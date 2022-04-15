@@ -1,0 +1,101 @@
+﻿@if (model != null)
+{
+    <EditForm Model="@model" OnValidSubmit="SubmitFormAsync">
+        <DataAnnotationsValidator />
+
+        <h2>@Localizer["TitleNotifications"]</h2>
+        <section class="form-section">
+
+            <div class="form-col">
+                <label for="@nameof(EditNotificationsModalModel.Email)">@Localizer["FormEmail"]</label>
+                <div class="form-element">
+                    <InputText type="text" id="@nameof(EditNotificationsModalModel.Email)" @bind-Value="model.Email" />
+                    <ValidationMessage For="() => model.Email" />
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <InputCheckbox id="@nameof(EditNotificationsModalModel.EmailNotificationActive)"
+                                   @bind-Value="model.EmailNotificationActive" />
+                    <label for="@nameof(EditNotificationsModalModel.EmailNotificationActive)"
+                           style="width: 100%;">
+                        @Localizer["FormEmailNotificationActive"]
+                    </label>
+                    <ValidationMessage For="@(() => model.EmailNotificationActive)" />
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <InputCheckbox id="@nameof(EditNotificationsModalModel.EmailNotificationOnDeliveryActive)"
+                                   @bind-Value="model.EmailNotificationOnDeliveryActive" />
+                    <label for="@nameof(EditNotificationsModalModel.EmailNotificationOnDeliveryActive)"
+                           style="width: 100%;">
+                        @Localizer["FormEmailNotificationOnDeliveryActive"]
+                    </label>
+                    <ValidationMessage For="@(() => model.EmailNotificationOnDeliveryActive)" />
+                </div>
+            </div>
+
+            <div class="form-col">
+                <label for="@nameof(EditNotificationsModalModel.Phone)">@Localizer["FormPhone"]</label>
+                <div class="form-element">
+                    <InputText type="text" id="@nameof(EditNotificationsModalModel.Phone)" @bind-Value="model.Phone" />
+                    <ValidationMessage For="() => model.Phone" />
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <InputCheckbox id="@nameof(EditNotificationsModalModel.ViberNotificationActive)"
+                                   @bind-Value="model.ViberNotificationActive" />
+                    <label for="@nameof(EditNotificationsModalModel.ViberNotificationActive)"
+                           style="width: 100%;">
+                        @Localizer["FormViberNotificationActive"]
+                    </label>
+                    <ValidationMessage For="@(() => model.ViberNotificationActive)" />
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <InputCheckbox id="@nameof(EditNotificationsModalModel.ViberNotificationOnDeliveryActive)"
+                                   @bind-Value="model.ViberNotificationOnDeliveryActive" />
+                    <label for="@nameof(EditNotificationsModalModel.ViberNotificationOnDeliveryActive)"
+                           style="width: 100%;">
+                        @Localizer["FormViberNotificationOnDeliveryActive"]
+                    </label>
+                    <ValidationMessage For="@(() => model.ViberNotificationOnDeliveryActive)" />
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <InputCheckbox id="@nameof(EditNotificationsModalModel.SmsNotificationActive)"
+                                   @bind-Value="model.SmsNotificationActive" />
+                    <label for="@nameof(EditNotificationsModalModel.SmsNotificationActive)"
+                           style="width: 100%;">
+                        @Localizer["FormSmsNotificationActive"]
+                    </label>
+                    <ValidationMessage For="@(() => model.SmsNotificationActive)" />
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <InputCheckbox id="@nameof(EditNotificationsModalModel.SmsNotificationOnDeliveryActive)"
+                                   @bind-Value="model.SmsNotificationOnDeliveryActive" />
+                    <label for="@nameof(EditNotificationsModalModel.SmsNotificationOnDeliveryActive)"
+                           style="width: 100%;">
+                        @Localizer["FormSmsNotificationOnDeliveryActive"]
+                    </label>
+                    <ValidationMessage For="@(() => model.SmsNotificationOnDeliveryActive)" />
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section form-row button-row-right">
+            <button class="btn-border btn-m" type="button" @onclick="CancelAsync">
+                @Localizer["BtnCancel"]
+            </button>
+            <button class="btn-primary btn-m" type="submit">
+                @Localizer["BtnSave"]
+            </button>
+        </section>
+    </EditForm>
+}

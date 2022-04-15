@@ -1,0 +1,88 @@
+﻿@page "/registrations"
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "registrations", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+
+        <div class="content-right col-list">
+            <h3>@Localizer["RegistrationTitle"]</h3>
+
+            @if (model != null && targetGroups != null)
+            {
+                <EditForm Model="@model" OnValidSubmit="SaveAsync">
+                    <DataAnnotationsValidator />
+                    <ServerSideValidator @ref="serverSideValidator" />
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="BlobId">@Localizer["BlobId"]</label>
+                                <BlobField id="BlobId"
+                                           Type="@FileType.Registration"
+                                           Value="model.BlobValue"
+                                           ValueChanged="ChangedBlobValue"
+                                           ValueExpression="() => model.BlobValue" />
+                                <ValidationMessage For="() => model.BlobValue" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="Name">@Localizer["Name"]</label>
+                                <InputText type="text" id="Name" @bind-Value="model.Name" />
+                                <ValidationMessage For="@(() => model.Name)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="Identifier">@Localizer["Identifier"]</label>
+                                <InputText type="text" id="Identifier" @bind-Value="model.Identifier" />
+                                <ValidationMessage For="@(() => model.Identifier)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="Phone">@Localizer["Phone"]</label>
+                                <InputText type="text" id="Phone" @bind-Value="model.Phone" />
+                                <ValidationMessage For="@(() => model.Phone)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="Email">@Localizer["Email"]</label>
+                                <InputText type="text" id="Email" @bind-Value="model.Email" />
+                                <ValidationMessage For="@(() => model.Email)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <label for="Residence">@Localizer["Residence"]</label>
+                        <InputText type="text" id="Residence" @bind-Value="model.Residence" />
+                        <ValidationMessage For="@(() => model.Residence)" />
+                    </div>
+                    <div class="form-col mt20">
+                        <label for="TargetGroupId">@Localizer["TargetGroup"]</label>
+                        <Select2Field id="TargetGroupId"
+                                      @bind-Value="model.TargetGroupId"
+                                      Options="@targetGroups" />
+                        <ValidationMessage For="@(() => model.TargetGroupId)" />
+                    </div>
+                    <div class="line20 aright form-group">
+                        <a class="btn btn-border btn-l" href="">@Localizer["Cancel"]</a>
+                        <button class="btn-primary btn-l" type="submit">@Localizer["Submit"]</button>
+                    </div>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>

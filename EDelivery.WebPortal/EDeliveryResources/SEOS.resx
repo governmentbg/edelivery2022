@@ -1,0 +1,499 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ButtonNewSEOSDocument" xml:space="preserve">
+    <value>Изпрати съобщение</value>
+  </data>
+  <data name="EntityStatusActive" xml:space="preserve">
+    <value>Активен</value>
+  </data>
+  <data name="EntityStatusInactive" xml:space="preserve">
+    <value>Не е активен</value>
+  </data>
+  <data name="EntityStatusTemporaryInactive" xml:space="preserve">
+    <value>Временно не е активен</value>
+  </data>
+  <data name="InfoMessageChooseEntityToSendDocument" xml:space="preserve">
+    <value>Можете да изпратите съобщение като изберете получател от регистъра на СЕОС и натиснете бутон "Изпрати съобщение" на съответния ред</value>
+  </data>
+  <data name="MessageNoEntities" xml:space="preserve">
+    <value>Не са намерени участници в СЕОС</value>
+  </data>
+  <data name="MessageNoEntitiesForSearch" xml:space="preserve">
+    <value>Не са намерени участничи в СЕОС, отговарящи на зададения критерий за търсене!</value>
+  </data>
+  <data name="MessageNoReceivedDocuments" xml:space="preserve">
+    <value>Няма получени съобщения през СЕОС</value>
+  </data>
+  <data name="MessageNoSentDocuments" xml:space="preserve">
+    <value>Няма изпратени съобщения през СЕОС</value>
+  </data>
+  <data name="ReceivedDocumentsTitle" xml:space="preserve">
+    <value>Получени съобщения през СЕОС</value>
+  </data>
+  <data name="RegisteredEntities" xml:space="preserve">
+    <value>Участници в СЕОС</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Търси</value>
+  </data>
+  <data name="SearchEntity" xml:space="preserve">
+    <value>Част от име или ЕИК</value>
+  </data>
+  <data name="SendDocumentToEntity" xml:space="preserve">
+    <value>Изпрати документ на участник в СЕОС</value>
+  </data>
+  <data name="SentDocumentsTitle" xml:space="preserve">
+    <value>Изпратени съобщения през СЕОС</value>
+  </data>
+  <data name="StatusAlreadyReceived" xml:space="preserve">
+    <value>Получено</value>
+  </data>
+  <data name="StatusClosed" xml:space="preserve">
+    <value>Приключено</value>
+  </data>
+  <data name="StatusNotFound" xml:space="preserve">
+    <value>Не е открито</value>
+  </data>
+  <data name="StatusRegistered" xml:space="preserve">
+    <value>Регистрирано</value>
+  </data>
+  <data name="StatusRejected" xml:space="preserve">
+    <value>Отказано</value>
+  </data>
+  <data name="StatusSending" xml:space="preserve">
+    <value>В процес на изпращане</value>
+  </data>
+  <data name="StatusSent" xml:space="preserve">
+    <value>Изпратено</value>
+  </data>
+  <data name="StatusStopped" xml:space="preserve">
+    <value>Спряно</value>
+  </data>
+  <data name="StatusWaitRegistration" xml:space="preserve">
+    <value>Очаква регистрация</value>
+  </data>
+  <data name="TableActionOpenMessage" xml:space="preserve">
+    <value>Преглед на съобщението</value>
+  </data>
+  <data name="TableHeaderDateReceived" xml:space="preserve">
+    <value>Получено на</value>
+  </data>
+  <data name="TableHeaderDateSent" xml:space="preserve">
+    <value>Изпратено на</value>
+  </data>
+  <data name="TableHeaderDocAbout" xml:space="preserve">
+    <value>Относно</value>
+  </data>
+  <data name="TableHeaderDocKind" xml:space="preserve">
+    <value>Вид на документа</value>
+  </data>
+  <data name="TableHeaderDocStatus" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="TableHeadeRegIndex" xml:space="preserve">
+    <value>Рег. индекс</value>
+  </data>
+  <data name="TableHeaderEIK" xml:space="preserve">
+    <value>ЕИК</value>
+  </data>
+  <data name="TableHeaderEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="TableHeaderEntityName" xml:space="preserve">
+    <value>Организация</value>
+  </data>
+  <data name="TableHeaderEntityStatus" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="TableHeaderPhone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="TableHeaderReceiver" xml:space="preserve">
+    <value>Получател</value>
+  </data>
+  <data name="TableHeaderSender" xml:space="preserve">
+    <value>Получено от</value>
+  </data>
+  <data name="TitleSEOS" xml:space="preserve">
+    <value>Система за електронен обмен на съобщения (СЕОС)</value>
+  </data>
+  <data name="ErrorRequired" xml:space="preserve">
+    <value>Полето е задължително!</value>
+  </data>
+  <data name="LabelDocAdditionalComment" xml:space="preserve">
+    <value>Допълнителен коментар</value>
+  </data>
+  <data name="LabelDocAttentionTo" xml:space="preserve">
+    <value>На вниманието на</value>
+  </data>
+  <data name="LabelDocAttList" xml:space="preserve">
+    <value>Прикачени файлове</value>
+  </data>
+  <data name="LabelDocKind" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="LabelDocRequestEndDate" xml:space="preserve">
+    <value>Краен срок за приключване</value>
+  </data>
+  <data name="LabelDocumentAttComment" xml:space="preserve">
+    <value>Коментар към документа</value>
+  </data>
+  <data name="LabelDocumentAttPath" xml:space="preserve">
+    <value>Път до документа</value>
+  </data>
+  <data name="LabelReceiverName" xml:space="preserve">
+    <value>Получател</value>
+  </data>
+  <data name="LabelSubject" xml:space="preserve">
+    <value>Относно</value>
+  </data>
+  <data name="TableHeaderEntityEIK" xml:space="preserve">
+    <value>ЕИК</value>
+  </data>
+  <data name="TitleCreateNewSEOSMessage" xml:space="preserve">
+    <value>Създаване на ново съобщение за електронен обмен</value>
+  </data>
+  <data name="ButtonAddMoreDos" xml:space="preserve">
+    <value>Добави още</value>
+  </data>
+  <data name="ButtonSendMessage" xml:space="preserve">
+    <value>Изпрати</value>
+  </data>
+  <data name="ErrorMaxFileLength" xml:space="preserve">
+    <value>Размерът на документа превишава лимита от 10MB!</value>
+  </data>
+  <data name="LabelReqEndDate" xml:space="preserve">
+    <value>Kраен срок за приключване</value>
+  </data>
+  <data name="DownloadAttachment" xml:space="preserve">
+    <value>Изтегли документа</value>
+  </data>
+  <data name="OpenDocument" xml:space="preserve">
+    <value>Отваряне</value>
+  </data>
+  <data name="OpenReceivedDocument" xml:space="preserve">
+    <value>Преглед на получен документ</value>
+  </data>
+  <data name="OpenSentDocument" xml:space="preserve">
+    <value>Преглед на изпратен документ</value>
+  </data>
+  <data name="ButtonCheckStatus" xml:space="preserve">
+    <value>Провери статуса</value>
+  </data>
+  <data name="ErrorNotFoundAttachment" xml:space="preserve">
+    <value>Грешка! Документ {0} не е намерен!</value>
+  </data>
+  <data name="ErrorNotFoundMessage" xml:space="preserve">
+    <value>Грешка! Съобщение с идентификатор {0} не е намерено!</value>
+  </data>
+  <data name="ErrorSubmitNewDocument" xml:space="preserve">
+    <value>Възникна грешка при изпращане на документа! Моля опитайте по-късно!</value>
+  </data>
+  <data name="ErrorUnauthorizedAccesssToAttachment" xml:space="preserve">
+    <value>Грешка! Опит за неоторизиран достъп до файл  {0}</value>
+  </data>
+  <data name="ErrorUnauthorizedAccesssToMessage" xml:space="preserve">
+    <value>Грешка! Опит за неоторизиран достъп до съобщение с идентификатор {0}</value>
+  </data>
+  <data name="LabeExternalRegIndex1" xml:space="preserve">
+    <value>Рег. индекс (изпращач)</value>
+  </data>
+  <data name="LabelCorespondent" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="LabelDateReceived" xml:space="preserve">
+    <value>Получено на</value>
+  </data>
+  <data name="LabelDateSent" xml:space="preserve">
+    <value>Изпратено на</value>
+  </data>
+  <data name="LabelDocId" xml:space="preserve">
+    <value>Уникален идентификатор</value>
+  </data>
+  <data name="LabelDocReferenceNumber" xml:space="preserve">
+    <value>Рег. индекс в АИС на изпращача</value>
+  </data>
+  <data name="LabelDocumentAttName" xml:space="preserve">
+    <value>Прикачен файл</value>
+  </data>
+  <data name="LabelDownloadDocument" xml:space="preserve">
+    <value>Изтегляне</value>
+  </data>
+  <data name="LabelExternalRegIndex" xml:space="preserve">
+    <value>Рег. индекс (получател)</value>
+  </data>
+  <data name="LabelInternalRegIndex" xml:space="preserve">
+    <value>Рег. индекс (е-Връчване)</value>
+  </data>
+  <data name="LabelParentDocName" xml:space="preserve">
+    <value>Родителски документ</value>
+  </data>
+  <data name="LabelRejectedReason" xml:space="preserve">
+    <value>Основание</value>
+  </data>
+  <data name="LabelSenderName" xml:space="preserve">
+    <value>Изпращач</value>
+  </data>
+  <data name="LabelService" xml:space="preserve">
+    <value>Адм. услуга</value>
+  </data>
+  <data name="LabelServiceCode" xml:space="preserve">
+    <value>Код на услугата</value>
+  </data>
+  <data name="LabelServiceType" xml:space="preserve">
+    <value>Тип на услугата</value>
+  </data>
+  <data name="LabelStatus" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="TableHeaderServiceURL" xml:space="preserve">
+    <value>УРЛ на услугата</value>
+  </data>
+  <data name="LabelUpdateStatus" xml:space="preserve">
+    <value>Промяна на статуса</value>
+  </data>
+  <data name="ErrorUpdatingStatus" xml:space="preserve">
+    <value>Възникна грешка при актуализиране на статуса! Моля, опитайте по-късно.</value>
+  </data>
+  <data name="ButtonUpdateStatus" xml:space="preserve">
+    <value>Промени</value>
+  </data>
+  <data name="ErrorExceededMaxLen" xml:space="preserve">
+    <value>Максималнияt брой символи в полето е {0}!</value>
+  </data>
+  <data name="ErrorRejectReasonMissing" xml:space="preserve">
+    <value>Полето е задължително!</value>
+  </data>
+  <data name="LabelAdditionalData" xml:space="preserve">
+    <value>Допълнителни данни</value>
+  </data>
+  <data name="LabelExpectedDateClose" xml:space="preserve">
+    <value>Очаквана дата за приключване на работата</value>
+  </data>
+  <data name="LabelNewStatus" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="LabelRejectReason" xml:space="preserve">
+    <value>Причина за отказ от регистрация</value>
+  </data>
+  <data name="StatusSentFailed" xml:space="preserve">
+    <value>Неуспешно изпращане</value>
+  </data>
+  <data name="LabelServiceCodeAndType" xml:space="preserve">
+    <value>Код / Тип на адм. услуга</value>
+  </data>
+  <data name="ProfileNoSEOSMessage" xml:space="preserve">
+    <value>Профилът на {0} няма регистрация като участник в Система за електронен обмен на съобщения (СЕОС). За да бъде използвана функционалността СЕОС през системата за електронно връчване, необходимо е да се направи съответна регистрация в регистъра на участниците в СЕОС.
+&lt;br/&gt;
+За повече информация и лица за контакт, посетете &lt;a href="https://e-gov.bg/bg/119" target="_blank"&gt;https://e-gov.bg/bg/119&lt;/a&gt;
+&lt;br/&gt;
+&lt;h3&gt;
+&lt;strong&gt;Внимание! &lt;/strong&gt;&lt;/h3&gt;
+&lt;br/&gt;
+Ако вашата документооборотна система е включена към СЕОС, изпращането на документи през СЕОС се извършва само чрез деловодната ви система!</value>
+  </data>
+  <data name="ErrorDocumenntRequired" xml:space="preserve">
+    <value>Моля, прикачете поне един документ!</value>
+  </data>
+  <data name="LabelDateRegistered" xml:space="preserve">
+    <value>Регистрирано на</value>
+  </data>
+  <data name="LabelRegisteredByLoginName" xml:space="preserve">
+    <value>Регистрирано от</value>
+  </data>
+  <data name="LabelSentByLoginNames" xml:space="preserve">
+    <value>Изпратено от</value>
+  </data>
+  <data name="LabelCorespondentAddress" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
+  <data name="LabelCorespondentBulstat" xml:space="preserve">
+    <value>Булстат</value>
+  </data>
+  <data name="LabelCorespondentContact" xml:space="preserve">
+    <value>Тел./E-mail</value>
+  </data>
+  <data name="LabelCorespondentEGN" xml:space="preserve">
+    <value>ЕГН</value>
+  </data>
+  <data name="LabelCorespondentIDCard" xml:space="preserve">
+    <value>Но. личен документ</value>
+  </data>
+  <data name="LabelCorespondentMOL" xml:space="preserve">
+    <value>МОЛ</value>
+  </data>
+  <data name="LabelCorespondents" xml:space="preserve">
+    <value>Кореспонденти</value>
+  </data>
+  <data name="LabelDateStatusUpdate" xml:space="preserve">
+    <value>Дата на статуса</value>
+  </data>
+  <data name="TitleHelp" xml:space="preserve">
+    <value>Помощ за работа със СЕОС</value>
+  </data>
+  <data name="ErrorMaliciousFile" xml:space="preserve">
+    <value>Открит е зловреден код! Документът не може да бъде изпратен!</value>
+  </data>
+  <data name="ErrorPleaseSelectFile" xml:space="preserve">
+    <value>Моля, изберете документ за прикачване!</value>
+  </data>
+  <data name="ErrorUnsuccessfulScan" xml:space="preserve">
+    <value>Грешка! Документът не е проверен за наличие на зловреден код! Това не пречи документа да бъде изпратен непроверен!</value>
+  </data>
+  <data name="ErrorCantUploadFile" xml:space="preserve">
+    <value>Файлът не може да бъде качен на сървъра! Моля, опитайте по-късно.</value>
+  </data>
+  <data name="ErrorCantAccessMalwareService" xml:space="preserve">
+    <value>Липса на достъп! Документът не е проверен за наличие на зловреден код!</value>
+  </data>
+  <data name="ErrorPendingScanResult" xml:space="preserve">
+    <value>Липсва отговор от антивирусна компонента! Документът не е проверен за наличие на зловреден код!</value>
+  </data>
+  <data name="ErrorReceivedDocumentIsMalicious" xml:space="preserve">
+    <value>Открит е зловреден код!</value>
+  </data>
+  <data name="ErrorReceivedDocumentIsNotCheckedForMalware" xml:space="preserve">
+    <value>Документът не е проверен за наличие на зловреден код! Желаете ли да го свалите на свой риск и отговорност?</value>
+  </data>
+  <data name="InfoFileIsNotMalicious" xml:space="preserve">
+    <value>Документът е успешно проверен и не са открити вируси!</value>
+  </data>
+  <data name="AllowDownload" xml:space="preserve">
+    <value>Да, свали документа</value>
+  </data>
+  <data name="DeclineDownload" xml:space="preserve">
+    <value>Отказ</value>
+  </data>
+  <data name="WarningTitle" xml:space="preserve">
+    <value>Предупреждение</value>
+  </data>
+  <data name="LabelCorespondentIdentifier" xml:space="preserve">
+    <value>ЕГН/ЛНЧ</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Действие</value>
+  </data>
+  <data name="MessageAction" xml:space="preserve">
+    <value>Съобщение</value>
+  </data>
+  <data name="ErrorConnectingSEOSService" xml:space="preserve">
+    <value>Проблем с достъпа до услугата!</value>
+  </data>
+</root>

@@ -1,0 +1,141 @@
+﻿@model SearchMessagesViewModel
+
+<div class="search-filter">
+    <button class="btn btn-m btn-light btn-search-filter" type="button">
+        @ViewBag.Legend
+        <svg viewBox="0 0 11 7" class="icon arrow-down">
+            <path d="M5.5,6.4C5.3,6.4,5,6.3,4.8,6.2L0.3,1.6c-0.4-0.4-0.4-1,0-1.3c0.4-0.4,1-0.4,1.3,0l3.9,3.9l3.9-3.9c0.4-0.4,1-0.4,1.3,0c0.4,0.4,0.4,1,0,1.3L6.2,6.2C6,6.3,5.7,6.4,5.5,6.4z"></path>
+        </svg>
+    </button>
+    @using (Ajax.BeginForm(
+        null,
+        null,
+        new AjaxOptions
+        {
+            InsertionMode = InsertionMode.ReplaceWith,
+            UpdateTargetId = "messages-list-content"
+        },
+        new { id = "seach-message-form" }))
+    {
+        <section class="form-section flex-row">
+            <div class="col-2">
+                <div class="form-col">
+                    <label for="SearchTitle">@ViewBag.SearchTitle:</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.Title)
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-col">
+                    <label for="SearchElSubject">@((string)ViewBag.SearchElSubject + " (Име или ЕИК/ЕГН/ЛНЧ)"):</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.Subject)
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-col">
+                    <label for="Orn">@ProfilePage.TableHeaderMessageOrn:</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.Orn)
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-col">
+                    <label for="ReferencedOrn">@ProfilePage.TableHeaderMessageReferencedOrn:</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.ReferencedOrn)
+                    </div>
+                </div>
+            </div>
+            <div class="col-2 flex-element date-group">
+                <div class="form-col">
+                    <label for="FromDateAsString">@ProfilePage.PlaceholderDateFrom:</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.FromDateAsString, new { @placeholder = SystemConstants.DatePickerDateFormat })
+                        <div class="icon-hint icon-hint--clear icon-hint--input-text"></div>
+                        @Html.ValidationMessageFor(x => x.FromDateAsString)
+                    </div>
+                </div>
+                <div class="form-col">
+                    <label for="ToDateAsString">@ProfilePage.PlaceholderDateТо:</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.ToDateAsString, new { @placeholder = SystemConstants.DatePickerDateFormat })
+                        <div class="icon-hint icon-hint--clear icon-hint--input-text"></div>
+                        @Html.ValidationMessageFor(x => x.ToDateAsString)
+                    </div>
+                </div>
+            </div>
+            <div class="col-2 btn-group">
+                <div class="form-col">
+                    <a href="#" class="btn btn-m btn-clear lnk-clear">@ProfilePage.ButtonClear</a>
+                    <button class="btn-border btn-l f-grow-80">@ProfilePage.ButtonSearch</button>
+                </div>
+            </div>
+        </section>
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.btn-search-filter').click(function () {
+            $(this).closest('.search-filter').toggleClass('show');
+        });
+
+        var dateFormat = 'dd-mm-yyyy';
+
+        $fromDate = $('#FromDateAsString');
+        $toDate = $('#ToDateAsString');
+
+        $fromDate
+            .datepicker({
+                language: 'bg',
+                format: dateFormat,
+                clearBtn: true
+            })
+            .on('change', function () {
+                $toDate
+                    .datepicker('destroy')
+                    .datepicker({
+                        language: 'bg',
+                        format: dateFormat,
+                        clearBtn: true,
+                        startDate: $(this).val()
+                    });
+            });
+
+        $fromDate.siblings('.icon-hint').on('click', function () {
+            $fromDate.datepicker('clearDates');
+        });
+
+        $toDate
+            .datepicker({
+                language: 'bg',
+                format: dateFormat,
+                clearBtn: true
+            })
+            .on('change', function () {
+                $fromDate
+                    .datepicker('destroy')
+                    .datepicker({
+                        language: 'bg',
+                        format: dateFormat,
+                        clearBtn: true,
+                        endDate: $(this).val()
+                    });
+            });
+
+        $toDate.siblings('.icon-hint').on('click', function () {
+            $toDate.datepicker('clearDates');
+        });
+
+        $('a.lnk-clear').on('click', function (e) {
+            e.preventDefault();
+
+            $('form#seach-message-form input').val('');
+            $('form#seach-message-form').submit();
+        });
+    });
+</script>

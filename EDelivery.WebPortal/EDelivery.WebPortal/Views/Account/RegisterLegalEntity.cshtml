@@ -1,0 +1,334 @@
+﻿@model RegisterLegalEntityViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutNonav.cshtml";
+
+    ViewBag.Title = LoginRegisterPage.TitleRegisterLegal;
+}
+
+<div class="wrapper content-wrapper">
+    <div class="wrapper content-wrapper page-title">
+        <h1>@LoginRegisterPage.TitleRegisterLegal</h1>
+        <a href="@Url.Action("Index","Help")"
+           rel="noopener"
+           target="_blank"
+           title="@UIControls.LinkHelpInfo">
+            @UIControls.LinkHelpInfo
+        </a>
+    </div>
+
+    <div class="single-col">
+        @using (Html.BeginForm(
+            "RegisterLegalEntity",
+            "Account",
+            FormMethod.Post,
+            new { }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-row">
+                <div class="da-tooltip attached iconed">
+                    <div class="icon-info"></div>
+                    @LoginRegisterPage.TextRegistrationInstructionsLegal
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-element">
+                    <a href="@Url.Content("~/Content/Documents/eDeliery-registration form legal person-v4.pdf")"
+                       download="eDeliery-registration form legal person-v4.pdf"
+                       rel="noopener"
+                       target="_blank"
+                       title="@LoginRegisterPage.DownloadRegistrationForm">
+                        @LoginRegisterPage.DownloadRegistrationForm
+
+                        <span class="icon-hint--info"
+                              data-toggle="tooltip"
+                              data-original-title="@Common.InfoLegalRegistration"
+                              style="position:relative;">
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+            <section class="form-section">
+                <h3>@LoginRegisterPage.TitleSectionProfileData</h3>
+                <ul class="col-list">
+                    <li class="form-row nowrap">
+                        <label for="@nameof(Model.FileId)-file">@LoginRegisterPage.LabelChoosePDF *:</label>
+                        <div class="f-grow-100 file-holder">
+                            <div class="row-group">
+                                <div class="">
+                                    <div class="pos-relative">
+                                        <input id="@nameof(Model.FileId)-file"
+                                               type="file"
+                                               disabled="disabled"
+                                               style="position: absolute; top: 0px; left: 0px; opacity: 0" />
+                                        @Html.HiddenFor(x => x.FileId)
+                                        @Html.HiddenFor(x => x.FileName)
+                                        <input type="text" name="@nameof(Model.FileId)-FileName" value="@Model.FileName" readonly="readonly" id="@nameof(Model.FileId)-text" />
+                                        @Html.ValidationMessage(nameof(Model.FileId), new { @class = "", @id = $"{nameof(Model.FileId)}-err" })
+                                        <div class="loader file-upload" id="@nameof(Model.FileId)-progress"></div>
+                                    </div>
+                                </div>
+                                <button id="@nameof(Model.FileId)-btn" class="btn-border btn-l file-upload" type="button">
+                                    @UIControls.ButtonAttach
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="col-list col-short">
+                    <li class="form-row">
+                        <label for="EmailAddress">@LoginRegisterPage.LabelEmailAddress *:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.EmailAddress)
+                            @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="PhoneNumber">@LoginRegisterPage.LabelPhoneNumber <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.PhoneNumber)
+                            @Html.ValidationMessageFor(x => x.PhoneNumber, null, new { @class = "validation-message" })
+                            <div class="icon-hint icon-hint--info icon-hint--input-text"
+                                 data-toggle="tooltip"
+                                 data-original-title="@Common.InfoPhoneNumberFormat">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="form-section">
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.EmailNotifications)
+                    <label for="EmailNotifications">@LoginRegisterPage.LabelEmailNotifications</label>
+                </div>
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.ViberNotifications)
+                    <label for="ViberNotifications">@LoginRegisterPage.LabelViberNotifications</label>
+                </div>
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.PhoneNotifications)
+                    <label for="PhoneNotifications">@LoginRegisterPage.LabelPhoneNotifications</label>
+                </div>
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.LicenceAgreement)
+                    <label for="LicenceAgreement">
+                        @Html.Raw(String.Format(LoginRegisterPage.LabelLicenceAgreement, @Url.Content("~/Content/Documents/LicenceAgreement-v4.pdf")))
+                    </label>
+                </div>
+                <div class="form-element">
+                    @Html.ValidationMessageFor(x => x.LicenceAgreement, null, new { @class = "validation-message" })
+                </div>
+
+                <p class="explain">
+                    @LoginRegisterPage.TextValidDataResponsibility
+                </p>
+
+                <div class="form-row">
+                    <div class="da-tooltip attached iconed">
+                        <div class="icon-info"></div>
+                        @Html.Raw(ProfilePage.InfoSmsViberNotificationChoice)
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section form-row button-row-right">
+                <a class="btn btn-border btn-l" href="@Url.Action("Index","Home")">
+                    @UIControls.ButtonBack
+                </a>
+                <button class="btn-primary btn-l" type="submit">@UIControls.ButtonRegister</button>
+            </section>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/uppy")
+
+    <script type="text/javascript">
+        $(function () {
+            $('#ViberNotifications').mutualExclusive('#PhoneNotifications');
+
+            var id = '@nameof(Model.FileId)';
+            var fileName = '@nameof(Model.FileName)';
+
+            var messages = {
+                notMaliciousFile: '@EDeliveryResources.SEOS.InfoFileIsNotMalicious',
+                notSureFile: '@EDeliveryResources.SEOS.ErrorUnsuccessfulScan',
+                maliciousFile: '@EDeliveryResources.SEOS.ErrorMaliciousFile',
+                maxFileSize: '@EDeliveryResources.SEOS.ErrorMaxFileLength',
+                fileNotUploaded: '@EDeliveryResources.SEOS.ErrorCantUploadFile',
+                invalidSignature: 'Електронният подпис на формата за регистрация е невалиден!',
+                missingSignature: 'Формата за регистрация не е подписана с Електронен подпис!'
+            }
+
+            var successClass = 'validation-message field-validation-valid file-valid';
+            var errorClass = 'validation-message field-validation-error';
+
+            var $fileId = $('#' + id);
+            var $fileInput = $('#' + id + '-file');
+            var $fileName = $('#' + id + '-text');
+            var $fileName2 = $('#' + fileName);
+            var $fileProgress = $('#' + id + '-progress');
+            var $attachButton = $('#' + id + '-btn');
+            var $fileValidation = $('#' + id + '-err');
+
+            function addFile(name, size) {
+                var fileName = name + '(' + gf.humanFileSize(size) + ')';
+                $fileName.val(fileName);
+                $fileName2.val(fileName);
+                $fileProgress.addClass('show');
+            }
+
+            var match = /(^|;\s?)EDelivery\.Identity=(.+?)($|;)/.exec(document.cookie);
+            var accessToken = match && match[2];
+
+            var uppyRestrictions = {
+                maxFileSize: 10 * 1024 * 1024, // 10 MB
+                allowedFileTypes: [ '.pdf' ]
+            };
+
+            var uppy = new Uppy.Core({
+                debug: true,
+                autoProceed: true,
+                restrictions: uppyRestrictions,
+                locale: Uppy.locales.bg_BG
+            });
+
+            uppy.use(Uppy.XHRUpload, {
+                endpoint: '@System.Web.Configuration.WebConfigurationManager.AppSettings["BlobServiceWebUrl"]/system/registration',
+                timeout: 120 * 1000, // 2 minutes for the maximum time between progress events,
+                limit: 5,
+                headers: {
+                    'authorization': 'Bearer ' + accessToken
+                }
+            });
+
+            uppy.on('upload-error', function (file, error, response) {
+                $fileValidation.removeClass();
+                $fileValidation.text(messages.fileNotUploaded);
+                $fileValidation.addClass(errorClass);
+
+                $fileProgress.removeClass('show');
+                $fileName.val('');
+
+                console.log(error);
+            });
+
+            uppy.on('restriction-failed', function(file, error) {
+                $fileValidation.removeClass();
+                $fileValidation.text(error);
+                $fileValidation.addClass(errorClass);
+
+                $fileProgress.removeClass('show');
+                $fileName.val('');
+                $fileName2.val('');
+
+                console.log(error);
+            })
+
+            uppy.on('complete', function () {
+                var uppyFiles = uppy.getFiles();
+                var i;
+                for (i = 0; i < uppyFiles.length; i++) {
+                    uppy.removeFile(uppyFiles[i].id);
+                }
+            });
+
+            uppy.on('upload-success', function (file, response) {
+                // var fileName = response.body.name;
+                var blobId = response.body.blobId;
+                var malwareScanStatus = response.body.malwareScanStatus;
+                var signatureStatus = response.body.signatureStatus;
+                var isBlockingWorkflow = false;
+
+                var statusClass;
+                var message;
+                switch (malwareScanStatus) {
+                    case 'NotMalicious':
+                        statusClass = successClass;
+                        message = messages.notMaliciousFile;
+                        break;
+                    case 'NotSure':
+                        statusClass = errorClass;
+                        message = messages.notSureFile;
+                        break;
+                    case 'IsMalicious':
+                        statusClass = errorClass;
+                        message = messages.maliciousFile;
+                        isBlockingWorkflow = true;
+                        break;
+                }
+
+                if (!isBlockingWorkflow) {
+                    switch (signatureStatus) {
+                        case 'InvalidIntegrity':
+                        case 'CertificateExpiredAtTimeOfSigning':
+                        case 'InvalidCertificate':
+                            statusClass = errorClass;
+                            message = messages.invalidSignature;
+                            break;
+                        case 'None':
+                            statusClass = errorClass;
+                            message = messages.missingSignature;
+                            break;
+                        case 'Valid':
+                        default:
+                            break;
+                    }
+                }
+
+                $fileInput.attr('disabled', 'disabled');
+
+                $fileValidation.removeClass();
+                $fileValidation.text(message);
+                $fileValidation.addClass(statusClass);
+
+                $fileProgress.removeClass('show');
+                if (blobId) {
+                    $fileId.val(blobId);
+                }
+            });
+
+            $attachButton.on('click', function () {
+                $fileInput.removeAttr('disabled');
+                $fileInput.trigger('click');
+            });
+
+            $fileInput.on('change', function (event) {
+                $fileValidation.removeClass();
+                $fileValidation.text('');
+
+                var files = Array.prototype.slice.call(event.target.files);
+
+                files.forEach(function (file) {
+                    try {
+                        uppy.cancelAll();
+
+                        uppy.addFile({
+                            source: 'file input',
+                            name: file.name,
+                            type: file.type,
+                            data: file
+                        });
+
+                        addFile(file.name, file.size);
+                    } catch (err) {
+                        if (err.isRestriction) {
+                            // handle restrictions
+                            console.log('Restriction error:', err);
+                        } else {
+                            // handle other errors
+                            console.error(err);
+                        }
+                    }
+                })
+            });
+        });
+    </script>
+}

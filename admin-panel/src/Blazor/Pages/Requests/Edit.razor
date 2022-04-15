@@ -1,0 +1,195 @@
+﻿@page "/requests/{RegistrationRequestId:int}"
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "requests", "requests" },
+        { "edit", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+
+        <div class="content-right">
+            <EditForm OnValidSubmit="SaveAsync" EditContext="@editContext">
+                <DataAnnotationsValidator />
+                <ServerSideValidator @ref="serverSideValidator" />
+
+                <div class="col-list">
+                    <h2>@Localizer["Title"]</h2>
+
+                    @if (request != null)
+                    {
+                        <h3 class="line20 topbrdr">@Localizer["TitleStatusSection"]</h3>
+                        <div class="form-group">
+                            <label>@Localizer["Status"]</label>
+                            <label class="strong">
+                                @Localizer[$"Status_{request.RegistrationRequestStatus}"]
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["CreateDate"]</label>
+                            <label class="strong">
+                                @request.RegistrationRequestCreateDate.ToLocalDateTime().ToString("g")
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["CreatedBy"]</label>
+                            <label class="strong">@request.RegistrationRequestAuthor</label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["CreatedEmail"]</label>
+                            <label class="strong">
+                                <a href="mailto:@request.RegistrationRequestEmail">
+                                    @request.RegistrationRequestEmail
+                                </a>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["CreatedPhone"]</label>
+                            <label class="strong">
+                                <a href="tel:@request.RegistrationRequestPhone">
+                                    @request.RegistrationRequestPhone
+                                </a>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["CreatedFor"]</label>
+                            <label class="strong">@request.ProfileName</label>
+                        </div>
+
+                        <h3 class="line20 topbrdr">@Localizer["TitleDataSection"]</h3>
+                        <div class="form-group">
+                            <label>@Localizer["ProfileName"]</label>
+                            <label class="strong"><a href="profiles/@request.ProfileId">@request.ProfileName</a></label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>@Localizer["ProfileIdentifier"]</label>
+                            <label class="strong">@request.ProfileIdentifier</label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["ProfileAuthor"]</label>
+                            <label class="strong">@request.RegistrationRequestAuthor</label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["ProfileRegistrationRequest"]</label>
+                            <label class="strong">
+                                <a href="@BlobUrlCreator.CreateSystemBlobUrl(request.RegistrationRequestBlobId)"
+                                   target="_blank"
+                                   title="Преглед на заявление за регистрация">
+                                    <i></i>@Localizer["ProfileRegistrationRequestDownload"]
+                                </a>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["ProfilePhone"]</label>
+                            <label class="strong">
+                                <a href="tel:@request.ProfilePhone">
+                                    @request.ProfilePhone
+                                </a>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["ProfileEmail"]</label>
+                            <label class="strong">
+                                <a href="mailto:@request.ProfileEmail">
+                                    @request.ProfileEmail
+                                </a>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["ProfileResidence"]</label>
+                            <label class="strong">@request.ProfileResidence</label>
+                        </div>
+
+                        <h3 class="line20 topbrdr">@Localizer["TItleSignaturesSection"]</h3>
+
+                        @foreach (var signature in request.Signatures)
+                        {
+                            <div class="form-inline" id="kepinfo">
+                                <div class="form-group">
+                                    <label>@Localizer["SignatureValidity"]</label>
+                                    <label class="strong">
+                                        @Localizer[$"SignatureValidityStatus_{signature.IsValid}"]
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>@Localizer["SignatureSignedBy"]</label>
+                                    <label class="strong">@signature.SignedBy</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>@Localizer["SignatureCertifiedBy"]</label>
+                                    <label class="strong">@signature.CertifiedBy</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>@Localizer["SignatureValidFrom"]</label>
+                                    <label class="strong">
+                                        @signature.ValidFrom.ToLocalDateTime().ToString("g")
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>@Localizer["SignatureValidTo"]</label>
+                                    <label class="strong">
+                                        @signature.ValidTo.ToLocalDateTime().ToString("g")
+                                    </label>
+                                </div>
+                            </div>
+                        }
+
+                        @if (request.RegistrationRequestStatus == DomainServices.RegistrationRequestStatus.New)
+                        {
+
+                            <h3 class="line20 topbrdr">@Localizer["TitleActionsSection"]</h3>
+
+                            <div class="form-group">
+                                <label for="Reason">@Localizer["FormReason"]</label>
+                                <InputTextArea cols="20" rows="4" id="Comment" @bind-Value="model.Comment" />
+                                <ValidationMessage For="@(() => model.Comment)" />
+                            </div>
+
+                            <section class="form-section form-row button-row-right">
+                                <button class="btn-border btn-l" type="button" @onclick="RejectAsync">
+                                    @Localizer["BtnReject"]
+                                </button>
+                                <button class="btn-primary btn-l" type="submit">
+                                    @Localizer["BtnConfirm"]
+                                </button>
+                            </section>
+                        }
+                        else
+                        {
+                            <h3 class="line20 topbrdr">
+                                @Localizer[$"Status_{request.RegistrationRequestStatus}"]
+                            </h3>
+
+                            <div class="form-inline" id="kepinfo">
+                                <div class="form-group">
+                                    <label>@Localizer["FieldProcessDate"]</label>
+                                    <label class="strong">
+                                        @request.RegistrationRequestProcessDate?.ToLocalDateTime().ToString("g")
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>@Localizer["FieldProcessUser"]</label>
+                                    <label class="strong">
+                                        @request.RegistrationRequestProcessUser
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>@Localizer["FieldReason"]</label>
+                                    <label class="strong">
+                                        @request.RegistrationRequestComment
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,140 @@
+﻿@using EDelivery.WebPortal.Models.Messages
+
+@model NewMessageViewModel
+
+@{
+    ViewBag.Title = Common.TitleCreateNewMessage;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleCreateNewMessage</h2>
+        <p class="explain">Полетата, означени със символа <span class="txt-red">*</span>, са задължителни за попълване.</p>
+
+        @using (Html.BeginForm(
+            "New",
+            "Messages",
+            new { templateId = Model.TemplateId },
+            FormMethod.Post,
+            new { enctype = "multipart/form-data", @id = "new-message-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.TemplateId)
+            @Html.HiddenFor(x => x.CurrentProfileId, new { id = "profileId" }) // used for file upload
+
+            @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+            <section class="form-section">
+                <ul class="col-list">
+                    <li class="form-row">
+                        <label for="ReceiverElectronicSubjectName">@ProfilePage.LabelMessageReceiver <span class="txt-red">*</span>:</label>
+                        <div class="row-group">
+                            <div style="position: relative;">
+                                <div class="recipients-bg">
+                                    <div class="recipient-list">
+                                        @foreach (var recipient in Model.GetRecipients())
+                                        {
+                                            <div class="recipient-list-item">
+                                                @recipient.Item2
+                                                <button type="button"
+                                                        class="recipient-remove-btn"
+                                                        data-recipient-id="@recipient.Item1">
+                                                    &nbsp;
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(x => x.RecipientIds)
+                                @Html.TextBoxFor(x => x.RecipientNames, new { @class = "hidden-input" })
+                                @Html.ValidationMessageFor(x => x.RecipientNames, null, new { @class = "validation-message" })
+                            </div>
+                            <button class="btn-border btn-l js-add-recipient"
+                                    type="button"
+                                    data-modal-href="@Url.Action("Search", "Search")">
+                                @ProfilePage.ButtonAddReceiver
+                            </button>
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="ReferencedOrn">@ProfilePage.LabelReferencedOrn:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.ReferencedOrn)
+                            @Html.ValidationMessageFor(x => x.ReferencedOrn, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="AdditionalIdentifier">@ProfilePage.LabelAdditionalIdentifier:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.AdditionalIdentifier)
+                            @Html.ValidationMessageFor(x => x.AdditionalIdentifier, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="Subject">@ProfilePage.LabelMessageTitle <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.Subject)
+                            @Html.ValidationMessageFor(x => x.Subject, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="form-section" id="template">
+                <div class="loader"></div>
+            </section>
+
+            <section class="form-section form-row button-row-right">
+                <button class="btn-border btn-l" type="button" onclick="goBack()">Откажи</button>
+                <button class="btn-primary btn-l" type="submit" id="confirm-message" disabled>@ProfilePage.ButtonSendMessage</button>
+            </section>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/uppy")
+
+    <script type="text/javascript">
+        function goBack() {
+            if (confirm('@ErrorMessages.ConfigrmLeaveMessage')) {
+                window.history.back();
+            }
+        }
+
+        $(function () {
+            var values = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateValuesAsJson))' || '{}');
+            var errors = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateErrorsAsJson))' || '[]');
+
+            $('#template').load(
+                '/Templates/Builder/@Model.TemplateId',
+                {
+                    container: {
+                        values: values,
+                        errors: errors
+                    }
+                },
+                function () {
+                    $('#confirm-message').prop('disabled', false);
+                }
+            );
+
+            // unobtrusive validation is not fired for readonly inputs
+            $('#ReceiverElectronicSubjectName').on("focusin", function () {
+                $(this).prop('readonly', true);
+            });
+
+            $('#ReceiverElectronicSubjectName').on("focusout", function () {
+                $(this).prop('readonly', false);
+            });
+
+            $('.recipient-list').on('click', 'button', function (e) {
+                e.preventDefault();
+                gf.removeMessageRecipient($(this));
+            });
+        });
+    </script>
+}

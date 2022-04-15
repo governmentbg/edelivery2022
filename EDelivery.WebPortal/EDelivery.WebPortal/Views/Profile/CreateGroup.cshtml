@@ -1,0 +1,43 @@
+﻿@model CreateRecipientGroupViewModel
+
+@{
+    ViewBag.Title = "Създаване на получателска група";
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>Създаване на получателска група</h2>
+        <p class="explain">Полетата, означени със символа <span class="txt-red">*</span>, са задължителни за попълване.</p>
+
+        @using (Html.BeginForm(
+            "CreateGroup",
+            "Profile",
+            FormMethod.Post,
+            new { @id = "create-recipient-group-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.ProfileId)
+
+            @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+            <section class="form-section">
+                <ul class="col-list">
+                    <li class="form-row">
+                        <label for="Subject">Наименование <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.Name)
+                            @Html.ValidationMessageFor(x => x.Name, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="form-section form-row button-row-right">
+                <a class="btn btn-border btn-l" href="/Profile/Groups">Откажи</a>
+                <button class="btn-primary btn-l" type="submit">Създай</button>
+            </section>
+        }
+    </div>
+</div>

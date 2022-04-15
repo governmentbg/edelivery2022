@@ -1,0 +1,966 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices.IntegrationService";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "enums.proto";
+
+service IntegrationService {
+  // queries
+  rpc GetRegisteredInstitutions (google.protobuf.Empty) returns (GetRegisteredInstitutionsResponse);
+  rpc HasLoginWithCertificateThumbprint (HasLoginWithCertificateThumbprintRequest) returns (HasLoginWithCertificateThumbprintResponse);
+  rpc GetLoginByIdentifier (GetLoginByIdentifierRequest) returns (GetLoginByIdentifierResponse);
+
+  rpc Outbox (OutboxRequest) returns (OutboxResponse);
+  rpc Inbox (InboxRequest) returns (InboxResponse);
+
+  rpc CheckIndividualRegistration (CheckIndividualRegistrationRequest) returns (CheckIndividualRegistrationResponse);
+  rpc CheckLegalEntityRegistration (CheckLegalEntityRegistrationRequest) returns (CheckLegalEntityRegistrationResponse);
+  rpc CheckProfileRegistration (CheckProfileRegistrationRequest) returns (CheckProfileRegistrationResponse);
+  rpc GetProfileInfo (GetProfileInfoRequest) returns (GetProfileInfoResponse);
+
+  rpc GetStatistics (google.protobuf.Empty) returns (GetStatisticsResponse);
+
+  // authentication
+  rpc GetAuthenticationInfo (GetAuthenticationInfoRequest) returns (GetAuthenticationInfoResponse);
+
+  // send messages
+  rpc GetCodeSender (GetCodeSenderRequest) returns (GetCodeSenderResponse);
+  rpc SendMessage1 (SendMessage1Request) returns (SendMessage1Response);
+  rpc SendMessage1WithAccessCode (SendMessage1WithAccessCodeRequest) returns (SendMessage1WithAccessCodeResponse);
+  rpc SendMessageInReplyTo (SendMessageInReplyToRequest) returns (SendMessageInReplyToResponse);
+  rpc SendMessage1OnBehalfOf (SendMessage1OnBehalfOfRequest) returns (SendMessage1OnBehalfOfResponse);
+  rpc SendMessage1OnBehalfOfToIndividual (SendMessage1OnBehalfOfToIndividualRequest) returns (SendMessage1OnBehalfOfToIndividualResponse);
+  rpc SendMessage1OnBehalfOfToLegalEntity (SendMessage1OnBehalfOfToLegalEntityRequest) returns (SendMessage1OnBehalfOfToLegalEntityResponse);
+
+  // open messages
+  rpc GetSentDocumentContentByRegNum (GetSentDocumentContentByRegNumRequest) returns (GetSentDocumentContentByRegNumResponse);
+  rpc GetSentDocumentsContent (GetSentDocumentsContentRequest) returns (GetSentDocumentsContentResponse);
+  rpc GetSentDocumentContent (GetSentDocumentContentRequest) returns (GetSentDocumentContentResponse);
+  rpc GetSentMessageStatus (GetSentMessageStatusRequest) returns (GetSentMessageStatusResponse);
+  rpc GetSentDocumentStatusByRegNum (GetSentDocumentStatusByRegNumRequest) returns (GetSentDocumentStatusByRegNumResponse);
+  rpc GetReceivedMessageContent (GetReceivedMessageContentRequest) returns (GetReceivedMessageContentResponse);
+  rpc GetSentMessageContent (GetSentMessageContentRequest) returns (GetSentMessageContentResponse);
+}
+
+message GetRegisteredInstitutionsResponse{
+  message Address {
+    int32 address_id = 1;
+    google.protobuf.StringValue residence = 2;
+    google.protobuf.StringValue city = 3;
+    google.protobuf.StringValue state = 4;
+    google.protobuf.StringValue country = 5;
+  }
+
+  message SiblingInsitution {
+    string subject_id = 1;
+    string name = 2;
+    bool is_activated = 3;
+    string email = 4;
+    google.protobuf.StringValue phone = 5;
+  }
+
+  message Institution {
+    string subject_id = 1;
+    string identifier = 2;
+    google.protobuf.Timestamp date_created = 3;
+    string name = 4;
+    string email = 5;
+    google.protobuf.StringValue phone = 6;
+    bool is_activated = 7;
+
+    optional Address address = 8;
+    optional SiblingInsitution parent = 9;
+    repeated SiblingInsitution children = 10;
+  }
+
+  repeated Institution institutions = 1;
+}
+
+message HasLoginWithCertificateThumbprintRequest{
+  string certificate_thumbprint = 1;
+}
+
+message HasLoginWithCertificateThumbprintResponse{
+  bool has_login = 1;
+}
+
+message GetLoginByIdentifierRequest{
+  string identifier = 1;
+}
+
+message GetLoginByIdentifierResponse{
+  message Profiles {
+    int32 profile_id = 1;
+    bool is_default = 2;
+    string profile_subject_id = 3;
+    string profile_name = 4;
+    string email = 5;
+    google.protobuf.StringValue phone = 6;
+    enums.ProfileType profile_type = 7;
+    google.protobuf.Timestamp date_created = 8;
+    int32 target_group_id = 9;
+  }
+
+  message Login {
+    int32 login_id = 1;
+    string login_subject_id = 2;
+    string login_name = 3;
+    string email = 4;
+    google.protobuf.StringValue phone = 5;
+    bool is_active = 6;
+    string certificate_thumbprint  = 7;
+    google.protobuf.StringValue push_notifications_url = 8;
+    repeated Profiles profiles = 9;
+  }
+
+  optional Login login = 1;
+}
+
+message OutboxRequest {
+  string certificate_thumbprint = 1;
+  int32 offset = 2;
+  int32 limit = 3;
+}
+
+message OutboxResponse{
+  message Profile {
+    int32 profile_id = 1;
+    string profile_subject_id = 2;
+    string profile_name = 3;
+  }
+
+  message Login {
+    int32 login_id = 1;
+    string login_subject_id = 2;
+    string login_name = 3;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    string subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    
+    Profile sender_profile = 6;
+    Profile recipient_profile = 7;
+    Login sender_login = 8;
+    optional Login recipient_login = 9;
+  }
+
+  repeated Message result = 1;
+  int32 length = 2;
+}
+
+message InboxRequest {
+  string certificate_thumbprint = 1;
+  bool show_only_new = 2;
+  int32 offset = 3;
+  int32 limit = 4;
+}
+
+message InboxResponse{
+  message Profile {
+    int32 profile_id = 1;
+    string profile_subject_id = 2;
+    string profile_name = 3;
+  }
+
+  message Login {
+    int32 login_id = 1;
+    string login_subject_id = 2;
+    string login_name = 3;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    string subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    
+    Profile sender_profile = 6;
+    Profile recipient_profile = 7;
+    Login sender_login = 8;
+    optional Login recipient_login = 9;
+  }
+
+  repeated Message result = 1;
+  int32 length = 2;
+}
+
+message CheckIndividualRegistrationRequest {
+  string identifier = 1;
+}
+
+message CheckIndividualRegistrationResponse {
+  message Profile {
+    string profile_name = 1;
+    string profile_identifier = 2;
+    int32 target_group_id = 3;
+  }
+
+  string profile_identifier = 1;
+  bool has_registration = 2;
+  google.protobuf.StringValue profile_name = 3;
+  repeated Profile profiles = 4;
+}
+
+message CheckLegalEntityRegistrationRequest {
+  string identifier = 1;
+}
+
+message CheckLegalEntityRegistrationResponse {
+  message Login {
+    string login_name = 1;
+    string profile_identifier = 2;
+    int32 target_group_id = 3;
+  }
+
+  string profile_identifier = 1;
+  bool has_registration = 2;
+  google.protobuf.StringValue profile_name = 3;
+  google.protobuf.StringValue profile_phone = 4;
+  google.protobuf.StringValue profile_email = 5;
+  repeated Login logins = 6;
+}
+
+message CheckProfileRegistrationRequest {
+  string identifier = 1;
+}
+
+message CheckProfileRegistrationResponse {
+  bool has_registration = 1;
+  string profile_identifier = 2;
+  google.protobuf.StringValue profile_subject_id = 3;
+  google.protobuf.StringValue profile_name = 4;
+  google.protobuf.BoolValue profile_is_activated = 5;
+  google.protobuf.StringValue profile_email = 6;
+  google.protobuf.StringValue profile_phone = 7;
+  google.protobuf.Int32Value target_group_id = 8;
+}
+
+message GetProfileInfoRequest {
+  string profile_subject_id = 1;
+}
+
+message GetProfileInfoResponse {
+  message Address {
+    int32 address_id = 11;
+    google.protobuf.StringValue residence = 12;
+    google.protobuf.StringValue city = 13;
+    google.protobuf.StringValue state = 14; 
+    google.protobuf.StringValue country = 15;
+  }
+
+  message Individual {
+    string profile_subject_id = 1;
+    string profile_name = 2;
+    string profile_identifier = 3;
+    google.protobuf.Timestamp date_created = 4;
+    bool is_activated = 5;
+    string email = 6;
+    google.protobuf.StringValue phone = 7;
+    string first_name = 8;
+    string middle_name = 9;
+    string last_name = 10;
+    optional Address address = 11;
+  }
+
+  message LegalEntity {
+    string profile_subject_id = 1;
+    string profile_name = 2;
+    string profile_identifier = 3;
+    google.protobuf.Timestamp date_created = 4;
+    bool is_activated = 5;
+    string email = 6;
+    google.protobuf.StringValue phone = 7;
+    string name = 8;
+    optional Individual registered_by = 9;
+    optional Address address = 10;
+  }
+
+  message Administration {
+    message Sibling {
+      string profile_subject_id = 1;
+      string profile_name = 2;
+      bool is_activated = 3;
+      string email = 4;
+      google.protobuf.StringValue phone = 5;
+    }
+
+    string profile_subject_id = 1;
+    string profile_name = 2;
+    string profile_identifier = 3;
+    google.protobuf.Timestamp date_created = 4;
+    bool is_activated = 5;
+    string email = 6;
+    google.protobuf.StringValue phone = 7;
+    string name = 8;
+    optional Sibling parent = 9;
+    repeated Sibling children = 10;
+    optional Address address = 11;
+  }
+
+  optional Individual individual = 1;
+  optional LegalEntity legal_entity = 2;
+  optional Administration administration = 3;
+}
+
+message GetStatisticsResponse {
+  int32 total_users = 1;
+  map<int32, int32> target_groups_count = 2;
+  int32 total_messages = 3;
+  int32 total_messages_last_30_days = 4;
+  int32 total_messages_last_10_days = 5;
+  int32 total_messages_today = 6;
+}
+
+message GetAuthenticationInfoRequest {
+  string certificate_thumbprint = 1;
+  google.protobuf.StringValue operator_identifier = 2;
+}
+
+message GetAuthenticationInfoResponse {
+  message AuthenticatedProfile {
+    int32 profile_id = 1;
+    int32 login_id = 2;
+    google.protobuf.Int32Value operator_login_id = 3;
+  }
+
+  optional AuthenticatedProfile authenticated_profile = 1;
+}
+
+message GetCodeSenderRequest {
+  string certificate_thumbprint = 1;
+  google.protobuf.StringValue operator_identifier = 2;
+}
+
+message GetCodeSenderResponse {
+  message Sender {
+    int32 profile_id = 1;
+    int32 login_id = 2;
+  }
+
+  optional Sender sender = 1;
+}
+
+message SendMessage1Request {
+  message Document {
+    string file_name = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    bytes file_content = 3;
+  }
+
+  string recipient_identifier = 1;
+  google.protobuf.StringValue recipient_phone = 2;
+  google.protobuf.StringValue recipient_email = 3;
+  int32 recipient_target_group_id = 4;
+  string message_subject = 5;
+  string message_body = 6;
+  repeated Document documents = 7;
+  google.protobuf.StringValue service_oid = 8;
+  int32 sender_profile_id = 9;
+  int32 sender_login_id = 10;
+  string send_event = 11;
+}
+
+message SendMessage1Response {
+  bool is_successful = 1;
+  string error = 2;
+  google.protobuf.Int32Value message_id = 3;
+}
+
+message SendMessage1WithAccessCodeRequest {
+  message Document {
+    string file_name = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    bytes file_content = 3;
+  }
+
+  string recipient_first_name = 1;
+  string recipient_middle_name = 2;
+  string recipient_last_name = 3;
+  string recipient_identifier = 4;
+  google.protobuf.StringValue recipient_phone = 5;
+  google.protobuf.StringValue recipient_email = 6;
+  string message_subject = 7;
+  string message_body = 8;
+  repeated Document documents = 9;
+  google.protobuf.StringValue service_oid = 10;
+  int32 sender_profile_id = 11;
+  int32 sender_login_id = 12;
+  string send_event = 13;
+}
+
+message SendMessage1WithAccessCodeResponse {
+  bool is_successful = 1;
+  string error = 2;
+  google.protobuf.Int32Value message_id = 3;
+}
+
+message SendMessageInReplyToRequest {
+  message Document {
+    string file_name = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    bytes file_content = 3;
+  }
+
+  string message_subject = 1;
+  string message_body = 2;
+  repeated Document documents = 3;
+  int32 reply_to_message_id = 4;
+  google.protobuf.StringValue service_oid = 8;
+  int32 sender_profile_id = 9;
+  int32 sender_login_id = 10;
+  string send_event = 11;
+}
+
+message SendMessageInReplyToResponse {
+  bool is_successful = 1;
+  string error = 2;
+  google.protobuf.Int32Value message_id = 3;
+}
+
+message SendMessage1OnBehalfOfRequest {
+  message Document {
+    string file_name = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    bytes file_content = 3;
+  }
+
+  string sender_identifier = 1;
+  google.protobuf.StringValue sender_phone = 2;
+  google.protobuf.StringValue sender_email = 3;
+  google.protobuf.StringValue sender_first_name = 4;
+  google.protobuf.StringValue sender_last_name = 5;
+  int32 sender_target_group_id = 6;
+  string recipient_identifier = 7;
+  int32 recipient_target_group_id = 8;
+  string message_subject = 9;
+  string message_body = 10;
+  repeated Document documents = 11;
+  google.protobuf.StringValue service_oid = 12;
+  int32 on_behalf_of_profile_id = 13;
+  int32 on_behalf_of_login_id = 14;
+  google.protobuf.Int32Value on_behalf_of_operator_login_id = 15;
+  string send_event = 16;
+}
+
+message SendMessage1OnBehalfOfResponse {
+  bool is_successful = 1;
+  string error = 2;
+  google.protobuf.Int32Value message_id = 3;
+}
+
+message SendMessage1OnBehalfOfToIndividualRequest {
+  message Document {
+    string file_name = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    bytes file_content = 3;
+  }
+
+  string sender_identifier = 1;
+  string recipient_identifier = 2;
+  google.protobuf.StringValue recipient_phone = 3;
+  google.protobuf.StringValue recipient_email = 4;
+  google.protobuf.StringValue recipient_first_name = 5;
+  google.protobuf.StringValue recipient_last_name = 6;
+  string message_subject = 7;
+  string message_body = 8;
+  repeated Document documents = 9;
+  google.protobuf.StringValue service_oid = 10;
+  int32 on_behalf_of_profile_id = 11;
+  int32 on_behalf_of_login_id = 12;
+  google.protobuf.Int32Value on_behalf_of_operator_login_id = 13;
+  string send_event = 14;
+}
+
+message SendMessage1OnBehalfOfToIndividualResponse {
+  bool is_successful = 1;
+  string error = 2;
+  google.protobuf.Int32Value message_id = 3;
+}
+
+message SendMessage1OnBehalfOfToLegalEntityRequest {
+  message Document {
+    string file_name = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    bytes file_content = 3;
+  }
+
+  string sender_identifier = 1;
+  string recipient_identifier = 2;
+  string message_subject = 3;
+  string message_body = 4;
+  repeated Document documents = 5;
+  google.protobuf.StringValue service_oid = 6;
+  int32 on_behalf_of_profile_id = 7;
+  int32 on_behalf_of_login_id = 8;
+  google.protobuf.Int32Value on_behalf_of_operator_login_id = 9;
+  string send_event = 10;
+}
+
+message SendMessage1OnBehalfOfToLegalEntityResponse {
+  bool is_successful = 1;
+  string error = 2;
+  google.protobuf.Int32Value message_id = 3;
+}
+
+message GetSentDocumentContentByRegNumRequest {
+  int32 profile_id = 1;
+  string document_registration_number = 2;
+}
+
+message GetSentDocumentContentByRegNumResponse {
+  message Signature {
+    bytes signing_certificate = 1;
+    bool covers_document = 2;
+    bool covers_prior_revision = 3;
+    bool is_timestamp = 4;
+    google.protobuf.Timestamp sign_date = 5;
+    bool valid_at_time_of_signing = 6;
+    string issuer = 7;
+    string subject = 8;
+    string serial_number = 9;
+    int32 version = 10;
+    google.protobuf.Timestamp valid_from = 11;
+    google.protobuf.Timestamp valid_to = 12;
+  }
+
+  message Blob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    bytes content  = 3;
+    bytes timestamp = 4;
+    google.protobuf.StringValue document_registration_number = 5;
+    repeated Signature signatures = 6;
+  }
+
+  optional Blob blob = 1;
+}
+
+message GetSentDocumentsContentRequest {
+  int32 profile_id = 1;
+  int32 message_id = 2;
+}
+
+message GetSentDocumentsContentResponse {
+  message Signature {
+    bytes signing_certificate = 1;
+    bool covers_document = 2;
+    bool covers_prior_revision = 3;
+    bool is_timestamp = 4;
+    google.protobuf.Timestamp sign_date = 5;
+    bool valid_at_time_of_signing = 6;
+    string issuer = 7;
+    string subject = 8;
+    string serial_number = 9;
+    int32 version = 10;
+    google.protobuf.Timestamp valid_from = 11;
+    google.protobuf.Timestamp valid_to = 12;
+  }
+
+  message Blob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    bytes content  = 3;
+    bytes timestamp = 4;
+    google.protobuf.StringValue document_registration_number = 5;
+    repeated Signature signatures = 6;
+  }
+
+  repeated Blob blobs = 1;
+}
+
+message GetSentDocumentContentRequest {
+  int32 profile_id = 1;
+  int32 blob_id = 2;
+}
+
+message GetSentDocumentContentResponse {
+  message Signature {
+    bytes signing_certificate = 1;
+    bool covers_document = 2;
+    bool covers_prior_revision = 3;
+    bool is_timestamp = 4;
+    google.protobuf.Timestamp sign_date = 5;
+    bool valid_at_time_of_signing = 6;
+    string issuer = 7;
+    string subject = 8;
+    string serial_number = 9;
+    int32 version = 10;
+    google.protobuf.Timestamp valid_from = 11;
+    google.protobuf.Timestamp valid_to = 12;
+  }
+
+  message Blob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    bytes content  = 3;
+    bytes timestamp = 4;
+    google.protobuf.StringValue document_registration_number = 5;
+    repeated Signature signatures = 6;
+  }
+
+  optional Blob blob = 1;
+}
+
+message GetSentMessageStatusRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  int32 message_id = 3;
+  string open_event = 4;
+}
+
+message GetSentMessageStatusResponse {
+  message Blob {
+    int32 blob_id = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    string file_name = 3;
+    bytes timestamp = 4;
+  }
+
+  message TimestampContent {
+    bytes content = 1;
+    string file_name = 2;
+  }
+
+  message Login {
+    int32 login_id = 1;
+    string login_subject_id = 2;
+    string login_name = 3;
+    google.protobuf.StringValue email = 4;
+    google.protobuf.StringValue phone = 5;
+    bool is_active = 6;
+    google.protobuf.StringValue certificate_thumbprint = 7;
+    google.protobuf.StringValue push_notifications_url = 8;
+  }
+
+  message Profile {
+    int32 profile_id = 1;
+    string profile_subject_id = 2;
+    string profile_name = 3;
+    string email = 4;
+    google.protobuf.StringValue phone = 5;
+    int32 target_group_id = 6;
+    google.protobuf.Timestamp date_created = 7;
+  }
+
+    message ForwardedMessage {
+    int32 message_id = 1;
+    string message_subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    string message_body = 6;
+    Profile sender_profile = 7;
+    Login sender_login = 8;
+    optional Profile recipient_profile = 9;
+    optional Login recipient_login = 10;
+    repeated Blob blobs = 11;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    string message_subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    string message_body = 6;
+    Profile sender_profile = 7;
+    Login sender_login = 8;
+    optional Profile recipient_profile = 9;
+    optional Login recipient_login = 10;
+    repeated Blob blobs = 11;
+    optional ForwardedMessage forwarded_message = 12;
+    bool first_time_open = 13;
+    TimestampContent timestamp_nro = 14;
+    optional TimestampContent timestamp_nrd = 15;
+    TimestampContent timestamp_message = 16;
+  }
+
+  optional Message message = 1;
+}
+
+message GetSentDocumentStatusByRegNumRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  google.protobuf.StringValue document_registration_number = 3;
+  string open_event = 4;
+}
+
+message GetSentDocumentStatusByRegNumResponse {
+  message Signature {
+    bytes signing_certificate = 1;
+    bool covers_document = 2;
+    bool covers_prior_revision = 3;
+    bool is_timestamp = 4;
+    google.protobuf.Timestamp sign_date = 5;
+    bool valid_at_time_of_signing = 6;
+    string issuer = 7;
+    string subject = 8;
+    string serial_number = 9;
+    int32 version = 10;
+    google.protobuf.Timestamp valid_from = 11;
+    google.protobuf.Timestamp valid_to = 12;
+  }
+
+  message Blob {
+    int32 blob_id = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    string file_name = 3;
+    bytes timestamp = 4;
+    repeated Signature signatures = 5;
+  }
+
+  message TimestampContent {
+    bytes content = 1;
+    string file_name = 2;
+  }
+
+  message Login {
+    int32 login_id = 1;
+    string login_subject_id = 2;
+    string login_name = 3;
+    google.protobuf.StringValue email = 4;
+    google.protobuf.StringValue phone = 5;
+    bool is_active = 6;
+    google.protobuf.StringValue certificate_thumbprint = 7;
+    google.protobuf.StringValue push_notifications_url = 8;
+  }
+
+  message Profile {
+    int32 profile_id = 1;
+    string profile_subject_id = 2;
+    string profile_name = 3;
+    string email = 4;
+    google.protobuf.StringValue phone = 5;
+    int32 target_group_id = 6;
+    google.protobuf.Timestamp date_created = 7;
+  }
+
+    message ForwardedMessage {
+    int32 message_id = 1;
+    string message_subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    string message_body = 6;
+    Profile sender_profile = 7;
+    Login sender_login = 8;
+    optional Profile recipient_profile = 9;
+    optional Login recipient_login = 10;
+    repeated Blob blobs = 11;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    string message_subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    string message_body = 6;
+    Profile sender_profile = 7;
+    Login sender_login = 8;
+    optional Profile recipient_profile = 9;
+    optional Login recipient_login = 10;
+    repeated Blob blobs = 11;
+    optional ForwardedMessage forwarded_message = 12;
+    bool first_time_open = 13;
+    TimestampContent timestamp_nro = 14;
+    optional TimestampContent timestamp_nrd = 15;
+    TimestampContent timestamp_message = 16;
+  }
+
+  optional Message message = 1;
+}
+
+message GetReceivedMessageContentRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  int32 message_id = 3;
+  string open_event = 4;
+}
+
+message GetReceivedMessageContentResponse {
+  message Signature {
+    bytes signing_certificate = 1;
+    bool covers_document = 2;
+    bool covers_prior_revision = 3;
+    bool is_timestamp = 4;
+    google.protobuf.Timestamp sign_date = 5;
+    bool valid_at_time_of_signing = 6;
+    string issuer = 7;
+    string subject = 8;
+    string serial_number = 9;
+    int32 version = 10;
+    google.protobuf.Timestamp valid_from = 11;
+    google.protobuf.Timestamp valid_to = 12;
+  }
+
+  message Blob {
+    int32 blob_id = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    string file_name = 3;
+    bytes timestamp = 4;
+    repeated Signature signatures = 6;
+  }
+
+  message TimestampContent {
+    bytes content = 1;
+    string file_name = 2;
+  }
+
+  message Login {
+    int32 login_id = 1;
+    string login_subject_id = 2;
+    string login_name = 3;
+    google.protobuf.StringValue email = 4;
+    google.protobuf.StringValue phone = 5;
+    bool is_active = 6;
+    google.protobuf.StringValue certificate_thumbprint = 7;
+    google.protobuf.StringValue push_notifications_url = 8;
+  }
+
+  message Profile {
+    int32 profile_id = 1;
+    string profile_subject_id = 2;
+    string profile_name = 3;
+    string email = 4;
+    google.protobuf.StringValue phone = 5;
+    int32 target_group_id = 6;
+    google.protobuf.Timestamp date_created = 7;
+  }
+
+    message ForwardedMessage {
+    int32 message_id = 1;
+    string message_subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    string message_body = 6;
+    Profile sender_profile = 7;
+    Login sender_login = 8;
+    optional Profile recipient_profile = 9;
+    optional Login recipient_login = 10;
+    repeated Blob blobs = 11;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    string message_subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    string message_body = 6;
+    Profile sender_profile = 7;
+    Login sender_login = 8;
+    optional Profile recipient_profile = 9;
+    optional Login recipient_login = 10;
+    repeated Blob blobs = 11;
+    optional ForwardedMessage forwarded_message = 12;
+    bool first_time_open = 13;
+    TimestampContent timestamp_nro = 14;
+    optional TimestampContent timestamp_nrd = 15;
+    TimestampContent timestamp_message = 16;
+  }
+
+  optional Message message = 1;
+}
+
+message GetSentMessageContentRequest {
+  int32 profile_id = 1;
+  int32 message_id = 2;
+}
+
+message GetSentMessageContentResponse {
+  message Signature {
+    bytes signing_certificate = 1;
+    bool covers_document = 2;
+    bool covers_prior_revision = 3;
+    bool is_timestamp = 4;
+    google.protobuf.Timestamp sign_date = 5;
+    bool valid_at_time_of_signing = 6;
+    string issuer = 7;
+    string subject = 8;
+    string serial_number = 9;
+    int32 version = 10;
+    google.protobuf.Timestamp valid_from = 11;
+    google.protobuf.Timestamp valid_to = 12;
+  }
+
+  message Blob {
+    int32 blob_id = 1;
+    google.protobuf.StringValue document_registration_number = 2;
+    string file_name = 3;
+    bytes timestamp = 4;
+    bytes content = 5;
+    repeated Signature signatures = 6;
+  }
+
+  message TimestampContent {
+    bytes content = 1;
+    string file_name = 2;
+  }
+
+  message Login {
+    int32 login_id = 1;
+    string login_subject_id = 2;
+    string login_name = 3;
+    google.protobuf.StringValue email = 4;
+    google.protobuf.StringValue phone = 5;
+    bool is_active = 6;
+    google.protobuf.StringValue certificate_thumbprint = 7;
+    google.protobuf.StringValue push_notifications_url = 8;
+  }
+
+  message Profile {
+    int32 profile_id = 1;
+    string profile_subject_id = 2;
+    string profile_name = 3;
+    string email = 4;
+    google.protobuf.StringValue phone = 5;
+    int32 target_group_id = 6;
+    google.protobuf.Timestamp date_created = 7;
+  }
+
+    message ForwardedMessage {
+    int32 message_id = 1;
+    string message_subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    string message_body = 6;
+    Profile sender_profile = 7;
+    Login sender_login = 8;
+    optional Profile recipient_profile = 9;
+    optional Login recipient_login = 10;
+    repeated Blob blobs = 11;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    string message_subject = 2;
+    google.protobuf.Timestamp date_created = 3;
+    google.protobuf.Timestamp date_sent = 4;
+    google.protobuf.Timestamp date_received = 5;
+    string message_body = 6;
+    Profile sender_profile = 7;
+    Login sender_login = 8;
+    optional Profile recipient_profile = 9;
+    optional Login recipient_login = 10;
+    repeated Blob blobs = 11;
+    optional ForwardedMessage forwarded_message = 12;
+    bool first_time_open = 13;
+    TimestampContent timestamp_nro = 14;
+    optional TimestampContent timestamp_nrd = 15;
+    TimestampContent timestamp_message = 16;
+  }
+
+  optional Message message = 1;
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<parameters>
+  <parameter name="Environment">
+    <parameterEntry
+      kind="XmlFile"
+      scope="Web.config"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ASPNETCORE_ENVIRONMENT']/@value"
+    />
+  </parameter>
+
+  <parameter name="LogPath">
+    <parameterEntry
+      kind="XmlFile"
+      scope="Web.config"
+      match="/configuration/location/system.webServer/aspNetCore/@stdoutLogFile"
+    />
+  </parameter>
+
+  <parameter name="SharedSecretDPKey">
+    <parameterEntry
+      kind="XmlFile"
+      scope="Web.config"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__AdminPanel__SharedSecretDPKey']/@value"
+      defaultValue=""
+    />
+  </parameter>
+</parameters>

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices";
+
+package errors;
+
+enum UpdateProfileValidationError {
+  UPDATE_PROFILE_VALIDATION_ERROR_OK = 0;
+  UPDATE_PROFILE_VALIDATION_ERROR_UNKNOWN = 1;
+  UPDATE_PROFILE_VALIDATION_ERROR_DUPLICATE_EMAIL = 2;
+}

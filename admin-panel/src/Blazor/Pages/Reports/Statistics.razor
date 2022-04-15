@@ -1,0 +1,106 @@
+﻿@page "/reports/statistics"
+@attribute [Authorize]
+
+@using ED.DomainServices.Admin
+@inject Admin.AdminClient AdminClient
+@inject IStringLocalizer<Statistics> Localizer
+@inject AuthenticationStateHelper AuthenticationStateHelper
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "reports", "reports" },
+        { "statistics", null }
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <div style="padding-bottom: 15px;">
+                <a href="@($"Reports/ExportStatistics?toDate={requestDate.ToString(Constants.DateTimeFormat)}")"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   download
+                   class="btn btn-border btn-m butright">
+                    @Localizer["BtnExport"]
+                </a>
+
+                <h3>@Localizer["Title"]</h3>
+            </div>
+
+            <div class="table-responsive" style="position: relative">
+                @if (statistics == null)
+                {
+                    <div class="loader-container">
+                    </div>
+                }
+                else
+                {
+                    <h3>@string.Format(Localizer["TitleSub"], requestDate.ToString(Constants.DateTimeFormat))</h3>
+
+                    <table class="list">
+                        <tbody>
+                            <tr>
+                                <th>@Localizer["ColumnStatistics"]</th>
+                                <th></th>
+                            </tr>
+
+                            <tr>
+                                <td>@Localizer["FieldTotalUsers"]</td>
+                                <td>@statistics.TotalUsers</td>
+                            </tr>
+
+                            @foreach (var targetGroupCount in statistics.TargetGroupsCount)
+                            {
+                                <tr>
+                                    <td>@($"{Localizer["FieldTargetGroup"]} - {targetGroupCount.Key}")</td>
+                                    <td>@targetGroupCount.Value</td>
+                                </tr>
+                            }
+
+                            <tr>
+                                <td>@Localizer["FieldTotalMessages"]</td>
+                                <td>@statistics.TotalMessages</td>
+                            </tr>
+                            <tr>
+                                <td>@Localizer["FieldTotalMessagesLast30Days"]</td>
+                                <td>@statistics.TotalMessagesLast30Days</td>
+                            </tr>
+                            <tr>
+                                <td>@Localizer["FieldTotalMessagesLast10Days"]</td>
+                                <td>@statistics.TotalMessagesLast10Days</td>
+                            </tr>
+                            <tr>
+                                <td>@Localizer["FieldTotalMessagesToday"]</td>
+                                <td>@statistics.TotalMessagesToday</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private GetStatisticsReportResponse statistics;
+    private DateTime requestDate;
+
+    protected override async Task OnInitializedAsync()
+    {
+        int currentUserId =
+            await this.AuthenticationStateHelper.GetAuthenticatedUserId();
+
+        requestDate = DateTime.Now;
+
+        this.statistics =
+            await this.AdminClient.GetStatisticsReportAsync(
+                new GetStatisticsReportRequest
+                    {
+                        AdminUserId = currentUserId
+                    });
+    }
+}

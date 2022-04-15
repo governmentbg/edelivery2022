@@ -1,0 +1,31 @@
+<CascadingAuthenticationState>
+    <CascadingValue Value="ConnectionInfo">
+        <CascadingBlazoredModal HideHeader="true" HideCloseButton="true" ContentScrollable="true">
+            <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+                <Found Context="routeData">
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                        <NotAuthorized>
+                            <RedirectToLogin />
+                            <div class="wrapper content-wrapper">
+                                <p>403 Forbidded</p>
+                            </div>
+                        </NotAuthorized>
+                    </AuthorizeRouteView>
+                </Found>
+                <NotFound>
+                    <LayoutView Layout="@typeof(MainLayout)">
+                        <div class="wrapper content-wrapper">
+                            <p>404 Not found</p>
+                        </div>
+                    </LayoutView>
+                </NotFound>
+            </Router>
+        </CascadingBlazoredModal>
+    </CascadingValue>
+</CascadingAuthenticationState>
+
+@code
+{
+    [Parameter]
+    public ConnectionInfo ConnectionInfo { get; set; }
+}

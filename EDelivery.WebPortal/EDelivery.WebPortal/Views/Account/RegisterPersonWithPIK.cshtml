@@ -1,0 +1,44 @@
+﻿@model PIKRegistrationModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutNonav.cshtml";
+
+    ViewBag.Title = Common.TitleRegisterPage;
+}
+
+<div class="wrapper content-wrapper page-title">
+    <h1>@LoginRegisterPage.TitleRegisterPerson</h1>
+    <a href="@Url.Action("Index","Help")"
+       rel="noopener"
+       target="_blank"
+       title="@UIControls.LinkHelpInfo">
+        @UIControls.LinkHelpInfo
+    </a>
+</div>
+
+<div class="single-col">
+    @using (Html.BeginForm("RegisterPersonWithPIK", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.Token)
+
+        <div class="wrapper content-wrapper message-box">
+            <div class="message-content">
+                <h3>@LoginRegisterPage.TitleSectionPIKData</h3>
+                <p>@LoginRegisterPage.LabelPersonalIdentifier: <b>@Model.EGN</b></p>
+                @Html.HiddenFor(x => x.EGN)
+            </div>
+        </div>
+
+        @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+        @Html.Partial("Partials/_RegisterPersonFields")
+
+        <section class="form-section form-row button-row-right">
+            <a class="btn btn-border btn-l" href="@Url.Action("Index", "Home")">
+                @UIControls.ButtonBack
+            </a>
+            <button class="btn-primary btn-l" type="submit">@UIControls.ButtonRegister</button>
+        </section>
+    }
+</div>

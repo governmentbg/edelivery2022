@@ -1,0 +1,49 @@
+﻿@model LegalSpecificModel
+
+<div class="wrapper content-wrapper message-box">
+    <div class="message-content">
+        <h3>@ProfilePage.TitleDataLegal:</h3>
+
+        <div class="form-row">
+            <div class="da-tooltip attached iconed red">
+                <div class="icon-info"></div>
+                @ProfilePage.MessageUpdateLegalSpecific
+            </div>
+        </div>
+
+        <div class="form-row">
+            <table class="blank-list">
+                <tbody>
+                    <tr>
+                        <td>@ProfilePage.LabelLegalName:</td>
+                        <td>@Model.CompanyName</td>
+                    </tr>
+                    <tr>
+                        <td>@ProfilePage.LabelLegalRegNum:</td>
+                        <td>@Model.RegistrationNumber</td>
+                    </tr>
+                    <tr>
+                        <td>@ProfilePage.LabelLegalRegisteredBy:</td>
+                        <td>@Model.RegisteredBy</td>
+                    </tr>
+                    <tr>
+                        <td>@ProfilePage.LabelLegalInForce:</td>
+                        <td>
+                            @(Model.InforceDate.HasValue
+                            ? Model.InforceDate.Value.ToString(SystemConstants.DateTimeFormat)
+                            : "")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@ProfilePage.LabelLegalOutForce:</td>
+                        <td>
+                            @(Model.OutOfForceDate.HasValue
+                            ? Model.OutOfForceDate.Value.ToString(SystemConstants.DateTimeFormat)
+                            : "")
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

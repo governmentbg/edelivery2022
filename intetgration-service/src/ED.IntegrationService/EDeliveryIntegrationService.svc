@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="ED.IntegrationService.EDeliveryIntegrationService" CodeBehind="EDeliveryIntegrationService.svc.cs" %>

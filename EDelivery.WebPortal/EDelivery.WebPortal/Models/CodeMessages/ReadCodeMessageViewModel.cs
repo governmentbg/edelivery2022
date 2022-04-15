@@ -1,0 +1,159 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace EDelivery.WebPortal.Models
+{
+    public class ReadCodeMessageViewModel
+    {
+        public class ReadCodeMessageViewModelProfile
+        {
+            public ReadCodeMessageViewModelProfile(
+                ED.DomainServices.CodeMessages.ReadResponse.Types.MessageProfile messageProfile)
+            {
+                this.ProfileId = messageProfile.ProfileId;
+                this.ProfileName = messageProfile.ProfileName;
+                this.LoginName = messageProfile.LoginName;
+            }
+
+            public int ProfileId { get; set; }
+
+            public string ProfileName { get; set; }
+
+            public string LoginName { get; set; }
+        }
+
+        public class ReadCodeMessageViewModelBlob
+        {
+            public ReadCodeMessageViewModelBlob(
+                ED.DomainServices.CodeMessages.ReadResponse.Types.MessageBlob blob)
+            {
+                this.BlobId = blob.BlobId;
+                this.FileName = blob.FileName;
+                this.Size = blob.Size;
+                this.DocumentRegistrationNumber = blob.DocumentRegistrationNumber;
+                this.Status = blob.Status;
+                this.IsMalicious = blob.IsMalicious;
+
+                this.Signatures =
+                    blob.Signatures
+                        .OrderBy(s => s.IsTimestamp)
+                        .Select(s => new ReadCodeMessageViewModelBlobSignature(s))
+                        .ToList();
+            }
+
+            public int BlobId { get; set; }
+
+            public string FileName { get; set; }
+
+            public long? Size { get; set; }
+
+            public string DocumentRegistrationNumber { get; set; }
+
+            public ED.DomainServices.MalwareScanResultStatus Status { get; set; }
+
+            public bool? IsMalicious { get; set; }
+
+            public List<ReadCodeMessageViewModelBlobSignature> Signatures { get; set; }
+        }
+
+        public class ReadCodeMessageViewModelBlobSignature
+        {
+            public ReadCodeMessageViewModelBlobSignature(
+                ED.DomainServices.CodeMessages.ReadResponse.Types.MessageBlobSignature blobSignature)
+            {
+                this.CoversDocument = blobSignature.CoversDocument;
+                this.IsTimestamp = blobSignature.IsTimestamp;
+                this.SignDate = blobSignature.SignDate.ToLocalDateTime();
+                this.ValidAtTimeOfSigning = blobSignature.ValidAtTimeOfSigning;
+                this.Issuer = blobSignature.Issuer;
+                this.Subject = blobSignature.Subject;
+                this.ValidFrom = blobSignature.ValidFrom.ToLocalDateTime();
+                this.ValidTo = blobSignature.ValidTo.ToLocalDateTime();
+            }
+
+            public bool CoversDocument { get; set; }
+
+            public bool IsTimestamp { get; set; }
+
+            public DateTime SignDate { get; set; }
+
+            public bool ValidAtTimeOfSigning { get; set; }
+
+            public string Issuer { get; set; }
+
+            public string Subject { get; set; }
+
+            public DateTime ValidFrom { get; set; }
+
+            public DateTime ValidTo { get; set; }
+        }
+
+        public ReadCodeMessageViewModel(
+            ED.DomainServices.CodeMessages.ReadResponse.Types.Message message)
+        {
+            this.MessageId = message.MessageId;
+            this.AccessCode = message.AccessCode.ToUpperInvariant();
+            this.DateSent = message.DateSent.ToLocalDateTime();
+            this.DateReceived = message.DateReceived?.ToLocalDateTime();
+            this.Sender = new ReadCodeMessageViewModelProfile(message.Sender);
+            this.Recipient = new ReadCodeMessageViewModelProfile(message.Recipient);
+            this.TemplateId = message.TemplateId;
+            this.Subject = message.Subject;
+            this.Orn = message.Orn;
+            this.ReferencedOrn = message.ReferencedOrn;
+            this.AdditionalIdentifier = message.AdditionalIdentifier;
+            this.Body = message.Body;
+            this.TemplateName = message.TemplateName;
+            this.Blobs = message.Blobs
+                .Select(e => new ReadCodeMessageViewModelBlob(e))
+                .ToList();
+        }
+
+        public int MessageId { get; set; }
+
+        public string AccessCode { get; set; }
+
+        public DateTime DateSent { get; set; }
+
+        public DateTime? DateReceived { get; set; }
+
+        public ReadCodeMessageViewModelProfile Sender { get; set; }
+
+        public ReadCodeMessageViewModelProfile Recipient { get; set; }
+
+        public int TemplateId { get; set; }
+
+        public string Subject { get; set; }
+
+        public string Orn { get; set; }
+
+        public string ReferencedOrn { get; set; }
+
+        public string AdditionalIdentifier { get; set; }
+
+        public string Body { get; set; }
+
+        public string TemplateName { get; set; }
+
+        public List<ReadCodeMessageViewModelBlob> Blobs { get; set; }
+
+        public Dictionary<string, (bool, object)> Fields { get; set; } =
+            new Dictionary<string, (bool, object)>();
+
+        public void SetFields(Dictionary<string, (bool, object)> values)
+        {
+            foreach (KeyValuePair<string, (bool, object)> item in values)
+            {
+                if (this.Fields.ContainsKey(item.Key))
+                {
+                    this.Fields[item.Key] = item.Value;
+                }
+                else
+                {
+                    this.Fields.Add(item.Key, item.Value);
+                }
+            }
+        }
+    }
+}

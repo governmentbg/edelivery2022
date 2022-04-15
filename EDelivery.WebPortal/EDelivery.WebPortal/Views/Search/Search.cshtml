@@ -1,0 +1,250 @@
+﻿@model SearchModel
+
+<div class="modal-content" id="modalcontacts">
+    <nav class="tabs-nav">
+        @if (Model.CanSendToIndividuals)
+        {
+            <button id="tab_btn_1"
+                    class="btn btn-m active"
+                    type="button"
+                    data-tab-id="tab_box_1">
+                @UIControls.MainNavPhysicalPerson
+            </button>
+        }
+
+        @if (Model.CanSendToLegalEntities)
+        {
+            <button id="tab_btn_2"
+                    class="btn btn-m"
+                    type="button"
+                    data-tab-id="tab_box_2">
+                @UIControls.MainMavLegalPerson
+            </button>
+        }
+
+        <button id="tab_btn_3"
+                class="btn btn-m @(!Model.CanSendToIndividuals && !Model.CanSendToLegalEntities ? "active" : string.Empty)"
+                type="button"
+                data-tab-id="tab_box_3">
+            Целеви групи
+        </button>
+
+        @if (Model.RecipientGroups.Any())
+        {
+            <button id="tab_btn_4"
+                    class="btn btn-m"
+                    type="button"
+                    data-tab-id="tab_box_4">
+                Профилни групи
+            </button>
+        }
+    </nav>
+
+    @if (Model.CanSendToIndividuals)
+    {
+        <div id="tab_box_1" class="tab-box active">
+            @Html.Partial("Partials/_SearchPerson", new SearchPersonModel())
+        </div>
+    }
+
+    @if (Model.CanSendToLegalEntities)
+    {
+        <div id="tab_box_2" class="tab-box">
+            @Html.Partial("Partials/_SearchLegal", new SearchLegalModel())
+        </div>
+    }
+
+    <div id="tab_box_3" class="tab-box @(!Model.CanSendToIndividuals && !Model.CanSendToLegalEntities ? "active" : string.Empty)">
+        <form>
+            <ul>
+                <li>
+                    @Html.DropDownList(
+                        "TargetGroups",
+                        Model.TargetGroups,
+                        new
+                        {
+                            @id = "TargetGroupsSelect2",
+                            @class = "form-select select2",
+                            style = "width: 100%"
+                        })
+                </li>
+                <li id="groupitems" style="margin: 10px 0;">
+                    @Html.DropDownList(
+                        "Recipients",
+                        Array.Empty<SelectListItem>(),
+                        new
+                        {
+                            @id = "RecipientsSelect2",
+                            @class = "form-select select2 autoaddcontact",
+                            style = "width: 100%"
+                        })
+                </li>
+            </ul>
+        </form>
+    </div>
+
+    @if (Model.RecipientGroups.Any())
+    {
+        <div id="tab_box_4" class="tab-box">
+            <form>
+                <ul>
+                    <li id="recipient-groups-items">
+                        @Html.DropDownList(
+                            "RecipientGroups",
+                            Model.RecipientGroups,
+                            new
+                            {
+                                @id = "RecipientGroupsSelect2",
+                                @class = "form-select select2 autoaddcontact",
+                                style = "width: 100%"
+                            })
+                    </li>
+                </ul>
+            </form>
+        </div>
+    }
+
+    <section class="form-section form-row dnone" id="sectionmodalrecipient">
+        <h3>Избрани получатели:</h3>
+        <div id="modalrecipientslist">
+        </div>
+    </section>
+
+</div>
+
+<section class="form-section form-row button-row-right">
+    <button class="btn-border btn-m" id="cancel-message-recipients">Откажи</button>
+    <button class="btn-disabled btn-m" id="add-message-recipients" disabled>Добави</button>
+</section>
+
+@{
+    var currentCulture = EDelivery.WebPortal.Utils.CultureHelper.ToSiteCulture(UICulture);
+    var select2Language = currentCulture == EDelivery.WebPortal.Enums.eSiteCulture.BG
+        ? "bg"
+        : "en";
+}
+
+@*TODO : look up recipient groups and follow select2 strategy there*@
+<script type="text/javascript">
+    $(function () {
+        $('button[id^="tab_btn_"]').myTabs(
+            'button[id^="tab_btn_"]',
+            'div[id^="tab_box_"]',
+            'data-tab-id',
+            'active');
+
+        var $parentTargetGroup = $('#modalcontacts #TargetGroupsSelect2');
+        var $childTargetGroup = $('#modalcontacts #RecipientsSelect2');
+        var $recipientGroups = $('#modalcontacts #RecipientGroupsSelect2');
+        var option = undefined;
+
+        $parentTargetGroup
+            .select2({ language: '@select2Language' })
+            .on('change', function (e) {
+                option = $parentTargetGroup.find(':selected');
+            });
+
+        option = $parentTargetGroup.find(':selected');
+
+        $childTargetGroup
+            .select2({
+                multiple: true,
+                closeOnSelect: false,
+                placeholder: 'Избери получател',
+                scrollAfterSelect: false,
+                maximumSelectionLength: 20,
+                dropdownParent: $('#groupitems'),
+                ajax: {
+                    url: '/Search/QueryRecipients',
+                    data: function(params) {
+                        return $.extend(params, { targetGroupId: option.val() });
+                    },
+                    dataType: 'json',
+                    cache: false,
+                    delay: 250,
+                    processResults: function(data) {
+                        data.results = $.map(data.results,
+                            function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.text,
+                                    selected: false,
+                                    disabled: false
+                                }
+                            });
+                        return data;
+                    }
+                },
+                language: '@select2Language'
+            })
+            .on('select2:select', function (e) {
+                var data = e.params.data;
+                gf.addMessageRecipientModal(data.id, data.text, 'profile', $childTargetGroup.get(0)['id']);
+            })
+            .on('select2:unselect', function (e) {
+                e.preventDefault();
+                var data = e.params.data;
+                $('#sectionmodalrecipient [data-id="' + data.id + '"]')
+                    .remove()
+                    .trigger('change');
+
+                if (!$('#modalrecipientslist .recipient-list-item').length) {
+                    $('#sectionmodalrecipient').hide();
+                }
+            });
+
+        $recipientGroups
+            .select2({
+                multiple: true,
+                closeOnSelect: false,
+                placeholder: 'Избери група',
+                maximumSelectionLength: 3,
+                dropdownParent: $('#recipient-groups-items'),
+                language: '@select2Language'
+            })
+            .val(null).trigger('change') //remove any selected options on open
+            .on('select2:select', function(e) {
+                var data = e.params.data;
+                gf.addMessageRecipientModal(data.id, data.text, 'group', $recipientGroups.get(0)['id']);
+            })
+            .on('select2:unselect', function(e) {
+                e.preventDefault();
+                var data = e.params.data;
+                $('#sectionmodalrecipient [data-id="' + data.id + '"]')
+                    .remove()
+                    .trigger('change');
+
+                if (!$('#modalrecipientslist .recipient-list-item').length) {
+                    $('#sectionmodalrecipient').hide();
+                }
+            });
+
+        $(document).on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+
+        $('#cancel-message-recipients').on('click', function () { gf.hideModal(); });
+
+        $('#add-message-recipients').on('click', function () {
+            var recipientIds = $(gf.messageFields.recipientIds).val().split('|');
+
+            $('#modalrecipientslist .recipient-list-item').each(function () {
+                if (recipientIds.indexOf($(this).data('id').toString()) == -1) {
+
+                    switch ($(this).data('type').toString()) {
+                    case 'profile':
+                        gf.addMessageRecipient('p' + $(this).data('id'), $(this).data('name'), false);
+                        break;
+                    case 'group':
+                        gf.addMessageRecipient('g' + $(this).data('id'), $(this).data('name'), false);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            });
+
+            gf.hideModal();
+        });
+    });
+</script>

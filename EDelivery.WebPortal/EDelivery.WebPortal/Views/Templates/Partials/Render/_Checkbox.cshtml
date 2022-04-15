@@ -1,0 +1,18 @@
+﻿@using EDelivery.WebPortal.Models.Templates.Components
+
+@model CheckboxComponent
+
+<li class="form-row">
+    <div class="checkbox-holder">
+        @Html.CheckBox(
+            Model.Id.ToString(),
+            Model.Value,
+            new
+            {
+                @id = Model.Id,
+                @class = Model.CustomClass
+            })
+        <label for="@Model.Id" style="width: 100%;">@Model.Label</label>
+        @Html.ValidationMessage(Model.Id.ToString(), new { @class = "validation-message" })
+    </div>
+</li>

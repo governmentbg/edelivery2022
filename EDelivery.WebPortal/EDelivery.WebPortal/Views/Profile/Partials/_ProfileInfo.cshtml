@@ -1,0 +1,22 @@
+﻿@model BaseProfileViewModel
+
+@if (Model.Editable != null)
+{
+    switch (Model.Editable.TargetGroupId)
+    {
+        // TODO: implement default
+        case (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual:
+            @Html.Partial("Partials/_ProfilePersonInfo", ((PersonProfileModel)Model).Request)
+
+            break;
+        case (int)EDelivery.WebPortal.Enums.TargetGroupId.LegalEntity:
+            @Html.Partial("Partials/_ProfileLegalInfo", ((LegalProfileModel)Model).Request)
+            break;
+        case (int)EDelivery.WebPortal.Enums.TargetGroupId.PublicAdministration:
+        case (int)EDelivery.WebPortal.Enums.TargetGroupId.SocialOrganization:
+            @Html.Partial("Partials/_ProfileInstitutionInfo", ((InstitutionProfileModel)Model).Request)
+            break;
+    }
+}
+
+@Html.Partial("Partials/_ProfileEditable", Model.Editable)

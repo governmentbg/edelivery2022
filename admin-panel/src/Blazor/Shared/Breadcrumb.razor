@@ -1,0 +1,23 @@
+﻿<div class="wrapper content-wrapper page-title">
+    <div class="breadcrumb">
+        <ol>
+            @foreach (var (title, url) in Items)
+            {
+                if (url == null)
+                {
+                    <li>@Localizer[title]</li>
+                }
+                else
+                {
+                    <li><a href="@url">@Localizer[title]</a></li>
+                }
+            }
+        </ol>
+    </div>
+</div>
+
+@code {
+    [Inject] IStringLocalizer<Breadcrumb> Localizer { get; set; }
+
+    [Parameter] public IDictionary<string, string> Items { get; set; } = new Dictionary<string, string>();
+}

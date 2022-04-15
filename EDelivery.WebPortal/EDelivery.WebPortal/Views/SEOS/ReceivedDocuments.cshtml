@@ -1,0 +1,14 @@
+﻿@model SEOSDocumentsPagedListModel
+
+@{
+    ViewBag.Title = SEOS.ReceivedDocumentsTitle;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@ViewBag.Title</h2>
+        @Html.Partial("Partials/_ReceivedDocuments", Model)
+    </div>
+</div>

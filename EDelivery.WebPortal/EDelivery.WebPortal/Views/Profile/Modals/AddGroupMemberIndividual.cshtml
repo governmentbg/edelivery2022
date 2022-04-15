@@ -1,0 +1,52 @@
+﻿@model AddRecipientGroupMemberIndividualViewModel
+
+<div id="searchPersonForm">
+
+    @Html.HiddenFor(x => x.SelectedIndividualProfileId)
+    @Html.HiddenFor(x => x.SelectedIndividualProfileName)
+
+    @using (Ajax.BeginForm(
+        "FindIndividual",
+        "Profile",
+        null,
+        new AjaxOptions()
+        {
+            AllowCache = false,
+            HttpMethod = "POST",
+            OnSuccess = $"gf.addMessageRecipientModal($('#SelectedIndividualProfileId').val(), $('#SelectedIndividualProfileName').val(), 'profile')",
+            UpdateTargetId = "searchPersonForm",
+            InsertionMode = InsertionMode.ReplaceWith
+        },
+        new { }))
+    {
+        <section class="form-section">
+            <div class="form-col">
+                <label for="FirstName">@Common.LabelFirstName *:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.FirstName, new { @class = "input-validation-valid" })
+                    @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "validation-message" })
+                </div>
+            </div>
+            <div class="form-col">
+                <label for="surname">@Common.LabelLastName *:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.LastName, new { @class = "input-validation-valid" })
+                    @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "validation-message" })
+                </div>
+            </div>
+            <div class="form-col">
+                <label for="surname">@Common.LabelPersonalIdentifier *:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.Identifier, new { @class = "input-validation-valid" })
+                    @Html.ValidationMessageFor(x => x.Identifier, null, new { @class = "validation-message" })
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section form-row button-row-right">
+            <button type="submit" class="btn-primary btn-m">
+                Добави ФЛ
+            </button>
+        </section>
+    }
+</div>

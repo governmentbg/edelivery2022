@@ -1,0 +1,22 @@
+﻿<div class="modal-container" id="modalContainer">
+    <div class="modal-box">
+        <button class="btn-close-modal js-modal-close"></button>
+        <div id="modal-content">
+            @*<div class="modal-content">
+
+            </div>*@
+        </div>
+        <div class="loader"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#modalContainer button.js-modal-close').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            gf.hideModal();
+        });
+    });
+</script>

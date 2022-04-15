@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configurationSnapshot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:schemas-microsoft-com:xml-wcfconfigurationsnapshot">
+  <behaviors />
+  <bindings>
+    <binding digest="System.ServiceModel.Configuration.BasicHttpBindingElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089:&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data name=&quot;egovmsgBinding&quot;&gt;&lt;security mode=&quot;Transport&quot; /&gt;&lt;/Data&gt;" bindingType="basicHttpBinding" name="egovmsgBinding" />
+    <binding digest="System.ServiceModel.Configuration.BasicHttpBindingElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089:&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data name=&quot;egovmsgBinding1&quot; /&gt;" bindingType="basicHttpBinding" name="egovmsgBinding1" />
+  </bindings>
+  <endpoints>
+    <endpoint normalizedDigest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;https://egov-docflow.is-bg.net:443/service/&quot; binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;egovmsgBinding&quot; contract=&quot;EGovRegstry.egovmsgPortType&quot; name=&quot;egovmsgPort&quot; /&gt;" digest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;https://egov-docflow.is-bg.net:443/service/&quot; binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;egovmsgBinding&quot; contract=&quot;EGovRegstry.egovmsgPortType&quot; name=&quot;egovmsgPort&quot; /&gt;" contractName="EGovRegstry.egovmsgPortType" name="egovmsgPort" />
+  </endpoints>
+</configurationSnapshot>

@@ -1,0 +1,98 @@
+﻿@page "/requests"
+@inherits PagedComponent
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "requests", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            <form class="width-100" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="Status">@Localizer["SearchStatus"]:</label>
+                    <div style="display: inline-block; width:50%; margin: 0 10px;">
+                        <Select2Field id="Status"
+                                      @bind-Value="@status"
+                                      Options="@registrationRequestStatuses" />
+                    </div>
+                    <div class="aright">
+                        <button type="submit"
+                                class="btn-primary btn-l"
+                                @onclick="Search">
+                            @Localizer["SearchBtn"]
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(requests?.Length ?? 0)" />
+            <div class="table-responsive" style="position: relative">
+                @if (IsLoading)
+                {
+                    <div class="loader-container">
+                    </div>
+                }
+                <table class="list">
+                    <tbody>
+                        <tr>
+                            <th>@Localizer["ColumnStatus"]</th>
+                            <th>@Localizer["ColumnProfileName"]</th>
+                            <th>@Localizer["ColumnAuthor"]</th>
+                            <th>@Localizer["ColumnCreateDate"]</th>
+                        </tr>
+
+                        @if (requests == null)
+                        {
+                            <tr>
+                                <td colspan="8">
+                                    <div class="loader page-loader show">
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @if (!requests.Result.Any())
+                            {
+                                <tr>
+                                    <td colspan="4">@Localizer["NoItems"]</td>
+                                </tr>
+                            }
+
+                            @foreach (var request in requests.Result)
+                            {
+                                <tr>
+                                    <td>
+                                        @Localizer[$"Status_{request.RegistrationRequestStatus}"]
+                                    </td>
+                                    <td>
+                                        <a href="requests/@request.RegistrationRequestId">
+                                            @(string.IsNullOrEmpty(request.ProfileName)
+                                                ? Localizer["FieldNoName"]
+                                                : request.ProfileName)
+                                        </a>
+                                    </td>
+                                    <td>@request.AuthorLoginName</td>
+                                    <td>@request.CreateDate.ToLocalDateTime().ToString("g")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(requests?.Length ?? 0)" />
+        </div>
+    </div>
+</div>

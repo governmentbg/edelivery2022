@@ -1,0 +1,37 @@
+﻿@inject IStringLocalizer<NavMenu> Localizer
+
+<nav class="left-nav-wrapper @NavCssClass">
+    <button class="btn btn-left-nav-menu" @onclick="ToggleNavMenu">
+        <span class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        @Localizer["MenuBtn"]
+    </button>
+    <ul class="left-nav-menu @UlCssClass" @onclick="ToggleNavMenu">
+        <li><NavLink href="" Match="NavLinkMatch.All" ActiveClass="selected">@Localizer["Home"]</NavLink></li>
+        <li><NavLink href="requests" ActiveClass="selected">@Localizer["Requests"]</NavLink></li>
+        <li><NavLink href="registrations" ActiveClass="selected">@Localizer["Registrations"]</NavLink></li>
+        <li><NavLink href="profiles" ActiveClass="selected">@Localizer["Profiles"]</NavLink></li>
+        <li><NavLink href="templates" ActiveClass="selected">@Localizer["Templates"]</NavLink></li>
+        <li><NavLink href="target-groups" ActiveClass="selected">@Localizer["TargetGroups"]</NavLink></li>
+        <li><NavLink href="recipient-groups" ActiveClass="selected">@Localizer["RecipientGroups"]</NavLink></li>
+        <li><NavLink href="administrators" ActiveClass="selected">@Localizer["Administrators"]</NavLink></li>
+        <li><NavLink href="profile" ActiveClass="selected">@Localizer["Profile"]</NavLink></li>
+        <li><NavLink href="reports" ActiveClass="selected">@Localizer["Reports"]</NavLink></li>
+        <li><NavLink href="seos-participants" ActiveClass="selected">@Localizer["SeosParticipants"]</NavLink></li>
+    </ul>
+</nav>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavCssClass => collapseNavMenu ? "collapsed" : null;
+    private string UlCssClass => collapseNavMenu ? null : "show";
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

@@ -1,0 +1,36 @@
+﻿@using System.Web.Configuration
+@using EDelivery.WebPortal.Enums
+@using EDelivery.WebPortal.Utils
+@model PagedListLight<RecipientGroupItemViewModel>
+
+@{
+    ViewBag.Title = "Профилни групи";
+
+    var isIndividual = Context.GetCachedUserData().ActiveProfile.TargetGroupId == (int)TargetGroupId.Individual;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+      <h2>@ViewBag.Title</h2>
+      @if (isIndividual && Model.TotalItemCount >= Convert.ToInt32(WebConfigurationManager.AppSettings["MaxRecipientGroups"]))
+      {
+        <p style="color: #c09853">*Достигнат е максималният брой от 20 групи</p>
+      }
+      else
+      {
+        <a href="@Url.Action("CreateGroup", "Profile")"
+           class="btn btn-border btn-m">
+          Създай група
+        </a>
+      }
+
+        @Html.Partial("Partials/Groups", Model)
+
+        <a href="@Url.Action("Administer", "Profile")"
+           class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

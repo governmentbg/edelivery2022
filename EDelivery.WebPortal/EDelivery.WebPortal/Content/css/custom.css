@@ -1,0 +1,170 @@
+a.btn {
+    text-decoration: none;
+}
+
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+}
+
+    input[type="checkbox"] ~ label {
+        position: relative;
+        padding-left: 30px;
+        cursor: pointer;
+    }
+
+        input[type="checkbox"] ~ label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: #FFF;
+            border-radius: 5px;
+            border: 2px solid #949494;
+        }
+
+        input[type="checkbox"] ~ label:after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            background-color: #01497c;
+            border-radius: 2px;
+            opacity: 0;
+        }
+
+    input[type="checkbox"]:checked ~ label:after {
+        opacity: 1;
+    }
+
+    input[type="checkbox"]:checked ~ label:before {
+        border: 2px solid #01497c;
+    }
+
+.hidden-input {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    opacity: 0;
+    z-index: -9999;
+}
+
+.recipients-bg {
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    background-color: #f7f7f7;
+    padding: 7.5px 7.5px 3.75px;
+    border: 2px solid #949494;
+    border-radius: 7px;
+    /*font-size: 14px;*/
+    min-height: 50px;
+    overflow: hidden;
+}
+
+.recipient-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    max-width: fit-content;
+}
+
+.recipient-list-item {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 3.75px;
+    margin-bottom: 3.75px;
+    background-color: #014f86;
+    color: #fff;
+    word-break: break-all;
+}
+
+.recipient-remove-btn {
+    position: relative;
+    display: inline-block;
+    margin: 0 -4px 0 8px;
+    padding-right: 16px;
+    border-left: 1px solid #008fa1;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==);
+    background-size: 8px;
+    width: 8px;
+    line-height: 1;
+    opacity: .75;
+    border-radius: 0;
+    text-indent: -9999px;
+    border: 0;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer
+}
+
+.dnone {
+    display: none;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 13px;
+    padding-right: 29px;
+}
+
+.select2-container .select2-selection--multiple {
+    min-height: 50px;
+}
+
+.select2-container .select2-selection--multiple .select2-selection__rendered {
+    display: block;
+    padding-top: 6px;
+    padding-left: 13px;
+    padding-right: 29px;
+    white-space: nowrap;
+}
+
+.select2-container .select2-search--inline .select2-search__field {
+    width: 100% !important;
+}
+
+.select2-container--default .select2-selection--single {
+    border-radius: 7px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 9px;
+    right: 9px;
+}
+
+.select2-container--default .select2-selection--multiple {
+    background-color: #fff;
+    border-radius: 7px;
+    height: auto;
+    display: flex;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    height: auto;
+    border-radius: 7px;
+    background: white;
+    padding: 10px 15px;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border: 2px solid #aaa;
+    outline: 0;
+}
+
+.select2-dropdown--below ul {
+    background-color: white;
+    border: 1px solid transparent;
+    border-top: none;
+}

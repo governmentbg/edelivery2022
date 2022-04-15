@@ -1,0 +1,110 @@
+﻿@model CreateProfileViewModel
+
+@{
+    ViewBag.Title = Common.TitleRegisterPage;
+
+    var htmlAttributes = (object)new { @readonly = "readonly" };
+}
+
+<div class="cols-wrapper">
+
+    @Html.Partial("_LeftMenuForPassiveProfiles")
+
+    <div class="content-right">
+        <h2>@ViewBag.Title</h2>
+        <div class="single-col">
+
+            @using (Html.BeginForm("CreateProfile", "Profile", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+                <section class="form-section">
+                    <h3>@LoginRegisterPage.TitleSectionPersonalData</h3>
+                    <ul class="col-list col-short">
+                        <li class="form-row">
+                            <label for="FirstName">@LoginRegisterPage.LabelFirstName *:</label>
+                            <div class="form-element">
+                                @Html.TextBoxFor(x => x.FirstName, htmlAttributes)
+                                @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "validation-message" })
+                            </div>
+                        </li>
+                        <li class="form-row">
+                            <label for="MiddleName">@LoginRegisterPage.LabelMiddleName *:</label>
+                            <div class="form-element">
+                                @Html.TextBoxFor(x => x.MiddleName, htmlAttributes)
+                                @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "validation-message" })
+                            </div>
+                        </li>
+                        <li class="form-row">
+                            <label for="LastName">@LoginRegisterPage.LabelLastName *:</label>
+                            <div class="form-element">
+                                @Html.TextBoxFor(x => x.LastName, htmlAttributes)
+                                @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "validation-message" })
+                            </div>
+                        </li>
+                        <li class="form-row">
+                            <label for="Address">@LoginRegisterPage.LabelAddress *:</label>
+                            <div class="form-element">
+                                @Html.TextBoxFor(x => x.Address, htmlAttributes)
+                                @Html.ValidationMessageFor(x => x.Address, null, new { @class = "validation-message" })
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+                <section class="form-section">
+                    <h3>@LoginRegisterPage.TitleSectionProfileData</h3>
+                    <ul class="col-list col-short">
+                        <li class="form-row">
+                            <label for="EmailAddress">@LoginRegisterPage.LabelEmailAddress *:</label>
+                            <div class="form-element">
+                                @Html.TextBoxFor(x => x.EmailAddress, htmlAttributes)
+                                @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "validation-message" })
+                            </div>
+                        </li>
+                        <li class="form-row">
+                            <label for="PhoneNumber">@LoginRegisterPage.LabelPhoneNumber <span class="txt-red">*</span>:</label>
+                            <div class="form-element">
+                                @Html.TextBoxFor(x => x.PhoneNumber, htmlAttributes)
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+                <section class="form-section">
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.IsEmailNotificationEnabled)
+                        <label for="IsEmailNotificationEnabled">@LoginRegisterPage.LabelEmailNotifications</label>
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.IsViberNotificationEnabled)
+                        <label for="IsViberNotificationEnabled">@LoginRegisterPage.LabelViberNotifications</label>
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.IsSmsNotificationEnabled)
+                        <label for="IsSmsNotificationEnabled">@LoginRegisterPage.LabelPhoneNotifications</label>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="da-tooltip attached iconed">
+                            <div class="icon-info"></div>
+                            @Html.Raw(ProfilePage.InfoSmsViberNotificationChoice)
+                        </div>
+                    </div>
+                </section>
+                <section class="form-section form-row button-row-right">
+                    <a class="btn btn-border btn-l" href="@Url.Action("Index", "Profile")">
+                        @UIControls.ButtonBack
+                    </a>
+                    <button class="btn-primary btn-l" type="submit">@UIControls.ButtonRegister</button>
+                </section>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#IsSmsNotificationEnabled').mutualExclusive('#IsViberNotificationEnabled');
+    });
+</script>

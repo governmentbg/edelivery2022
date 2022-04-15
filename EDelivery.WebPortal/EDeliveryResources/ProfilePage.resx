@@ -1,0 +1,549 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ButtonAddMoreDos" xml:space="preserve">
+    <value>Добави още</value>
+  </data>
+  <data name="ButtonAddReceiver" xml:space="preserve">
+    <value>Добави</value>
+  </data>
+  <data name="ButtonAttach" xml:space="preserve">
+    <value>Прикачи</value>
+  </data>
+  <data name="ButtonRequestProfileChange" xml:space="preserve">
+    <value>Подай заявление за промяна на данни</value>
+  </data>
+  <data name="ButtonSaveMessage" xml:space="preserve">
+    <value>Запази</value>
+  </data>
+  <data name="ButtonSendMessage" xml:space="preserve">
+    <value>Изпрати</value>
+  </data>
+  <data name="LabelAttachedDocument" xml:space="preserve">
+    <value>Път до документа</value>
+  </data>
+  <data name="LabelAttachedDocumentName" xml:space="preserve">
+    <value>Наименование</value>
+  </data>
+  <data name="LabelCurrentPassword" xml:space="preserve">
+    <value>Текуща парола:</value>
+  </data>
+  <data name="LabelDocuments" xml:space="preserve">
+    <value>Документи за връчване</value>
+  </data>
+  <data name="LabelHeadInstName" xml:space="preserve">
+    <value>Главен орган</value>
+  </data>
+  <data name="LabelInstEIK" xml:space="preserve">
+    <value>ЕИК</value>
+  </data>
+  <data name="LabelInstName" xml:space="preserve">
+    <value>Наименование</value>
+  </data>
+  <data name="LabelLegalInForce" xml:space="preserve">
+    <value>Дата на влизане в сила</value>
+  </data>
+  <data name="LabelLegalName" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="LabelLegalOutForce" xml:space="preserve">
+    <value>Дата на излизане от сила</value>
+  </data>
+  <data name="LabelLegalRegisteredBy" xml:space="preserve">
+    <value>Регистриран от</value>
+  </data>
+  <data name="LabelLegalRegNum" xml:space="preserve">
+    <value>ЕИК</value>
+  </data>
+  <data name="LabelMessageReceivedOn" xml:space="preserve">
+    <value>Връчено:</value>
+  </data>
+  <data name="LabelMessageReceiver" xml:space="preserve">
+    <value>Получател</value>
+  </data>
+  <data name="LabelMessageSender" xml:space="preserve">
+    <value>Връчител</value>
+  </data>
+  <data name="LabelMessageSentOn" xml:space="preserve">
+    <value>Подадено:</value>
+  </data>
+  <data name="LabelMessageText" xml:space="preserve">
+    <value>Съдържание</value>
+  </data>
+  <data name="LabelMessageTitle" xml:space="preserve">
+    <value>Заглавие</value>
+  </data>
+  <data name="LabelNewPassword" xml:space="preserve">
+    <value>Нова парола:</value>
+  </data>
+  <data name="LabelNewPasswordAgain" xml:space="preserve">
+    <value>Потвърди нова парола:</value>
+  </data>
+  <data name="LabelPersonBirthDay" xml:space="preserve">
+    <value>Дата на раждане</value>
+  </data>
+  <data name="LabelPersonEGN" xml:space="preserve">
+    <value>ЕГН</value>
+  </data>
+  <data name="LabelPersonFirstName" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="LabelPersonLastName" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="LabelPersonMiddleName" xml:space="preserve">
+    <value>Презиме</value>
+  </data>
+  <data name="MessageSaveSettingsSuccess" xml:space="preserve">
+    <value>Вашите настройки бяха успешно обновени.</value>
+  </data>
+  <data name="MessageUpdateInstitutionSpecific" xml:space="preserve">
+    <value>Промяната на данни наименование, ЕИК и представителство се извършват само след одобряване от администратор на системата!</value>
+  </data>
+  <data name="MessageUpdateLegalSpecific" xml:space="preserve">
+    <value>Промяната на данните име, данъчен номер и дата на влизане в сила се извършват само след одобряване от администратор на системата!</value>
+  </data>
+  <data name="MessageUpdatePersonSpecific" xml:space="preserve">
+    <value>Промяната на данните име, презиме, фамилия, ЕГН и дата на раждане се извършват само след одобряване от администратор на системата!</value>
+  </data>
+  <data name="TableActionOpenMessage" xml:space="preserve">
+    <value>Отваряне</value>
+  </data>
+  <data name="TableActionViewMessage" xml:space="preserve">
+    <value>Преглед</value>
+  </data>
+  <data name="TableHeaderMessageDateReceived" xml:space="preserve">
+    <value>Връчено</value>
+  </data>
+  <data name="TableHeaderMessageDateSent" xml:space="preserve">
+    <value>Изпратено</value>
+  </data>
+  <data name="TableHeaderMessageReceivedBy" xml:space="preserve">
+    <value>Получено от</value>
+  </data>
+  <data name="TableHeaderMessageReceiver" xml:space="preserve">
+    <value>Получател</value>
+  </data>
+  <data name="TableHeaderMessageSender" xml:space="preserve">
+    <value>Връчител</value>
+  </data>
+  <data name="TableHeaderMessageSentBy" xml:space="preserve">
+    <value>Изпратено от</value>
+  </data>
+  <data name="TableHeaderMessageStatus" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="TableHeaderMessageTitle" xml:space="preserve">
+    <value>Заглавие</value>
+  </data>
+  <data name="TitleDataInstitution" xml:space="preserve">
+    <value>Данни за административен орган</value>
+  </data>
+  <data name="TitleDataLegal" xml:space="preserve">
+    <value>Данни за юридическо лице</value>
+  </data>
+  <data name="TitleDataPerson" xml:space="preserve">
+    <value>Данни за физическо лице</value>
+  </data>
+  <data name="TitleSectionNotificationSettings" xml:space="preserve">
+    <value>Настройки на нотификациите</value>
+  </data>
+  <data name="TitleSectionPasswordChange" xml:space="preserve">
+    <value>Смяна на паролата</value>
+  </data>
+  <data name="TooltipAddInstitution" xml:space="preserve">
+    <value>Добавяне на орган на ДА</value>
+  </data>
+  <data name="TooltipAddPersonOrLegal" xml:space="preserve">
+    <value>Добавяне на получател</value>
+  </data>
+  <data name="TooltipDocumentTimestamp" xml:space="preserve">
+    <value>Удостоверение за време на изпращане</value>
+  </data>
+  <data name="TooltipDownloadDocument" xml:space="preserve">
+    <value>Изтегли документа</value>
+  </data>
+  <data name="TooltipDownloadNRD" xml:space="preserve">
+    <value>Свали  удостоверение за време на връчване</value>
+  </data>
+  <data name="TooltipDownloadNRO" xml:space="preserve">
+    <value>Свали  удостоверение за време на изпращане</value>
+  </data>
+  <data name="TooltipMessageNew" xml:space="preserve">
+    <value>Ново</value>
+  </data>
+  <data name="TooltipMessageNotReceived" xml:space="preserve">
+    <value>Не е връчено</value>
+  </data>
+  <data name="TooltipMessageOpened" xml:space="preserve">
+    <value>Отворено</value>
+  </data>
+  <data name="TooltipMessageReceived" xml:space="preserve">
+    <value>Връчено</value>
+  </data>
+  <data name="LinkGrantAccess" xml:space="preserve">
+    <value>Добави физическо лице, имащо достъп до профила</value>
+  </data>
+  <data name="TableGrantAccessHeaderGivenBy" xml:space="preserve">
+    <value>Добавен от</value>
+  </data>
+  <data name="TableGrantAccessHeaderGivenOn" xml:space="preserve">
+    <value>Добавен на</value>
+  </data>
+  <data name="TableGrantAccessHeaderName" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="TitleProfileAccess" xml:space="preserve">
+    <value>Достъп до профила</value>
+  </data>
+  <data name="ButtonGrantAccess" xml:space="preserve">
+    <value>Добави</value>
+  </data>
+  <data name="MessageConfirmRemoveAccessForLogin" xml:space="preserve">
+    <value>Сигурни ли сте, че желаете да премахнете достъпа до профила на {0}?</value>
+  </data>
+  <data name="TitleGrantAccessToProfile" xml:space="preserve">
+    <value>Достъп до профила</value>
+  </data>
+  <data name="LabelChooseDocument" xml:space="preserve">
+    <value>Път до документа</value>
+  </data>
+  <data name="TooltipDownloadTimestampedMessage" xml:space="preserve">
+    <value>Свали съобщението в xml.</value>
+  </data>
+  <data name="HistoryTableAction" xml:space="preserve">
+    <value>Действие</value>
+  </data>
+  <data name="HistoryTableActor" xml:space="preserve">
+    <value>Извършено от</value>
+  </data>
+  <data name="HistoryTableDate" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="HistoryTableDetails" xml:space="preserve">
+    <value>Детайли</value>
+  </data>
+  <data name="HistoryTableIP" xml:space="preserve">
+    <value>IP адрес</value>
+  </data>
+  <data name="HistoryActionAccessProfile" xml:space="preserve">
+    <value>Достъп до профила</value>
+  </data>
+  <data name="HistoryActionCreateProfile" xml:space="preserve">
+    <value>Профилът е създаден</value>
+  </data>
+  <data name="HistoryActionDetailsGrantAccessToProfile" xml:space="preserve">
+    <value>Даден е достъп до профила на {0}.</value>
+  </data>
+  <data name="HistoryActionDetailsProfileUpdated" xml:space="preserve">
+    <value>Следните данни са актуализирани: {0}</value>
+  </data>
+  <data name="HistoryActionDetailsRemoveAccessToProfile" xml:space="preserve">
+    <value>Отнет е достъпът до профила на {0}.</value>
+  </data>
+  <data name="HistoryActionGrantAccessToProfile" xml:space="preserve">
+    <value>Даден е достъп до профила</value>
+  </data>
+  <data name="HistoryActionProfileActivated" xml:space="preserve">
+    <value>Профилът е акивиран</value>
+  </data>
+  <data name="HistoryActionProfileDeactivated" xml:space="preserve">
+    <value>Профилът е деактивиран</value>
+  </data>
+  <data name="HistoryActionProfileUpdated" xml:space="preserve">
+    <value>Профилът е актуализиран</value>
+  </data>
+  <data name="HistoryActionRemoveAccessToProfile" xml:space="preserve">
+    <value>Отнет достъп до профила</value>
+  </data>
+  <data name="HistoryActionDetailsProfileActivated" xml:space="preserve">
+    <value>Aктивиран е профил {0}.</value>
+  </data>
+  <data name="HistoryActionDetailsCreateProfile" xml:space="preserve">
+    <value>Профилът е създаден от {0}.</value>
+  </data>
+  <data name="TextUpdatedTo" xml:space="preserve">
+    <value>е променено на </value>
+  </data>
+  <data name="LabelDocumentRegNumber" xml:space="preserve">
+    <value>Входящ номер</value>
+  </data>
+  <data name="LinkSignatureDataMore" xml:space="preserve">
+    <value>Повече</value>
+  </data>
+  <data name="LinkSignatureEgnInfo" xml:space="preserve">
+    <value>Данни от подпис. Отвори линка</value>
+  </data>
+  <data name="TextSigatureValidationValid" xml:space="preserve">
+    <value>Успешно валидиран подпис</value>
+  </data>
+  <data name="TextSignatureValidationWithErroс" xml:space="preserve">
+    <value>Подписът към документа има проблеми</value>
+  </data>
+  <data name="TitleEgnInfo" xml:space="preserve">
+    <value>Данни от подпис към документ {0}</value>
+  </data>
+  <data name="TitleSignatureInfo" xml:space="preserve">
+    <value>Валидация на подпис към документ {0}</value>
+  </data>
+  <data name="LabelEmail" xml:space="preserve">
+    <value>Email адрес</value>
+  </data>
+  <data name="LabelPhone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="SignatureInformation" xml:space="preserve">
+    <value>Подписан от</value>
+  </data>
+  <data name="TooltipDownloadStampPdfMessage" xml:space="preserve">
+    <value>Удостоверение за електронно връчване</value>
+  </data>
+  <data name="ButtonClear" xml:space="preserve">
+    <value>Изчисти филтрите</value>
+  </data>
+  <data name="ButtonSearch" xml:space="preserve">
+    <value>Търси</value>
+  </data>
+  <data name="LabelNoMessagesFromSearch" xml:space="preserve">
+    <value>Не са намерени съобщения, отговарящи на критерия за търсене!</value>
+  </data>
+  <data name="LabelNoReceivedMessages" xml:space="preserve">
+    <value>Все още няма получени съобщения.</value>
+  </data>
+  <data name="LabelNoSentMessages" xml:space="preserve">
+    <value>Все още няма изпратени съобщения</value>
+  </data>
+  <data name="LabelReceivedInPeriod" xml:space="preserve">
+    <value>Връчено в периода</value>
+  </data>
+  <data name="LabelSentInPeriod" xml:space="preserve">
+    <value>Изпратено в периода</value>
+  </data>
+  <data name="TitleSearchInSentMessages" xml:space="preserve">
+    <value>Търсене в изпратени съобщения</value>
+  </data>
+  <data name="TitleSearchReceivedMessages" xml:space="preserve">
+    <value>Търсене в получени съобщения</value>
+  </data>
+  <data name="PlaceholderDateFrom" xml:space="preserve">
+    <value>От дата</value>
+  </data>
+  <data name="PlaceholderDateТо" xml:space="preserve">
+    <value>До дата</value>
+  </data>
+  <data name="LabelMySpace" xml:space="preserve">
+    <value>Mоето пространство</value>
+  </data>
+  <data name="LabelMessageTextMaxLength" xml:space="preserve">
+    <value>(до 100 000 символа)</value>
+  </data>
+  <data name="InfoSmsNotificationsTurnedOff" xml:space="preserve">
+    <value>Поради необходимост от оптимизиране работата на системата, след &lt;strong&gt;25.05.2020 г.&lt;/strong&gt; нотификациите към  административни органи ще се изпращат само по имейл адреса, вписан в профила.</value>
+  </data>
+  <data name="ButtonGRAONamesSync" xml:space="preserve">
+    <value>Синхронизация на имена</value>
+  </data>
+  <data name="LabelPersonUpdateNames" xml:space="preserve">
+    <value>За промяна на име, презиме, фамилия чрез извличане на данни от ГРАО (за потребители с ЕГН), моля натиснете бутона "Синхронизация на имена"!</value>
+  </data>
+  <data name="TooltipMessageForwarded" xml:space="preserve">
+    <value>Препратено</value>
+  </data>
+  <data name="ButtonForwardMessage" xml:space="preserve">
+    <value>Препрати</value>
+  </data>
+  <data name="ForwardedMessage" xml:space="preserve">
+    <value>Препратено съобщение</value>
+  </data>
+  <data name="ForwardedHistoryLink" xml:space="preserve">
+    <value>Детайли за препращането</value>
+  </data>
+  <data name="TitleForwardedMessageHistory" xml:space="preserve">
+    <value>Детайли за препращането</value>
+  </data>
+  <data name="TooltipMessageOriginal" xml:space="preserve">
+    <value>Оригинално</value>
+  </data>
+  <data name="LabelMessageStatus" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="TableHeaderSubjectDocument" xml:space="preserve">
+    <value>Документ</value>
+  </data>
+  <data name="TableHeaderSubjectDocumentAddedBy" xml:space="preserve">
+    <value>Добавен от</value>
+  </data>
+  <data name="TableHeaderSubjectDocumentAddedOn" xml:space="preserve">
+    <value>Добавен на</value>
+  </data>
+  <data name="TitleSectionAttachedDocuments" xml:space="preserve">
+    <value>Прикачени документи към профила</value>
+  </data>
+  <data name="SectionAttachedDocumentsEmpty" xml:space="preserve">
+    <value>Няма прикачени документи към профила</value>
+  </data>
+  <data name="TitleSectionNotificationSettingsViaEmail" xml:space="preserve">
+    <value>Нотификации по e-mail</value>
+  </data>
+  <data name="TitleSectionNotificationSettingsViaSMS" xml:space="preserve">
+    <value>Нотификации по Viber/SMS</value>
+  </data>
+  <data name="LabelMessageReceiverPersonalIdentifier" xml:space="preserve">
+    <value>ЕГН/ЛНЧ</value>
+  </data>
+  <data name="MessageWithCodeMessageSection" xml:space="preserve">
+    <value>Съобщение</value>
+  </data>
+  <data name="MessageWithCodeReceiverSection" xml:space="preserve">
+    <value>Получател</value>
+  </data>
+  <data name="ButtonConfirmAccessCode" xml:space="preserve">
+    <value>Потвърди</value>
+  </data>
+  <data name="LabelEnterAccessCode" xml:space="preserve">
+    <value>Въведете код за достъп</value>
+  </data>
+  <data name="LabelAccessCode" xml:space="preserve">
+    <value>Код за достъп</value>
+  </data>
+  <data name="LabelPersonalIdentifier" xml:space="preserve">
+    <value>ЕГН/ЛНЧ</value>
+  </data>
+  <data name="InfoSmsViberNotificationChoice" xml:space="preserve">
+    <value>Уважаеми потребители,&lt;br/&gt;ако желаете да получавате съобщения по е-майл, моля маркирайте горните радиобутони.&lt;br/&gt;
+В случай, че имате предпочитания към един от каналите за нотификация: Viber или SMS, избирате само един: или Viber или SMS.&lt;br/&gt;
+Ако не желаете да получавате съобщения, не избирате нито един канал.&lt;br/&gt;
+За да получавате съобщения по Viber e необходимо приложението да бъде инсталирано на мобилното Ви устройство и да имате активен Viber профил.</value>
+  </data>
+  <data name="LabelAdditionalIdentifier" xml:space="preserve">
+    <value>Допълнителен идентификатор</value>
+  </data>
+  <data name="LabelReferencedOrn" xml:space="preserve">
+    <value>Към ORN</value>
+  </data>
+  <data name="LabelOrn" xml:space="preserve">
+    <value>Референтен номер на операция  (ORN)</value>
+  </data>
+  <data name="TableHeaderMessageOrn" xml:space="preserve">
+    <value>ORN</value>
+  </data>
+  <data name="TableHeaderMessageReferencedOrn" xml:space="preserve">
+    <value>Към ORN</value>
+  </data>
+</root>

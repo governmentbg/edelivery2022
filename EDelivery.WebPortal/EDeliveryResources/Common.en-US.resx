@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AT" xml:space="preserve">
+    <value>Austria</value>
+  </data>
+  <data name="BE" xml:space="preserve">
+    <value>Belgium</value>
+  </data>
+  <data name="BG" xml:space="preserve">
+    <value>Bulgaria</value>
+  </data>
+  <data name="BGCultureName" xml:space="preserve">
+    <value>Bulgarian</value>
+  </data>
+  <data name="BreadCrumbHomePage" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="ButtonReply" xml:space="preserve">
+    <value>Reply</value>
+  </data>
+  <data name="CopyRight" xml:space="preserve">
+    <value>&amp;copy; 2018  State e-Government Agency</value>
+  </data>
+  <data name="CY" xml:space="preserve">
+    <value>Cyprus</value>
+  </data>
+  <data name="CZ" xml:space="preserve">
+    <value>Czech Republic</value>
+  </data>
+  <data name="DE" xml:space="preserve">
+    <value>Germany</value>
+  </data>
+  <data name="DK" xml:space="preserve">
+    <value>Denmark</value>
+  </data>
+  <data name="EDeliveryTitle" xml:space="preserve">
+    <value>Secure Electronic Delivery System</value>
+  </data>
+  <data name="EE" xml:space="preserve">
+    <value>Estonia</value>
+  </data>
+  <data name="ENCultureName" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="ErrorPageTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ES" xml:space="preserve">
+    <value>Spain</value>
+  </data>
+  <data name="FI" xml:space="preserve">
+    <value>Finland</value>
+  </data>
+  <data name="FooterNavAbout" xml:space="preserve">
+    <value>About the system</value>
+  </data>
+  <data name="FooterNavAdministration" xml:space="preserve">
+    <value>Account administration</value>
+  </data>
+  <data name="FooterNavCreateNew" xml:space="preserve">
+    <value>New delivery service</value>
+  </data>
+  <data name="FooterNavHelp" xml:space="preserve">
+    <value>Help Information</value>
+  </data>
+  <data name="FooterNavProfile" xml:space="preserve">
+    <value>Profile:</value>
+  </data>
+  <data name="FooterNavReceived" xml:space="preserve">
+    <value>Messages received</value>
+  </data>
+  <data name="FooterNavSent" xml:space="preserve">
+    <value>Messages sent</value>
+  </data>
+  <data name="FooterNavSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="FR" xml:space="preserve">
+    <value>France</value>
+  </data>
+  <data name="GB" xml:space="preserve">
+    <value>England</value>
+  </data>
+  <data name="GR" xml:space="preserve">
+    <value>Greece</value>
+  </data>
+  <data name="HR" xml:space="preserve">
+    <value>Croatia</value>
+  </data>
+  <data name="HU" xml:space="preserve">
+    <value>Hungary</value>
+  </data>
+  <data name="IE" xml:space="preserve">
+    <value>Ireland</value>
+  </data>
+  <data name="InfoKEPNames" xml:space="preserve">
+    <value>Please, check your names in Cyrillic and correct them if necessary!</value>
+  </data>
+  <data name="InfoLegalRegistration" xml:space="preserve">
+    <value>Please fill out the  registration form  in Cyrillic!</value>
+  </data>
+  <data name="InfoPasswordFormat" xml:space="preserve">
+    <value>The password must contain: a small and a capital Latin letter, a digit and a special symbol!</value>
+  </data>
+  <data name="InfoPersonalData" xml:space="preserve">
+    <value>First and Last Name boxes must be filled out in Cyrillic!</value>
+  </data>
+  <data name="InfoPhoneNumberFormat" xml:space="preserve">
+    <value>Please, enter a mobile phone in the format 359xxxxxxxxx!</value>
+  </data>
+  <data name="IT" xml:space="preserve">
+    <value>Italy</value>
+  </data>
+  <data name="LabelAdministrativeOrgan" xml:space="preserve">
+    <value>Administrative authority</value>
+  </data>
+  <data name="LabelCommpanyName" xml:space="preserve">
+    <value>Company name</value>
+  </data>
+  <data name="LabelCompanyRegistrationNumber" xml:space="preserve">
+    <value>UIC</value>
+  </data>
+  <data name="LabelFirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="LabelLastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="LabelPersonalIdentifier" xml:space="preserve">
+    <value>UCN / Foreigner ID</value>
+  </data>
+  <data name="LabelProfile" xml:space="preserve">
+    <value>Profile:</value>
+  </data>
+  <data name="LabelSubAdministrativeOrgan" xml:space="preserve">
+    <value>Representative of the administrative authority</value>
+  </data>
+  <data name="LT" xml:space="preserve">
+    <value>Lithuania</value>
+  </data>
+  <data name="LU" xml:space="preserve">
+    <value>Luxembourg</value>
+  </data>
+  <data name="LV" xml:space="preserve">
+    <value>Latvia</value>
+  </data>
+  <data name="MT" xml:space="preserve">
+    <value>Malta</value>
+  </data>
+  <data name="NL" xml:space="preserve">
+    <value>Netherlands</value>
+  </data>
+  <data name="PL" xml:space="preserve">
+    <value>Poland</value>
+  </data>
+  <data name="PT" xml:space="preserve">
+    <value>Portugal</value>
+  </data>
+  <data name="ReportsLinkPerson" xml:space="preserve">
+    <value>References for an natural person</value>
+  </data>
+  <data name="RO" xml:space="preserve">
+    <value>Romania</value>
+  </data>
+  <data name="SE" xml:space="preserve">
+    <value>Sweden</value>
+  </data>
+  <data name="ShareOnFacebook" xml:space="preserve">
+    <value>Share on Facebook</value>
+  </data>
+  <data name="ShareOnTwitter" xml:space="preserve">
+    <value>Share on Twitter</value>
+  </data>
+  <data name="SI" xml:space="preserve">
+    <value>Slovenia</value>
+  </data>
+  <data name="SK" xml:space="preserve">
+    <value>Slovakia</value>
+  </data>
+  <data name="TitleAddRecipient" xml:space="preserve">
+    <value>Add recipient</value>
+  </data>
+  <data name="TitleCreateNewMessage" xml:space="preserve">
+    <value>Create a new message to be delivered</value>
+  </data>
+  <data name="TitleHelp" xml:space="preserve">
+    <value>Help information</value>
+  </data>
+  <data name="TitleLoginPage" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="TitleOpenMessage" xml:space="preserve">
+    <value>View message received</value>
+  </data>
+  <data name="TitleOpenSentMessage" xml:space="preserve">
+    <value>View message sent</value>
+  </data>
+  <data name="TitleProfileAccessHistory" xml:space="preserve">
+    <value>Account access history</value>
+  </data>
+  <data name="TitleProfileAdministration" xml:space="preserve">
+    <value>Account Administration</value>
+  </data>
+  <data name="TitleProfileHome" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="TitleReceivedMessages" xml:space="preserve">
+    <value>Received messages</value>
+  </data>
+  <data name="TitleReceiverInformation" xml:space="preserve">
+    <value>Recipient Information</value>
+  </data>
+  <data name="TitleRegisterPage" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="TitleRegistrationSuccess" xml:space="preserve">
+    <value>Registration successful</value>
+  </data>
+  <data name="TitleSenderInformation" xml:space="preserve">
+    <value>Sender Information</value>
+  </data>
+  <data name="TitleSentMessages" xml:space="preserve">
+    <value>Sent messages</value>
+  </data>
+  <data name="TitleSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="BlanksLink" xml:space="preserve">
+    <value>eForms</value>
+  </data>
+  <data name="Menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="TitleStorageHome" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+</root>

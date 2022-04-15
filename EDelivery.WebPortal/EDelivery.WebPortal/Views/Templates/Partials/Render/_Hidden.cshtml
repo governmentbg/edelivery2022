@@ -1,0 +1,11 @@
+﻿@using EDelivery.WebPortal.Models.Templates.Components
+
+@model HiddenComponent
+
+@{
+    string value = !string.IsNullOrWhiteSpace(Model.Value)
+        ? Model.Value
+        : string.Empty;
+}
+
+@Html.TextBox(Model.Id.ToString(), value, new { @id = Model.Id, @type = "hidden" })

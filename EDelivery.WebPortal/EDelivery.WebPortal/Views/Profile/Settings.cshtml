@@ -1,0 +1,15 @@
+﻿@model LoginProfileSettingsViewModel
+
+@{
+    ViewBag.Title = Common.TitleSettings;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@ProfilePage.TitleSectionNotificationSettings</h2>
+
+        @Html.Partial("Partials/_NotificationSettings", Model)
+    </div>
+</div>

@@ -1,0 +1,35 @@
+﻿@using ED.AdminPanel.Blazor.Pages.Templates.Components.Models
+
+<label for="@Model.Id">@Model.Label:</label>
+<div class="form-element">
+    @{
+        var options =
+            Model.Options
+            ?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            ?.Select(o => o.Trim())
+            ?.Select(o =>
+                new Select2Option
+                {
+                    Id = o,
+                    Text = o,
+                });
+    }
+    <Select2Field id="@Model.Id.ToString()"
+                  Options="@options"
+                  @bind-Value="Model.Value"
+                  class="@("form-select select2 " + Model.CustomClass)">
+    </Select2Field>
+</div>
+
+@code
+{
+    [Parameter] public SelectComponent Model { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (this.Model == null)
+        {
+            throw new Exception($"Required parameter {nameof(Model)} is null");
+        }
+    }
+}

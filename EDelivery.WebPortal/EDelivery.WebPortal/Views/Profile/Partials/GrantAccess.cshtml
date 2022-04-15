@@ -1,0 +1,62 @@
+﻿@using EDelivery.WebPortal.Models.Profile
+
+@model GrantAccessViewModel
+
+@using (Ajax.BeginForm(
+    "GrantAccess",
+    "Profile",
+    null,
+    new AjaxOptions()
+    {
+        AllowCache = false,
+        HttpMethod = "POST",
+        UpdateTargetId = "grantAccessForm",
+        InsertionMode = InsertionMode.ReplaceWith
+    },
+    new { id = "grantAccessForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.ProfileId)
+
+    <h2>@ProfilePage.TitleGrantAccessToProfile</h2>
+
+    @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+    <div class="modal-content">
+        <section class="form-section">
+            <div class="form-col">
+                <label for="FirstName">@Common.LabelFirstName *:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.FirstName, new { @class = "input-validation-valid" })
+                    @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "validation-message" })
+                </div>
+            </div>
+            <div class="form-col">
+                <label for="LastName">@Common.LabelLastName *:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.LastName, new { @class = "input-validation-valid" })
+                    @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "validation-message" })
+                </div>
+            </div>
+            <div class="form-col">
+                <label for="EGN">@Common.LabelPersonalIdentifier *:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.Identifier, new { @class = "input-validation-valid" })
+                    @Html.ValidationMessageFor(x => x.Identifier, null, new { @class = "validation-message" })
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-border btn-m" type="button" id="cancel-add-person">Откажи</button>
+        <button class="btn-primary btn-m" type="submit">@ProfilePage.ButtonGrantAccess</button>
+    </section>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel-add-person').on('click', function () { gf.hideModal(); });
+        });
+    </script>
+}
+

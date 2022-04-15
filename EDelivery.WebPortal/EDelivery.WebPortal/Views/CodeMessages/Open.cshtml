@@ -1,0 +1,27 @@
+﻿@model ReadCodeMessageViewModel
+
+@{
+    ViewBag.Title = Common.TitleOpenMessage + " - " + Model.Subject;
+}
+
+<div class="cols-wrapper">
+    <div class="content-right">
+        <h2>@Common.TitleOpenMessage</h2>
+
+        <a href="@Url.Action("Inbox")" class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+
+        <div class="wrapper content-wrapper message-box">
+            <div class="message-content">
+
+                @Html.Partial("Partials/_Open", Model)
+
+            </div>
+        </div>
+
+        <a href="@Url.Action("Inbox")" class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+﻿@model CodeMessageProfileInfoViewModel
+
+<h2>@Common.TitleSenderInformation</h2>
+
+<div class="modal-content">
+    <div class="form-col">
+        @{
+            var nameTitle = Model.Type == ED.DomainServices.ProfileType.Individual
+                ? ProfilePage.LabelLegalName
+                : ProfilePage.LabelInstName;
+        }
+        <label for="Name">@nameTitle:</label>
+        <div class="form-element">
+            @Html.TextBoxFor(x => x.Name, new { @readonly = "true" })
+        </div>
+    </div>
+    <div class="form-col">
+        @{
+            var identifierTitle = Model.Type == ED.DomainServices.ProfileType.Individual
+                ? ProfilePage.LabelPersonalIdentifier
+                : ProfilePage.LabelInstEIK;
+        }
+        <label for="Identifier">@identifierTitle:</label>
+        <div class="form-element">
+            @Html.TextBoxFor(x => x.Identifier, new { @readonly = "true" })
+        </div>
+    </div>
+    <div class="form-col">
+        <label for="Email">@ProfilePage.LabelEmail:</label>
+        <div class="form-element">
+            @Html.TextBoxFor(x => x.Email, new { @readonly = "true" })
+        </div>
+    </div>
+    <div class="form-col">
+        <label for="Phone">@ProfilePage.LabelPhone:</label>
+        <div class="form-element">
+            @Html.TextBoxFor(x => x.Phone, new { @readonly = "true" })
+        </div>
+    </div>
+</div>
+
+<section class="form-section form-row button-row-right">
+    <button class="btn-primary btn-m" id="cancel-info">Затвори</button>
+</section>
+
+<script type="text/javascript">
+    $(function () {
+        $('#cancel-info').on('click', function () { gf.hideModal(); });
+    });
+</script>

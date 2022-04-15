@@ -1,0 +1,96 @@
+@*
+    This page is a merge of _Host.cshtml and MainLayout.razor
+
+    All of the javascripts except blazor.server.js is removed, as the only
+    component used is the CultureSelector
+*@
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using System.Globalization;
+@using Microsoft.Extensions.Localization
+@using ED.AdminPanel
+@using ED.AdminPanel.Blazor.Shared
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject IStringLocalizer<MainLayout> Localizer
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ССЕВ Административен панел</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="~/css/alertify.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/datepicker.css" />
+    <link rel="stylesheet" href="~/css/select2.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+    <link rel="stylesheet" href="~/css/blazor.css" />
+</head>
+<body class="admin">
+    @{
+        HttpContextAccessor.HttpContext.AppendCultureCookie(
+            CultureInfo.CurrentCulture,
+            CultureInfo.CurrentUICulture);
+    }
+
+    <header id="scale-wrapper">
+        <div class="wrapper header-wrapper">
+            <div class="logo-wrapper" id="scale-in">
+                <a href="/">
+                    <img src="images/lion-form.svg" class="icon-lion-form">
+                </a>
+                <div class="titles-box">
+                    <h2 class="main-title-long">@Localizer["MainTitle"]</h2>
+                    <h4 class="sub-title">@Localizer["SubTitle"]</h4>
+                </div>
+            </div>
+            <div class="right-content">
+                <ul>
+                    <component type="typeof(ED.AdminPanel.Blazor.Shared.CultureSelector)" render-mode="ServerPrerendered" />
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="inner">
+        <div class="gradient-decor"></div>
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="wrapper">
+            <div class="flex-between content-wrapper">
+                <div>
+                    <p class="explain">
+                        @Localizer["FooterProject"]
+                    </p>
+                    <p class="small">
+                        @Localizer["FooterCopyright"]
+                    </p>
+                </div>
+                <img src="images/footer-flags.png">
+            </div>
+        </div>
+    </footer>
+
+    <script src="_framework/blazor.server.js"></script>
+
+    <environment include="Production">
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144844293-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', 'UA-144844293-1');
+        </script>
+    </environment>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

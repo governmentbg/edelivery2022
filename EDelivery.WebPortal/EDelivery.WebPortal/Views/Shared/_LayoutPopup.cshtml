@@ -1,0 +1,15 @@
+﻿<div data-popup="true" id="@ViewBag.PopupId" title="@ViewBag.Title">
+  <div class="form" method="post">
+    @RenderBody()
+  </div>
+</div>
+
+<script>
+    var statusCodeErrors = {
+        ErrorSystemGeneral: '@ErrorMessages.ErrorSystemGeneral',
+        ErrorCanNotGrantAccess:'@ErrorMessages.ErrorCanNotGrantAccess',
+        ErrorPersonNotFound:'@ErrorMessages.ErrorPersonNotFound',
+        ErrorInvalidData:'@ErrorMessages.ErrorInvalidData',
+        ErrorLegalNotFound: '@ErrorMessages.ErrorLegalNotFound'
+    };
+</script>

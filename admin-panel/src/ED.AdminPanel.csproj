@@ -1,0 +1,309 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AnalysisMode>Default</AnalysisMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\admin.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\admin.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\template.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\template.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\nomenclature.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\nomenclature.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\enums.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\enums.proto</Link>
+    </Protobuf>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.Modal" Version="6.0.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.3" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.44.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.44.0" />
+    <PackageReference Include="Grpc.Net.Client.Web" Version="2.44.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.44.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+    <PackageReference Include="Serilog.Filters.Expressions" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Areas\Identity\Pages\Account\LoginResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LoginResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Administrators\CreateResources.Designer.cs">
+      <DependentUpon>CreateResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\AddIntegrationLoginModalResources.Designer.cs">
+      <DependentUpon>EditResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\AddLoginModalResources - Copy.Designer.cs">
+      <DependentUpon>AddLoginModalResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\AddProfileEsbUserModalResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddProfileEsbUserModalResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\AddProfileQuotasModalResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddProfileQuotasModalResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\EditResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EditResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profile\EditResources.Designer.cs">
+      <DependentUpon>EditResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\EditNotificationsModalResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EditNotificationsModalResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\RecipientGroups\AddRecipientGroupMembersModalResources.Designer.cs">
+      <DependentUpon>AddRecipientGroupMembersModalResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\RecipientGroups\CreateEditResources.Designer.cs">
+      <DependentUpon>CreateEditResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\AddDocumentModalResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddDocumentModalResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\AddIntegrationLoginModalResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddIntegrationLoginModalResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Registrations\IndexResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IndexResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Reports\DelayedMessagesResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DelayedMessagesResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Reports\EFormsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EFormsResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Reports\ReceivedMessagesResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReceivedMessagesResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Reports\NotificationsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NotificationsResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Reports\SentMessagesResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SentMessagesResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Reports\TimestampsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TimestampsResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Requests\EditResources.Designer.cs">
+      <DependentUpon>EditResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\SeosParticipants\CreateResources.Designer.cs">
+      <DependentUpon>CreateResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\TargetGroups\AddTargetGroupsModalResources.Designer.cs">
+      <DependentUpon>AddTargetGroupsModalResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\TargetGroups\CreateEditResources.Designer.cs">
+      <DependentUpon>CreateEditResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Blazor\Pages\Templates\AddPermissionsModalResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddPermissionsModalResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Templates\Components\Create\FieldFormResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FieldFormResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Templates\CreateEditResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CreateEditResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\CommonResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CommonResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ErrorMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ErrorMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Areas\Identity\Pages\Account\LoginResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>LoginResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Administrators\CreateResources.resx">
+      <LastGenOutput>CreateResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\AddIntegrationLoginModalResources.resx">
+      <LastGenOutput>AddIntegrationLoginModalResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\AddProfileEsbUserModalResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AddProfileEsbUserModalResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\AddProfileQuotasModalResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AddProfileQuotasModalResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\EditNotificationsModalResources.resx">
+      <LastGenOutput>EditNotificationsModalResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profile\EditResources.resx">
+      <LastGenOutput>EditResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\AddLoginModalResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditNotificationsModalResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\RecipientGroups\AddRecipientGroupMembersModalResources.resx">
+      <LastGenOutput>AddRecipientGroupMembersModalResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\RecipientGroups\CreateEditResources.resx">
+      <LastGenOutput>CreateEditResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\AddDocumentModalResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AddDocumentModalResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\EditResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Registrations\IndexResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IndexResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Reports\TimestampsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TimestampsResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Reports\SentMessagesResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SentMessagesResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Reports\ReceivedMessagesResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ReceivedMessagesResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Reports\EFormsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EFormsResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Reports\DelayedMessagesResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DelayedMessagesResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Reports\NotificationsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>NotificationsResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Requests\EditResources.resx">
+      <LastGenOutput>EditResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\SeosParticipants\CreateResources.resx">
+      <LastGenOutput>CreateResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\TargetGroups\AddTargetGroupsModalResources.resx">
+      <LastGenOutput>AddTargetGroupsModalResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\TargetGroups\CreateEditResources.resx">
+      <LastGenOutput>CreateEditResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Templates\AddPermissionsModalResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AddPermissionsModalResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Templates\Components\Create\FieldFormResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FieldFormResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Templates\CreateEditResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CreateEditResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\CommonResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>CommonResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ErrorMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

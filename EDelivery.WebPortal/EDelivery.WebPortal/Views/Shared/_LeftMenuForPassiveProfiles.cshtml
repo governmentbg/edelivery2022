@@ -1,0 +1,48 @@
+﻿@using EDelivery.WebPortal.Enums
+@using EDelivery.WebPortal.Utils
+
+@{
+    BreadCrumb b = null;
+    var userData = Context.GetCachedUserData();
+    if (userData != null)
+    {
+        b = userData.BreadCrumb;
+    }
+
+    var profile = userData.ActiveProfile;
+}
+<nav class="left-nav-wrapper collapsed">
+    <button class="btn btn-left-nav-menu">
+        <span class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        @Common.Menu
+    </button>
+    <ul class="left-nav-menu">
+        @if (userData.ActiveProfile.IsPassive)
+        {
+            <li class="@(b?.ELeftMenu == eLeftMenu.CreateProfile ? "selected" : string.Empty)">
+                <a href="@Url.Action("CreateProfile", "Account")">
+                    @Common.TitleCreateProfile
+                </a>
+                <span class="number"
+                      data-type="delivery"
+                      data-profileid="@profile.ProfileId"
+                      style="display: none;">
+                </span>
+            </li>
+            <li class="@(b?.ELeftMenu == eLeftMenu.HelpInfo ? "selected" : string.Empty)">
+                <a href="@Url.Action("Index", "Help")">
+                    @Common.TitleHelp
+                </a>
+                <span class="number"
+                      data-type="delivery"
+                      data-profileid="@profile.ProfileId"
+                      style="display: none;">
+                </span>
+            </li>
+        }
+    </ul>
+</nav>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.egov.bg/messaging/v1" elementFormDefault="qualified" targetNamespace="http://schemas.egov.bg/messaging/v1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="DocumentStatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DS_WAIT_REGISTRATION" />
+      <xs:enumeration value="DS_REGISTERED" />
+      <xs:enumeration value="DS_STOPPED" />
+      <xs:enumeration value="DS_CLOSED" />
+      <xs:enumeration value="DS_NOT_FOUND" />
+      <xs:enumeration value="DS_ALREADY_RECEIVED" />
+      <xs:enumeration value="DS_REJECTED" />
+      <xs:enumeration value="DS_TRY_SEND" />
+      <xs:enumeration value="DS_SENT" />
+      <xs:enumeration value="DS_SENT_FAILED" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="DocumentStatusType" nillable="true" type="tns:DocumentStatusType" />
+</xs:schema>

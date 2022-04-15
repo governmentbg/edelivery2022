@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = Common.TitleProfileHome;
+}
+
+<h2>@Common.BreadCrumbHomePage</h2>
+
+<div class="wrapper flex-row mt-spacer">
+    <div class="col-3">
+        <a href="@Url.Action("CreateProfile", "Profile")" class="content-wrapper icon-menu-item bgr-gray">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                    <path d="M34 46.9c4-.9 4-2.3 4-3.3v-1.5a9.3 9.3 0 0 1-2.9-6.9v-4.5a7 7 0 0 1 13.9 0v4.5a9.3 9.3 0 0 1-3 6.9v1.5c0 .9 0 2.4 4.1 3.3S54 52 54 52H30a5.1 5.1 0 0 1 4-5.1z" />
+                    <path d="M10 10H2v50h60V10h-8M26 24H10m10 8H10m14 8H10m8-30h28" />
+                    <path d="M10 4h8v12h-8zm36 0h8v12h-8z" />
+                </svg>
+            </div>
+            <h6>Създаване на профил</h6>
+        </a>
+    </div>
+    <div class="col-3">
+        <a href="@Url.Action("Index", "Help")" class="content-wrapper icon-menu-item bgr-gray">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                    <circle cx="32" cy="32" r="30" />
+                    <path d="M28 26h4v22m-4 .008h8" />
+                    <circle cx="31" cy="19" r="2" />
+                </svg>
+            </div>
+            <h6>@Common.FooterNavHelp</h6>
+        </a>
+    </div>
+</div>

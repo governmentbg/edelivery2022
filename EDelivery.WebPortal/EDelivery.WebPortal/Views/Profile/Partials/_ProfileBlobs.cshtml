@@ -1,0 +1,35 @@
+﻿@using EDelivery.WebPortal.Utils
+
+@model IEnumerable<ProfileBlobsViewModel>
+
+@if (Model != null && Model.Any())
+{
+    <table class="statistics">
+        <tbody>
+            <tr>
+                <th>@ProfilePage.TableHeaderSubjectDocument </th>
+                <th>@ProfilePage.TableHeaderSubjectDocumentAddedBy </th>
+                <th>@ProfilePage.TableHeaderSubjectDocumentAddedOn</th>
+            </tr>
+            @{
+                var activeProfileId = Context.GetCachedUserData().ActiveProfileId;
+            }
+            @foreach (var blob in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, blob.BlobId)" rel="noopener" target="_blank">
+                            @(blob.Description ?? blob.FileName)
+                        </a>
+                    </td>
+                    <td>@blob.CreatedBy</td>
+                    <td>@blob.CreateDate.ToString(SystemConstants.DateTimeFormat)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <span>@ProfilePage.SectionAttachedDocumentsEmpty</span>
+}

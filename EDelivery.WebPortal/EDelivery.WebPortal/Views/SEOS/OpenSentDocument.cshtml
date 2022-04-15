@@ -1,0 +1,129 @@
+﻿@model SEOSOpenDocumentModel
+
+@{
+    ViewBag.Title = SEOS.OpenSentDocument + " - " + Model.Subject;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@ViewBag.Title</h2>
+        <a class="btn btn-m btn-clear mtb-spacer" href="@Url.Action("SentDocuments")">
+            < @UIControls.ButtonBack
+        </a>
+
+        <div class="wrapper content-wrapper message-box">
+            <table class="blank-list">
+                <tbody>
+                    <tr>
+                        <td>@SEOS.LabelReceiverName:</td>
+                        <td>
+                            <a href="#" data-modal-href="@Url.Action("SEOSEntitiyInfo","SEOS", new { id = Model.ReceiverGuid })">
+                                @Model.ReceiverName
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDateSent:</td>
+                        <td>
+                            @Model.DateSent.Value.ToString(SystemConstants.DateTimeFormat)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelSentByLoginNames:</td>
+                        <td>@Model.SenderLoginName</td>
+                    </tr>
+
+                    <tr>
+                        <td>@SEOS.LabelStatus:</td>
+                        <td>@EDelivery.WebPortal.Utils.SEOSHelper.GetSEOSStatusText(Model.Status)</td>
+                    </tr>
+                    @if (Model.LastStatusChangeDate.HasValue)
+                    {
+                        <tr>
+                            <td>@SEOS.LabelDateStatusUpdate:</td>
+                            <td>@Model.LastStatusChangeDate.Value.ToString(SystemConstants.DateTimeFormat)</td>
+                        </tr>
+                    }
+                    @if (Model.Status == EDelivery.WebPortal.SeosService.DocumentStatusType.DS_REJECTED)
+                    {
+                        <tr>
+                            <td>@SEOS.LabelRejectedReason:</td>
+                            <td>@Model.RejectedReason</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="wrapper content-wrapper">
+            <table class="blank-list">
+                <tbody>
+                    <tr>
+                        <td>@SEOS.LabelSubject:</td>
+                        <td>@Model.Subject</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDocKind:</td>
+                        <td>@Model.DocKind</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabeExternalRegIndex1:</td>
+                        <td>@Model.ExternalRegIndex</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelInternalRegIndex:</td>
+                        <td>@Model.InternalRegIndex</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDocId:</td>
+                        <td>@Model.DocGuid.ToString("B")</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDocReferenceNumber:</td>
+                        <td>@Model.DocReferenceNumber</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDocAttentionTo:</td>
+                        <td>@Model.AttentionTo</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelReqEndDate:</td>
+                        <td>
+                            @(Model.RequestedCloseDate.HasValue ? Model.RequestedCloseDate.Value.ToString(SystemConstants.DateFormat) : string.Empty)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDocAdditionalComment:</td>
+                        <td>
+                            <p>
+                                @Model.Comment
+                            </p>
+                        </td>
+                    </tr>
+
+                    @for (int i = 0; i < Model.Attachments.Count; i++)
+                    {
+                        <tr>
+                            <td>@SEOS.LabelDocAttList:</td>
+                            <td>
+                                <a href="@Url.Action("DownloadAttachment", "SEOS", new { id = Model.MessageGuid, aid = Model.Attachments[i].Id })"
+                                   class="file-link">
+                                    @Model.Attachments[i].Name
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@SEOS.LabelDocumentAttComment:</td>
+                            <td>@Model.Attachments[i].Comment</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <a class="btn btn-m btn-clear mtb-spacer" href="@Url.Action("SentDocuments")">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

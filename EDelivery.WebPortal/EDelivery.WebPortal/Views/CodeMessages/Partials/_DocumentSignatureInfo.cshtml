@@ -1,0 +1,60 @@
+﻿@model EDelivery.WebPortal.Models.ReadCodeMessageViewModel.ReadCodeMessageViewModelBlobSignature
+
+<div class="modal-content">
+    <section class="form-section form-row">
+        <h2>@(Model.IsTimestamp ? ValidationResources.DSLabelTimestampCertInfo : ValidationResources.DSLabelCertInfo):</h2>
+        <table class="statistics">
+            <tbody>
+                <tr>
+                    <td>@ValidationResources.DSLabelIntegrity</td>
+                    <td>
+                        @if (Model.CoversDocument)
+                        {
+                            <span class="signature">@ValidationResources.DSIntegrityOK</span>
+                        }
+                        else
+                        {
+                            <span class="warning-message">@ValidationResources.DSIntegrityNotOK</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>@ValidationResources.DSLabelSignedBy</td>
+                    <td>
+                        <span class="@(Model.ValidAtTimeOfSigning ? "signature" : "warning-message")"
+                              title="@(Model.ValidAtTimeOfSigning ? ValidationResources.DCSignatureCertificateValid : @ValidationResources.DCSignatureCertificateNotValid)">
+                            @Model.Subject
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@(Model.IsTimestamp ? ValidationResources.DSLabelTimeStampDate : ValidationResources.DSLabelSignDate)</td>
+                    <td>
+                        <span class="@(Model.ValidAtTimeOfSigning ? "signature" : "warning-message")"
+                              title="@(Model.ValidAtTimeOfSigning ? ValidationResources.DCSignatureCertificateValid : @ValidationResources.DCSignatureCertificateNotValid)">
+                            @Model.SignDate.ToString(SystemConstants.DateTimeFormat)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@ValidationResources.DSLabelIssuer</td>
+                    <td>
+                        <span class="@(Model.ValidAtTimeOfSigning ? "signature" : "warning-message")"
+                              title="@(Model.ValidAtTimeOfSigning ? ValidationResources.DCSignatureCertificateValid : @ValidationResources.DCSignatureCertificateNotValid)">
+                            @Model.Issuer
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@ValidationResources.DSLabelCertValidity</td>
+                    <td>
+                        <span class="@(Model.ValidAtTimeOfSigning ? "signature" : "warning-message")"
+                              title="@(Model.ValidAtTimeOfSigning ? ValidationResources.DCSignatureCertificateValid : @ValidationResources.DCSignatureCertificateNotValid)">
+                            @Model.ValidFrom.ToString(SystemConstants.DateTimeFormat) / @Model.ValidTo.ToString(SystemConstants.DateTimeFormat)
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>

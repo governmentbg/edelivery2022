@@ -1,0 +1,110 @@
+﻿@model BaseRegistrationModel
+
+@{
+    var htmlAttributes = !Model.LockNames ?
+        (object)new { } :
+        (object)new { @readonly = "readonly" };
+}
+
+<section class="form-section">
+    <h3>@LoginRegisterPage.TitleSectionPersonalData</h3>
+    <ul class="col-list col-short">
+        <li class="form-row">
+            <label for="FirstName">@LoginRegisterPage.LabelFirstName *:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.FirstName, htmlAttributes)
+                @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "validation-message" })
+            </div>
+        </li>
+        <li class="form-row">
+            <label for="MiddleName">@LoginRegisterPage.LabelMiddleName *:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.MiddleName, htmlAttributes)
+                @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "validation-message" })
+            </div>
+        </li>
+        <li class="form-row">
+            <label for="LastName">@LoginRegisterPage.LabelLastName *:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.LastName, htmlAttributes)
+                @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "validation-message" })
+            </div>
+        </li>
+        <li class="form-row">
+            <label for="Address">@LoginRegisterPage.LabelAddress *:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.Address)
+                @Html.ValidationMessageFor(x => x.Address, null, new { @class = "validation-message" })
+            </div>
+        </li>
+    </ul>
+</section>
+
+<section class="form-section">
+    <h3>@LoginRegisterPage.TitleSectionProfileData</h3>
+    <ul class="col-list col-short">
+        <li class="form-row">
+            <label for="EmailAddress">@LoginRegisterPage.LabelEmailAddress *:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.EmailAddress)
+                @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "validation-message" })
+            </div>
+        </li>
+        <li class="form-row">
+            <label for="PhoneNumber">@LoginRegisterPage.LabelPhoneNumber <span class="txt-red">*</span>:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.PhoneNumber)
+                @Html.ValidationMessageFor(x => x.PhoneNumber, null, new { @class = "validation-message" })
+                <div class="icon-hint icon-hint--info icon-hint--input-text"
+                     data-toggle="tooltip"
+                     data-original-title="@Common.InfoPhoneNumberFormat">
+                </div>
+            </div>
+        </li>
+    </ul>
+</section>
+
+<section class="form-section">
+    <div class="form-group">
+        @Html.CheckBoxFor(x => x.CreateProfile)
+        <label for="CreateProfile">Създаване на личен профил</label>
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(x => x.EmailNotifications)
+        <label for="EmailNotifications">@LoginRegisterPage.LabelEmailNotifications</label>
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(x => x.ViberNotifications)
+        <label for="ViberNotifications">@LoginRegisterPage.LabelViberNotifications</label>
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(x => x.PhoneNotifications)
+        <label for="PhoneNotifications">@LoginRegisterPage.LabelPhoneNotifications</label>
+    </div>
+    <div class="form-group">
+        @Html.CheckBoxFor(x => x.LicenceAgreement)
+        <label for="LicenceAgreement">
+            @Html.Raw(String.Format(LoginRegisterPage.LabelLicenceAgreement, @Url.Content("~/Content/Documents/LicenceAgreement-v4.pdf")))
+        </label>
+    </div>
+    <div class="form-element">
+        @Html.ValidationMessageFor(x => x.LicenceAgreement, null, new { @class = "validation-message" })
+    </div>
+
+    <p class="explain">
+        @LoginRegisterPage.TextValidDataResponsibility
+    </p>
+
+    <div class="form-row">
+        <div class="da-tooltip attached iconed">
+            <div class="icon-info"></div>
+            @Html.Raw(ProfilePage.InfoSmsViberNotificationChoice)
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(function () {
+        $('#ViberNotifications').mutualExclusive('#PhoneNotifications');
+    });
+</script>

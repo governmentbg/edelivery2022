@@ -1,0 +1,134 @@
+﻿@using EDelivery.WebPortal.Models.Profile.Administration
+
+@model AddLoginProfilePermissionsViewModel
+
+@using (Ajax.BeginForm(
+    "AddLoginProfilePermissions",
+    "Profile",
+    null,
+    new AjaxOptions()
+    {
+        AllowCache = false,
+        HttpMethod = "POST",
+        OnSuccess = "gf.hideModal()",
+        UpdateTargetId = "section-profile-access",
+        InsertionMode = InsertionMode.ReplaceWith
+    },
+    new { }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.LoginId)
+    @Html.HiddenFor(x => x.ProfileId)
+    @Html.HiddenFor(m => m.LoginName)
+    @Html.HiddenFor(m => m.ProfileIdentifier)
+    @Html.HiddenFor(m => m.IsEmailNotificationEnabled)
+    @Html.HiddenFor(m => m.IsEmailNotificationOnDeliveryEnabled)
+    @Html.HiddenFor(m => m.IsSmsNotificationEnabled)
+    @Html.HiddenFor(m => m.IsSmsNotificationOnDeliveryEnabled)
+    @Html.HiddenFor(m => m.IsViberNotificationEnabled)
+    @Html.HiddenFor(m => m.IsViberNotificationOnDeliveryEnabled)
+
+    <h2>Права</h2>
+
+    <div class="modal-content">
+
+        <section class="form-section">
+            <div class="form-col">
+                <label for="">Потребител:</label>
+                <div class="form-element">
+                    <strong>
+                        @Model.LoginName
+                    </strong>
+                </div>
+            </div>
+            <div class="form-col">
+                <label for="">Идентификатор:</label>
+                <div class="form-element">
+                    <strong>
+                        @Model.ProfileIdentifier
+                    </strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="form-col">
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.IsRepresentative)
+                    @Html.LabelFor(x => x.IsRepresentative, "Роля представител")
+                </div>
+            </div>
+        </section>
+
+        <table id="templates-permission-matrix"
+               class="statistics"
+               style="display:none;">
+            <tbody>
+                <tr>
+                    <th>Шаблон</th>
+                    <th>Четене</th>
+                    <th>Писане</th>
+                </tr>
+
+                @for (int i = 0; i < Model.Templates.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.Templates[i].TemplateName
+                            @Html.HiddenFor(m => Model.Templates[i].TemplateId)
+                            @Html.HiddenFor(m => Model.Templates[i].TemplateName)
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(m => Model.Templates[i].HasReadPermission)
+                            @Html.LabelFor(m => Model.Templates[i].HasReadPermission, " ")
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(m => Model.Templates[i].HasWritePermission)
+                            @Html.LabelFor(m => Model.Templates[i].HasWritePermission, " ")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <section class="form-section">
+            <div class="form-col">
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.IsFullAccessMember)
+                    @Html.LabelFor(x => x.IsFullAccessMember, "Роля представител с пълни права")
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.IsAdmin)
+                    @Html.LabelFor(x => x.IsAdmin, "Роля администратор")
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-border btn-m" type="button" id="cancel-add-permissions">Откажи</button>
+        <button class="btn-primary btn-m" type="submit">Запиши</button>
+    </section>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel-add-permissions').on('click', function () {
+                gf.hideModal();
+            });
+
+            $('#IsRepresentative').on('change', function () {
+                var isChecked = !!$(this).prop('checked');
+                if (isChecked) {
+                    $('#templates-permission-matrix').show();
+                    $('#templates-permission-matrix input').prop('disabled', false);
+                }
+                else {
+                    $('#templates-permission-matrix').hide();
+                    $('#templates-permission-matrix input').prop('disabled', true);
+                }
+            });
+        });
+    </script>
+}

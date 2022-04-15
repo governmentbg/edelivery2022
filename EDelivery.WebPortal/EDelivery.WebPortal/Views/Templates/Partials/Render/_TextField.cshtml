@@ -1,0 +1,39 @@
+﻿@using EDelivery.WebPortal.Models.Templates.Components
+
+@model TextFieldComponent
+
+<li class="form-row">
+    <label for="@Model.Id">@Model.Label:</label>
+    <div class="form-element">
+        @{
+            string value = !string.IsNullOrWhiteSpace(Model.Value)
+                ? Model.Value
+                : string.Empty;
+        }
+
+        @Html.TextBox(
+            Model.Id.ToString(),
+            value,
+            new
+            {
+                @id = Model.Id,
+                @class = Model.CustomClass,
+                @placeholder = Model.Placeholder
+            })
+        @Html.ValidationMessage(Model.Id.ToString(), new { @class = "validation-message" })
+    </div>
+</li>
+
+@if (Model.IsRequired)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#@Model.Id').rules("add", {
+                required: true,
+                messages: {
+                    required: "Полето е задължително."
+                }
+            });
+        })
+    </script>
+}

@@ -1,0 +1,38 @@
+﻿@model HandleErrorInfo
+
+@{
+    ViewBag.Title = Common.ErrorPageTitle;
+}
+
+<div class="content-right">
+    <h2>@Common.ErrorPageTitle</h2>
+
+    <a href="@Url.Action("Index","Home")" class="btn btn-m btn-clear mtb-spacer">
+        < @UIControls.ButtonBack
+    </a>
+
+    <div class="wrapper content-wrapper message-box warning-box message-flex-start">
+        <img src="~/Content/img/warning-big.png">
+        <div>
+            <p>
+                @if (Model is HandleErrorInfoWithMessage)
+                {
+                    @: @((Model as HandleErrorInfoWithMessage).ErrorMessage)
+                }
+                else
+                {
+                    @ErrorMessages.ErrorSystemGeneral
+                    <br />
+                    <br />
+
+                    @DateTime.Now.ToString("s")
+                    @Model.Exception.Message
+                }
+            </p>
+        </div>
+
+    </div>
+    <a href="@Url.Action("Index","Home")" class="btn btn-m btn-clear mtb-spacer">
+        < @UIControls.ButtonBack
+    </a>
+</div>

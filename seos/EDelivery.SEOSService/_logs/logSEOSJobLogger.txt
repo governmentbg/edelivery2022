@@ -1,0 +1,607 @@
+﻿2021-08-31 02:58:55,042 [8] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 2:59:55
+
+2021-08-31 02:59:55,055 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 03:00:16,077 [8] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 03:00:16,077 [8] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 3:01:16
+
+2021-08-31 03:01:16,086 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 03:01:37,143 [8] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 03:01:37,145 [8] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 3:02:37
+
+2021-08-31 03:01:58,219 [7] INFO  SEOSJobLogger [(null)]
+Starting execution of ResendDocumentRequestMessageJob
+
+2021-08-31 03:01:58,219 [7] INFO  SEOSJobLogger [(null)]
+Starting resend operation
+
+2021-08-31 03:01:58,226 [7] INFO  SEOSJobLogger [(null)]
+Found 0 items to retry!
+
+2021-08-31 03:01:58,226 [7] INFO  SEOSJobLogger [(null)]
+Finished execution of ResendDocumentRequestMessageJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 3:06:58
+
+2021-08-31 03:01:58,263 [6] INFO  SEOSJobLogger [(null)]
+Starting execution of RefreshRegisteredEntitiesJob
+
+2021-08-31 03:01:58,263 [6] INFO  SEOSJobLogger [(null)]
+Load service entities started
+
+2021-08-31 03:01:58,278 [6] ERROR SEOSJobLogger [(null)]
+Error loading registry entities
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at https://register-t.obmen.local/service/ that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: The remote name could not be resolved: 'register-t.obmen.local'
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EGovRegstry.egovmsgPortType.GetAllRecords()
+   at EDelivery.SEOS.EGovRegstry.egovmsgPortTypeClient.GetAllRecords() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EGovRegstry\Reference.cs:line 436
+   at EDelivery.SEOS.SEOSServiceWrapper.LoadServiceEntities() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\SEOSServiceWrapper.cs:line 184
+2021-08-31 03:01:58,279 [6] INFO  SEOSJobLogger [(null)]
+Finished execution of RefreshRegisteredEntitiesJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 3:06:58
+
+2021-08-31 03:02:37,158 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 03:02:58,203 [8] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 03:02:58,205 [8] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 3:03:58
+
+2021-08-31 03:03:58,215 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 03:04:19,236 [8] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 03:04:19,237 [8] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 3:05:19
+
+2021-08-31 03:05:19,247 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 03:05:40,291 [8] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 03:05:40,292 [8] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 3:06:40
+
+2021-08-31 03:06:40,294 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 03:06:58,239 [7] INFO  SEOSJobLogger [(null)]
+Starting execution of ResendDocumentRequestMessageJob
+
+2021-08-31 03:06:58,239 [7] INFO  SEOSJobLogger [(null)]
+Starting resend operation
+
+2021-08-31 03:06:58,245 [7] INFO  SEOSJobLogger [(null)]
+Found 0 items to retry!
+
+2021-08-31 03:06:58,245 [7] INFO  SEOSJobLogger [(null)]
+Finished execution of ResendDocumentRequestMessageJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 3:11:58
+
+2021-08-31 03:06:58,279 [6] INFO  SEOSJobLogger [(null)]
+Starting execution of RefreshRegisteredEntitiesJob
+
+2021-08-31 03:06:58,279 [6] INFO  SEOSJobLogger [(null)]
+Load service entities started
+
+2021-08-31 03:06:58,288 [6] ERROR SEOSJobLogger [(null)]
+Error loading registry entities
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at https://register-t.obmen.local/service/ that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: The remote name could not be resolved: 'register-t.obmen.local'
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EGovRegstry.egovmsgPortType.GetAllRecords()
+   at EDelivery.SEOS.EGovRegstry.egovmsgPortTypeClient.GetAllRecords() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EGovRegstry\Reference.cs:line 436
+   at EDelivery.SEOS.SEOSServiceWrapper.LoadServiceEntities() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\SEOSServiceWrapper.cs:line 184
+2021-08-31 03:06:58,288 [6] INFO  SEOSJobLogger [(null)]
+Finished execution of RefreshRegisteredEntitiesJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 3:11:58
+
+2021-08-31 03:07:01,333 [8] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 03:07:01,335 [8] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 3:08:01
+
+2021-08-31 03:08:01,336 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 03:08:22,357 [8] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 03:08:22,358 [8] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 3:09:22
+
+2021-08-31 03:09:22,367 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 09:54:51,437 [1] INFO  SEOSJobLogger [(null)]
+Job RefreshRegisteredEntitiesJob is successfully started!
+
+2021-08-31 09:54:51,437 [6] INFO  SEOSJobLogger [(null)]
+Starting execution of RefreshRegisteredEntitiesJob
+
+2021-08-31 09:54:51,815 [1] INFO  SEOSJobLogger [(null)]
+Job ResendDocumentRequestMessageJob is successfully started!
+
+2021-08-31 09:54:51,816 [7] INFO  SEOSJobLogger [(null)]
+Starting execution of ResendDocumentRequestMessageJob
+
+2021-08-31 09:54:51,845 [1] INFO  SEOSJobLogger [(null)]
+Job ProcessAS4Messages is successfully started!
+
+2021-08-31 09:54:51,846 [8] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 09:55:03,152 [6] INFO  SEOSJobLogger [(null)]
+Load service entities started
+
+2021-08-31 09:55:03,341 [7] INFO  SEOSJobLogger [(null)]
+Starting resend operation
+
+2021-08-31 09:55:04,746 [7] INFO  SEOSJobLogger [(null)]
+Found 0 items to retry!
+
+2021-08-31 09:55:04,747 [7] INFO  SEOSJobLogger [(null)]
+Finished execution of ResendDocumentRequestMessageJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 10:00:04
+
+2021-08-31 09:55:05,062 [6] INFO  SEOSJobLogger [(null)]
+Service entities received:69
+
+2021-08-31 15:00:08,549 [1] INFO  SEOSJobLogger [(null)]
+Job RefreshRegisteredEntitiesJob is successfully started!
+
+2021-08-31 15:00:08,550 [14] INFO  SEOSJobLogger [(null)]
+Starting execution of RefreshRegisteredEntitiesJob
+
+2021-08-31 15:00:08,560 [1] INFO  SEOSJobLogger [(null)]
+Job ResendDocumentRequestMessageJob is successfully started!
+
+2021-08-31 15:00:08,561 [15] INFO  SEOSJobLogger [(null)]
+Starting execution of ResendDocumentRequestMessageJob
+
+2021-08-31 15:00:08,565 [1] INFO  SEOSJobLogger [(null)]
+Job ProcessAS4Messages is successfully started!
+
+2021-08-31 15:00:08,566 [16] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 15:00:14,956 [14] INFO  SEOSJobLogger [(null)]
+Load service entities started
+
+2021-08-31 15:00:15,098 [15] INFO  SEOSJobLogger [(null)]
+Starting resend operation
+
+2021-08-31 15:00:16,499 [15] INFO  SEOSJobLogger [(null)]
+Found 0 items to retry!
+
+2021-08-31 15:00:16,500 [15] INFO  SEOSJobLogger [(null)]
+Finished execution of ResendDocumentRequestMessageJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 15:05:16
+
+2021-08-31 15:00:16,528 [14] ERROR SEOSJobLogger [(null)]
+Error loading registry entities
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at https://register-t.obmen.local/service/ that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: The remote name could not be resolved: 'register-t.obmen.local'
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EGovRegstry.egovmsgPortType.GetAllRecords()
+   at EDelivery.SEOS.EGovRegstry.egovmsgPortTypeClient.GetAllRecords() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EGovRegstry\Reference.cs:line 436
+   at EDelivery.SEOS.SEOSServiceWrapper.LoadServiceEntities() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\SEOSServiceWrapper.cs:line 184
+2021-08-31 15:00:16,536 [14] INFO  SEOSJobLogger [(null)]
+Finished execution of RefreshRegisteredEntitiesJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 15:05:16
+
+2021-08-31 15:00:36,775 [16] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 15:00:36,778 [16] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 15:01:36
+
+2021-08-31 15:01:36,790 [16] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 15:01:57,813 [16] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 15:01:57,814 [16] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 15:02:57
+
+2021-08-31 15:02:57,825 [16] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 15:26:01,328 [1] INFO  SEOSJobLogger [(null)]
+Job RefreshRegisteredEntitiesJob is successfully started!
+
+2021-08-31 15:26:01,329 [14] INFO  SEOSJobLogger [(null)]
+Starting execution of RefreshRegisteredEntitiesJob
+
+2021-08-31 15:26:01,342 [14] INFO  SEOSJobLogger [(null)]
+Load service entities started
+
+2021-08-31 15:26:01,711 [1] INFO  SEOSJobLogger [(null)]
+Job ResendDocumentRequestMessageJob is successfully started!
+
+2021-08-31 15:26:01,713 [15] INFO  SEOSJobLogger [(null)]
+Starting execution of ResendDocumentRequestMessageJob
+
+2021-08-31 15:26:01,716 [15] INFO  SEOSJobLogger [(null)]
+Starting resend operation
+
+2021-08-31 15:26:01,749 [1] INFO  SEOSJobLogger [(null)]
+Job ProcessAS4Messages is successfully started!
+
+2021-08-31 15:26:01,750 [17] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+
+2021-08-31 15:26:02,119 [15] INFO  SEOSJobLogger [(null)]
+Found 0 items to retry!
+
+2021-08-31 15:26:02,119 [15] INFO  SEOSJobLogger [(null)]
+Finished execution of ResendDocumentRequestMessageJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 15:31:02
+
+2021-08-31 15:26:02,177 [14] ERROR SEOSJobLogger [(null)]
+Error loading registry entities
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at https://register-t.obmen.local/service/ that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: The remote name could not be resolved: 'register-t.obmen.local'
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EGovRegstry.egovmsgPortType.GetAllRecords()
+   at EDelivery.SEOS.EGovRegstry.egovmsgPortTypeClient.GetAllRecords() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EGovRegstry\Reference.cs:line 436
+   at EDelivery.SEOS.SEOSServiceWrapper.LoadServiceEntities() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\SEOSServiceWrapper.cs:line 184
+2021-08-31 15:26:02,181 [14] INFO  SEOSJobLogger [(null)]
+Finished execution of RefreshRegisteredEntitiesJob. Delay for 5 minutes. Next execution should be at: 31.8.2021 г. 15:31:02
+
+2021-08-31 15:26:22,898 [17] ERROR SEOSJobLogger [(null)]
+Error in ProcessAS4MessagesJob download AS4 messages: 
+
+System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://10.10.60.51:8080/domibus/services/backend that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 10.10.60.51:8080
+   at System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.GetRequestStream(TransportContext& context)
+   at System.Net.HttpWebRequest.GetRequestStream()
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpOutput.WebRequestHttpOutput.GetOutputStream()
+   at System.ServiceModel.Channels.HttpOutput.Send(TimeSpan timeout)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.SendRequest(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Dispatcher.RequestChannelBinder.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request)
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(listPendingMessages request) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1634
+   at EDelivery.SEOS.EDeliveryAS4Node.BackendInterfaceClient.listPendingMessages(Object listPendingMessagesRequest) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Service References\EDeliveryAS4Node\Reference.cs:line 1640
+   at EDelivery.SEOS.AS4.As4.ListPendingMessages() in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\AS4\As4.cs:line 109
+   at EDelivery.SEOS.Jobs.ProcessAS4MessagesJob.Execute(String dbConnectionString) in D:\CielaWorkNew\EDelivery\EDelivery.WebPortal\EDelivery.SEOS\Jobs\ProcessAS4MessagesJob.cs:line 38
+2021-08-31 15:26:22,899 [17] INFO  SEOSJobLogger [(null)]
+Finished execution of ProcessAS4Messages. Delay for 1 minutes. Next execution should be at: 31.8.2021 г. 15:27:22
+
+2021-08-31 15:27:23,455 [17] INFO  SEOSJobLogger [(null)]
+Starting execution of ProcessAS4Messages
+

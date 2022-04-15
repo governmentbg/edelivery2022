@@ -1,0 +1,162 @@
+﻿@model LoginProfileSettingsViewModel
+
+<div id="settings-content">
+    @using (Ajax.BeginForm(
+        "UpdateSettings",
+        null,
+        new AjaxOptions()
+        {
+            AllowCache = false,
+            HttpMethod = "Post",
+            InsertionMode = InsertionMode.ReplaceWith,
+            UpdateTargetId = "settings-content",
+            OnSuccess = $"gf.showSuccess('{ProfilePage.MessageSaveSettingsSuccess}', 2);",
+            OnFailure = $"gf.showError('{ErrorMessages.ErrorSystemGeneral}', 2);"
+        },
+        new { }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.ProfileId)
+        @Html.HiddenFor(x => x.TargetGroupId)
+
+        <div class="wrapper content-wrapper message-box">
+            <div class="form-row" style="margin-top: 0px;">
+                <div>
+                    <h5>@ProfilePage.TitleSectionNotificationSettingsViaEmail</h5>
+                </div>
+            </div>
+
+            <ul class="col-list">
+                <li class="form-row">
+                    <label for="Email">Имейл <span class="txt-red">*</span>:</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.Email)
+                        @Html.ValidationMessageFor(x => x.Email, null, new { @class = "validation-message" })
+                    </div>
+                </li>
+            </ul>
+
+            <div class="form-row" style="margin-top: 5px;">
+                <div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.IsEmailNotificationEnabled)
+                        @Html.LabelFor(x => x.IsEmailNotificationEnabled, LoginRegisterPage.LabelEmailNotificationsOnReceiving)
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.IsEmailNotificationOnDeliveryEnabled)
+                        @Html.LabelFor(x => x.IsEmailNotificationOnDeliveryEnabled, LoginRegisterPage.LabelEmailNotificationsOnDelivery)
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <div class="form-row">
+                <div>
+                    <h5>@ProfilePage.TitleSectionNotificationSettingsViaSMS</h5>
+                </div>
+            </div>
+
+            <ul class="col-list">
+                <li class="form-row">
+                    <label for="Phone">Телефон <span class="txt-red">*</span>:</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.Phone)
+                        @Html.ValidationMessageFor(x => x.Phone, null, new { @class = "validation-message" })
+                        <div class="icon-hint icon-hint--@(this.Model.IsValidMobilePhone ? "info" : "warning") icon-hint--input-text"
+                             data-toggle="tooltip"
+                             data-original-title="@Common.InfoPhoneNumberFormat">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="form-row" style="margin-top: 5px;">
+                @{
+                    bool isDisabled =
+                        Model.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.PublicAdministration;
+                }
+
+                @if (isDisabled)
+                {
+                    <div>
+                        <div class="form-group disabled">
+                            @Html.CheckBoxFor(x => x.IsViberNotificationEnabled, new { disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsViberNotificationEnabled, LoginRegisterPage.LabelViberNotificationsOnReceiving)
+                        </div>
+                        <div class="form-group disabled">
+                            @Html.CheckBoxFor(x => x.IsViberNotificationOnDeliveryEnabled, new { disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsViberNotificationOnDeliveryEnabled, LoginRegisterPage.LabelViberNotificationsOnDelivery)
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group disabled">
+                            @Html.CheckBoxFor(x => x.IsSmsNotificationEnabled, new { disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsSmsNotificationEnabled, LoginRegisterPage.LabelPhoneNotificationsOnReceiving, new { @class = "disabled" })
+                        </div>
+                        <div class="form-group disabled">
+                            @Html.CheckBoxFor(x => x.IsSmsNotificationOnDeliveryEnabled, new { disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsSmsNotificationOnDeliveryEnabled, "Желая да получавам нотификация по SMS при отваряне на съобщение", new { @class = "disabled" })
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <div class="form-group">
+                            @Html.CheckBoxFor(x => x.IsViberNotificationEnabled)
+                            @Html.LabelFor(x => x.IsViberNotificationEnabled, LoginRegisterPage.LabelViberNotificationsOnReceiving)
+                        </div>
+                        <div class="form-group">
+                            @Html.CheckBoxFor(x => x.IsViberNotificationOnDeliveryEnabled)
+                            @Html.LabelFor(x => x.IsViberNotificationOnDeliveryEnabled, LoginRegisterPage.LabelViberNotificationsOnDelivery)
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            @Html.CheckBoxFor(x => x.IsSmsNotificationEnabled)
+                            @Html.LabelFor(x => x.IsSmsNotificationEnabled, LoginRegisterPage.LabelPhoneNotificationsOnReceiving)
+                        </div>
+                        <div class="form-group">
+                            @Html.CheckBoxFor(x => x.IsSmsNotificationOnDeliveryEnabled)
+                            @Html.LabelFor(x => x.IsSmsNotificationOnDeliveryEnabled, "Желая да получавам нотификация по SMS при отваряне на съобщение")
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (isDisabled)
+            {
+                <div class="form-row">
+                    <div class="da-tooltip attached iconed red">
+                        <div class="icon-info"></div>
+                        @Html.Raw(ProfilePage.InfoSmsNotificationsTurnedOff)
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-row">
+                    <div class="da-tooltip attached iconed">
+                        <div class="icon-info"></div>
+                        @Html.Raw(ProfilePage.InfoSmsViberNotificationChoice)
+                    </div>
+                </div>
+            }
+        </div>
+        <section class="form-section form-row button-row-left">
+            <button class="btn-primary btn-l">@UIControls.ButtonSave</button>
+        </section>
+
+        if (!isDisabled)
+        {
+            <script type="text/javascript">
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+
+                    $('#IsSmsNotificationEnabled').mutualExclusive('#IsViberNotificationEnabled');
+                    $('#IsSmsNotificationOnDeliveryEnabled').mutualExclusive('#IsViberNotificationOnDeliveryEnabled');
+                });
+            </script>
+        }
+    }
+</div>

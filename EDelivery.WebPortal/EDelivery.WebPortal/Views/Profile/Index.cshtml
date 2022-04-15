@@ -1,0 +1,240 @@
+﻿@model ProfileModel
+@using EDelivery.WebPortal.Enums
+
+@{
+    ViewBag.Title = String.Format("{0} {1}", Common.TitleProfileHome, Model.ProfileName);
+}
+
+<h2>@Common.BreadCrumbHomePage</h2>
+
+<div class="wrapper flex-row mt-spacer">
+    @if (!Model.IsReadOnly)
+    {
+        <div class="col-3">
+            <a href="@Url.Action("Template", "Messages")" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M32,48H2V12h54v23" />
+                        <path d="M2,12l27,20.6L56,12" />
+                        <path d="M47,40v14 M54,47H40" />
+                        <circle cx="47" cy="47" r="15" />
+                    </svg>
+                </div>
+                <h6>@Common.FooterNavCreateNew</h6>
+            </a>
+        </div>
+
+        if (Model.EnableMessagesWithCode)
+        {
+            <div class="col-3">
+                <a href="@Url.Action("New", "CodeMessages")" class="content-wrapper icon-menu-item bgr-gray">
+                    <div class="icon-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                            <path d="M40 52H2V16h54v18.1" />
+                            <path d="M2 16l27 20.6L56 16" />
+                            <path d="M40 46h22v16H40zm4 0v-7a7 7 0 0 1 7-7 7 7 0 0 1 7 7v7m-7 6v5" />
+                        </svg>
+                    </div>
+                    <h6>@Common.FooterNavCreateMessageWithCode</h6>
+                </a>
+            </div>
+        }
+    }
+
+    <div class="col-3">
+        <a href="@Url.Action("Inbox", "Messages")" class="content-wrapper icon-menu-item bgr-gray">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                    <path d="M30 46H2V10h54v23" />
+                    <path d="M2 10l27 20.6L56 10" />
+                    <circle cx="46" cy="46" r="16" />
+                    <path d="M46 38v14.9m5.9-5.8L46 52.9l-5.9-5.8" />
+                </svg>
+            </div>
+            <h6>@Common.FooterNavReceived</h6>
+            <span id="message-count"
+                  class="number"
+                  style="display: none;">
+            </span>
+        </a>
+    </div>
+    <div class="col-3">
+        <a href="@Url.Action("Outbox", "Messages")" class="content-wrapper icon-menu-item bgr-gray">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                    <path d="M30 46H2V10h54v23" />
+                    <path d="M2 10l27 20.6L56 10" />
+                    <circle cx="46" cy="46" r="16" />
+                    <path d="M46 53.9V39m5.9 5.9L46 39l-5.9 5.9" />
+                </svg>
+            </div>
+            <h6>@Common.FooterNavSent</h6>
+        </a>
+    </div>
+    <div class="col-3">
+        <a href="@Url.Action("Index", "Storage")" class="content-wrapper icon-menu-item bgr-gray">
+            <div class="icon-box">
+                <svg class="icon icon-svg" viewBox="-1 0 210 190" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path xmlns="http://www.w3.org/2000/svg" d="M202.219,95.172c0-16.949-15.275-30.513-32.664-27.489c-6.181-10.017-18.399-15.3-30.12-12.515   c-4.985-8.686-14.119-14.018-24.179-14.018c-9.87,0-18.492,5.193-23.449,12.984c-6.08-3.951-13.235-6.216-20.807-6.216   c-20.607,0-37.46,16.341-38.276,36.934C13.961,87.582,0,103.608,0,122.758c0,21.122,17.189,38.312,38.315,38.312h115.289   c21.122,0,38.312-17.189,38.312-38.312c0-1.929-0.197-3.815-0.476-5.669C197.975,111.989,202.219,104.091,202.219,95.172z    M153.604,157.494H38.315c-19.154,0-34.736-15.582-34.736-34.733c0-17.844,13.367-32.696,31.089-34.547l1.593-0.372v-1.61   c0-19.154,15.582-34.736,34.74-34.736c13.127,0,24.988,7.297,30.957,19.039l0.673,1.321l1.417-0.412   c3.196-0.927,6.453-1.396,9.681-1.396c12.615,0,24.261,6.871,30.392,17.934l0.651,1.167l1.299-0.286   c22.278-4.914,42.27,12.279,42.27,33.895C188.337,141.912,172.758,157.494,153.604,157.494z M190.638,113.135   c-4.871-18.639-23.438-31.88-44.052-28.03c-6.914-11.531-19.383-18.635-32.861-18.635c-3.096,0-6.199,0.387-9.269,1.152   c-2.509-4.52-5.837-8.385-9.738-11.474c4.309-6.836,11.871-11.42,20.539-11.42c9.19,0,17.497,5.111,21.677,13.338l0.673,1.321   l1.424-0.412c10.966-3.192,22.668,1.854,28.058,11.578l0.651,1.167l1.299-0.286c15.657-3.429,29.601,8.604,29.601,23.739   C198.641,102.301,195.545,108.69,190.638,113.135z" fill="#014F7C"></path>
+                </svg>
+            </div>
+            <h6>@Common.TitleStorageHome</h6>
+        </a>
+    </div>
+
+    @if (Model.HasSEOS.HasValue && Model.HasSEOS.Value)
+    {
+        <div class="col-3">
+            <a href="@Url.Action("Index", "SEOS")" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M26 52H4V36h22v16zM4 52l-2 4v2h26v-2l-2-4"></path>
+                        <path d="M43 22H21V6h22v16zm-22 0l-2 4v2h26v-2l-2-4m17 30H38V36h22v16zm-22 0l-2 4v2h26v-2l-2-4"></path>
+                    </svg>
+                </div>
+                <h6>@SEOS.TitleSEOS</h6>
+                <span id="seos-message-count"
+                      class="number"
+                      style="display: none;">
+                </span>
+            </a>
+        </div>
+    }
+    else if (!Model.HasSEOS.HasValue && Model.TargetGroupId == (int)TargetGroupId.PublicAdministration)
+    {
+        <div class="col-3">
+            <a href="#" class="content-wrapper icon-menu-item bgr-gray disabled">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M26 52H4V36h22v16zM4 52l-2 4v2h26v-2l-2-4"></path>
+                        <path d="M43 22H21V6h22v16zm-22 0l-2 4v2h26v-2l-2-4m17 30H38V36h22v16zm-22 0l-2 4v2h26v-2l-2-4"></path>
+                    </svg>
+                </div>
+                <h6>@SEOS.TitleSEOS</h6>
+                <h6>@SEOS.ErrorConnectingSEOSService</h6>
+            </a>
+        </div>
+    }
+
+    @*TODO : rethink*@
+
+    @if (Model.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.PublicAdministration
+        && Model.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.SocialOrganization)
+    {
+        <div class="col-3">
+            <a href="@Url.Action("BulSI", "Profile")"
+               rel="noopener"
+               target="_blank"
+               class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M2 8h60v12H2zm0 12v36h60V20"></path>
+                        <path d="M38 30l7 8-7 8M26 30l-7 8 7 8"></path>
+                        <circle cx="8" cy="14" r="1"></circle>
+                        <circle cx="15" cy="14" r="1"></circle>
+                        <circle cx="22" cy="14" r="1"></circle>
+                    </svg>
+                </div>
+                <h6>@Common.BlanksLink</h6>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="@Url.Action("Pay","Profile")"
+               rel="noopener"
+               target="_blank"
+               class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M10.3 29l-2.2-6.1a2.4 2.4 0 0 1 1.4-3.1L50.1 5.1a2.4 2.4 0 0 1 3.1 1.4l8.7 24a2.4 2.4 0 0 1-1.4 3.1L50 37.4m-39.9-9.2L55 11.8m-8.3 9.8l4.5-1.6" />
+                        <rect x="2" y="29" width="48" height="30" rx="2.4" ry="2.4" />
+                        <path d="M10 43h14m12-6h6M10 51h2m8 0h2m8 0h2m8 0h2" />
+                    </svg>
+                </div>
+                <h6>@Common.PayLink</h6>
+            </a>
+        </div>
+    }
+    else if (Model.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.PublicAdministration)
+    {
+        <div class="col-3">
+            <a href="https://pay.egov.bg/eforms"
+               rel="noopener"
+               target="_blank"
+               class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M10.3 29l-2.2-6.1a2.4 2.4 0 0 1 1.4-3.1L50.1 5.1a2.4 2.4 0 0 1 3.1 1.4l8.7 24a2.4 2.4 0 0 1-1.4 3.1L50 37.4m-39.9-9.2L55 11.8m-8.3 9.8l4.5-1.6" />
+                        <rect x="2" y="29" width="48" height="30" rx="2.4" ry="2.4" />
+                        <path d="M10 43h14m12-6h6M10 51h2m8 0h2m8 0h2m8 0h2" />
+                    </svg>
+                </div>
+                <h6>@Common.PayLink</h6>
+            </a>
+        </div>
+    }
+
+    @if (Model.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+    {
+        <div class="col-3">
+            <a href="@Url.Action("Ahu", "Profile")"
+               rel="noopener"
+               target="_blank"
+               class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M6 2h9l7 28" />
+                        <path d="M15 2h2.1a5 5 0 0 1 4.851 3.787l.871 3.485A3 3 0 0 1 19.908 13H17.75M51.9 58H60M31.329 33H51m-15.141 5H51M20 22h19a12 12 0 0 1 12 12v20.017M51 47H38" />
+                        <circle cx="22" cy="46" r="16" />
+                        <circle cx="22" cy="46" r="11" />
+                        <circle cx="47" cy="57" r="5" />
+                    </svg>
+                </div>
+                <h6>@Common.InfoDisallowedPeople</h6>
+            </a>
+        </div>
+    }
+
+    <div class="col-3">
+        <a href="@Url.Action("Administer", "Profile")" class="content-wrapper icon-menu-item bgr-gray">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                    <path d="M34 46.9c4-.9 4-2.3 4-3.3v-1.5a9.3 9.3 0 0 1-2.9-6.9v-4.5a7 7 0 0 1 13.9 0v4.5a9.3 9.3 0 0 1-3 6.9v1.5c0 .9 0 2.4 4.1 3.3S54 52 54 52H30a5.1 5.1 0 0 1 4-5.1z" />
+                    <path d="M10 10H2v50h60V10h-8M26 24H10m10 8H10m14 8H10m8-30h28" />
+                    <path d="M10 4h8v12h-8zm36 0h8v12h-8z" />
+                </svg>
+            </div>
+            <h6>@Common.FooterNavAdministration</h6>
+        </a>
+    </div>
+    <div class="col-3">
+        <a href="@Url.Action("Index","Help")" class="content-wrapper icon-menu-item bgr-gray">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                    <circle cx="32" cy="32" r="30" />
+                    <path d="M28 26h4v22m-4 .008h8" />
+                    <circle cx="31" cy="19" r="2" />
+                </svg>
+            </div>
+            <h6>@Common.FooterNavHelp</h6>
+        </a>
+    </div>
+
+    @if (Model.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+    {
+        <div class="col-3">
+            <a href="@Url.Action("Reports", "Profile")"
+               rel="noopener"
+               target="_blank"
+               class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M46 14h8v48H18a8 8 0 0 1-8-8V8" />
+                        <path d="M46 34l-7.9-6-8.1 6V10h16v24z" />
+                        <path d="M30 14H16a6 6 0 0 1 0-12h34" />
+                    </svg>
+                </div>
+                <h6>@Common.ReportsLinkPerson</h6>
+            </a>
+        </div>
+    }
+</div>

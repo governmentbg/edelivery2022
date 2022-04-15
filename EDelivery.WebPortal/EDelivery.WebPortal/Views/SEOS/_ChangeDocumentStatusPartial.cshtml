@@ -1,0 +1,64 @@
+﻿@model ChangeDocumentStatusModel
+@{
+    ViewBag.Title = SEOS.LabelUpdateStatus;
+    ViewBag.PopupId = "updateStatusPopup";
+}
+
+
+@using (Ajax.BeginForm("UpdateDocumentStatus", "SEOS", null, new AjaxOptions()
+{
+    AllowCache = false,
+    HttpMethod = "Post",
+    LoadingElementId = "loaderChangeStatus",
+    OnBegin = "$('#changeStatusPersonError').hide();",
+    OnFailure = "$('#changeStatusPersonError').text('" + SEOS.ErrorUpdatingStatus + "')",
+    OnSuccess = "seos.changeStatusSuccess(data)"
+}, new { id = "updateDocStatusForm" }))
+{
+    @Html.AntiForgeryToken();
+    @Html.HiddenFor(x=>x.OldStatus)
+    @Html.HiddenFor(x=>x.MessageId)
+    <div class="loader" id="loaderChangeStatus"></div>
+    <span class="error" id="changeStatusPersonError" style="display:none"></span>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Status, SEOS.LabelNewStatus)
+        <div class="form-control drop-down-holder">
+            @Html.DropDownListFor(x => x.Status, EDelivery.WebPortal.Utils.SEOSHelper.SeosChangeStatusList(), new { id= "Status" })
+            <label></label>
+        </div>
+        <div class="clearer"></div>
+        @Html.ValidationMessageFor(x => x.Status)
+    </div>
+        @*<div class="form-group">
+            @Html.LabelFor(x => x.ExpectedDateClose, SEOS.LabelExpectedDateClose)
+            @Html.TextBoxFor(x => x.ExpectedDateClose, new { type="date", @class = "form-control" })
+            <div class="clearer"></div>
+            @Html.ValidationMessageFor(x => x.ExpectedDateClose)
+        </div>*@
+        
+        <div id="rejectReasonDiv" class="form-group" style="display:@(Model.Status == EDelivery.WebPortal.SeosService.DocumentStatusType.DS_REJECTED?"block":"none")">
+            @Html.LabelFor(x => x.RejectReason, SEOS.LabelRejectReason)
+            @Html.TextAreaFor(x => x.RejectReason, new { @class = "form-control" })
+            <div class="clearer"></div>
+            @Html.ValidationMessageFor(x => x.RejectReason)
+        </div>
+       
+        <div class="form-group text-center">
+            <button id="submitStatusUpdate" type="submit" >@SEOS.ButtonUpdateStatus</button>
+        </div>
+}
+<script>
+    $(function () {
+        $('#Status').on('change', function (e) {
+            var newValue = $(this).val();
+           
+            if (newValue == '@EDelivery.WebPortal.SeosService.DocumentStatusType.DS_REJECTED') {
+                $('#rejectReasonDiv').show();
+            }
+            else
+            {
+                $('#rejectReasonDiv').hide();
+            }
+        });
+    });
+</script>

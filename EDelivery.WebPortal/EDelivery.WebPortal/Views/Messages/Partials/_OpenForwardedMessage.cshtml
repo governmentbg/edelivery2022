@@ -1,0 +1,171 @@
+﻿@using EDelivery.WebPortal.Utils
+@using EDelivery.WebPortal.Models.Messages
+
+@model ReadMessageViewModel
+
+@{
+    var userData = Context.GetCachedUserData();
+}
+
+<section class="form-section">
+    <h3>@ProfilePage.ForwardedMessage</h3>
+
+    <table class="blank-list">
+        <tbody>
+            <tr>
+                <td>@ProfilePage.LabelMessageSender:</td>
+                <td>
+                    <a href="#" data-modal-href="@Url.Action("MessageProfileInfo", "Messages", new { messageId = Model.MessageId })">
+                        @Model.Sender.Name
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>@ProfilePage.LabelOrn:</td>
+                <td>@Model.Orn</td>
+            </tr>
+            @if (!string.IsNullOrEmpty(Model.ReferencedOrn))
+            {
+                <tr>
+                    <td>@ProfilePage.LabelReferencedOrn:</td>
+                    <td>@Model.ReferencedOrn</td>
+                </tr>
+            }
+            @if (!string.IsNullOrEmpty(Model.AdditionalIdentifier))
+            {
+                <tr>
+                    <td>@ProfilePage.LabelAdditionalIdentifier:</td>
+                    <td>@Model.AdditionalIdentifier</td>
+                </tr>
+            }
+            <tr>
+                <td>@ProfilePage.LabelMessageTitle:</td>
+                <td>@Model.Subject</td>
+            </tr>
+            <tr>
+                <td>@ProfilePage.LabelMessageSentOn</td>
+                <td>
+                    @Model.DateSent.ToString(SystemConstants.DateTimeFormat)
+                    <a href="@Url.Action("GetMessageTimestamp", "Messages", new { id = Model.MessageId, timeStampType = EDelivery.WebPortal.Enums.eTimeStampType.NRO })"
+                       data-toggle="tooltip"
+                       data-original-title="@ProfilePage.TooltipDownloadNRO">
+                        <img src="~/Content/img/timestamp.png">
+                    </a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Шаблон</td>
+                <td><strong>@Model.TemplateName</strong></td>
+            </tr>
+
+            @{
+                var activeProfileId = userData.ActiveProfileId;
+            }
+            @foreach (var item in Model.Fields)
+            {
+                if (!item.Value.Item1)
+                {
+                    <tr>
+                        <td>@item.Key</td>
+                        <td>@item.Value.Item2</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>@item.Key</td>
+                        <td>
+                            @foreach (var blob in Model.Blobs.Where(e =>
+                                ((FileObject[])item.Value.Item2)
+                                    .Select(f => f.FileName.ToUpperInvariant())
+                                    .Any(f => f.StartsWith(e.FileName.ToUpperInvariant()))))
+                            {
+                                bool isMalicious = false;
+                                string errorMessage = string.Empty;
+
+                                if (blob.Status != ED.DomainServices.MalwareScanResultStatus.Complete)
+                                {
+                                    errorMessage = SEOS.ErrorUnsuccessfulScan;
+                                }
+                                else
+                                {
+                                    if (blob.IsMalicious ?? false)
+                                    {
+                                        errorMessage = SEOS.ErrorReceivedDocumentIsMalicious;
+                                        isMalicious = true;
+                                    }
+                                }
+
+                                string blobTimestamp = Url.Action("GetDocumentTimestamp", "Messages", new { id = Model.MessageId, documentId = blob.BlobId });
+
+                                <div class="td-section">
+                                    @if (isMalicious)
+                                    {
+                                        <span>
+                                            @blob.FileName
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.CreateMessageBlobWebPortalToken(activeProfileId, Model.MessageId, blob.BlobId)" class="file-link" rel="noopener" target="_blank">
+                                            @blob.FileName <span class="note"></span>
+                                        </a>
+                                    }
+
+                                    <a href="@blobTimestamp" data-toggle="tooltip" data-original-title="@ProfilePage.TooltipDocumentTimestamp">
+                                        <img src="~/Content/img/timestamp.png">
+                                    </a>
+
+                                    @if (!string.IsNullOrEmpty(errorMessage))
+                                    {
+                                        <span class="warning-message">@errorMessage</span>
+                                    }
+
+
+                                    @if (!string.IsNullOrEmpty(blob.DocumentRegistrationNumber))
+                                    {
+                                        <span class="additional-message">@blob.DocumentRegistrationNumber</span>
+                                    }
+
+                                    @if (blob.Signatures != null && blob.Signatures.Any())
+                                    {
+                                        for (int i = 0; i < blob.Signatures.Count; i++)
+                                        {
+                                            var signature = blob.Signatures[i];
+                                            var validStatus = signature.CoversDocument && signature.ValidAtTimeOfSigning;
+
+                                            <span class="@(validStatus
+                                            ? (signature.IsTimestamp ? "timestamp-signature" : "signature")
+                                            : "warning-message")">
+                                                @ProfilePage.SignatureInformation: @EDelivery.WebPortal.Utils.TextHelper.GetSignatureSubjectShortName(signature.Subject)
+                                                &nbsp;
+                                                <a href="#" data-modal-tagId="signatureDataPanel_@(blob.BlobId)_@i">
+                                                    @EDeliveryResources.ProfilePage.LinkSignatureDataMore
+                                                </a>
+                                            </span>
+
+                                            <div id="signatureDataPanel_@(blob.BlobId)_@i" style="display:none;">
+                                                @Html.Partial("Partials/_OpenDocumentSignatureInfo", signature)
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</section>
+
+@if (!userData.ActiveProfile.IsReadOnly)
+{
+    <section class="form-section form-row button-row-right">
+        <a class="btn btn-primary btn-l"
+           href="/Messages/ChooseReply/@Model.MessageId">
+            @Common.ButtonReply
+        </a>
+    </section>
+}

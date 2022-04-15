@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = Common.TitleRegistrationSuccess;
+}
+
+<div class="content-right">
+    <h2>@Common.TitleRegistrationSuccess</h2>
+
+    <a href="@Url.Action("Index","Home")" class="btn btn-m btn-clear mtb-spacer">
+        < @UIControls.ButtonBack
+    </a>
+
+    <div class="wrapper content-wrapper message-box message-flex-start">
+        <img src="~/Content/img/info-neutral.png">
+        <div>
+            <p>
+                @LoginRegisterPage.TextRegistrationSuccess
+            </p>
+        </div>
+
+    </div>
+    <a href="@Url.Action("Index","Home")" class="btn btn-m btn-clear mtb-spacer">
+        < @UIControls.ButtonBack
+    </a>
+</div>

@@ -1,0 +1,40 @@
+﻿@model CertAuthViewModel
+
+@{
+    ViewBag.Title = LoginRegisterPage.LoginWithKep;
+}
+
+<div class="content-right">
+    <div class="wrapper content-wrapper message-box message-flex-center">
+        <noscript>
+            <p>
+                <strong>Важно:</strong> Моля, натиснете бутон „Изпрати”, за да изпратите формата
+            </p>
+        </noscript>
+
+        <h2>@LoginRegisterPage.MessageStartingCertificateAuth</h2>
+    </div>
+    <div class="wrapper content-wrapper message-box message-flex-center">
+        <form id="requestAuthForm" action="@Model.TargetUrl" method="post">
+
+            <input type="hidden" name="SAMLRequest" value="@Model.EncodedRequest" />
+            <input type="hidden" name="RelayState" value="@Model.EncodedRelayState" />
+            <noscript>
+                <div>
+                    <input type="submit" value="@UIControls.ButtonSendRequest" />
+                </div>
+            </noscript>
+        </form>
+
+        <div class="loader"></div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function () {
+            $('#requestAuthForm').submit();
+        });
+    </script>
+}

@@ -1,0 +1,49 @@
+﻿@model SEOSRegisteredEntitiesModel
+
+@{
+    ViewBag.Title = SEOS.RegisteredEntities;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@ViewBag.Title</h2>
+        @using (Ajax.BeginForm("RegisteredEntities", null, new AjaxOptions()
+        {
+            AllowCache = false,
+            HttpMethod = "Post",
+            InsertionMode = System.Web.Mvc.Ajax.InsertionMode.ReplaceWith,
+            LoadingElementId = "formSearchLoader",
+            UpdateTargetId = "registeredEntitiesHolder"
+        }, new { id = "formSearchEntity" }))
+        {
+            @Html.AntiForgeryToken();
+            @Html.HiddenFor(x => x.ShowOnlyActive)
+
+            <section class="form-section">
+                <div class="da-tooltip attached iconed">
+                    <div class="icon-info"></div>
+                    @SEOS.InfoMessageChooseEntityToSendDocument
+                </div>
+                <ul class="col-list">
+                    <li class="form-row">
+                        <label for="SearchPhase">@SEOS.SearchEntity<span class="txt-red">*</span>:</label>
+                        <div class="f-grow-100">
+                            <div class="row-group">
+                                <div class="">
+                                    <div class="pos-relative">
+                                        @Html.TextBoxFor(x => x.SearchPhase)
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-border btn-l">@SEOS.Search</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        }
+
+        @Html.Partial("_RegisteredEntitiesList", Model)
+    </div>
+</div>

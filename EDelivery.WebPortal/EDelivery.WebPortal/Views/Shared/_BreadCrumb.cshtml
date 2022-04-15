@@ -1,0 +1,34 @@
+﻿@using EDelivery.WebPortal.Utils
+
+@{
+    BreadCrumb b = null;
+    var i = 0;
+    var userData = Context.GetCachedUserData();
+    if (userData != null)
+    {
+        b = userData.BreadCrumb;
+    }
+}
+
+@if (b != null)
+{
+    <div class="breadcrumb">
+        <ol>
+            <li>@Common.LabelProfile &nbsp; @b.ProfileName</li>
+            @for (i = 0; i < b.Links.Count - 1; i++)
+            {
+                <li>
+                    <a href="@b.Links[i].LinkUrl">@b.Links[i].LinkName</a>
+                </li>
+            }
+            <li>@b.Links[i].LinkName</li>
+        </ol>
+    </div>
+}
+
+@if (userData != null && (userData.ActiveProfile?.IsReadOnly ?? true))
+{
+    <div class="breadcrumb">
+        @ErrorMessages.ErrorProfileIsReadOnly
+    </div>
+}

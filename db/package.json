@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "cross-var": "^1.1.0",
+    "run-script-os": "1.1.6"
+  },
+  "scripts": {
+    "deploy": "npm run sqlcmd -- -i CreateAll.sql",
+    "sqlcmd": "run-script-os --",
+    "sqlcmd:nix": "cross-var cross-env dbName=ElectronicDelivery_test sqlcmd -b -S .",
+    "sqlcmd:win32": "cross-var cross-env dbName=ElectronicDelivery_test sqlcmd -b -S . -f 65001"
+  }
+}

@@ -1,0 +1,196 @@
+﻿@using EDelivery.WebPortal.Extensions
+
+@model SEOSDocumentsPagedListModel
+
+@{
+    var updateTargetId = "messages-content";
+
+    var opositeOrder = Model.SortOrder == EDelivery.WebPortal.Enums.eSortOrder.Asc
+        ? EDelivery.WebPortal.Enums.eSortOrder.Desc
+        : EDelivery.WebPortal.Enums.eSortOrder.Asc;
+
+    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
+    new AjaxOptions
+    {
+        HttpMethod = "GET",
+        InsertionMode = System.Web.Mvc.Ajax.InsertionMode.Replace,
+        UpdateTargetId = updateTargetId
+    });
+
+    options.Display = PagedListDisplayMode.IfNeeded;
+    options.MaximumPageNumbersToDisplay = 6;
+    options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToFirstPage = PagedListDisplayMode.Never;
+    options.DisplayLinkToLastPage = PagedListDisplayMode.Never;
+}
+
+<div class="table-responsive" id="messages-content">
+    @Html.CustomPagedListPager(
+        Model.Documents,
+        p => Url.Action("ReceivedDocuments", new { page = p, sortColumn = Model.SortColumn, sortOrder = Model.SortOrder }),
+        options)
+
+    <table class="statistics">
+        <tbody>
+            <tr>
+                <th>
+                    @Ajax.ActionLink(
+                        SEOS.TableHeaderDocStatus,
+                        "ReceivedDocuments",
+                        new
+                        {
+                            sortColumn = EDelivery.WebPortal.Enums.eSortColumn.Status,
+                            sortOrder = Model.SortColumn == EDelivery.WebPortal.Enums.eSortColumn.Status
+                                ? opositeOrder :
+                                EDelivery.WebPortal.Enums.eSortOrder.Asc
+                        },
+                        new AjaxOptions
+                        {
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = updateTargetId
+                        },
+                        new { @class = "change-order" })
+                </th>
+                <th>
+                    @Ajax.ActionLink(
+                        SEOS.TableHeadeRegIndex,
+                        "ReceivedDocuments",
+                        new
+                        {
+                            sortColumn = EDelivery.WebPortal.Enums.eSortColumn.RegIndex,
+                            sortOrder = Model.SortColumn == EDelivery.WebPortal.Enums.eSortColumn.RegIndex
+                                ? opositeOrder
+                                : EDelivery.WebPortal.Enums.eSortOrder.Asc
+                        },
+                        new AjaxOptions
+                        {
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = updateTargetId
+                        },
+                        new { @class = "change-order" })
+                </th>
+                <th>
+                    @Ajax.ActionLink(
+                        SEOS.TableHeaderDocAbout,
+                        "ReceivedDocuments",
+                        new
+                        {
+                            sortColumn = EDelivery.WebPortal.Enums.eSortColumn.Title,
+                            sortOrder = Model.SortColumn == EDelivery.WebPortal.Enums.eSortColumn.Title
+                                ? opositeOrder
+                                : EDelivery.WebPortal.Enums.eSortOrder.Asc
+                        },
+                        new AjaxOptions
+                        {
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = updateTargetId
+                        },
+                        new { @class = "change-order" })
+                </th>
+                <th>
+                    @Ajax.ActionLink(
+                        SEOS.TableHeaderSender,
+                        "ReceivedDocuments",
+                        new
+                        {
+                            sortColumn = EDelivery.WebPortal.Enums.eSortColumn.SenderName,
+                            sortOrder = Model.SortColumn == EDelivery.WebPortal.Enums.eSortColumn.SenderName
+                                ? opositeOrder
+                                : EDelivery.WebPortal.Enums.eSortOrder.Asc
+                        },
+                        new AjaxOptions
+                        {
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = updateTargetId
+                        },
+                        new { @class = "change-order" })
+                </th>
+                <th>
+                    @Ajax.ActionLink(
+                        SEOS.TableHeaderDateReceived,
+                        "ReceivedDocuments",
+                        new
+                        {
+                            sortColumn = EDelivery.WebPortal.Enums.eSortColumn.DateReceived,
+                            sortOrder = Model.SortColumn == EDelivery.WebPortal.Enums.eSortColumn.DateReceived
+                                ? opositeOrder
+                                : EDelivery.WebPortal.Enums.eSortOrder.Asc
+                        },
+                        new AjaxOptions
+                        {
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = updateTargetId
+                        },
+                        new { @class = "change-order" })
+                </th>
+                <th>
+                    @Ajax.ActionLink(
+                        SEOS.TableHeaderDocKind,
+                        "ReceivedDocuments",
+                        new
+                        {
+                            sortColumn = EDelivery.WebPortal.Enums.eSortColumn.DocKind,
+                            sortOrder = Model.SortColumn == EDelivery.WebPortal.Enums.eSortColumn.DocKind
+                                ? opositeOrder
+                                : EDelivery.WebPortal.Enums.eSortOrder.Asc
+                        },
+                        new AjaxOptions
+                        {
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace,
+                            UpdateTargetId = updateTargetId
+                        },
+                        new { @class = "change-order" })
+                </th>
+            </tr>
+
+            @if (Model == null || Model.Documents == null || !Model.Documents.Any())
+            {
+                <tr>
+                    <td colspan="6">@SEOS.MessageNoReceivedDocuments</td>
+                </tr>
+            }
+
+            @foreach (var doc in Model.Documents)
+            {
+                <tr>
+                    <td>
+                        @EDelivery.WebPortal.Utils.SEOSHelper.GetSEOSStatusText(doc.Status)
+                    </td>
+                    <td>
+                        @doc.RegIndex
+                    </td>
+                    <td>
+                        <a href="@Url.Action("OpenReceivedDocument", "SEOS", new { id = doc.UniqueIdentifier })"
+                           title="@SEOS.TableActionOpenMessage">
+                            @(String.IsNullOrEmpty(doc.Subject) 
+                                ? doc.DocumentKind + " " + doc.RegIndex 
+                                : doc.Subject)
+                        </a>
+                    </td>
+                    <td>
+                        @doc.Sender
+                    </td>
+                    <td>
+                        @doc.DateReceived.Value.ToString(SystemConstants.DateTimeFormat)
+                    </td>
+                    <td>
+                        @doc.DocumentKind
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.CustomPagedListPager(
+        Model.Documents,
+        p => Url.Action("ReceivedDocuments", new { page = p, sortColumn = Model.SortColumn, sortOrder = Model.SortOrder }),
+        options)
+</div>
+

@@ -1,0 +1,56 @@
+﻿@using EDelivery.WebPortal.Extensions
+
+@model PagedListLight<ProfileHistoryRecord>
+
+@{
+    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
+    new AjaxOptions
+    {
+        HttpMethod = "GET",
+        InsertionMode = System.Web.Mvc.Ajax.InsertionMode.Replace,
+        UpdateTargetId = "history-content"
+    });
+
+    options.Display = PagedListDisplayMode.IfNeeded;
+    options.MaximumPageNumbersToDisplay = 6;
+    options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToFirstPage = PagedListDisplayMode.Never;
+    options.DisplayLinkToLastPage = PagedListDisplayMode.Never;
+}
+
+<div class="table-responsive" id="history-content">
+    @Html.CustomPagedListPager(Model, p => Url.Action("History", new { page = p }), options)
+
+    <table class="statistics">
+        <tbody>
+            <tr>
+                <th>@ProfilePage.HistoryTableDate</th>
+                <th>@ProfilePage.HistoryTableAction</th>
+                <th>@ProfilePage.HistoryTableActor</th>
+                <th>@ProfilePage.HistoryTableIP</th>
+                <th>@ProfilePage.HistoryTableDetails</th>
+            </tr>
+            @foreach (var message in Model)
+            {
+                <tr>
+                    <td>@message.Date.ToString(SystemConstants.DateTimeFormat)</td>
+                    <td>@message.Action</td>
+                    <td>@message.UserName</td>
+                    <td>@message.Ip</td>
+                    <td>
+                        @if (!String.IsNullOrEmpty(message.Details))
+                        {
+                            <div class="icon-hint-relative icon-hint--info"
+                                 data-toggle="tooltip"
+                                 data-original-title="@message.Details">
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.CustomPagedListPager(Model, p => Url.Action("History", new { page = p }), options)
+</div>

@@ -1,0 +1,536 @@
+﻿@page "/profiles/{ProfileId:int}"
+@attribute [Authorize]
+
+@using ED.DomainServices.Admin
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "profiles", "profiles" },
+        { "view", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+
+        <div class="content-right">
+            <div class="col-list">
+                @if (profile != null)
+                {
+                    <h2>
+                        @Localizer["TitlePrefix"]
+                        @(" ")
+                        @(profile.InfoCase == GetProfileInfoResponse.InfoOneofCase.IndividualInfo
+                            ? string.Join(" ",
+                                    new[]
+                                    {
+                                        profile.IndividualInfo.FirstName,
+                                        profile.IndividualInfo.MiddleName,
+                                        profile.IndividualInfo.LastName
+                                    }.Where(s => !string.IsNullOrWhiteSpace(s)))
+                            : profile.LegalEntityInfo.Name)
+                    </h2>
+                    <div style="padding-bottom: 20px">
+                        @if (profile.IsActive)
+                        {
+                            <button type="button" class="btn btn-s btn-primary butright warn"
+                                    @onclick="DeactivateAsync"
+                                    disabled="@deactivating">
+                                <span>@Localizer["BtnDeactivate"]</span>
+                                @if (deactivating)
+                                {
+                                    <div class="loader-container"></div>
+                                }
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-s btn-primary butright"
+                                    @onclick="ActivateAsync"
+                                    disabled="@(!profile.CanBeActivated || activating)">
+                                <span>@Localizer["BtnActivate"]</span>
+                                @if (activating)
+                                {
+                                    <div class="loader-container"></div>
+                                }
+                            </button>
+                        }
+
+                        @if (profile.IsReadOnly)
+                        {
+                            <button type="button" class="btn btn-s btn-primary butright mr10"
+                                    @onclick="MarkProfileAsNonReadonlyAsync"
+                                    disabled="@profileReadonlyDeactivating">
+                                <span>@Localizer["BtnReadonlyOff"]</span>
+                                @if (profileReadonlyDeactivating)
+                                {
+                                    <div class="loader-container"></div>
+                                }
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-s btn-primary butright warn mr10"
+                                    @onclick="MarkProfileAsReadonlyAsync"
+                                    disabled="@profileReadonlyActivating">
+                                <span>@Localizer["BtnReadonlyOn"]</span>
+                                @if (profileReadonlyActivating)
+                                {
+                                    <div class="loader-container"></div>
+                                }
+                            </button>
+                        }
+                    </div>
+                }
+
+                @if (profile != null)
+                {
+                    <h3 class="line20 topbrdr">
+                        @Localizer["SectionTitleInfo"]
+
+                        <a class="btn btn-s btn-primary butright"
+                           href="@($"profiles/edit/{ProfileId}")">
+                            <span>@Localizer["BtnEdit"]</span>
+                        </a>
+                    </h3>
+                    if (profile.RegistrationRequests.Any())
+                    {
+                        <div class="form-group">
+                            <label>@Localizer["FieldRegistrationRequest"]</label>
+                            <label class="strong">
+                                @foreach (var request in profile.RegistrationRequests)
+                                {
+                                    <a href="requests/@(request.RegistrationRequestId)">
+                                        @($"{request.CreateDate.ToLocalDateTime().ToString(Constants.DateTimeFormat)} {Localizer[$"FieldRegistrationRequestStatus_{request.Status}"]}")
+                                    </a>
+                                    <br />
+                                }
+                            </label>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label>@Localizer["Status"]</label>
+                        <label class="strong">
+                            @(profile.IsActive
+                                ? Localizer[$"Status_Active"]
+                                : Localizer[$"Status_Inactive"])
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldIsProfileReadOnly"]</label>
+                        <label class="strong">
+                            @(profile.IsReadOnly
+                                ? Localizer[$"FieldIsProfileReadOnly_True"]
+                                : Localizer[$"FieldIsProfileReadOnly_False"])
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldIsProfilePassive"]</label>
+                        <label class="strong">
+                            @(profile.IsPassive
+                                ? Localizer["FieldIsProfilePassive_True"]
+                                : Localizer["FieldIsProfilePassive_False"])
+                        </label>
+                    </div>
+                    <div class="form-group"></div>
+
+                    @if (profile.InfoCase == GetProfileInfoResponse.InfoOneofCase.IndividualInfo)
+                    {
+                        <div class="form-group">
+                            <label>@Localizer["FirstName"]</label>
+                            <label class="strong">@profile.IndividualInfo.FirstName</label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["MiddleName"]</label>
+                            <label class="strong">@profile.IndividualInfo.MiddleName</label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["LastName"]</label>
+                            <label class="strong">@profile.IndividualInfo.LastName</label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["IndividualIdentifier"]</label>
+                            <label class="strong">@profile.Identifier</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label>@Localizer["Name"]</label>
+                            <label class="strong">@profile.LegalEntityInfo.Name</label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["LegalEntityIdentifier"]</label>
+                            <label class="strong">@profile.Identifier</label>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label>@Localizer["CreatedBy"]</label>
+                        <label class="strong">@profile.CreatedBy</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["DateCreated"]</label>
+                        <label class="strong">
+                            @profile.DateCreated.ToLocalDateTime().ToString("g")
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["Phone"]</label>
+                        <label class="strong">
+                            <a href="tel:@profile.Phone">
+                                @profile.Phone
+                            </a>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["EmailAddress"]</label>
+                        <label class="strong">
+                            <a href="mailto:@profile.EmailAddress">
+                                @profile.EmailAddress
+                            </a>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["AddressCountry"]</label>
+                        <label class="strong">@profile.AddressCountry</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["AddressState"]</label>
+                        <label class="strong">@profile.AddressState</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["AddressCity"]</label>
+                        <label class="strong">@profile.AddressCity</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["AddressResidence"]</label>
+                        <label class="strong">@profile.AddressResidence</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldTargetGroup"]</label>
+                        <label class="strong">@profile.TargetGroupName</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldCodeMessages"]</label>
+                        <label class="strong">
+                            @(profile.EnableMessagesWithCode.HasValue && profile.EnableMessagesWithCode.Value
+                                ? Localizer["FieldCodeMessages_True"]
+                                : Localizer["FieldCodeMessages_False"])
+                        </label>
+                    </div>
+
+                    <h3 class="line20 topbrdr">
+                        @Localizer["SectionTitleQuotas"]
+
+                        <button type="button"
+                                class="btn btn-s btn-primary butright"
+                                @onclick="AddProfileQuotasAsync">
+                            <span>@Localizer["BtnEdit"]</span>
+                        </button>
+                    </h3>
+                    <div class="form-group">
+                        <label>@Localizer["FieldStorageQuotaInMb"]</label>
+                        <label class="strong">@profile.Quota.StorageQuotaInMb</label>
+                    </div>
+
+                    @if (profile.TargetGroupId != Constants.IndividualTargetGroupId)
+                    {
+                        if (profile.DefaultLogin != null)
+                        {
+                            <h3 class="line20 topbrdr">
+                                @Localizer["SectionTitleIntegrationLogin"]
+
+                                @if (profile.DefaultLogin.IsActive)
+                                {
+                                    <button type="button" class="btn btn-s btn-primary butright warn"
+                                            @onclick="async () => await DeactivateLoginAsync(profile.DefaultLogin.LoginId)"
+                                            disabled="@loginDeactivating">
+                                        <span>@Localizer["BtnDeactivate"]</span>
+                                        @if (loginDeactivating)
+                                        {
+                                            <div class="loader-container"></div>
+                                        }
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-s btn-primary butright"
+                                            @onclick="async () => await ActivateLoginAsync(profile.DefaultLogin.LoginId)"
+                                            disabled="@loginActivating">
+                                        <span>@Localizer["BtnActivate"]</span>
+                                        @if (loginActivating)
+                                        {
+                                            <div class="loader-container"></div>
+                                        }
+                                    </button>
+                                }
+                            </h3>
+
+                            <h3 class="line20 topbrdr">
+                                @Localizer["SectionTitleInfo"]
+
+                                <button type="button"
+                                        class="btn btn-s btn-primary butright"
+                                        @onclick="AddIntegrationLoginAsync">
+                                    <span>@Localizer["BtnEdit"]</span>
+                                </button>
+                            </h3>
+
+                            <div class="form-group">
+                                <label>@Localizer["FieldLoginCertificateThumbprint"]</label>
+                                <label class="strong">@profile.DefaultLogin.CertificateThumbprint</label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldLoginCertificatePushNotificationsUrl"]</label>
+                                <label class="strong">@profile.DefaultLogin.PushNotificationsUrl</label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldLoginEmail"]</label>
+                                <label class="strong">@profile.DefaultLogin.Email</label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldLoginPhone"]</label>
+                                <label class="strong">@profile.DefaultLogin.Phone</label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldLoginCanSendOnBehalfOf"]</label>
+                                <label class="strong">
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.CanSendOnBehalfOf ?? false}"]
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldEmailNotificationActive"]</label>
+                                <label class="strong">
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.EmailNotificationActive}"]
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldEmailNotificationOnDeliveryActive"]</label>
+                                <label class="strong">
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.EmailNotificationOnDeliveryActive}"]
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldViberNotificationActive"]</label>
+                                <label class="strong">
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.ViberNotificationActive}"]
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldViberNotificationOnDeliveryActive"]</label>
+                                <label class="strong">
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.ViberNotificationOnDeliveryActive}"]
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldLoginSmsNotificationActive"]</label>
+                                <label class="strong">
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.SmsNotificationActive}"]
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldLoginSmsNotificationOnDeliveryActive"]</label>
+                                <label class="strong">
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.SmsNotificationOnDeliveryActive}"]
+                                </label>
+                            </div>
+
+                            <h3 class="line20 topbrdr">
+                                @Localizer["SectionTitleEsbUserInfo"]
+
+                                <button type="button"
+                                        class="btn btn-s btn-primary butright"
+                                        @onclick="AddProfileEsbUserAsync">
+                                    <span>@Localizer["BtnEdit"]</span>
+                                </button>
+                            </h3>
+
+                            <div class="form-group">
+                                <label>@Localizer["FieldEsbUserOId"]</label>
+                                <label class="strong">@profile.EsbUser.OId</label>
+                            </div>
+                            <div class="form-group">
+                                <label>@Localizer["FieldEsbUserClientId"]</label>
+                                <label class="strong">@profile.EsbUser.ClientId</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <h3 class="line20 topbrdr">
+                                @Localizer["SectionTitleIntegrationLogin"]
+
+                                <button type="button"
+                                        class="btn btn-s btn-primary butright"
+                                        @onclick="AddIntegrationLoginAsync">
+                                    <span>@Localizer["BtnAdd"]</span>
+                                </button>
+                            </h3>
+                        }
+                    }
+
+                    <h3 class="line20 topbrdr">
+                        @Localizer["SectionTitleBlobs"]
+
+                        <button type="button" class="btn btn-s btn-primary butright"
+                                @onclick="AddDocumentAsync"
+                                disabled="@(!profile.IsActive)">
+                            <span>@Localizer["BtnAddBlob"]</span>
+                        </button>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="list">
+                            <tbody>
+                                <tr>
+                                    <th>@Localizer["ColFileName"]</th>
+                                    <th>@Localizer["ColCreatedBy"]</th>
+                                    <th>@Localizer["ColCreateDate"]</th>
+                                    <th></th>
+                                </tr>
+
+                                @if (!profile.Documents.Any())
+                                {
+                                    <tr>
+                                        <td colspan="4">@Localizer["NoDocuments"]</td>
+                                    </tr>
+                                }
+
+                                @foreach (var blob in profile.Documents)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="@BlobUrlCreator.CreateSystemBlobUrl(blob.BlobId)"
+                                               target="_blank">
+                                                @blob.FileName
+                                            </a>
+                                        </td>
+                                        <td>@blob.CreatedBy</td>
+                                        <td>@blob.CreateDate.ToLocalDateTime().ToString("g")</td>
+                                        <td class="file-actions">
+                                            <a href="javascript:void(0);" @onclick="async () => await RemoveDocumentAsync(blob.BlobId)">
+                                                <img src="img/trash-icon.png" class="delete" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (profile.TargetGroupId != Constants.IndividualTargetGroupId)
+                    {
+                        <h3 class="line20 topbrdr">
+                            @Localizer["SectionTitleLogins"]
+                            <button type="button" class="btn btn-s btn-primary butright"
+                                    @onclick="AddLoginAsync"
+                                    disabled="@(!profile.IsActive)">
+                                <span>@Localizer["BtnAddLogin"]</span>
+                            </button>
+                        </h3>
+                        <div class="table-responsive">
+                            <table class="list">
+                                <tbody>
+                                    <tr>
+                                        <th>@Localizer["ColElectronicSubjectName"]</th>
+                                        <th>@Localizer["ColAccessGrantedByElectronicSubjectName"]</th>
+                                        <th>@Localizer["ColAccessGrantedOn"]</th>
+                                        <th></th>
+                                    </tr>
+
+                                    @if (!profile.Logins.Any())
+                                    {
+                                        <tr>
+                                            <td colspan="4">@Localizer["NoLogins"]</td>
+                                        </tr>
+                                    }
+
+                                    @foreach (var login in profile.Logins)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a href="profiles/@(login.ProfileId)">
+                                                    @login.ElectronicSubjectName
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @if (login.IsDefault)
+                                                {
+                                                    <strong>@login.AccessGrantedByElectronicSubjectName</strong>
+                                                }
+                                                else
+                                                {
+                                                    @login.AccessGrantedByElectronicSubjectName
+                                                }
+                                            </td>
+                                            <td>@login.AccessGrantedOn.ToLocalDateTime().ToString("g")</td>
+                                            <td class="file-actions">
+                                                <div>
+                                                    <a href="javascript:void(0);" @onclick="() => ViewNotificationsAsync(login.LoginId)">
+                                                        <img src="img/mail-read.png" width="25" />
+                                                    </a>
+                                                    @if (!login.IsDefault)
+                                                    {
+                                                        <a href="javascript:void(0);" @onclick="() => ViewLoginAsync(login.LoginId)">
+                                                            <img src="img/edit-icon.png" />
+                                                        </a>
+                                                        <a href="javascript:void(0);" @onclick="async () => await RemoveLoginAsync(login.LoginId)">
+                                                            <img src="img/trash-icon.png" class="delete" />
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <h3 class="line20 topbrdr">
+                            @Localizer["SectionTitleProfiles"]
+                        </h3>
+                        <div class="table-responsive">
+                            <table class="list">
+                                <tbody>
+                                    <tr>
+                                        <th>@Localizer["ColStatus"]</th>
+                                        <th>@Localizer["ColElectronicSubjectName"]</th>
+                                        <th>@Localizer["ColAccessGrantedByElectronicSubjectName"]</th>
+                                        <th>@Localizer["ColTargetGroup"]</th>
+                                    </tr>
+
+                                    @if (!profile.Profiles.Any())
+                                    {
+                                        <tr>
+                                            <td colspan="4">@Localizer["NoProfiles"]</td>
+                                        </tr>
+                                    }
+
+                                    @foreach (var profile1 in profile.Profiles)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(profile1.IsActive
+                                                    ? Localizer[$"Status_Active"]
+                                                    : Localizer[$"Status_Inactive"])
+                                            </td>
+                                            <td>
+                                                <a href="profiles/@(profile1.ProfileId)">
+                                                    @profile1.ProfileName
+                                                </a>
+                                            </td>
+                                            <td>@profile1.AccessGrantedBy</td>
+                                            <td>@profile1.TargetGroupName</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

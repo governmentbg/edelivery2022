@@ -1,0 +1,46 @@
+﻿@model SEOSRegisteredEntitiesModel
+
+<div class="table-responsive" id="registeredEntitiesHolder">
+    <table class="statistics unbreakable">
+        <tbody>
+            <tr>
+                <th>@SEOS.TableHeaderEntityStatus</th>
+                <th>@SEOS.TableHeaderEntityName</th>
+                <th>@SEOS.TableHeaderEntityEIK</th>
+                <th>@SEOS.TableHeaderPhone</th>
+                <th>@SEOS.TableHeaderEmail</th>
+                <th>@SEOS.Action</th>
+            </tr>
+
+            @if (Model.Entities == null || !Model.Entities.Any())
+            {
+                <tr>
+                    <td colspan="6">
+                        @(String.IsNullOrEmpty(Model.SearchPhase)
+                            ? SEOS.MessageNoEntitiesForSearch
+                            : SEOS.MessageNoEntities)
+                    </td>
+                </tr>
+            }
+
+            @foreach (var item in Model.Entities)
+            {
+                var statusClass = item.Status == EDelivery.WebPortal.SeosService.EntityServiceStatusEnum.Active
+                    ? "dot"
+                    : "dot inactive";
+
+                <tr>
+                    <td class="@statusClass"><div></div></td>
+                    <td>@item.AdministrationBodyName</td>
+                    <td>@item.EIK</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Emailddress</td>
+                    <td>
+                        @if (item.Status == EDelivery.WebPortal.SeosService.EntityServiceStatusEnum.Active
+                            && item.UniqueIdentifier != ViewBag.EDeliveryGuid)
+                        {<a href="@Url.Action("NewSEOSDocument", "SEOS", new { id=item.UniqueIdentifier})" class="btn btn-s btn-light">@SEOS.MessageAction</a>}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

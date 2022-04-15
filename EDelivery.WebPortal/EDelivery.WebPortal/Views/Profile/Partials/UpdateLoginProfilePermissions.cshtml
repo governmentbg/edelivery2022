@@ -1,0 +1,135 @@
+﻿@using EDelivery.WebPortal.Models.Profile.Administration
+
+@model UpdateLoginProfilePermissionsViewModel
+
+@using (Ajax.BeginForm(
+    "UpdateLoginProfilePermissions",
+    "Profile",
+    null,
+    new AjaxOptions()
+    {
+        AllowCache = false,
+        HttpMethod = "POST",
+        OnSuccess = "gf.hideModal()",
+        UpdateTargetId = "section-profile-access",
+        InsertionMode = InsertionMode.ReplaceWith
+    },
+    new { }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.LoginId)
+    @Html.HiddenFor(x => x.ProfileId)
+    @Html.HiddenFor(m => m.IsOwner)
+    @Html.HiddenFor(m => m.LoginName)
+    @Html.HiddenFor(m => m.ProfileIdentifier)
+
+    <h2>Права</h2>
+
+    <div class="modal-content">
+
+        <section class="form-section">
+            <div class="form-col">
+                <label for="">Потребител:</label>
+                <div class="form-element">
+                    <strong>
+                        @Model.LoginName
+                    </strong>
+                </div>
+            </div>
+            <div class="form-col">
+                <label for="">Идентификатор:</label>
+                <div class="form-element">
+                    <strong>
+                        @Model.ProfileIdentifier
+                    </strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="form-col">
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.IsRepresentative)
+                    @Html.LabelFor(x => x.IsRepresentative, "Роля представител")
+                </div>
+            </div>
+        </section>
+
+        @{ 
+            string displayTable = Model.IsRepresentative
+                ? string.Empty
+                : "display:none;";
+        }
+
+        <table id="templates-permission-matrix"
+               class="statistics"
+               style="@displayTable">
+            <tbody>
+                <tr>
+                    <th>Шаблон</th>
+                    <th>Четене</th>
+                    <th>Писане</th>
+                </tr>
+
+                @for (int i = 0; i < Model.Templates.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.Templates[i].TemplateName
+                            @Html.HiddenFor(m => Model.Templates[i].TemplateId)
+                            @Html.HiddenFor(m => Model.Templates[i].TemplateName)
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(m => Model.Templates[i].HasReadPermission)
+                            @Html.LabelFor(m => Model.Templates[i].HasReadPermission, " ")
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(m => Model.Templates[i].HasWritePermission)
+                            @Html.LabelFor(m => Model.Templates[i].HasWritePermission, " ")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <section class="form-section">
+            <div class="form-col">
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.IsFullAccessMember)
+                    @Html.LabelFor(x => x.IsFullAccessMember, "Роля представител с пълни права")
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    @Html.CheckBoxFor(x => x.IsAdmin)
+                    @Html.LabelFor(x => x.IsAdmin, "Роля администратор")
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-border btn-m" type="button" id="cancel-edit-permissions">Откажи</button>
+        <button class="btn-primary btn-m" type="submit">Запиши</button>
+    </section>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel-edit-permissions').on('click', function () {
+                gf.hideModal();
+            });
+
+            $('#IsRepresentative').on('change', function () {
+                var isChecked = !!$(this).prop('checked');
+                if (isChecked) {
+                    $('#templates-permission-matrix').show();
+                    $('#templates-permission-matrix input').prop('disabled', false);
+                }
+                else {
+                    $('#templates-permission-matrix').hide();
+                    $('#templates-permission-matrix input').prop('disabled', true);
+                }
+            });
+        });
+    </script>
+}

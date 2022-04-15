@@ -1,0 +1,109 @@
+﻿@using EDelivery.WebPortal.Extensions
+
+@model RegisteredSubjectsListModel
+
+@{
+    var searchTile = Common.SearchRegisteredAdministration;
+
+    switch (Model.Type)
+    {
+        case EDelivery.WebPortal.Enums.eRegisteredSubjectsType.Administration:
+            searchTile = Common.SearchRegisteredAdministration;
+            break;
+        case EDelivery.WebPortal.Enums.eRegisteredSubjectsType.SocialOrganisation:
+            searchTile = Common.SearchRegisteredSocialOrganisation;
+            break;
+        case EDelivery.WebPortal.Enums.eRegisteredSubjectsType.LegalPerson:
+            searchTile = Common.SearchRegisteredLegalPerson;
+            break;
+    }
+
+    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
+        new AjaxOptions
+        {
+            HttpMethod = "POST",
+            InsertionMode = System.Web.Mvc.Ajax.InsertionMode.ReplaceWith,
+            UpdateTargetId = "list-content-" + Model.Type
+        });
+
+    options.Display = PagedListDisplayMode.IfNeeded;
+    options.MaximumPageNumbersToDisplay = 6;
+    options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToFirstPage = PagedListDisplayMode.Never;
+    options.DisplayLinkToLastPage = PagedListDisplayMode.Never;
+}
+
+
+<div class="content-wrapper" id="list-content-@Model.Type">
+    @using (Ajax.BeginForm(
+        "GetRegisteredOfType",
+        null,
+        new AjaxOptions()
+        {
+            AllowCache = false,
+            HttpMethod = "POST",
+            InsertionMode = System.Web.Mvc.Ajax.InsertionMode.ReplaceWith,
+            UpdateTargetId = "list-content-" + Model.Type
+        },
+        new { id = "registered-" + Model.Type }))
+    {
+        @Html.AntiForgeryToken();
+        @Html.Hidden("type", Model.Type)
+
+        <section class="form-section">
+            <ul class="col-list">
+                <li class="form-row">
+                    <label for="Search-@Model.Type">@searchTile</label>
+                    <div class="row-group">
+                        <div>
+                            @Html.TextBoxFor(x => x.Search, new { @class = "input-validation-valid", @id = "Search-" + Model.Type })
+                        </div>
+                        <button class="btn-border btn-l" type="submit">@UIControls.ButtonSearch</button>
+                    </div>
+                </li>
+            </ul>
+        </section>
+    }
+
+    @if (Model.Items.Any())
+    {
+        <div class="table-responsive">
+            @Html.CustomPagedListPager(
+                   Model.Items,
+                   p => Url.Action("GetRegisteredOfType", new { type = Model.Type, search = Model.Search, page = p }),
+                   options)
+
+            <table class="statistics">
+                <tbody>
+                    <tr>
+                        <th>@SEOS.TableHeaderEntityName</th>
+                        <th>@SEOS.TableHeaderEntityEIK</th>
+                    </tr>
+
+                    @if (Model.Items == null || !Model.Items.Any())
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @(String.IsNullOrEmpty(Model.Search) ? Common.MessageNoItemsForSearch : Common.MessageNoItems)
+                            </td>
+                        </tr>
+                    }
+
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.EIK</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @Html.CustomPagedListPager(
+                   Model.Items,
+                   p => Url.Action("GetRegisteredOfType", new { type = Model.Type, search = Model.Search, page = p }),
+                   options)
+        </div>
+    }
+</div>

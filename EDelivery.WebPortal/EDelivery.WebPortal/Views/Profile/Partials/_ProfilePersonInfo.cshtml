@@ -1,0 +1,62 @@
+﻿@model PersonSpecificModel
+
+@using (Ajax.BeginForm(
+     "ProfileNamesSync",
+     null,
+     new AjaxOptions()
+     {
+         HttpMethod = "POST",
+         InsertionMode = InsertionMode.ReplaceWith,
+         UpdateTargetId = "syncPersonNamesForm"
+     },
+     new { id = "syncPersonNamesForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.FirstName)
+    @Html.HiddenFor(x => x.MiddleName)
+    @Html.HiddenFor(x => x.LastName)
+
+    <div class="wrapper content-wrapper message-box">
+        <div class="message-content">
+            <h3>@ProfilePage.TitleDataPerson:</h3>
+
+            <div class="form-row">
+                <div class="da-tooltip attached iconed">
+                    <div class="icon-info"></div>
+                    @ProfilePage.LabelPersonUpdateNames
+                </div>
+            </div>
+
+            <section class="form-section form-row">
+                <button type="submit" class="btn-primary btn-l">@ProfilePage.ButtonGRAONamesSync</button>
+                <div class="form-element">
+                    @Html.HiddenFor(x => x.EGN)
+                    @Html.ValidationMessageFor(x => x.EGN, null, new { @class = "validation-message" })
+                </div>
+            </section>
+
+            <div class="form-row">
+                <table class="blank-list">
+                    <tbody>
+                        <tr>
+                            <td>@ProfilePage.LabelPersonFirstName:</td>
+                            <td>@Model.FirstName</td>
+                        </tr>
+                        <tr>
+                            <td>@ProfilePage.LabelPersonMiddleName:</td>
+                            <td>@Model.MiddleName</td>
+                        </tr>
+                        <tr>
+                            <td>@ProfilePage.LabelPersonLastName:</td>
+                            <td>@Model.LastName</td>
+                        </tr>
+                        <tr>
+                            <td>@ProfilePage.LabelPersonalIdentifier:</td>
+                            <td>@Model.EGN</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

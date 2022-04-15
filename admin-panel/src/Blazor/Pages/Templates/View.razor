@@ -1,0 +1,258 @@
+﻿@page "/templates/{TemplateId:int}"
+@attribute [Authorize]
+
+@using ED.AdminPanel.Blazor.Pages.Templates.Components.Preview
+@inject IStringLocalizer<View> Localizer
+@inject CommonStringLocalizer CommonLocalizer
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "templates", "templates" },
+        { "view", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            @if (template != null)
+            {
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            @if (template.ArchiveDate != null)
+                            {
+                                <li class="form-row">
+                                    <label for="Name">@Localizer["ArchiveDate"]:</label>
+                                    <div class="form-element">
+                                        @template.ArchiveDate.ToLocalDateTime().ToString("g")
+                                    </div>
+                                </li>
+                            }
+                            @if (template.PublishDate != null)
+                            {
+                                <li class="form-row">
+                                    <label for="Name">@Localizer["PublishDate"]:</label>
+                                    <div class="form-element">
+                                        @template.PublishDate.ToLocalDateTime().ToString("g")
+                                    </div>
+                                </li>
+                            }
+                            <li class="form-row">
+                                <label for="Name">@Localizer["Name"]:</label>
+                                <div class="form-element">
+                                    @template.Name
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="Name">@Localizer["IdentityNumber"]:</label>
+                                <div class="form-element">
+                                    @template.IdentityNumber
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="Name">@Localizer["IsSystemTemplate"]:</label>
+                                <div class="form-element">
+                                    @CommonLocalizer[template.IsSystemTemplate.ToString()]
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="Name">@Localizer["ResponseTemplateName"]:</label>
+                                <div class="form-element">
+                                    @template.ResponseTemplateName
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="Name">@Localizer["ReadLoginSecurityLevelName"]:</label>
+                                <div class="form-element">
+                                    @template.ReadLoginSecurityLevelName
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="Name">@Localizer["WriteLoginSecurityLevelName"]:</label>
+                                <div class="form-element">
+                                    @template.WriteLoginSecurityLevelName
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="Name">@Localizer["Blob"]:</label>
+                                <div class="form-element">
+                                    @template.BlobName
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="SenderDocumentField">
+                                    @Localizer["FieldSenderDocumentField"]:
+                                </label>
+                                <div class="form-element">
+                                    @template.SenderDocumentField
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="RecipientDocumentField">
+                                    @Localizer["FieldRecipientDocumentField"]:
+                                </label>
+                                <div class="form-element">
+                                    @template.RecipientDocumentField
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="SubjectDocumentField">
+                                    @Localizer["FieldSubjectDocumentField"]:
+                                </label>
+                                <div class="form-element">
+                                    @template.SubjectDocumentField
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="DateSentDocumentField">
+                                    @Localizer["FieldDateSentDocumentField"]:
+                                </label>
+                                <div class="form-element">
+                                    @template.DateSentDocumentField
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="DateReceivedDocumentField">
+                                    @Localizer["FieldDateReceivedDocumentField"]:
+                                </label>
+                                <div class="form-element">
+                                    @template.DateReceivedDocumentField
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="SenderSignatureDocumentField">
+                                    @Localizer["FieldSenderSignatureDocumentField"]:
+                                </label>
+                                <div class="form-element">
+                                    @template.SenderSignatureDocumentField
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="RecipientSignatureDocumentField">
+                                    @Localizer["FieldRecipientSignatureDocumentField"]:
+                                </label>
+                                <div class="form-element">
+                                    @template.RecipientSignatureDocumentField
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="form-section">
+                        <ul class="col-list">
+                            @foreach (var item in content)
+                            {
+                                <li @key="item.Id" class="form-row">
+                                    <FieldPreview Model="@item" />
+                                </li>
+                            }
+                        </ul>
+                    </section>
+
+                    <section class="form-section">
+                        <h3>@Localizer["PermissionSectionTitle"]</h3>
+                        <button type="button" class="btn-light btn-l" @onclick="AddPermissionsAsync">
+                            + @Localizer["PermissionAddBtn"]
+                        </button>
+                        <div class="form-row">
+                            <div class="table-responsive">
+                                <table class="statistics">
+                                    <tbody>
+                                        <tr>
+                                            <th>@Localizer["PermissionNameCol"]</th>
+                                            <th>@Localizer["PermissionCanSendCol"]</th>
+                                            <th>@Localizer["PermissionCanReceiveCol"]</th>
+                                            <th></th>
+                                        </tr>
+                                        @foreach (var item in permissions.TemplateProfiles)
+                                        {
+                                            <tr @key="item.ProfileId">
+                                                <td>@item.ProfileName</td>
+                                                <td>@(item.CanSend ? "+" : string.Empty)</td>
+                                                <td>@(item.CanReceive ? "+" : string.Empty)</td>
+                                                <td class="file-actions">
+                                                    <div>
+                                                        <a href="javascript:void(0);"
+                                                           @onclick="async () => await DeleteProfilePermissionAsync(item.ProfileId)">
+                                                            <img src="img/trash-icon.png" class="delete" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @if (permissions.TemplateProfiles.Count == 0)
+                                        {
+                                            <tr><td colspan="4">@Localizer["NoPermissionProfiles"]</td></tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                <br />
+
+                                <table class="statistics">
+                                    <tbody>
+                                        <tr>
+                                            <th>@Localizer["PermissionNameCol"]</th>
+                                            <th>@Localizer["PermissionCanSendCol"]</th>
+                                            <th>@Localizer["PermissionCanReceiveCol"]</th>
+                                            <th></th>
+                                        </tr>
+                                        @foreach (var item in permissions.TemplateTargetGroups)
+                                        {
+                                            <tr @key="item.TargetGroupId">
+                                                <td>@item.TargetGroupName</td>
+                                                <td>@(item.CanSend ? "+" : string.Empty)</td>
+                                                <td>@(item.CanReceive ? "+" : string.Empty)</td>
+                                                <td class="file-actions">
+                                                    <div>
+                                                        <a href="javascript:void(0);"
+                                                           @onclick="async () => await DeleteTargetGroupPermissionAsync(item.TargetGroupId)">
+                                                            <img src="img/trash-icon.png" class="delete" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @if (permissions.TemplateTargetGroups.Count == 0)
+                                        {
+                                            <tr><td colspan="4">@Localizer["NoPermissionTargetGroups"]</td></tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section form-row button-row-right">
+                        <a class="btn btn-border btn-l" href="templates">&lt; @Localizer["BackBtn"]</a>
+                        @if (template.ArchiveDate == null)
+                        {
+                            <button class="btn btn-primary btn-l" @onclick="ArchiveAsync">
+                                @Localizer["ArchiveBtn"]
+                            </button>
+                        }
+                        @if (template.PublishDate == null && template.ArchiveDate == null)
+                        {
+                            <a class="btn btn-primary btn-l" href="templates/edit/@template.TemplateId">
+                                @Localizer["EditBtn"]
+                            </a>
+                            <button class="btn btn-primary btn-l" @onclick="PublishAsync">
+                                @Localizer["PublishBtn"]
+                            </button>
+                        }
+                    </section>
+                </div>
+            }
+        </div>
+    </div>
+</div>

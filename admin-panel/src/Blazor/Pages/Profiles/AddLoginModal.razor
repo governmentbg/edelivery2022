@@ -1,0 +1,103 @@
+﻿@if (model != null)
+{
+    <EditForm Model="@model" OnValidSubmit="SubmitFormAsync">
+        <DataAnnotationsValidator />
+        <ServerSideValidator @ref="serverSideValidator" />
+
+        @if (model.FindIndividual)
+        {
+            <h2>@Localizer["TitleFindIndividual"]</h2>
+            <section class="form-section">
+                <div class="form-col">
+                    <label for="Identifier">@Localizer["FieldIdentifier"]</label>
+                    <div class="form-element">
+                        <InputText type="text" id="Identifier" @bind-Value="model.Identifier" />
+                        <ValidationMessage For="() => model.Identifier" />
+                    </div>
+                </div>
+            </section>
+        }
+        else
+        {
+            <h2>@Localizer["TitleSetPermissions"]</h2>
+            <section class="form-section">
+                <div class="form-col">
+                    <label for="">@Localizer["FieldProfileElectronicSubjectName"]</label>
+                    <div class="form-element">
+                        <strong>
+                            @model.LoginElectronicSubjectName
+                        </strong>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <label for="">@Localizer["FieldIdentifier"]</label>
+                    <div class="form-element">
+                        <strong>
+                            @model.Identifier
+                        </strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <div class="form-col">
+                    <div class="form-group">
+                        <InputCheckbox id="IsRepresentative" @bind-Value="model.IsRepresentative" />
+                        <label for="IsRepresentative" style="width: 100%;">@Localizer["FieldIsRepresentative"]</label>
+                    </div>
+                </div>
+            </section>
+
+            @if (model.IsRepresentative)
+            {
+                <table id="templates-permission-matrix" class="statistics">
+                    <tbody>
+                        <tr>
+                            <th>@Localizer["ColumnTemplateName"]</th>
+                            <th>@Localizer["ColumnHasReadPermission"]</th>
+                            <th>@Localizer["ColumnHasWritePermission"]</th>
+                        </tr>
+
+                        @for (int i = 0; i < model.Templates.Length; i++)
+                        {
+                            var template = model.Templates[i];
+                            <tr>
+                                <td>@template.TemplateName</td>
+                                <td>
+                                    <InputCheckbox id="@($"HasReadPermission_{i}")" @bind-Value="template.HasReadPermission" />
+                                    <label for="@($"HasReadPermission_{i}")" style="width: 100%;"></label>
+                                </td>
+                                <td>
+                                    <InputCheckbox id="@($"HasWritePermission_{i}")" @bind-Value="template.HasWritePermission" />
+                                    <label for="@($"HasWritePermission_{i}")" style="width: 100%;"></label>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <section class="form-section">
+                <div class="form-col">
+                    <div class="form-group">
+                        <InputCheckbox id="IsFullAccessMember" @bind-Value="model.IsFullAccessMember" />
+                        <label for="IsFullAccessMember" style="width: 100%;">@Localizer["FieldIsFullAccessMember"]</label>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <InputCheckbox id="IsAdmin" @bind-Value="model.IsAdmin" />
+                        <label for="IsAdmin" style="width: 100%;">@Localizer["FieldIsAdmin"]</label>
+                    </div>
+                </div>
+            </section>
+        }
+
+        <section class="form-section form-row button-row-right">
+            <button class="btn-border btn-m" type="button" @onclick="CancelAsync">@Localizer["BtnCancel"]</button>
+            <button class="btn-primary btn-m" type="submit">
+                @(model.FindIndividual ? Localizer["BtnContinue"] : Localizer["BtnAdd"])
+            </button>
+        </section>
+    </EditForm>
+}

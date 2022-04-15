@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.Keystore";
+
+package key_sync;
+
+import "google/protobuf/empty.proto";
+
+service KeySync {
+  rpc ImportRsaKey (ImportRsaKeyRequest) returns (google.protobuf.Empty);
+}
+
+message ImportRsaKeyRequest {
+  string key_name = 1;
+  bytes key_data = 2;
+}

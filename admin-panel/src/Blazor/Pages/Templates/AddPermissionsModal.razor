@@ -1,0 +1,43 @@
+﻿<EditForm Model="@model" OnValidSubmit="SubmitFormAsync">
+    <DataAnnotationsValidator />
+
+    <h2>@Localizer["Title"]</h2>
+
+    <section class="form-section">
+        <div class="form-col">
+            <label for="ProfileIds">@Localizer["ProfileIds"]<span class="txt-red">*</span></label>
+            <div class="form-element">
+                <Select2MultiField id="ProfileIds"
+                                   @bind-Value="model.ProfileIds"
+                                   Url="nomenclatures/profiles" />
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="TargetGroupIds">@Localizer["TargetGroupIds"]<span class="txt-red">*</span></label>
+            <div class="form-element">
+                <Select2MultiField id="TargetGroupIds"
+                                   @bind-Value="model.TargetGroupIds"
+                                   Url="nomenclatures/targetGroups" />
+            </div>
+        </div>
+        <div class="form-col">
+            <div class="form-group">
+                <InputCheckbox id="CanSend" @bind-Value="model.CanSend" />
+                <label for="CanSend" style="width: 100%;">@Localizer["CanSend"]</label>
+            </div>
+        </div>
+        <div class="form-col">
+            <div class="form-group">
+                <InputCheckbox id="CanReceive" @bind-Value="model.CanReceive" />
+                <label for="CanReceive" style="width: 100%;">@Localizer["CanReceive"]</label>
+            </div>
+        </div>
+
+        <ValidationSummary />
+    </section>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-border btn-m" type="button" @onclick="CancelAsync">@Localizer["CancelBtn"]</button>
+        <button class="btn-primary btn-m" type="submit">@Localizer["AddBtn"]</button>
+    </section>
+</EditForm>

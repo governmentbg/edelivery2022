@@ -1,0 +1,22 @@
+﻿@model InboxViewModel
+
+@{
+    ViewBag.Title = Common.TitleReceivedMessages;
+    ViewBag.SearchTitle = ProfilePage.TableHeaderMessageTitle;
+    ViewBag.SearchElSubject = ProfilePage.TableHeaderMessageSender;
+
+    ViewBag.SearchDates = ProfilePage.LabelReceivedInPeriod;
+    ViewBag.Legend = ProfilePage.TitleSearchReceivedMessages;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleReceivedMessages</h2>
+
+        @Html.Partial("Partials/_SearchMessages", Model.SearchFilter)
+
+        @Html.Partial("Partials/_InboxMessageList", Model)
+    </div>
+</div>

@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutBase.cshtml";
+}
+
+<div class="gradient-decor"></div>
+
+<div class="wrapper content-wrapper pt-0">
+    @RenderBody()
+</div>
+
+@RenderSection("scripts", required: false)

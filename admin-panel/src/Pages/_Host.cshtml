@@ -1,0 +1,94 @@
+﻿@page "/"
+@namespace ED.AdminPanel.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+@using System.Globalization;
+@using ED.AdminPanel
+@using ED.AdminPanel.Blazor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ССЕВ Административен панел</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="~/css/alertify.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/datepicker.css" />
+    <link rel="stylesheet" href="~/css/select2.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+    <link rel="stylesheet" href="~/css/blazor.css" />
+    <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
+
+    @* Add for component css isolation *@
+    @*<link rel="stylesheet" href="ED.AdminPanel.styles.css" />*@
+</head>
+<body class="admin">
+    @{
+        this.HttpContext.AppendCultureCookie(
+            CultureInfo.CurrentCulture,
+            CultureInfo.CurrentUICulture);
+
+        ConnectionInfo connectionInfo =
+            new(Request.HttpContext.Connection.RemoteIpAddress.ToString());
+    }
+
+    <component type="typeof(App)"
+               render-mode="ServerPrerendered"
+               param-ConnectionInfo="connectionInfo" />
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+    <script src="_content/Blazored.Modal/blazored.modal.js"></script>
+
+    <script src='https://unpkg.com/systemjs@6.10.2/dist/system.js'></script>
+    <script src='https://unpkg.com/systemjs@6.10.2/dist/extras/amd.js'></script>
+    <script type="systemjs-importmap">
+        {
+          "imports": {
+            "jquery": "https://code.jquery.com/jquery-3.5.1.min.js",
+            "select2": "https://cdn.jsdelivr.net/npm/select2@4.0.5/dist/js/select2.full.min.js",
+            "select2/bg": "https://cdn.jsdelivr.net/npm/select2@4.0.5/dist/js/i18n/bg.min.js",
+            "datepicker": "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js",
+            "datepicker/bg": "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.bg.min.js",
+            "uppy": "https://releases.transloadit.com/uppy/v2.0.2/uppy.min.js"
+          }
+        }
+    </script>
+    <script>
+        @* preload jquery *@
+        System.import("jquery");
+
+        window.pathBase = '@HttpContext.Request.PathBase/system/ping';
+    </script>
+    <script src="~/scripts/poll.js"></script>
+
+    <environment include="Production">
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144844293-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', 'UA-144844293-1');
+        </script>
+    </environment>
+</body>
+</html>

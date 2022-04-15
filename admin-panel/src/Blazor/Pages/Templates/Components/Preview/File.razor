@@ -1,0 +1,62 @@
+﻿@using ED.AdminPanel.Blazor.Pages.Templates.Components.Models
+@inject IStringLocalizer<File> Localizer
+
+<label for="@Model.Id">@Model.Label:</label>
+<div class="f-grow-100">
+    <BlobField id="@Model.Id"
+               Type="@FileType.Template"
+               @bind-Value="BlobValue"
+               MaxFileSizeBytes="@(Model.MaxSize * 1024 * 1024)"
+               AllowedFileTypes="@(Model.AllowedExtensions?.Split(",", StringSplitOptions.RemoveEmptyEntries))" />
+
+    @if (Model.Instances > 1)
+    {
+        <div class="row-group" style="justify-content: right;">
+            <button type="button"
+                    class="btn-primary btn-l"
+                    style="margin-right: 14px;">
+                @Localizer["BtnShowMore"]
+            </button>
+        </div>
+    }
+</div>
+
+@code
+{
+    [Parameter] public FileComponent Model { get; set; }
+
+    private BlobValue BlobValue
+    {
+        get
+        {
+            if (this.Model.Id != Guid.Empty &&
+                !string.IsNullOrEmpty(this.Model.FileName))
+            {
+                return new BlobValue(this.Model.FileName, this.Model.FileId.Value);
+            }
+
+            return null;
+        }
+        set
+        {
+            if (value != null)
+            {
+                this.Model.FileId = value.BlobId;
+                this.Model.FileName = value.Name;
+            }
+            else
+            {
+                this.Model.FileId = null;
+                this.Model.FileName = null;
+            }
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (this.Model == null)
+        {
+            throw new Exception($"Required parameter {nameof(Model)} is null");
+        }
+    }
+}

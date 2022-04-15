@@ -1,0 +1,131 @@
+﻿@page "/seos-participants"
+@inherits PagedComponent
+@attribute [Authorize]
+
+@using System.Threading
+@using ED.DomainServices.Admin
+@using Microsoft.Extensions.Primitives
+@inject Admin.AdminClient AdminClient
+@inject IStringLocalizer<Index> Localizer
+@inject IModalService Modal
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "seos-participants", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <div style="padding-bottom: 15px;">
+                <a href="seos-participants/create"
+                   class="btn btn-border btn-m butright">
+                    @Localizer["CreateSeosParticipant"]
+                </a>
+                <h3>@Localizer["Title"]</h3>
+            </div>
+
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(seosParticipants?.Length ?? 0)" />
+            <div class="table-responsive" style="position: relative">
+                @if (IsLoading)
+                {
+                    <div class="loader-container">
+                    </div>
+                }
+                <table class="list">
+                    <tbody>
+                        <tr>
+                            <th>@Localizer["ColumnIdentifier"]</th>
+                            <th>@Localizer["ColumnName"]</th>
+                            <th>@Localizer["ColumnEmail"]</th>
+                            <th>@Localizer["ColumnPhone"]</th>
+                            <th>@Localizer["ColumnServiceUrl"]</th>
+                            <th>@Localizer["ColumnCertificate"]</th>
+                            <th></th>
+                        </tr>
+                        @if (seosParticipants == null)
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <div class="loader page-loader show">
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @if (!seosParticipants.Result.Any())
+                            {
+                                <tr>
+                                    <td colspan="6">@Localizer["NoItems"]</td>
+                                </tr>
+                            }
+                            @foreach (var participant in seosParticipants.Result)
+                            {
+                                <tr>
+                                    <td>@participant.Identifier</td>
+                                    <td>@participant.Name</td>
+                                    <td>@participant.Email</td>
+                                    <td>@participant.Phone</td>
+                                    <td>@participant.ServiceUrl</td>
+                                    <td>@participant.CertificateNumber</td>
+                                    <td>
+                                        <a href="javascript:void(0);"
+                                           @onclick="async () => await RemoveParticipant(participant.Id)">
+                                            <img src="img/trash-icon.png" class="delete" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(seosParticipants?.Length ?? 0)" />
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private GetSeosParticipantsListResponse seosParticipants;
+
+    protected override async Task LoadDataAsync(CancellationToken ct)
+    {
+        this.seosParticipants =
+            await this.AdminClient.GetSeosParticipantsListAsync(
+                new GetSeosParticipantsListRequest
+                {
+                    Limit = base.Limit,
+                    Offset = base.Offset
+                },
+                cancellationToken: ct);
+    }
+
+    protected async Task RemoveParticipant(int participantId)
+    {
+        if (!(await Modal.ShowConfirmDangerModal(this.Localizer["MessageConfirmMemberDelete"])))
+        {
+            return;
+        }
+
+        _ = await this.AdminClient.DeleteSeosParticipantAsync(
+            new DeleteSeosParticipantRequest
+            {
+                ParticipantId = participantId
+            });
+
+        this.NavigationManager.NavigateToSameWithQuery(
+            new Dictionary<string, StringValues>
+            {
+                { "page", "1".ToString() }
+            });
+    }
+}

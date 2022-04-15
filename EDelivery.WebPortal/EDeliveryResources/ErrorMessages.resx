@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ConfigrmLeaveMessage" xml:space="preserve">
+    <value>Сигурни ли сте, че желаете да затворите страницата?</value>
+  </data>
+  <data name="EmailAlredyRegistered" xml:space="preserve">
+    <value>Вече има регистриран потребител със същия e-mail адрес!</value>
+  </data>
+  <data name="ErrorAcceptLicenceAgreement" xml:space="preserve">
+    <value>Необходимо е да приемете 'Условия за ползвате на системата за сигурно електронно връчване', за да направите Вашата регистрация!</value>
+  </data>
+  <data name="ErrorCanNotCreateUser" xml:space="preserve">
+    <value>Системна грешка! Потребителят не може да бъде създаден. Моля свържете се с администратор или опитайте по-късно.</value>
+  </data>
+  <data name="ErrorCanNotGrantAccess" xml:space="preserve">
+    <value>Достъпът до профила не може да бъде даден в момента! Моля свържете се с администратор за повече информация.</value>
+  </data>
+  <data name="ErrorCanNotUpdateProfile" xml:space="preserve">
+    <value>Профилните данни не могат да бъдат актуализирани в момента! Моля опитайте по-късно или се свържете с администратор за помощ.</value>
+  </data>
+  <data name="ErrorCantSendDocument" xml:space="preserve">
+    <value>Съобщението не може да бъде изпратено в момента! Моля опитайте по-късно или се свържете с администратор за помощ.</value>
+  </data>
+  <data name="ErrorInvalidCurrentPassword" xml:space="preserve">
+    <value>Текуща парола не е вярна!</value>
+  </data>
+  <data name="ErrorInvalidData" xml:space="preserve">
+    <value>Липсващи или невалидни данни!</value>
+  </data>
+  <data name="ErrorInvalidEGN" xml:space="preserve">
+    <value>Невалиден формат на ЕГН!</value>
+  </data>
+  <data name="ErrorInvalidEGNParam" xml:space="preserve">
+    <value>Некоректен ЕГН параметър! </value>
+  </data>
+  <data name="ErrorInvalidEmail" xml:space="preserve">
+    <value>Моля въведете валиден email адрес!</value>
+  </data>
+  <data name="ErrorInvalidPassword" xml:space="preserve">
+    <value>Моля, уверете се, че паролата  Ви съдържа поне една цифра (0-9), поне една главна и една малка буква и поне един символ, различен от буква и цифра!</value>
+  </data>
+  <data name="ErrorInvalidPdfFormData" xml:space="preserve">
+    <value>Невалидни или липсващи данни!</value>
+  </data>
+  <data name="ErrorInvalidPhone" xml:space="preserve">
+    <value>Моля въведете валиден телефонен номер!</value>
+  </data>
+  <data name="ErrorKepAuthenticationFailed" xml:space="preserve">
+    <value>Неуспешна идентификация. Възникна проблем с разчитането на Вашия КЕП.&lt;br/&gt;
+Моля, извадете устройството, рестартирайте браузъра, поставете устройството и опитайте отново. Ако проблемите продължават, свържете с администратора на системата. STS съобщение: {0}</value>
+  </data>
+  <data name="ErrorKepFailedInvalidResponse" xml:space="preserve">
+    <value>Грешка в модула за единна автентикация с КЕП. Моля свържете се с администратор за отстраняване на проблема! STS съобщение: {0}. </value>
+  </data>
+  <data name="ErrorLegalNotFound" xml:space="preserve">
+    <value>Търсеното юридическо лице не е намерено в системата!</value>
+  </data>
+  <data name="ErrorLoginEID" xml:space="preserve">
+    <value>Грешка при вход с Електронна Идентичност! Моля, свържете се с администратор за отстраняване на проблема!</value>
+  </data>
+  <data name="ErrorLoginInvalidCredentials" xml:space="preserve">
+    <value>Невалидни потребителско име / парола!</value>
+  </data>
+  <data name="ErrorLoginKEP" xml:space="preserve">
+    <value>Грешка при опит за автентикация с КЕП. Моля, свържете се с администратор за отстраняване на проблема.</value>
+  </data>
+  <data name="ErrorLoginLockedOut" xml:space="preserve">
+    <value>Въвели сте няколко пъти грешна парола, поради което потребителят временно се заключва!</value>
+  </data>
+  <data name="ErrorLoginNoActiveProfiles" xml:space="preserve">
+    <value>Вашият профил в системата за сигурно електронно връчване НЕ е е активиран. </value>
+  </data>
+  <data name="ErrorMaxFileLength" xml:space="preserve">
+    <value>Максималният размер на прикачения документ трябва да не надвишава {0} МБ!</value>
+  </data>
+  <data name="ErrorMessageCyrilicRequired" xml:space="preserve">
+    <value>Полето може да съдържа само букви на кирилица (А-Я) и тире!</value>
+  </data>
+  <data name="ErrorMessageFieldLength" xml:space="preserve">
+    <value>Полето трябва да е с дължина максимум {1} символа</value>
+  </data>
+  <data name="ErrorOldData" xml:space="preserve">
+    <value>Данните на страницата са неактуални. Моля опреснете екрана и повторете операцията!</value>
+  </data>
+  <data name="ErrorPasswordConfirm" xml:space="preserve">
+    <value>Паролата и паролата повторно не съвпадат!</value>
+  </data>
+  <data name="ErrorPasswordLength" xml:space="preserve">
+    <value>Паролата трябва да е с дължина минимум {2} символа</value>
+  </data>
+  <data name="ErrorPdfRequired" xml:space="preserve">
+    <value>Моля, прикачете PDF документ!</value>
+  </data>
+  <data name="ErrorPersonNotFound" xml:space="preserve">
+    <value>Търсенето физическо лице не е намерено в системата!</value>
+  </data>
+  <data name="ErrorRegisterCanNotValidateSignature" xml:space="preserve">
+    <value>Електронният подпис на формата за регистрация е невалиден!</value>
+  </data>
+  <data name="ErrorRegisterCertificateExpired" xml:space="preserve">
+    <value>Електронният подпис е с изтекла валидност!</value>
+  </data>
+  <data name="ErrorRegisterEmailMismatch" xml:space="preserve">
+    <value>Въведеният e-mail адрес трябва да съвпада с e-mail адреса от формата за регистрация!</value>
+  </data>
+  <data name="ErrorRegisterInvalidIntegrity" xml:space="preserve">
+    <value>Интегритетът на формата за регистрация е нарушен!</value>
+  </data>
+  <data name="ErrorRegisterPhoneNumberMismatch" xml:space="preserve">
+    <value>Въведеният телефонен номер трябва да съвпада с телефонния номер от формата за регистрация!</value>
+  </data>
+  <data name="ErrorRegisterRepresentativeInvalidCredentials" xml:space="preserve">
+    <value>Невалидни потребителско име / парола на представител!</value>
+  </data>
+  <data name="ErrorRegisterRepresentativeNotExists" xml:space="preserve">
+    <value>Потребителят, с който опитвате да направите регистрация, не е регистриран в системата!</value>
+  </data>
+  <data name="ErrorRequired" xml:space="preserve">
+    <value>Полето е задължително!</value>
+  </data>
+  <data name="ErrorRequiredChooseRegistration" xml:space="preserve">
+    <value>Моля, изберете дали ще използвате КЕП или eID за удостоверяване на Вашата регистрация!</value>
+  </data>
+  <data name="ErrorSystemGeneral" xml:space="preserve">
+    <value>Системна грешка! Операцията не може да бъде извършена в момента. Моля свържете се с администратор или опитайте по-късно.</value>
+  </data>
+  <data name="ErrorUserNameLength" xml:space="preserve">
+    <value>Потребителското име трябва да е не по-дълго от {1} символа!</value>
+  </data>
+  <data name="InvalidEIDResponse" xml:space="preserve">
+    <value>Грешка в отговора на Валидиращ Орган! Моля, свържете се с администратор за отстраняване на проблема!</value>
+  </data>
+  <data name="LegalPersonAlreadyRegisteredAndActivated" xml:space="preserve">
+    <value>Юридическото лице вече има активна регистрация в системата! За повече информация и промяна на данните, моля свържете се с администратор на системата!</value>
+  </data>
+  <data name="NotAuthenticatedByThirdParty" xml:space="preserve">
+    <value>Неуспешен опит за автентикация пред Автентикиращият орган! Моля, опитайте отново или изберете друг метод за вход!</value>
+  </data>
+  <data name="UserDoesNotExistsInTheSystem" xml:space="preserve">
+    <value>За съжаление все още нямате регистрация в нашата система. Моля, направере си регистрация и опитайте отново.</value>
+  </data>
+  <data name="UsernameAlredyRegistered" xml:space="preserve">
+    <value>Вече има регистриран потребител със същото потребителско име. </value>
+  </data>
+  <data name="UserOrEmailAlredyRegistered" xml:space="preserve">
+    <value>Вече има регистриран потребител с това потребителско име или e-mail адрес!</value>
+  </data>
+  <data name="ErrorProfileIsReadOnly" xml:space="preserve">
+    <value>Изпращането и получаването на съобщения не е активно за този профил!</value>
+  </data>
+  <data name="ErrorProfileOfReceiverIsReadOnly" xml:space="preserve">
+    <value>Получаването на съобщения не е активно за профила, към който искате да изпратите!</value>
+  </data>
+  <data name="ErrorCantSendDocumentTimestampIssues" xml:space="preserve">
+    <value>Възникна грашка в комуникацията с услугата за TimeStamp! Съобщението не може да бъде изпратено в момента! Моля, опитайте по-късно!</value>
+  </data>
+  <data name="ErrorLegalPedingRegistration" xml:space="preserve">
+    <value>За ЕИК {0} вече има подадено заявление за регистрация, което е в процес на обработка! </value>
+  </data>
+  <data name="ErrorLoginIsDeactivated" xml:space="preserve">
+    <value>Профилът е деактивиран. За повторна активация на профила свържете се с администратор!</value>
+  </data>
+  <data name="ProfileNamesSyncGraoNoData" xml:space="preserve">
+    <value>Няма данни в ГРАО за текущия профил!</value>
+  </data>
+  <data name="ProfileNamesSyncGraoServiceUnavailable" xml:space="preserve">
+    <value>В момента няма връзка с ГРАО! Моля, опитайте по-късно.</value>
+  </data>
+  <data name="ProfileNamesSyncInvalidProfile" xml:space="preserve">
+    <value>Грешка! Операцията не може да бъде изпълнена за текущия профил!</value>
+  </data>
+  <data name="ErrorCantUploadFile" xml:space="preserve">
+    <value>Грешка! Файлът не може да бъде качен на сървъра!</value>
+  </data>
+  <data name="RegisterWithFormInvalidDocumentFormat" xml:space="preserve">
+    <value>Грешка! Избраният формат на файла не е валиден за тази операция! Моля изберете попълена PDF бланка за регистрация!</value>
+  </data>
+  <data name="RegisterWithFormInvalidSubjectIdentifier" xml:space="preserve">
+    <value>Грешка! Невалиден или грешен ЕИК {0}</value>
+  </data>
+  <data name="RegisterWithFormSubjectAlreadyExists" xml:space="preserve">
+    <value>Грешка! Има съществуващ профил в системата с ЕИК {0}. Не може да бъде направена регистрация!</value>
+  </data>
+  <data name="ErrorEIKAlreadyRegistered" xml:space="preserve">
+    <value>Грешка! Вашето заявление не може да бъде записано! В системате вече съществува регистрирано лице с ЕИК {0}!</value>
+  </data>
+  <data name="ErrorPageNotFound" xml:space="preserve">
+    <value>Ресурсът, който опитвате да достъпите, не беше открит!</value>
+  </data>
+  <data name="ErrorMessageInvalidEGNorLNCh" xml:space="preserve">
+    <value>Въведеният идентификатор не е валидно ЕГН или ЛНЧ.</value>
+  </data>
+  <data name="ErrorInvalidAccessCode" xml:space="preserve">
+    <value>Невалиден код за достъп</value>
+  </data>
+  <data name="ErrorPageForbidden" xml:space="preserve">
+    <value>Нямате достъп до ресурсът, който опитвате да достъпите!</value>
+  </data>
+  <data name="ErrorExistingGroupName" xml:space="preserve">
+    <value>Вече има съществуваща група с това име, моля изберете друго.</value>
+  </data>
+</root>

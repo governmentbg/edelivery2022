@@ -1,0 +1,61 @@
+﻿@model SEOSEntityModel
+
+<div class="modal-content modal-content--tabs">
+    <h2>Информация за участник в регистъра</h2>
+
+    @if (Model == null)
+    {
+        <div class="warrning-message">
+            Не е намерена информация за участника!
+        </div>
+    }
+    else
+    {
+        <div class="form-col">
+            <label for="AdministrationBodyName">@SEOS.TableHeaderEntityName:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.AdministrationBodyName, new { @readonly = "true" })
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="Status">@SEOS.TableHeaderEntityStatus:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.Status, new { @readonly = "true" })
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="EIK">@SEOS.TableHeaderEntityEIK:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.EIK, new { @readonly = "true" })
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="Phone">@SEOS.TableHeaderPhone:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.Phone, new { @readonly = "true" })
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="Emailddress">@SEOS.TableHeaderEmail:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.Emailddress, new { @readonly = "true" })
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="ServiceUrl">@SEOS.TableHeaderServiceURL:</label>
+            <div class="form-element">
+                @Html.TextBoxFor(x => x.ServiceUrl, new { @readonly = "true" })
+            </div>
+        </div>
+
+        <section class="form-section form-row button-row-right">
+            <button class="btn-primary btn-m" id="cancel-info">Затвори</button>
+        </section>
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#cancel-info').on('click', function () { gf.hideModal(); });
+    });
+</script>

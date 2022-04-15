@@ -1,0 +1,47 @@
+﻿@page
+@model LoginModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<LoginResources> Localizer
+
+<div class="wrapper content-wrapper page-title">
+    <div class="breadcrumb">
+        <ol>
+            <li>@Localizer["LoginBreadcrumb"]</li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper content-wrapper loginpage">
+    <h3>@Localizer["LoginTitle"]</h3>
+
+    <div class="wrapper flex-row mt-spacer col-list">
+        <form id="account" method="post">
+            <div class="form-group">
+                <label asp-for="Input.UserName"></label>
+                <div class="form-element">
+                    <input asp-for="Input.UserName" class="form-control" />
+                    <span asp-validation-for="Input.UserName"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Password"></label>
+                <div class="form-element">
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label></label>
+                <div class="form-element">
+                    <div asp-validation-summary="ModelOnly"></div>
+                </div>
+            </div>
+            <div class="form-group margin-top-50">
+                <label></label>
+                <div class="form-element">
+                    <button class="btn-primary btn-l" type="submit">@Localizer["LoginBtn"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

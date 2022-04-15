@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<parameters>
+  <parameter name="connectionStrings:LoggingDB">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/connectionStrings/add[@name='LoggingDB']/@connectionString" />
+  </parameter>
+
+  <parameter name="connectionStrings:EDeliveryIdentityDB">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/connectionStrings/add[@name='EDeliveryIdentityDB']/@connectionString" />
+  </parameter>
+
+  <parameter name="appSettings:bg.gov.eAuth.certPass">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='bg.gov.eAuth.certPass']/@value" />
+  </parameter>
+
+  <parameter name="appSettings:PaySecretKey">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='PaySecretKey']/@value" />
+  </parameter>
+
+  <parameter name="appSettings:RegiX.ServiceURI">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='RegiX.ServiceURI']/@value" />
+  </parameter>
+
+  <parameter name="appSettings:ReportsSecretKey">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='ReportsSecretKey']/@value" />
+  </parameter>
+
+  <parameter name="appSettings:AhuSecretKey">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='AhuSecretKey']/@value" />
+  </parameter>
+
+  <parameter name="appSettings:BulSISecretKey">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='BulSISecretKey']/@value" />
+  </parameter>
+
+  <parameter name="appSettings:PaySecretKey">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='PaySecretKey']/@value" />
+  </parameter>
+
+  <parameter name="appSettings:SharedSecretDPKey">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='SharedSecretDPKey']/@value"
+      defaultValue="" />
+  </parameter>
+
+  <parameter name="appSettings:NOIAuthSharedSecret">
+    <parameterValidation kind="AllowEmpty" />
+    <parameterEntry
+      kind="XmlFile"
+      scope="\\web.config$"
+      match="/configuration/location/appSettings/add[@key='NOIAuthSharedSecret']/@value" />
+  </parameter>
+</parameters>

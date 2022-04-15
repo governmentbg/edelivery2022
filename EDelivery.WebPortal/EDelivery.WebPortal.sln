@@ -1,0 +1,76 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDelivery.WebPortal", "EDelivery.WebPortal\EDelivery.WebPortal.csproj", "{C9D9131A-8806-46A8-92FB-497C906A3EF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDelivery.UserStore", "EDelivery.UserStore\EDelivery.UserStore.csproj", "{BB8D0521-1E1C-4995-A823-EF80C5C5376B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{00CA568B-7A39-4093-9C76-A91E4DD42BB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegixInfoClient", "RegixInfoClient\RegixInfoClient.csproj", "{88A62633-C22F-42B1-A216-0451C9E7D5C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10E27F9E-E3E8-4BF2-A050-FF5C5F1A5C30}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDeliveryResources", "EDeliveryResources\EDeliveryResources.csproj", "{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		EGovTestV2|Any CPU = EGovTestV2|Any CPU
+		ProdV2|Any CPU = ProdV2|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9D9131A-8806-46A8-92FB-497C906A3EF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9D9131A-8806-46A8-92FB-497C906A3EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9D9131A-8806-46A8-92FB-497C906A3EF2}.EGovTestV2|Any CPU.ActiveCfg = EGovTestV2|Any CPU
+		{C9D9131A-8806-46A8-92FB-497C906A3EF2}.EGovTestV2|Any CPU.Build.0 = EGovTestV2|Any CPU
+		{C9D9131A-8806-46A8-92FB-497C906A3EF2}.ProdV2|Any CPU.ActiveCfg = ProdV2|Any CPU
+		{C9D9131A-8806-46A8-92FB-497C906A3EF2}.ProdV2|Any CPU.Build.0 = ProdV2|Any CPU
+		{C9D9131A-8806-46A8-92FB-497C906A3EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9D9131A-8806-46A8-92FB-497C906A3EF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB8D0521-1E1C-4995-A823-EF80C5C5376B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB8D0521-1E1C-4995-A823-EF80C5C5376B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB8D0521-1E1C-4995-A823-EF80C5C5376B}.EGovTestV2|Any CPU.ActiveCfg = EGovTestV2|Any CPU
+		{BB8D0521-1E1C-4995-A823-EF80C5C5376B}.EGovTestV2|Any CPU.Build.0 = EGovTestV2|Any CPU
+		{BB8D0521-1E1C-4995-A823-EF80C5C5376B}.ProdV2|Any CPU.ActiveCfg = ProdV2|Any CPU
+		{BB8D0521-1E1C-4995-A823-EF80C5C5376B}.ProdV2|Any CPU.Build.0 = ProdV2|Any CPU
+		{BB8D0521-1E1C-4995-A823-EF80C5C5376B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB8D0521-1E1C-4995-A823-EF80C5C5376B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00CA568B-7A39-4093-9C76-A91E4DD42BB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00CA568B-7A39-4093-9C76-A91E4DD42BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00CA568B-7A39-4093-9C76-A91E4DD42BB5}.EGovTestV2|Any CPU.ActiveCfg = EGovTestV2|Any CPU
+		{00CA568B-7A39-4093-9C76-A91E4DD42BB5}.EGovTestV2|Any CPU.Build.0 = EGovTestV2|Any CPU
+		{00CA568B-7A39-4093-9C76-A91E4DD42BB5}.ProdV2|Any CPU.ActiveCfg = ProdV2|Any CPU
+		{00CA568B-7A39-4093-9C76-A91E4DD42BB5}.ProdV2|Any CPU.Build.0 = ProdV2|Any CPU
+		{00CA568B-7A39-4093-9C76-A91E4DD42BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00CA568B-7A39-4093-9C76-A91E4DD42BB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88A62633-C22F-42B1-A216-0451C9E7D5C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88A62633-C22F-42B1-A216-0451C9E7D5C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88A62633-C22F-42B1-A216-0451C9E7D5C0}.EGovTestV2|Any CPU.ActiveCfg = EGovTestV2|Any CPU
+		{88A62633-C22F-42B1-A216-0451C9E7D5C0}.EGovTestV2|Any CPU.Build.0 = EGovTestV2|Any CPU
+		{88A62633-C22F-42B1-A216-0451C9E7D5C0}.ProdV2|Any CPU.ActiveCfg = ProdV2|Any CPU
+		{88A62633-C22F-42B1-A216-0451C9E7D5C0}.ProdV2|Any CPU.Build.0 = ProdV2|Any CPU
+		{88A62633-C22F-42B1-A216-0451C9E7D5C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88A62633-C22F-42B1-A216-0451C9E7D5C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}.EGovTestV2|Any CPU.ActiveCfg = EGovTestV2|Any CPU
+		{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}.EGovTestV2|Any CPU.Build.0 = EGovTestV2|Any CPU
+		{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}.ProdV2|Any CPU.ActiveCfg = ProdV2|Any CPU
+		{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}.ProdV2|Any CPU.Build.0 = ProdV2|Any CPU
+		{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FF4D8F6-0359-4A88-878F-788DB1DDBDCA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6FF9C727-A206-4622-90F3-3BD615C20C85}
+	EndGlobalSection
+EndGlobal

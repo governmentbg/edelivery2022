@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configurationSnapshot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:schemas-microsoft-com:xml-wcfconfigurationsnapshot">
+  <behaviors />
+  <bindings>
+    <binding digest="System.ServiceModel.Configuration.CustomBindingElement, System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089:&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data name=&quot;BackendService_1_1SoapBinding&quot;&gt;&lt;httpTransport /&gt;&lt;textMessageEncoding messageVersion=&quot;Soap12&quot; /&gt;&lt;/Data&gt;" bindingType="customBinding" name="BackendService_1_1SoapBinding" />
+  </bindings>
+  <endpoints>
+    <endpoint normalizedDigest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://10.10.60.51:8080/domibus/services/backend&quot; binding=&quot;customBinding&quot; bindingConfiguration=&quot;BackendService_1_1SoapBinding&quot; contract=&quot;EDeliveryAS4Node.BackendInterface&quot; name=&quot;BACKEND_PORT&quot; /&gt;" digest="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;Data address=&quot;http://10.10.60.51:8080/domibus/services/backend&quot; binding=&quot;customBinding&quot; bindingConfiguration=&quot;BackendService_1_1SoapBinding&quot; contract=&quot;EDeliveryAS4Node.BackendInterface&quot; name=&quot;BACKEND_PORT&quot; /&gt;" contractName="EDeliveryAS4Node.BackendInterface" name="BACKEND_PORT" />
+  </endpoints>
+</configurationSnapshot>

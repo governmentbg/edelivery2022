@@ -1,0 +1,132 @@
+﻿@using EDelivery.WebPortal.Models.Storage
+@using EDelivery.WebPortal.Utils
+
+@model BrowseViewModel
+
+<h2>Избор от хранилище</h2>
+
+@if (Model.MaxFileSize > 0 || !string.IsNullOrEmpty(Model.AllowedFileTypes))
+{
+  <ul style="color: #c09853">
+    Полето "Прикачени файлове" има ограничения и са показани само файлове, които:
+
+    @if (Model.MaxFileSize > 0)
+    {
+      <li>- са по-малки от @Utils.FormatSize(Convert.ToUInt64(Model.MaxFileSize))</li>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.AllowedFileTypes))
+    {
+      <li>
+        - са с разширение @Model.AllowedFileTypes
+      </li>
+    }
+  </ul>
+}
+
+<div class="modal-content">
+  <table class="statistics">
+    <tbody>
+      <tr>
+        <th>Име на файла</th>
+        <th>Дата</th>
+        <th>Размер</th>
+        <th></th>
+      </tr>
+
+      @if (Model.Blobs.Count == 0)
+      {
+        <tr>
+          <td colspan="6">
+            @ViewBag.NoMessages
+          </td>
+        </tr>
+      }
+
+      @{
+        var activeProfileId = Context.GetCachedUserData().ActiveProfileId;
+      }
+      @foreach (var item in Model.Blobs)
+      {
+        <tr>
+          <td class="file-name elipsis">
+            @if (item.IsNotMalicious)
+            {
+              <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
+                 data-toggle="tooltip"
+                 data-original-title="@(EDeliveryResources.SEOS.InfoFileIsNotMalicious)"
+                 rel="noopener"
+                 target="_blank">
+                <img src="~/Content/img/signature-icon.png" />
+                <span>@item.FileName</span>
+              </a>
+            }
+            else if (item.IsNotSure)
+            {
+              <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
+                 data-toggle="tooltip"
+                 data-original-title="@(EDeliveryResources.SEOS.ErrorUnsuccessfulScan)"
+                 rel="noopener"
+                 target="_blank">
+                <img src="~/Content/img/neutral-icon.png" />
+                <span>@item.FileName</span>
+              </a>
+            }
+            else if (item.IsMalicious)
+            {
+              <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
+                 data-toggle="tooltip"
+                 data-original-title="@(EDeliveryResources.SEOS.ErrorReceivedDocumentIsMalicious)"
+                 rel="noopener"
+                 target="_blank">
+                <img src="~/Content/img/warning-icon.png" />
+                <span>@item.FileName</span>
+              </a>
+            }
+            else
+            {
+              <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)" rel="noopener" target="_blank">
+                <span>@item.FileName</span>
+              </a>
+            }
+          </td>
+          <td>
+            @item.CreateDate.ToLocalDateTime().ToString(SystemConstants.DateTimeFormat)
+          </td>
+          <td>@EDelivery.WebPortal.Utils.Utils.FormatSize(Convert.ToUInt64(item.Size))</td>
+          <td>
+            <a href="#"
+               class="btn btn-border btn-m"
+               id="pick-blob-@item.BlobId"
+               data-file-id="@Model.FileId"
+               data-blob-id="@item.BlobId"
+               data-file-name="@item.FileName"
+               data-hash-algorithm="@item.HashAlgorithm"
+               data-hash="@item.Hash"
+               data-size="@item.Size">
+              Избери
+            </a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<script type="text/javascript">
+  $(function () {
+    $('a[id^=pick-blob]').on('click', function (e) {
+      e.preventDefault();
+
+      gf.setFileUpload(
+        $(this).data('fileId'),
+        $(this).data('blobId'),
+        $(this).data('fileName'),
+        $(this).data('hashAlgorithm'),
+        $(this).data('hash'),
+        $(this).data('size'));
+
+      gf.hideModal();
+    });
+  })
+</script>

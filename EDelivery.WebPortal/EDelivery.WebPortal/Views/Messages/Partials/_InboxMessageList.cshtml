@@ -1,0 +1,134 @@
+﻿@using EDelivery.WebPortal.Extensions
+
+@model InboxViewModel
+
+@{
+    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
+    new AjaxOptions
+    {
+        HttpMethod = "GET",
+        InsertionMode = System.Web.Mvc.Ajax.InsertionMode.ReplaceWith,
+        UpdateTargetId = "messages-list-content"
+    });
+
+    options.Display = PagedListDisplayMode.IfNeeded;
+    options.MaximumPageNumbersToDisplay = 6;
+    options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToFirstPage = PagedListDisplayMode.Never;
+    options.DisplayLinkToLastPage = PagedListDisplayMode.Never;
+}
+
+<div class="table-responsive" id="messages-list-content">
+    @Html.CustomPagedListPager(
+        Model.Messages,
+        p => Url.Action(
+            "Inbox",
+            new
+            {
+                page = p,
+                Model.SearchFilter.Title,
+                Model.SearchFilter.Subject,
+                Model.SearchFilter.FromDateAsString,
+                Model.SearchFilter.ToDateAsString
+            }),
+        options)
+
+    <table class="statistics unbreakable mails">
+        <tbody>
+            <tr>
+                <th>@ProfilePage.TableHeaderMessageStatus</th>
+                <th>@ProfilePage.TableHeaderMessageSender</th>
+                <th>@ProfilePage.TableHeaderMessageTitle</th>
+                <th>@ProfilePage.TableHeaderMessageOrn</th>
+                <th>@ProfilePage.TableHeaderMessageReferencedOrn</th>
+                <th>@ProfilePage.TableHeaderMessageDateSent</th>
+                <th>@ProfilePage.TableHeaderMessageDateReceived</th>
+                @if (Model.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+                {
+                    <th>@ProfilePage.TableHeaderMessageReceivedBy</th>
+                }
+            </tr>
+
+            @if (Model.Messages.Count == 0)
+            {
+                <tr>
+                    <td colspan="10">
+                        @ViewBag.NoMessages
+                    </td>
+                </tr>
+            }
+
+            @foreach (var message in Model.Messages)
+            {
+                var received = message.DateReceived != null;
+                var addForward = (message.ForwardStatusId == ED.DomainServices.ForwardStatus.IsInForwardChain
+                    || message.ForwardStatusId == ED.DomainServices.ForwardStatus.IsInForwardChainAndForwarded);
+
+                string statusClass = $"{(received ? "read" : "unread")}{(addForward ? "-forward" : string.Empty)}";
+                string statusName = (addForward ? ProfilePage.TooltipMessageForwarded + " - " : string.Empty) + (received ? ProfilePage.TooltipMessageOpened : ProfilePage.TooltipMessageNew);
+
+                <tr>
+                    <td class="mail @statusClass">
+                        <div data-toggle="tooltip"
+                             data-original-title="@statusName">
+                            <a href="@Url.Action("Open", "Messages", new { id = message.MessageId })"
+                               style="display:block; height:100%; width: 100%;">
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        @message.SenderProfileName
+                    </td>
+                    <td class="title">
+                        <a href="@Url.Action("Open", "Messages", new { id = message.MessageId })"
+                           title="@ProfilePage.TableActionOpenMessage">
+                            @message.Subject
+                        </a>
+                    </td>
+                    <td>
+                        @message.Orn
+                    </td>
+                    <td>
+                        @message.ReferencedOrn
+                    </td>
+                    <td>
+                        @message.DateSent.ToLocalDateTime().ToString(SystemConstants.DateTimeFormat)
+                    </td>
+                    <td>
+                        @if (received)
+                        {
+                            @message.DateReceived.ToLocalDateTime().ToString(SystemConstants.DateTimeFormat)
+                        }
+                    </td>
+                    @if (Model.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+                    {
+                        <td>
+                            @if (received)
+                            {
+                                @message.RecipientLoginName
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.CustomPagedListPager(
+        Model.Messages,
+        p => Url.Action(
+            "Inbox",
+            new
+            {
+                page = p,
+                Model.SearchFilter.Title,
+                Model.SearchFilter.Subject,
+                Model.SearchFilter.FromDateAsString,
+                Model.SearchFilter.ToDateAsString
+            }),
+        options)
+</div>
+
+
+

@@ -1,0 +1,5 @@
+﻿<Documentation>
+  <CommonParams>
+    <param name="dpMiscinfo">Хедър, съдържащ персонален идентификатор</param>
+  </CommonParams>
+</Documentation>

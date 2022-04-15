@@ -1,0 +1,84 @@
+﻿@model CommonDataModel
+
+<div id="profile-form-content">
+    @using (Ajax.BeginForm(
+        "UpdateProfileInfo",
+        null,
+        new AjaxOptions()
+        {
+            AllowCache = false,
+            HttpMethod = "POST",
+            InsertionMode = System.Web.Mvc.Ajax.InsertionMode.ReplaceWith,
+            UpdateTargetId = "profile-form-content",
+            OnFailure = $"gf.showError('{ErrorMessages.ErrorSystemGeneral}', 2);"
+        },
+        new { }))
+    {
+        @Html.AntiForgeryToken();
+        @Html.HiddenFor(x => x.ProfileId)
+        @Html.HiddenFor(x => x.TargetGroupId)
+
+        @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+        <ul class="col-list col-short">
+            <li class="form-row">
+                <label for="Email">@LoginRegisterPage.LabelEmailAddress:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.Email)
+                    @Html.ValidationMessageFor(x => x.Email, null, new { @class = "validation-message" })
+                </div>
+            </li>
+            <li class="form-row">
+                <label for="Phone">Телефон:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.Phone)
+                    @Html.ValidationMessageFor(x => x.Phone, null, new { @class = "validation-message" })
+                    <div class="icon-hint icon-hint--@(this.Model.IsValidMobilePhone ? "info" : "warning") icon-hint--input-text"
+                            data-toggle="tooltip"
+                            data-original-title="@Common.InfoPhoneNumberFormat">
+                    </div>
+                </div>
+            </li>
+            <li class="form-row">
+                <label for="Residence">Адрес:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.Residence)
+                    @Html.ValidationMessageFor(x => x.Residence, null, new { @class = "validation-message" })
+                </div>
+            </li>
+            @if (Model.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+            {
+                <li class="form-row">
+                    <div class="form-element">
+                        @Html.CheckBoxFor(x => x.SyncNotificationSettings)
+                        <label for="SyncNotificationSettings" style="width: 100%">
+                            Синхронизирай телефон/e-mail с настройките за нотификации
+                        </label>
+                    </div>
+                </li>
+            }
+            else
+            {
+                @Html.HiddenFor(x => x.SyncNotificationSettings)
+            }
+        </ul>
+        <section class="form-section form-row button-row-left">
+            <button type="submit" class="btn-primary btn-l">@UIControls.ButtonSave</button>
+        </section>
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
+</script>
+
+@if (ViewContext.ViewData.ModelState.IsValid && (ViewBag.ShowSuccessAlert ?? false))
+{
+    <script type="text/javascript">
+        $(function () {
+            gf.showSuccess('@ProfilePage.MessageSaveSettingsSuccess', 2);
+        });
+    </script>
+}

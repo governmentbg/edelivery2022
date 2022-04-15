@@ -1,0 +1,16 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutBase.cshtml";
+}
+
+<div class="gradient-decor"></div>
+@Html.Partial("_TopNavigation")
+
+<div class="wrapper content-wrapper">
+    @Html.Partial("_BreadCrumb")
+    @RenderBody()
+</div>
+
+@section scripts
+{
+    @RenderSection("scripts", required: false)
+}

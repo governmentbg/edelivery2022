@@ -1,0 +1,60 @@
+﻿@using EDelivery.WebPortal.Utils
+@using EDelivery.WebPortal.Models.Messages
+
+@model ReadMessageViewModel
+
+@{
+    ViewBag.Title = Common.TitleOpenMessage + " - " + Model.Subject;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleOpenMessage</h2>
+
+        <a href="@Url.Action("Inbox")" class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+
+        <div class="wrapper content-wrapper message-box">
+            <div class="message-content">
+
+                @Html.Partial("Partials/_Open", Model)
+
+                @if (!Model.Recipient.IsReadOnly)
+                {
+                    var userData = Context.GetCachedUserData();
+                    bool canForward =
+                        userData.ActiveProfile.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.PublicAdministration
+                        || userData.ActiveProfile.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.SocialOrganization;
+
+                    <section class="form-section form-row button-row-right">
+                        @if (canForward && Model.ForwardedMessage == null)
+                        {
+                            <button class="btn-border btn-l"
+                                    type="button"
+                                    data-modal-href="@Url.Action("Forward", "Messages" , new { messageId = Model.MessageId })">
+                                @ProfilePage.ButtonForwardMessage
+                            </button>
+                        }
+
+                        <a class="btn btn-primary btn-l"
+                           href="/Messages/ChooseReply/@Model.MessageId">
+                            @Common.ButtonReply
+                        </a>
+                    </section>
+                }
+
+                @if (Model.ForwardedMessage != null)
+                {
+                    @Html.Partial("Partials/_OpenForwardedMessage", Model.ForwardedMessage)
+                }
+            </div>
+        </div>
+
+        <a href="@Url.Action("Inbox")" class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

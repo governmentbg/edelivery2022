@@ -1,0 +1,602 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices.Profiles";
+
+package profile;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "enums.proto";
+import "errors.proto";
+
+service Profile {
+  // administer
+  rpc ArchiveRecipientGroup (ArchiveRecipientGroupRequest) returns (google.protobuf.Empty);
+  rpc CreateRecipientGroup (CreateRecipientGroupRequest) returns (CreateRecipientGroupResponse);
+  rpc DeleteRecipientGroupMember (DeleteRecipientGroupMemberRequest) returns (google.protobuf.Empty);
+  rpc GrantAccess (GrantAccessRequest) returns (google.protobuf.Empty);
+  rpc RevokeAccess (RevokeAccessRequest) returns (google.protobuf.Empty);
+  rpc UpdateIndividualNames (UpdateIndividualNamesRequest) returns (google.protobuf.Empty);
+  rpc Update (UpdateRequest) returns (UpdateResponse);
+  rpc UpdateAccess (UpdateAccessRequest) returns (google.protobuf.Empty);
+  rpc UpdateRecipientGroup (UpdateRecipientGroupRequest) returns (google.protobuf.Empty);
+  rpc UpdateRecipientGroupMembers (UpdateRecipientGroupMembersRequest) returns (google.protobuf.Empty);
+  rpc UpdateSettings (UpdateSettingsRequest) returns (google.protobuf.Empty);
+  rpc BringProfileInForce (BringProfileInForceRequest) returns (google.protobuf.Empty);
+
+  rpc FindIndividual (FindIndividualRequest) returns (FindIndividualResponse);
+  rpc FindLegalEntity (FindLegalEntityRequest) returns (FindLegalEntityResponse);
+  rpc FindLogin (FindLoginRequest) returns (FindLoginResponse);
+  rpc GetBlobs (GetBlobsRequest) returns (GetBlobsResponse);
+  rpc GetHistory (GetHistoryRequest) returns (GetHistoryResponse);
+  rpc GetIndividual (GetIndividualRequest) returns (GetIndividualResponse);
+  rpc GetLegalEntity (GetLegalEntityRequest) returns (GetLegalEntityResponse);
+  rpc GetLoginPermissions (GetLoginPermissionsRequest) returns (GetLoginPermissionsResponse);
+  rpc GetLogins (GetLoginsRequest) returns (GetLoginsResponse);
+  rpc GetRecipientGroup (GetRecipientGroupRequest) returns (GetRecipientGroupResponse);
+  rpc GetRecipientGroupMembers (GetRecipientGroupMembersRequest) returns (GetRecipientGroupMembersResponse);
+  rpc GetRecipientGroups (GetRecipientGroupsRequest) returns (GetRecipientGroupsResponse);
+  rpc GetRecipientGroupsCount (GetRecipientGroupsCountRequest) returns (GetRecipientGroupsCountResponse);
+  rpc GetTargetGroups (GetTargetGroupsRequest) returns (GetTargetGroupsResponse);
+  rpc GetTemplates (GetTemplatesRequest) returns (GetTemplatesResponse);
+  rpc GetSettings (GetSettingsRequest) returns (GetSettingsResponse);
+  rpc GetPassiveProfileData (GetPassiveProfileDataRequest) returns (GetPassiveProfileDataResponse);
+
+  // list
+  rpc CreateAccessProfilesHistory (CreateAccessProfilesHistoryRequest) returns (google.protobuf.Empty);
+
+  rpc GetLoginProfiles (GetLoginProfilesRequest) returns (GetLoginProfilesResponse);
+  rpc GetStatistics (google.protobuf.Empty) returns (GetStatisticsResponse);
+  rpc GetTargetGroupProfiles (GetTargetGroupProfilesRequest) returns (GetTargetGroupProfilesResponse);
+
+  // register
+  rpc CreateOrUpdateIndividual (CreateOrUpdateIndividualRequest) returns (CreateOrUpdateIndividualResponse);
+  rpc CreateRegisterRequest (CreateRegisterRequestRequest) returns (CreateRegisterRequestResponse);
+  rpc ParseRegistrationDocument (ParseRegistrationDocumentRequest) returns (ParseRegistrationDocumentResponse);
+
+  rpc GetRegisteredIndividual (GetRegisteredIndividualRequest) returns (GetRegisteredIndividualResponse);
+  rpc CheckIndividualUniqueness (CheckIndividualUniquenessRequest) returns (CheckIndividualUniquenessResponse);
+
+  // seos
+  rpc GetProfile (GetProfileRequest) returns (GetProfileResponse);
+}
+
+message ArchiveRecipientGroupRequest {
+  int32 recipient_group_id = 1;
+  int32 login_id = 2;
+}
+
+message CreateRecipientGroupRequest {
+  string name = 1;
+  int32 profile_id = 2;
+  int32 login_id = 3;
+}
+
+message CreateRecipientGroupResponse {
+  int32 recipient_group_id = 1;
+  bool is_successful = 2;
+  string error = 3;
+}
+
+message DeleteRecipientGroupMemberRequest {
+  int32 recipient_group_id = 1;
+  int32 profile_id = 2;
+  int32 login_id = 3;
+}
+
+message GrantAccessRequest {
+  message PermissionMessage {
+    enums.LoginProfilePermissionType permission = 1;
+    google.protobuf.Int32Value template_id = 2;
+  }
+
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  bool is_default = 3;
+  bool is_email_notification_enabled = 4;
+  bool is_email_notification_on_delivery_enabled = 5;
+  bool is_sms_notification_enabled = 6;
+  bool is_sms_notification_on_delivery_enabled = 7;
+  string details = 8;
+  int32 action_login_id = 9;
+  string ip = 10;
+  repeated PermissionMessage permissions = 11;
+  bool is_viber_notification_enabled = 12;
+  bool is_viber_notification_on_delivery_enabled = 13;
+}
+
+message RevokeAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  int32 action_login_id = 3;
+  string ip = 4;
+}
+
+message UpdateIndividualNamesRequest{
+  int32 profile_id = 1;
+  string first_name = 2;
+  string middle_name = 3;
+  string last_name = 4;
+  int32 action_login_id = 5;
+  string ip = 6;
+}
+
+message UpdateRequest {
+  int32 profile_id = 1;
+  string email = 2;
+  string phone = 3;
+  string residence = 4;
+  int32 action_login_id = 5;
+  string ip = 6;
+  bool sync = 7;
+}
+
+message UpdateResponse {
+  bool is_successful = 1;
+  errors.UpdateProfileValidationError error = 2;
+}
+
+message BringProfileInForceRequest {
+  int32 login_id = 1;
+  bool is_email_notification_enabled = 2;
+  bool is_email_notification_on_delivery_enabled = 3;
+  bool is_sms_notification_enabled = 4;
+  bool is_sms_notification_on_delivery_enabled = 5;
+  bool is_viber_notification_enabled = 6;
+  bool is_viber_notification_on_delivery_enabled = 7;
+  string ip = 8;
+}
+
+message UpdateAccessRequest {
+  message PermissionMessage {
+    enums.LoginProfilePermissionType permission = 1;
+    google.protobuf.Int32Value template_id = 2;
+  }
+
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  string details = 3;
+  int32 action_login_id = 4;
+  string ip = 5;
+  repeated PermissionMessage permissions = 9;
+}
+
+message UpdateRecipientGroupRequest {
+  int32 recipient_group_id = 1;
+  string name = 2;
+  int32 login_id = 3;
+}
+
+message UpdateRecipientGroupMembersRequest {
+  int32 recipient_group_id = 1;
+  repeated int32 profile_ids = 2;
+  int32 login_id = 3;
+  int32 profile_id = 4;
+}
+
+message UpdateSettingsRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  bool is_email_notification_enabled = 3;
+  bool is_email_notification_on_delivery_enabled = 4;
+  bool is_sms_notification_enabled = 5;
+  bool is_sms_notification_on_delivery_enabled = 6;
+  string email = 7;
+  string phone = 8;
+  bool is_viber_notification_enabled = 9;
+  bool is_viber_notification_on_delivery_enabled = 10;
+}
+
+message FindIndividualRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string identifier = 3;
+}
+
+message FindIndividualResponse {
+  message Individual {
+    int32 profile_id = 1;
+    string name = 2;
+  }
+
+  optional Individual individual = 1;
+}
+
+message FindLegalEntityRequest {
+  string identifier = 3;
+}
+
+message FindLegalEntityResponse {
+  message LegalEntity {
+    int32 profile_id = 1;
+    string name = 2;
+  }
+
+  optional LegalEntity legal_entity = 1;
+}
+
+message FindLoginRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string identifier = 3;
+}
+
+message FindLoginResponse {
+  message Login {
+    int32 login_id = 1;
+    string login_name = 2;
+    string profile_identifier = 3;
+  }
+
+  optional Login login = 1;
+}
+
+message GetBlobsRequest {
+  int32 profile_id = 1;
+}
+
+message GetBlobsResponse {
+  message BlobMessage {
+    int32 blobId = 1;
+    string file_name = 2;
+    google.protobuf.StringValue description = 3;
+    google.protobuf.Timestamp create_date = 4;
+    string created_by = 5;
+  }
+
+  repeated BlobMessage result = 1;
+  int32 length = 2;
+}
+
+message GetHistoryRequest {
+  int32 profile_id = 1;
+  int32 offset = 2;
+  int32 limit = 3;
+}
+
+message GetHistoryResponse {
+  message History {
+    int32 profiles_history_id = 1;
+    int32 profile_id = 2;
+    google.protobuf.Timestamp action_date = 3;
+    enums.ProfileHistoryAction action = 4;
+    string action_login_name = 5;
+    google.protobuf.StringValue details = 6;
+    google.protobuf.StringValue ip = 7;
+  }
+
+  repeated History history = 1;
+  int32 length = 2;
+}
+
+message GetIndividualRequest {
+  int32 profile_id = 1;
+}
+
+message GetIndividualResponse {
+  string first_name = 1;
+  string middle_name = 2;
+  string last_name = 3;
+  string identifier = 4;
+  string email = 5;
+  string phone = 6;
+  google.protobuf.StringValue residence  = 7;
+}
+
+message GetLegalEntityRequest {
+  int32 profile_id = 1;
+}
+
+message GetLegalEntityResponse {
+  string name = 1;
+  string identifier = 2;
+  string email = 3;
+  string phone = 4;
+  google.protobuf.StringValue residence  = 5;
+  google.protobuf.StringValue parent_guid = 6;
+  google.protobuf.StringValue parent_name = 7;
+}
+
+message GetLoginPermissionsRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+}
+
+message GetLoginPermissionsResponse {
+  message Permissions {
+    enums.LoginProfilePermissionType permission = 1;
+    google.protobuf.Int32Value template_id = 2;
+    google.protobuf.StringValue template_name = 3;
+  }
+
+  string login_name = 1;
+  string profile_identifier = 2;
+  repeated Permissions permissions = 3;
+}
+
+message GetLoginsRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+}
+
+message GetLoginsResponse {
+  message Login {
+    int32 login_id = 1;
+    string login_name = 2;
+    string access_granted_by_login_name = 3;
+    google.protobuf.Timestamp date_access_granted = 4;
+    bool is_default = 5;
+  }
+
+  repeated Login logins = 1;
+}
+
+message GetRecipientGroupRequest {
+  int32 recipient_group_id = 1;
+  int32 profile_id = 2;
+}
+
+message GetRecipientGroupResponse {
+  int32 recipient_group_id = 1;
+  string name = 2;
+  google.protobuf.Timestamp create_date = 3;
+  google.protobuf.Timestamp modify_date = 4;
+}
+
+message GetRecipientGroupMembersRequest {
+  int32 recipient_group_id = 1;
+}
+
+message GetRecipientGroupMembersResponse {
+  message Member {
+    int32 profile_id = 1;
+    string profile_name = 2;
+    string profile_target_group = 3;
+  }
+
+  repeated Member members = 1;
+  int32 length = 2;
+}
+
+message GetRecipientGroupsRequest {
+  int32 profile_id = 1;
+  int32 offset = 2;
+  int32 limit = 3;
+}
+
+message GetRecipientGroupsResponse {
+  message RecipientGroup {
+    int32 recipient_group_id = 1;
+    string name = 2;
+    google.protobuf.Timestamp create_date = 3;
+    google.protobuf.Timestamp modify_date = 4;
+    int32 number_of_members = 5;
+  }
+
+  repeated RecipientGroup recipient_groups = 1;
+  int32 length = 2;
+}
+
+message GetRecipientGroupsCountRequest {
+  int32 profile_id = 1;
+}
+
+message GetRecipientGroupsCountResponse {
+  int32 number_of_recipient_groups = 1;
+}
+
+message GetTargetGroupsRequest {
+  int32 profile_id = 1;
+}
+
+message GetTargetGroupsResponse {
+  message TargetGroupMessage {
+    int32 target_group_id = 1;
+    string name = 2;
+  }
+
+  repeated TargetGroupMessage result = 1;
+  int32 length = 2;
+}
+
+message GetTemplatesRequest {
+  int32 profile_id = 1;
+}
+
+message GetTemplatesResponse {
+  message TemplateMessage {
+    int32 template_id = 1;
+    string name = 2;
+  }
+
+  repeated TemplateMessage result = 1;
+  int32 length = 2;
+}
+
+message GetSettingsRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+}
+
+message GetSettingsResponse {
+  bool is_email_notification_enabled = 1;
+  bool is_email_notification_on_delivery_enabled = 2;
+  bool is_sms_notification_enabled = 3;
+  bool is_sms_notification_on_delivery_enabled = 4;
+  string email = 5;
+  string phone = 6;
+  bool is_viber_notification_enabled = 7;
+  bool is_viber_notification_on_delivery_enabled = 8;
+}
+
+message GetPassiveProfileDataRequest {
+  int32 login_id = 1;
+}
+
+message GetPassiveProfileDataResponse {
+  string first_name = 1;
+  string middle_name = 2;
+  string last_name = 3;
+  string address = 4;
+  string email = 5;
+  string phone = 6;
+}
+
+message CreateAccessProfilesHistoryRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  string ip = 3;
+}
+
+message GetLoginProfilesRequest {
+  int32 login_id = 1;
+}
+
+message GetLoginProfilesResponse {
+  message LoginProfile {
+    int32 profile_id = 1;
+    int32 profile_type = 2;
+    string profile_guid = 3;
+    string profile_name = 4;
+    string email = 5;
+    string phone = 6;
+    string identifier = 7;
+    google.protobuf.BoolValue enable_messages_with_code = 8;
+    int32 target_group_id = 9;
+    bool is_default = 10;
+    bool is_read_only = 11;
+    google.protobuf.Timestamp date_access_granted = 12;
+  }
+
+  repeated LoginProfile login_profiles = 1;
+}
+
+message GetStatisticsResponse {
+  int32 legal_entities_count = 1;
+  int32 public_administrations_count = 2;
+  int32 social_organizations_count = 3;
+}
+
+message GetTargetGroupProfilesRequest {
+  int32 target_group_id = 1;
+  string term = 2;
+  int32 offset = 3;
+  int32 limit = 4;
+}
+
+message GetTargetGroupProfilesResponse {
+  message Profile {
+    string name = 1;
+    string identifier = 2;
+  }
+
+  repeated Profile result = 1;
+  int32 length = 2;
+}
+
+message CreateOrUpdateIndividualRequest {
+  string fist_name = 1;
+  string middle_name = 2;
+  string last_name = 3;
+  string identifier = 4;
+  string phone = 5;
+  string email = 6;
+  string residence = 7;
+  bool is_passive = 8;
+  bool is_email_notification_enabled = 9;
+  bool is_sms_notification_enabled = 10;
+  int32 action_login_id = 11;
+  string ip = 12;
+  bool is_viber_notification_enabled = 13;
+}
+
+message CreateOrUpdateIndividualResponse {
+  int32 profile_id = 1;
+  string profile_guid = 2;
+  string profile_name = 3;
+}
+
+message CreateRegisterRequestRequest {
+  string registration_email = 1;
+  string registration_phone = 2;
+  bool registration_is_email_notification_enabled = 3;
+  bool registration_is_sms_notification_enabled = 4;
+  string name = 5;
+  string identifier = 6;
+  string phone = 7;
+  string email = 8;
+  string residence = 9;
+  google.protobuf.StringValue city = 10;
+  google.protobuf.StringValue state = 11;
+  google.protobuf.StringValue country = 12;
+  int32 target_group_id = 13;
+  int32 blob_id = 14;
+  int32 login_id = 15;
+  bool registration_is_viber_notification_enabled = 16;
+}
+
+message CreateRegisterRequestResponse {
+  bool is_successful = 1;
+  string error = 2;
+}
+
+message ParseRegistrationDocumentRequest {
+  int32 blob_id = 1;
+}
+
+message ParseRegistrationDocumentResponse {
+  message ResultMessage {
+    string name = 1;
+    string identifier = 2;
+    string phone = 3;
+    string email = 4;
+    string residence = 5;
+    google.protobuf.StringValue city = 6;
+    google.protobuf.StringValue state = 7;
+    google.protobuf.StringValue country = 8;
+  }
+
+  bool is_successful = 1;
+  optional ResultMessage result = 2;
+}
+
+message GetRegisteredIndividualRequest {
+  string identifier = 1;
+}
+
+message GetRegisteredIndividualResponse {
+  message Profile {
+    string guid = 1;
+    string email = 2;
+    string name = 3;
+    string phone = 4;
+    string identifier = 5;
+  }
+
+  optional Profile profile = 1;
+}
+
+message GetProfileRequest {
+  int32 profile_id = 1;
+}
+
+message GetProfileResponse {
+  string profile_name = 1;
+  string identifier = 2;
+  string email = 3;
+  string phone = 4;
+  google.protobuf.StringValue residence = 5;
+  google.protobuf.StringValue city = 6;
+}
+
+message CheckIndividualUniquenessRequest {
+  string identifier = 1;
+  string email = 2;
+}
+
+message CheckIndividualUniquenessResponse {
+  bool is_unique_identifier = 1;
+  bool is_unique_email = 2;
+}

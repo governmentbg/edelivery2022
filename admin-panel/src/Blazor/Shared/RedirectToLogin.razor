@@ -1,0 +1,19 @@
+﻿<h3>RedirectToLogin</h3>
+
+@code {
+    [CascadingParameter] protected Task<AuthenticationState> AuthenticationState { get; set; }
+
+    [Inject] NavigationManager NavigationManager { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var user = (await AuthenticationState).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            string location = (new Uri(this.NavigationManager.Uri)).AbsolutePath;
+            NavigationManager.NavigateTo(
+                $"Identity/Account/Login?ReturnUrl={Uri.EscapeDataString(location)}",
+                true);
+        }
+    }
+}
