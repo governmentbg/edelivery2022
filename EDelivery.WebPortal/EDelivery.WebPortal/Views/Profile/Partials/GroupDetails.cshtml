@@ -1,0 +1,44 @@
+﻿@model RecipientGroupViewModel
+
+<div id="recipient-group-section">
+    <section class="form-section">
+        <ul class="col-list">
+            <li class="form-row">
+                <label for="Name">Наименование:</label>
+                <div class="form-element">
+                    @Html.DisplayFor(x => x.Name)
+                </div>
+            </li>
+            <li class="form-row">
+                <label for="Name">Дата на създаване:</label>
+                <div class="form-element">
+                    @Model.CreateDate.ToString(SystemConstants.DateTimeFormat)
+                </div>
+            </li>
+            <li class="form-row">
+                <label for="Name">Дата на последна промяна:</label>
+                <div class="form-element">
+                    @Model.ModifyDate.ToString(SystemConstants.DateTimeFormat)
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <section class="form-section" id="recipient-group-members">
+        @Html.Action("GroupMembers", new { id = Model.RecipientGroupId })
+    </section>
+
+    <section class="form-section form-row button-row-right">
+        @using (Html.BeginForm(
+            "ArchiveGroup", 
+            "Profile", 
+            new { id = Model.RecipientGroupId },
+            FormMethod.Post, 
+            new { style= "margin: 0 15px 0 0;" }))
+        {
+            <button class="btn btn-border btn-l" type="submit">Архивирай</button>
+        }
+
+        <a class="btn btn-primary btn-l" href="/Profile/EditGroup/@Model.RecipientGroupId">Редактирай</a>
+    </section>
+</div>

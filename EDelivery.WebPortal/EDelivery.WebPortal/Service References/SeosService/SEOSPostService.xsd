@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/EDelivery.SEOS.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/EDelivery.SEOS.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:23514/SEOSPostService.svc?xsd=xsd3" namespace="http://schemas.egov.bg/messaging/v1" />
+  <xs:import schemaLocation="http://localhost:23514/SEOSPostService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="SendMessageResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Request" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.egov.bg/messaging/v1" minOccurs="0" name="Status" type="q1:DocumentStatusType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SendMessageResult" nillable="true" type="tns:SendMessageResult" />
+  <xs:simpleType name="SortColumnEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Status" />
+      <xs:enumeration value="ReceiverName" />
+      <xs:enumeration value="Title" />
+      <xs:enumeration value="SenderName" />
+      <xs:enumeration value="DateSent" />
+      <xs:enumeration value="DateReceived" />
+      <xs:enumeration value="RegIndex" />
+      <xs:enumeration value="DocKind" />
+      <xs:enumeration value="DocReferenceNumber" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SortColumnEnum" nillable="true" type="tns:SortColumnEnum" />
+  <xs:simpleType name="SortOrderEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Asc" />
+      <xs:enumeration value="Desc" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SortOrderEnum" nillable="true" type="tns:SortOrderEnum" />
+  <xs:complexType name="MessagesPageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CountAllMessages" type="xs:int" />
+      <xs:element minOccurs="0" name="Messages" nillable="true" type="tns:ArrayOfMessageResponse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MessagesPageResponse" nillable="true" type="tns:MessagesPageResponse" />
+  <xs:complexType name="ArrayOfMessageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MessageResponse" nillable="true" type="tns:MessageResponse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMessageResponse" nillable="true" type="tns:ArrayOfMessageResponse" />
+  <xs:complexType name="MessageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DateReceived" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DateSent" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DocumentKind" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocumentReferenceNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Receiver" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReceiverId" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="RegIndex" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Sender" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SenderId" nillable="true" type="ser:guid" />
+      <xs:element xmlns:q2="http://schemas.egov.bg/messaging/v1" minOccurs="0" name="Status" type="q2:DocumentStatusType" />
+      <xs:element minOccurs="0" name="Subject" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UniqueIdentifier" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MessageResponse" nillable="true" type="tns:MessageResponse" />
+  <xs:complexType name="OpenDocumentRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ESubjectId" type="ser:guid" />
+      <xs:element minOccurs="0" name="IsReceived" type="xs:boolean" />
+      <xs:element minOccurs="0" name="MessageGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="ProfileGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="ProfileName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OpenDocumentRequest" nillable="true" type="tns:OpenDocumentRequest" />
+  <xs:complexType name="OpenDocumentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Attachments" nillable="true" type="tns:ArrayOfAttachmentResponse" />
+      <xs:element minOccurs="0" name="AttentionTo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Corespondents" nillable="true" type="tns:ArrayOfCorespondentResponse" />
+      <xs:element minOccurs="0" name="DateReceived" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DateRegistered" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DateSent" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DocAdditionalData" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="DocKind" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocReferenceNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ExternalRegIndex" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="InternalRegIndex" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsReceived" type="xs:boolean" />
+      <xs:element minOccurs="0" name="LastStatusChangeDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="MessageGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="ReceiverGuid" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="ReceiverLoginName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReceiverName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RejectedReason" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RequestedCloseDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="SenderGuid" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="SenderLoginName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SenderName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Service" nillable="true" type="tns:MessageSerivceResponse" />
+      <xs:element xmlns:q3="http://schemas.egov.bg/messaging/v1" minOccurs="0" name="Status" type="q3:DocumentStatusType" />
+      <xs:element minOccurs="0" name="Subject" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OpenDocumentResponse" nillable="true" type="tns:OpenDocumentResponse" />
+  <xs:complexType name="ArrayOfAttachmentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AttachmentResponse" nillable="true" type="tns:AttachmentResponse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAttachmentResponse" nillable="true" type="tns:ArrayOfAttachmentResponse" />
+  <xs:complexType name="AttachmentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Content" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="MalwareScanResult" nillable="true" type="tns:MalwareScanResultResponse" />
+      <xs:element minOccurs="0" name="MalwareScanResultId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="MessageId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="MimeType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReceiverElectronicSubjectId" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="SenderElectronicSubjectId" nillable="true" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AttachmentResponse" nillable="true" type="tns:AttachmentResponse" />
+  <xs:complexType name="MalwareScanResultResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DbItemId" type="xs:int" />
+      <xs:element minOccurs="0" name="ElapsedTimeSeconds" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ErrorReason" type="tns:MalwareScanErrorReasonEnum" />
+      <xs:element minOccurs="0" name="FileName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsMalicious" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IsSuccessfulScan" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Status" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="StatusDate" nillable="true" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MalwareScanResultResponse" nillable="true" type="tns:MalwareScanResultResponse" />
+  <xs:simpleType name="MalwareScanErrorReasonEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NoError" />
+      <xs:enumeration value="ApiNotAccessible" />
+      <xs:enumeration value="ServiceReturnedError" />
+      <xs:enumeration value="ServiceResultPending" />
+      <xs:enumeration value="MalwareScanDisabled" />
+      <xs:enumeration value="EDeliveryError" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="MalwareScanErrorReasonEnum" nillable="true" type="tns:MalwareScanErrorReasonEnum" />
+  <xs:complexType name="ArrayOfCorespondentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CorespondentResponse" nillable="true" type="tns:CorespondentResponse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCorespondentResponse" nillable="true" type="tns:ArrayOfCorespondentResponse" />
+  <xs:complexType name="CorespondentResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Address" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Bulstat" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EGN" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IDCard" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Kind" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="MOL" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MessageId" type="xs:int" />
+      <xs:element minOccurs="0" name="MobilePhone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Phone" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CorespondentResponse" nillable="true" type="tns:CorespondentResponse" />
+  <xs:complexType name="MessageSerivceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ServiceCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ServiceName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ServiceType" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MessageSerivceResponse" nillable="true" type="tns:MessageSerivceResponse" />
+  <xs:complexType name="ArrayOfRegisteredEntityResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RegisteredEntityResponse" nillable="true" type="tns:RegisteredEntityResponse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfRegisteredEntityResponse" nillable="true" type="tns:ArrayOfRegisteredEntityResponse" />
+  <xs:complexType name="RegisteredEntityResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AdministrationBodyName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EIK" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Emailddress" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Phone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ServiceUrl" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Status" type="tns:EntityServiceStatusEnum" />
+      <xs:element minOccurs="0" name="UniqueIdentifier" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RegisteredEntityResponse" nillable="true" type="tns:RegisteredEntityResponse" />
+  <xs:simpleType name="EntityServiceStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Inactive" />
+      <xs:enumeration value="Active" />
+      <xs:enumeration value="TemporarilyInactive" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EntityServiceStatusEnum" nillable="true" type="tns:EntityServiceStatusEnum" />
+  <xs:complexType name="ChangeDocumentStatusResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExpectedDateClose" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="MessageId" type="ser:guid" />
+      <xs:element xmlns:q4="http://schemas.egov.bg/messaging/v1" minOccurs="0" name="OldStatus" type="q4:DocumentStatusType" />
+      <xs:element minOccurs="0" name="RejectReason" nillable="true" type="xs:string" />
+      <xs:element xmlns:q5="http://schemas.egov.bg/messaging/v1" minOccurs="0" name="Status" type="q5:DocumentStatusType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ChangeDocumentStatusResponse" nillable="true" type="tns:ChangeDocumentStatusResponse" />
+  <xs:complexType name="ChangeDocumentStatusRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ExpectedDateClose" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="MessageId" type="ser:guid" />
+      <xs:element xmlns:q6="http://schemas.egov.bg/messaging/v1" minOccurs="0" name="NewStatus" type="q6:DocumentStatusType" />
+      <xs:element minOccurs="0" name="ProfileGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="RejectReason" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ChangeDocumentStatusRequest" nillable="true" type="tns:ChangeDocumentStatusRequest" />
+  <xs:complexType name="AttachmentRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Content" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="MimeType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AttachmentRequest" nillable="true" type="tns:AttachmentRequest" />
+  <xs:complexType name="MessageRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DocumenAttachmentFirstComment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocumenAttachmentFirstContent" type="xs:int" />
+      <xs:element minOccurs="0" name="DocumenAttachmentFirstFileName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocumenAttachments" nillable="true" type="tns:ArrayOfAttachmentRequest" />
+      <xs:element minOccurs="0" name="DocumentAttentionTo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocumentComment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocumentKind" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocumentRequestCloseDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ElectronicSubjectId" type="ser:guid" />
+      <xs:element minOccurs="0" name="LoginProfileGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="LoginProfileName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProfileGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="ProfileIdentifier" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Receiver" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ReceiverGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="ReferenceNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Subject" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MessageRequest" nillable="true" type="tns:MessageRequest" />
+  <xs:complexType name="ArrayOfAttachmentRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AttachmentRequest" nillable="true" type="tns:AttachmentRequest" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAttachmentRequest" nillable="true" type="tns:ArrayOfAttachmentRequest" />
+  <xs:complexType name="CorespondentRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Address" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Bulstat" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MobilePhone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Phone" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CorespondentRequest" nillable="true" type="tns:CorespondentRequest" />
+  <xs:complexType name="SubmitStatusRequestResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Error" nillable="true" type="xs:string" />
+      <xs:element xmlns:q7="http://schemas.egov.bg/messaging/v1" minOccurs="0" name="Status" type="q7:DocumentStatusType" />
+      <xs:element minOccurs="0" name="StatusResponse" nillable="true" type="tns:DocumentStatusResponseType" />
+      <xs:element minOccurs="0" name="StatusResponseMessage" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SubmitStatusRequestResult" nillable="true" type="tns:SubmitStatusRequestResult" />
+  <xs:complexType name="DocumentStatusResponseType">
+    <xs:sequence>
+      <xs:element name="docAddDataField" nillable="true" type="tns:AdditionalDataType" />
+      <xs:element name="docExpectCloseDateField" type="xs:dateTime" />
+      <xs:element name="docExpectCloseDateFieldSpecified" type="xs:boolean" />
+      <xs:element name="docIDField" nillable="true" type="tns:DocumentIdentificationType" />
+      <xs:element xmlns:q8="http://schemas.egov.bg/messaging/v1" name="docRegStatusField" type="q8:DocumentStatusType" />
+      <xs:element name="rejectionReasonField" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentStatusResponseType" nillable="true" type="tns:DocumentStatusResponseType" />
+  <xs:complexType name="AdditionalDataType">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="AdditionalDataType" nillable="true" type="tns:AdditionalDataType" />
+  <xs:complexType name="DocumentIdentificationType">
+    <xs:sequence>
+      <xs:element name="documentGUIDField" nillable="true" type="xs:string" />
+      <xs:element name="itemField" nillable="true" type="xs:anyType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DocumentIdentificationType" nillable="true" type="tns:DocumentIdentificationType" />
+</xs:schema>

@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="EDelivery.SEOSService.SEOSService" CodeBehind="SEOSService.svc.cs" %>

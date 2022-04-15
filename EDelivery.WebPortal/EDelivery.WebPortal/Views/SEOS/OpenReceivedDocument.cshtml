@@ -1,0 +1,175 @@
+﻿@model SEOSOpenDocumentModel
+
+@{
+    ViewBag.Title = SEOS.OpenReceivedDocument + " - " + Model.Subject;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@ViewBag.Title</h2>
+        <a class="btn btn-m btn-clear mtb-spacer" href="@Url.Action("ReceivedDocuments")">
+            < @UIControls.ButtonBack
+        </a>
+
+        <div class="wrapper content-wrapper message-box">
+            <table class="blank-list">
+                <tbody>
+                    <tr>
+                        <td>@SEOS.LabelSenderName:</td>
+                        <td>
+                            <a href="#" data-modal-href="@Url.Action("SEOSEntitiyInfo","SEOS", new { id = Model.SenderGuid })">
+                                @Model.SenderName
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDateRegistered:</td>
+                        <td>
+                            @(Model.DateRegistered.HasValue ? Model.DateRegistered.Value.ToString(SystemConstants.DateTimeFormat) : string.Empty)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelRegisteredByLoginName:</td>
+                        <td>@Model.ReceiverLoginName</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDateReceived:</td>
+                        <td>@Model.DateReceived.Value.ToString(SystemConstants.DateTimeFormat)</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelStatus:</td>
+                        <td>@EDelivery.WebPortal.Utils.SEOSHelper.GetSEOSStatusText(Model.Status)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="wrapper content-wrapper">
+            <table class="blank-list">
+                <tbody>
+                    <tr>
+                        <td>@SEOS.LabelSubject:</td>
+                        <td>@Model.Subject</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDocKind:</td>
+                        <td>@Model.DocKind</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabeExternalRegIndex1:</td>
+                        <td>@Model.ExternalRegIndex</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelInternalRegIndex:</td>
+                        <td>@Model.InternalRegIndex</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDocId:</td>
+                        <td>@Model.DocGuid.ToString("B")</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelReqEndDate:</td>
+                        <td>
+                            @(Model.RequestedCloseDate.HasValue ? Model.RequestedCloseDate.Value.ToString(SystemConstants.DateFormat) : string.Empty)
+                        </td>
+                    </tr>
+                    @if (Model.Corespondents != null && Model.Corespondents.Any())
+                    {
+                        foreach (var c in Model.Corespondents)
+                        {
+                            <tr>
+                                <td>@SEOS.LabelCorespondents:</td>
+                                <td>
+                                    <ul>
+                                        <li>@c.Name</li>
+                                        @if (!String.IsNullOrEmpty(c.Bulstat))
+                                        {
+                                            <li>
+                                                @SEOS.LabelCorespondentBulstat: @c.Bulstat, @SEOS.LabelCorespondentMOL: @c.MOL
+                                            </li>
+                                        }
+                                        else if (!String.IsNullOrEmpty(c.EGN))
+                                        {
+                                            <li>
+                                                @SEOS.LabelCorespondentIdentifier: @c.EGN, @SEOS.LabelCorespondentIDCard: @c.IDCard
+                                            </li>
+                                        }
+                                        @if (!string.IsNullOrEmpty(c.City) || !string.IsNullOrEmpty(c.Address))
+                                        {
+                                            <li>@SEOS.LabelCorespondentAddress: @c.City @c.Address</li>
+                                        }
+                                        @if (!string.IsNullOrEmpty(c.MobilePhone))
+                                        {
+                                            <li>@c.MobilePhone</li>
+                                        }
+                                        @if (!string.IsNullOrEmpty(c.Email))
+                                        {
+                                            <li>@c.Email</li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    @if (Model.Service != null)
+                    {
+                        <tr>
+                            <td>@SEOS.LabelService:</td>
+                            <td>@Model.Service.ServiceName</td>
+                        </tr>
+                        <tr>
+                            <td>@SEOS.LabelServiceCodeAndType:</td>
+                            <td>@Model.Service.ServiceCode / @Model.Service.ServiceType</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>@SEOS.LabelDocAttentionTo:</td>
+                        <td>@Model.AttentionTo</td>
+                    </tr>
+                    <tr>
+                        <td>@SEOS.LabelDocAdditionalComment:</td>
+                        <td>
+                            <p>
+                                @Model.Comment
+                            </p>
+                        </td>
+                    </tr>
+
+                    @for (int i = 0; i < Model.Attachments.Count; i++)
+                    {
+                        var ischecked = Model.Attachments[i].MalwareScanResult == null
+                            || Model.Attachments[i].MalwareScanResult.Status == 1;
+                        var isMalicious = Model.Attachments[i].MalwareScanResult != null
+                            && Model.Attachments[i].MalwareScanResult.IsMalicious == true;
+
+                        <tr>
+                            <td>@SEOS.LabelDocAttList:</td>
+                            <td>
+                                @if (isMalicious)
+                                {
+                                    @Model.Attachments[i].Name
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("DownloadAttachment", "SEOS", new { id = Model.MessageGuid, aid = Model.Attachments[i].Id })"
+                                       class="file-link">
+                                        @Model.Attachments[i].Name
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@SEOS.LabelDocumentAttComment:</td>
+                            <td>@Model.Attachments[i].Comment</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <a class="btn btn-m btn-clear mtb-spacer" href="@Url.Action("ReceivedDocuments")">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

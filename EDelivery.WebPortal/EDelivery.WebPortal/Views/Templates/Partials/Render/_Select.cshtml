@@ -1,0 +1,136 @@
+﻿@using System.Web.Mvc
+@using EDelivery.WebPortal.Models.Templates.Components
+
+@model SelectComponent
+
+<li class="form-row">
+    <label for="@Model.Id">@Model.Label:</label>
+    <div class="form-element">
+        @{
+            string[] options = Model.Options.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            IEnumerable<SelectListItem> selectListItems =
+                !string.IsNullOrWhiteSpace(Model.Url)
+                    ? Enumerable.Empty<SelectListItem>()
+                    : options.Select(e => new SelectListItem
+                    {
+                        Disabled = false,
+                        Selected = Model.Value == e,
+                        Text = e,
+                        Value = e
+                    });
+        }
+
+        <select name="@Model.Id" id="@Model.Id" class="form-select select2 @Model.CustomClass">
+            <option value=""
+                    disabled
+                    @(string.IsNullOrWhiteSpace(Model.Value) ? "selected" : string.Empty)>
+                @(Model.Placeholder ?? string.Empty)
+            </option>
+            @foreach (var option in selectListItems)
+            {
+                <option value="@option.Value"
+                        @(option.Selected ? "selected" : string.Empty)
+                        @(option.Disabled ? "disabled" : string.Empty)>
+                    @option.Text
+                </option>
+            }
+        </select>
+
+        @*@Html.DropDownList(
+            Model.Id.ToString(),
+            selectListItems,
+            Model.Placeholder ?? string.Empty,
+            new
+            {
+                @id = Model.Id,
+                @class = $"form-select select2 {Model.CustomClass}"
+            })*@
+
+
+        @Html.ValidationMessage(Model.Id.ToString(), new { @class = "validation-message" })
+    </div>
+</li>
+
+@{
+    var currentCulture = EDelivery.WebPortal.Utils.CultureHelper.ToSiteCulture(UICulture);
+    var select2Language = currentCulture == EDelivery.WebPortal.Enums.eSiteCulture.BG
+        ? "bg"
+        : "en";
+}
+
+@if (string.IsNullOrWhiteSpace(Model.Url))
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#@Model.Id').select2({
+                placeholder: '@Model.Placeholder',
+                language: '@select2Language'
+            });
+        })
+    </script>
+}
+else
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#@Model.Id').select2({
+                ajax: {
+                    url: '@Model.Url',
+                    dataType: 'json',
+                    cache: false,
+                    delay: 250,
+                    processResults: function (data) {
+                        var mappedData = $.map(data, function (item) {
+                            return {
+                                id: item.Id,
+                                text: item.Text,
+                                selected: item.Selected,
+                                disabled: item.Disabled
+                            }
+                        });
+
+                        return {
+                            results: mappedData
+                        };
+                    }
+                },
+                placeholder: '@Model.Placeholder',
+                language: '@select2Language'
+            });
+
+            var select2Value = @(!string.IsNullOrWhiteSpace(Model.Value) ? Model.Value : "undefined");
+
+            if (select2Value) {
+                var dropdown = $('#@Model.Id')l
+                var option = new Option(select2Value, select2Value, true, true);
+
+                dropdown.append(option).trigger('change');
+                dropdown.trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: {
+                            id: select2Value,
+                            text: select2Value
+                        }
+                    }
+                });
+
+            }
+        })
+    </script>
+}
+
+@if (Model.IsRequired)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#@Model.Id').rules("add", {
+                required: true,
+                messages: {
+                    required: "Полето е задължително."
+                }
+            });
+        })
+    </script>
+}

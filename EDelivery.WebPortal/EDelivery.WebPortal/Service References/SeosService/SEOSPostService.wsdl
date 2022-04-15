@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SEOSPostService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:23514/SEOSPostService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:23514/SEOSPostService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:23514/SEOSPostService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/EDelivery.SEOS.DataContracts" />
+      <xsd:import schemaLocation="http://localhost:23514/SEOSPostService.svc?xsd=xsd3" namespace="http://schemas.egov.bg/messaging/v1" />
+      <xsd:import schemaLocation="http://localhost:23514/SEOSPostService.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ISEOSPostService_SendSeos_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendSeos" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_SendSeos_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendSeosResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_SendAs4_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendAs4" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_SendAs4_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendAs4Response" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetReceivedDocuments_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceivedDocuments" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetReceivedDocuments_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetReceivedDocumentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetSentDocuments_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSentDocuments" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetSentDocuments_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSentDocumentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetNewMessagesCount_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNewMessagesCount" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetNewMessagesCount_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNewMessagesCountResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_OpenDocument_InputMessage">
+    <wsdl:part name="parameters" element="tns:OpenDocument" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_OpenDocument_OutputMessage">
+    <wsdl:part name="parameters" element="tns:OpenDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetRegisteredEntities_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRegisteredEntities" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetRegisteredEntities_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRegisteredEntitiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetEDeliveryEntity_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEDeliveryEntity" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetEDeliveryEntity_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEDeliveryEntityResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetRegisteredEntity_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRegisteredEntity" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetRegisteredEntity_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRegisteredEntityResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_HasSeos_InputMessage">
+    <wsdl:part name="parameters" element="tns:HasSeos" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_HasSeos_OutputMessage">
+    <wsdl:part name="parameters" element="tns:HasSeosResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_CheckDocumentStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:CheckDocumentStatus" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_CheckDocumentStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CheckDocumentStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetDocumentStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDocumentStatus" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetDocumentStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDocumentStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_UpdateDocumentStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateDocumentStatus" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_UpdateDocumentStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateDocumentStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetDocumentAttachment_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDocumentAttachment" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_GetDocumentAttachment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDocumentAttachmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_SaveAttachmentWithScan_InputMessage">
+    <wsdl:part name="parameters" element="tns:SaveAttachmentWithScan" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_SaveAttachmentWithScan_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SaveAttachmentWithScanResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_SendMessage_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendMessage" />
+  </wsdl:message>
+  <wsdl:message name="ISEOSPostService_SendMessage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendMessageResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ISEOSPostService">
+    <wsdl:operation name="SendSeos">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/SendSeos" message="tns:ISEOSPostService_SendSeos_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/SendSeosResponse" message="tns:ISEOSPostService_SendSeos_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendAs4">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/SendAs4" message="tns:ISEOSPostService_SendAs4_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/SendAs4Response" message="tns:ISEOSPostService_SendAs4_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetReceivedDocuments">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/GetReceivedDocuments" message="tns:ISEOSPostService_GetReceivedDocuments_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/GetReceivedDocumentsResponse" message="tns:ISEOSPostService_GetReceivedDocuments_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSentDocuments">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/GetSentDocuments" message="tns:ISEOSPostService_GetSentDocuments_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/GetSentDocumentsResponse" message="tns:ISEOSPostService_GetSentDocuments_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNewMessagesCount">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/GetNewMessagesCount" message="tns:ISEOSPostService_GetNewMessagesCount_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/GetNewMessagesCountResponse" message="tns:ISEOSPostService_GetNewMessagesCount_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="OpenDocument">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/OpenDocument" message="tns:ISEOSPostService_OpenDocument_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/OpenDocumentResponse" message="tns:ISEOSPostService_OpenDocument_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRegisteredEntities">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/GetRegisteredEntities" message="tns:ISEOSPostService_GetRegisteredEntities_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/GetRegisteredEntitiesResponse" message="tns:ISEOSPostService_GetRegisteredEntities_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEDeliveryEntity">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/GetEDeliveryEntity" message="tns:ISEOSPostService_GetEDeliveryEntity_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/GetEDeliveryEntityResponse" message="tns:ISEOSPostService_GetEDeliveryEntity_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRegisteredEntity">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/GetRegisteredEntity" message="tns:ISEOSPostService_GetRegisteredEntity_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/GetRegisteredEntityResponse" message="tns:ISEOSPostService_GetRegisteredEntity_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="HasSeos">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/HasSeos" message="tns:ISEOSPostService_HasSeos_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/HasSeosResponse" message="tns:ISEOSPostService_HasSeos_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckDocumentStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/CheckDocumentStatus" message="tns:ISEOSPostService_CheckDocumentStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/CheckDocumentStatusResponse" message="tns:ISEOSPostService_CheckDocumentStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/GetDocumentStatus" message="tns:ISEOSPostService_GetDocumentStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/GetDocumentStatusResponse" message="tns:ISEOSPostService_GetDocumentStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateDocumentStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/UpdateDocumentStatus" message="tns:ISEOSPostService_UpdateDocumentStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/UpdateDocumentStatusResponse" message="tns:ISEOSPostService_UpdateDocumentStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentAttachment">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/GetDocumentAttachment" message="tns:ISEOSPostService_GetDocumentAttachment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/GetDocumentAttachmentResponse" message="tns:ISEOSPostService_GetDocumentAttachment_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveAttachmentWithScan">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/SaveAttachmentWithScan" message="tns:ISEOSPostService_SaveAttachmentWithScan_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/SaveAttachmentWithScanResponse" message="tns:ISEOSPostService_SaveAttachmentWithScan_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISEOSPostService/SendMessage" message="tns:ISEOSPostService_SendMessage_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISEOSPostService/SendMessageResponse" message="tns:ISEOSPostService_SendMessage_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ISEOSPostService" type="tns:ISEOSPostService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SendSeos">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/SendSeos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendAs4">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/SendAs4" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetReceivedDocuments">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/GetReceivedDocuments" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSentDocuments">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/GetSentDocuments" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewMessagesCount">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/GetNewMessagesCount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenDocument">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/OpenDocument" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRegisteredEntities">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/GetRegisteredEntities" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEDeliveryEntity">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/GetEDeliveryEntity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRegisteredEntity">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/GetRegisteredEntity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HasSeos">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/HasSeos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckDocumentStatus">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/CheckDocumentStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentStatus">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/GetDocumentStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateDocumentStatus">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/UpdateDocumentStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDocumentAttachment">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/GetDocumentAttachment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveAttachmentWithScan">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/SaveAttachmentWithScan" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <soap:operation soapAction="http://tempuri.org/ISEOSPostService/SendMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SEOSPostService">
+    <wsdl:port name="BasicHttpBinding_ISEOSPostService" binding="tns:BasicHttpBinding_ISEOSPostService">
+      <soap:address location="http://localhost:23514/SEOSPostService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

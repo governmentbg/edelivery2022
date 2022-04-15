@@ -1,0 +1,136 @@
+﻿@model NewCodeMessageViewModel
+
+@{
+    ViewBag.Title = Common.TitleCreateNewMessageWithCode;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleCreateNewMessage</h2>
+        <p class="explain">Полетата, означени със символа <span class="txt-red">*</span>, са задължителни за попълване.</p>
+
+        @using (Html.BeginForm(
+            "New",
+            "CodeMessages",
+            FormMethod.Post,
+            new { enctype = "multipart/form-data", @id = "new-message-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.TemplateId)
+            @Html.HiddenFor(x => x.CurrentProfileId, new { id = "profileId" }) // used for file upload
+
+            @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+            <section class="form-section">
+                <ul class="col-list">
+                    <li class="form-row">
+                        <label for="Identifier">@ProfilePage.LabelPersonalIdentifier <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.Identifier)
+                            @Html.ValidationMessageFor(x => x.Identifier, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="FirstName">@LoginRegisterPage.LabelFirstName <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.FirstName)
+                            @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="MiddleName">@LoginRegisterPage.LabelMiddleName <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.MiddleName)
+                            @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="LastName">@LoginRegisterPage.LabelLastName <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.LastName)
+                            @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="Phone">@LoginRegisterPage.LabelPhoneNumber <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.Phone)
+                            @Html.ValidationMessageFor(x => x.Phone, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="Email">@LoginRegisterPage.LabelEmailAddress <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.Email)
+                            @Html.ValidationMessageFor(x => x.Email, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="ReferencedOrn">@ProfilePage.LabelReferencedOrn:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.ReferencedOrn)
+                            @Html.ValidationMessageFor(x => x.ReferencedOrn, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="AdditionalIdentifier">@ProfilePage.LabelAdditionalIdentifier:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.AdditionalIdentifier)
+                            @Html.ValidationMessageFor(x => x.AdditionalIdentifier, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="Subject">@ProfilePage.LabelMessageTitle <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.Subject)
+                            @Html.ValidationMessageFor(x => x.Subject, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="form-section" id="template">
+                <div class="loader"></div>
+            </section>
+
+            <section class="form-section form-row button-row-right">
+                <button class="btn-border btn-l" type="button" onclick="goBack()">Откажи</button>
+                <button class="btn-primary btn-l" type="submit" id="confirm-message" disabled>@ProfilePage.ButtonSendMessage</button>
+            </section>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/uppy")
+
+    <script type="text/javascript">
+
+        function goBack() {
+            if (confirm('@ErrorMessages.ConfigrmLeaveMessage')) {
+                window.history.back();
+            }
+        }
+
+        $(function () {
+            var values = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateValuesAsJson))' || '{}');
+            var errors = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateErrorsAsJson))' || '[]');
+
+            $('#template').load(
+                '/Templates/Builder/@Model.TemplateId',
+                {
+                    container: {
+                        values: values,
+                        errors: errors
+                    }
+                },
+                function () {
+                    $('#confirm-message').prop('disabled', false);
+                }
+            );
+        });
+    </script>
+}

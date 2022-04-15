@@ -1,0 +1,121 @@
+﻿@page "/reports"
+@attribute [Authorize]
+@inject IStringLocalizer<Index> Localizer
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "reports", null }
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3 style="display: block;">@Localizer["Title"]</h3>
+
+            <div class="wrapper flex-row mt-spacer">
+
+                <div class="col-3">
+                    <a href="reports/statistics" class="content-wrapper icon-menu-item bgr-gray">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 66.5 67.16" class="icon icon-svg">
+                                <rect x="53.88" y="1.58" width="11.04" height="63.99" />
+                                <rect x="36.83" y="34.28" width="11.04" height="31.3" />
+                                <rect x="19.2" y="20.64" width="11.04" height="44.94" />
+                                <rect x="1.58" y="48.49" width="11.04" height="17.08" />
+                            </svg>
+                        </div>
+                        <h6>@Localizer["Statistics"]</h6>
+                    </a>
+                </div>
+
+                <div class="col-3">
+                    <a href="reports/delayed-messages" class="content-wrapper icon-menu-item bgr-gray">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 66.5 67.16" class="icon icon-svg">
+                                <rect x="53.88" y="1.58" width="11.04" height="63.99" />
+                                <rect x="36.83" y="34.28" width="11.04" height="31.3" />
+                                <rect x="19.2" y="20.64" width="11.04" height="44.94" />
+                                <rect x="1.58" y="48.49" width="11.04" height="17.08" />
+                            </svg>
+                        </div>
+                        <h6>@Localizer["DelayedMessages"]</h6>
+                    </a>
+                </div>
+
+                <div class="col-3">
+                    <a href="reports/eforms" class="content-wrapper icon-menu-item bgr-gray">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 66.5 67.16" class="icon icon-svg">
+                                <rect x="53.88" y="1.58" width="11.04" height="63.99" />
+                                <rect x="36.83" y="34.28" width="11.04" height="31.3" />
+                                <rect x="19.2" y="20.64" width="11.04" height="44.94" />
+                                <rect x="1.58" y="48.49" width="11.04" height="17.08" />
+                            </svg>
+                        </div>
+                        <h6>@Localizer["EForms"]</h6>
+                    </a>
+                </div>
+
+                <div class="col-3">
+                    <a href="reports/received-messages" class="content-wrapper icon-menu-item bgr-gray">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 66.5 67.16" class="icon icon-svg">
+                                <rect x="53.88" y="1.58" width="11.04" height="63.99" />
+                                <rect x="36.83" y="34.28" width="11.04" height="31.3" />
+                                <rect x="19.2" y="20.64" width="11.04" height="44.94" />
+                                <rect x="1.58" y="48.49" width="11.04" height="17.08" />
+                            </svg>
+                        </div>
+                        <h6>@Localizer["ReceivedMessages"]</h6>
+                    </a>
+                </div>
+
+                <div class="col-3">
+                    <a href="reports/sent-messages" class="content-wrapper icon-menu-item bgr-gray">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 66.5 67.16" class="icon icon-svg">
+                                <rect x="53.88" y="1.58" width="11.04" height="63.99" />
+                                <rect x="36.83" y="34.28" width="11.04" height="31.3" />
+                                <rect x="19.2" y="20.64" width="11.04" height="44.94" />
+                                <rect x="1.58" y="48.49" width="11.04" height="17.08" />
+                            </svg>
+                        </div>
+                        <h6>@Localizer["SentMessages"]</h6>
+                    </a>
+                </div>
+
+                <div class="col-3">
+                    <a href="reports/notifications" class="content-wrapper icon-menu-item bgr-gray">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 66.5 67.16" class="icon icon-svg">
+                                <rect x="53.88" y="1.58" width="11.04" height="63.99" />
+                                <rect x="36.83" y="34.28" width="11.04" height="31.3" />
+                                <rect x="19.2" y="20.64" width="11.04" height="44.94" />
+                                <rect x="1.58" y="48.49" width="11.04" height="17.08" />
+                            </svg>
+                        </div>
+                        <h6>@Localizer["Notifications"]</h6>
+                    </a>
+                </div>
+
+                <div class="col-3">
+                    <a href="reports/timestamps" class="content-wrapper icon-menu-item bgr-gray">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 66.5 67.16" class="icon icon-svg">
+                                <rect x="53.88" y="1.58" width="11.04" height="63.99" />
+                                <rect x="36.83" y="34.28" width="11.04" height="31.3" />
+                                <rect x="19.2" y="20.64" width="11.04" height="44.94" />
+                                <rect x="1.58" y="48.49" width="11.04" height="17.08" />
+                            </svg>
+                        </div>
+                        <h6>@Localizer["Timestamps"]</h6>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

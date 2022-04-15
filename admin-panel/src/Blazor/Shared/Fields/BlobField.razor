@@ -1,0 +1,30 @@
+﻿<div class="row-group" id="@id" @attributes="AdditionalAttributes">
+    <div class="pos-relative">
+        <input type="text" readonly="readonly" value="@fileName" class="@FieldCssClass" />
+        <div class="loader file-upload"></div>
+    </div>
+    @{
+        bool uploadBtnVisible = Value == null && (fileName == null || uploading);
+    }
+    <button
+        type="button"
+        class="btn-border btn-l file-upload fileinput-button @(uploadBtnVisible ? "" : "dnone")"
+        tabindex="-1"
+        disabled="@uploading"
+    >
+        @Localizer["BtnUpload"]
+        <input
+            type="file"
+            name="files[]"
+            accept="@string.Join(",", AllowedFileTypes ?? Array.Empty<string>())"
+            disabled="@uploading"
+        >
+    </button>
+    <button
+        type="button"
+        class="btn-border btn-l file-upload @(!uploadBtnVisible ? "" : "dnone")"
+        @onclick="ClearAsync"
+    >
+        @Localizer["BtnClear"]
+    </button>
+</div>

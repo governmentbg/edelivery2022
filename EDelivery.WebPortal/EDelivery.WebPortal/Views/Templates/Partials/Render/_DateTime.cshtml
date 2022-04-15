@@ -1,0 +1,74 @@
+﻿@using System.Globalization
+@using EDelivery.WebPortal.Models.Templates.Components
+
+@model DateTimeComponent
+
+<li class="form-row">
+    <label for="@Model.Id">@Model.Label:</label>
+    <div class="form-element">
+        @{
+            string value = !string.IsNullOrWhiteSpace(Model.Value)
+                ? Model.Value
+                : string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                if (!DateTime.TryParseExact(
+                    value,
+                    SystemConstants.DatePickerDateFormat,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out DateTime dt))
+                {
+                    value = string.Empty;
+                }
+            }
+        }
+
+        @Html.TextBox(
+            Model.Id.ToString(),
+            value,
+            new
+            {
+                @id = Model.Id,
+                @class = Model.CustomClass,
+                @readonly = "readonly"
+            })
+        @Html.ValidationMessage(Model.Id.ToString(), new { @class = "validation-message" })
+        <div class="icon-hint icon-hint--info icon-hint--input-text" id="@Model.Id-clear">
+        </div>
+    </div>
+</li>
+
+<script type="text/javascript">
+    $(function () {
+        var dateFormat = 'dd-mm-yyyy';
+        var input = $('#@Model.Id');
+        var clear = $('#@Model.Id-clear');
+
+        input.datepicker({
+            language: 'bg',
+            format: dateFormat
+        });
+
+        input.datepicker('update', '@value')
+
+        clear.on('click', function () {
+            input.val('').datepicker('update');
+        });
+    })
+</script>
+
+@if (Model.IsRequired)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#@Model.Id').rules("add", {
+                required: true,
+                messages: {
+                    required: "Полето е задължително."
+                }
+            });
+        })
+    </script>
+}

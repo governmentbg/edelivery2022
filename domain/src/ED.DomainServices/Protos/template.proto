@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices.Templates";
+
+package template;
+
+service Template {
+  rpc GetContent (GetContentRequest) returns (GetContentResponse);
+}
+
+message GetContentRequest {
+  int32 template_id = 1;
+}
+
+message GetContentResponse {
+  int32 template_id = 1;
+  string content = 2;
+}

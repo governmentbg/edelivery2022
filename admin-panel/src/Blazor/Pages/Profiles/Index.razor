@@ -1,0 +1,141 @@
+﻿@page "/profiles"
+@inherits PagedComponent
+@attribute [Authorize]
+
+@using System.Threading
+@using ED.DomainServices.Admin
+@using Microsoft.Extensions.Primitives
+@inject Admin.AdminClient AdminClient
+@inject IStringLocalizer<Index> Localizer
+@inject AuthenticationStateHelper AuthenticationStateHelper
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "profiles", null }
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            <form class="width-100" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="IdentifierOrName">@Localizer["IdentifierOrNameLabel"]:</label>
+                    <div style="display: inline-block; width:50%; margin: 0 10px;">
+                        <input class="form-control"
+                               name="IdentifierOrName"
+                               type="text"
+                               @bind="term" />
+                    </div>
+                    <div class="aright">
+                        <button type="submit"
+                                class="btn-primary btn-l"
+                                @onclick="Search"
+                        >
+                            @Localizer["SearchBtn"]
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(profiles?.Length ?? 0)" />
+            <div class="table-responsive" style="position: relative">
+                @if (IsLoading)
+                {
+                    <div class="loader-container">
+                    </div>
+                }
+                <table class="list">
+                    <tbody>
+                        <tr>
+                            <th>@Localizer["ColumnElectronicSubjectName"]</th>
+                            <th>@Localizer["ColumnIdentifier"]</th>
+                            <th>@Localizer["ColumnIsActivated"]</th>
+                            <th>@Localizer["ColumnTargetGroupName"]</th>
+                        </tr>
+
+                        @if (profiles == null)
+                        {
+                            <tr>
+                                <td colspan="4">
+                                    <div class="loader page-loader show">
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @if (!profiles.Result.Any())
+                            {
+                                <tr>
+                                    <td colspan="4">@Localizer["NoItems"]</td>
+                                </tr>
+                            }
+
+                            @foreach (var profile in profiles.Result)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="profiles/@profile.ProfileId">
+                                            @profile.ElectronicSubjectName
+                                        </a>
+                                    </td>
+                                    <td>@profile.Identifier</td>
+                                    <td>@Localizer[$"ColumnIsActivated_{profile.IsActivated}"]</td>
+                                    <td>@profile.TargetGroupName</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(profiles?.Length ?? 0)" />
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private GetProfileListResponse profiles;
+    private string term;
+
+    protected override void ExtractQueryStringParams()
+    {
+        base.ExtractQueryStringParams();
+        this.term = this.NavigationManager.GetCurrentQueryItem<string>("term");
+    }
+
+    protected override async Task LoadDataAsync(CancellationToken ct)
+    {
+        int currentUserId = await this.AuthenticationStateHelper.GetAuthenticatedUserId();
+
+        this.profiles =
+        await this.AdminClient.GetProfileListAsync(
+            new GetProfileListRequest
+            {
+                AdminUserId = currentUserId,
+                Term = term,
+                Offset = base.Offset,
+                Limit = base.Limit,
+            },
+            cancellationToken: ct);
+    }
+
+    private void Search()
+    {
+        this.NavigationManager.NavigateToSameWithQuery(
+                new Dictionary<string, StringValues>
+                {
+                    { "page", 1.ToString() },
+                    { "term", term }
+                });
+    }
+}

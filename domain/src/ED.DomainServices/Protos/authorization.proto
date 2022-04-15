@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices";
+
+package authorization;
+
+service Authorization {
+  rpc HasProfileAccess (HasProfileAccessRequest) returns (HasAccessResponse);
+  rpc IsReadonlyProfile (IsReadonlyProfileRequest) returns (IsReadonlyProfileResponse);
+  rpc HasReadMessageAsRecipientAccess (HasReadMessageAsRecipientAccessRequest) returns (HasAccessResponse);
+  rpc HasReadMessageAsSenderAccess (HasReadMessageAsSenderAccessRequest) returns (HasAccessResponse);
+  rpc HasReadMessageAsSenderOrRecipientAccess (HasReadMessageAsSenderOrRecipientAccessRequest) returns (HasAccessResponse);
+  rpc HasWriteMessageAccess (HasWriteMessageAccessRequest) returns (HasAccessResponse);
+  rpc HasForwardMessageAccess (HasForwardMessageAccessRequest) returns (HasAccessResponse);
+  rpc HasAdministerProfileAccess (HasAdministerProfileAccessRequest) returns (HasAccessResponse);
+  rpc HasListProfileMessageAccess (HasListProfileMessageAccessRequest) returns (HasAccessResponse);
+  rpc HasAdministerProfileRecipientGroupAccess (HasAdministerProfileRecipientGroupAccessRequest) returns (HasAccessResponse);
+  rpc HasAccessTargetGroupSearch (HasAccessTargetGroupSearchRequest) returns (HasAccessResponse);
+  rpc HasWriteCodeMessageAccess (HasWriteCodeMessageAccessRequest) returns (HasAccessResponse);
+}
+
+message HasProfileAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+}
+
+message IsReadonlyProfileRequest {
+  int32 profile_id = 1;
+}
+
+message IsReadonlyProfileResponse {
+  bool is_readonly = 1;
+}
+
+message HasAccessResponse {
+  bool has_access = 1;
+}
+
+message HasReadMessageAsRecipientAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  int32 message_id = 3;
+}
+
+message HasReadMessageAsSenderAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  int32 message_id = 3;
+}
+
+message HasReadMessageAsSenderOrRecipientAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  int32 message_id = 3;
+}
+
+message HasWriteMessageAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  int32 template_id = 3;
+}
+
+message HasForwardMessageAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  int32 message_id = 3;
+}
+
+message HasAdministerProfileAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+}
+
+message HasListProfileMessageAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+}
+
+message HasAdministerProfileRecipientGroupAccessRequest {
+  int32 profile_id = 1;
+  int32 recipient_group_id = 2;
+}
+
+message HasAccessTargetGroupSearchRequest {
+  int32 profile_id = 1;
+  int32 target_group_id = 2;
+}
+
+message HasWriteCodeMessageAccessRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+}

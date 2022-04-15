@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices.Nomenclatures";
+
+package nomenclature;
+
+import "google/protobuf/wrappers.proto";
+
+service Nomenclature {
+  rpc GetLoginSecurityLevel (GetNomRequest) returns (GetEntityNomResponse);
+  rpc GetCountries (GetNomRequest) returns (GetEntityCodeNomResponse);
+  rpc GetTargetGroups (GetNomRequest) returns (GetActiveEntityNomResponse);
+}
+
+message GetNomRequest {
+  string term = 1;
+  int32 offset = 2;
+  google.protobuf.Int32Value limit = 3;
+}
+
+message GetEntityNomResponse {
+  repeated EntityNom result = 1;
+}
+
+message GetActiveEntityNomResponse {
+  repeated ActiveEntityNom result = 1;
+}
+
+
+message GetEntityCodeNomResponse {
+  repeated EntityCodeNom result = 1;
+}
+
+message EntityNom {
+  int32 id = 1;
+  string name = 2;
+}
+
+message ActiveEntityNom {
+  int32 id = 1;
+  string name = 2;
+  bool is_active = 3;
+}
+
+message EntityCodeNom {
+  string id = 1;
+  string name = 2;
+}

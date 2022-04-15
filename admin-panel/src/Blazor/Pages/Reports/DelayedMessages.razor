@@ -1,0 +1,168 @@
+﻿@page "/reports/delayed-messages"
+@inherits PagedComponent
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "reports", "reports" },
+        { "delayed-messages", null }
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            <EditForm EditContext="@editContext" OnValidSubmit="Search">
+                <DataAnnotationsValidator />
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="@nameof(SearchDelayedMessagesModel.Delay)">
+                                    @Localizer["FormDelay"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <InputNumber id="@nameof(SearchDelayedMessagesModel.Delay)" @bind-Value="model.Delay" />
+                                    <ValidationMessage For="@(() => model.Delay)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchDelayedMessagesModel.TargetGroupId)">
+                                    @Localizer["FormTargetGroup"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <Select2Field id="@nameof(SearchDelayedMessagesModel.TargetGroupId)"
+                                                  @bind-Value="model.TargetGroupId"
+                                                  Url="nomenclatures/targetGroups" />
+                                    <ValidationMessage For="@(() => model.TargetGroupId)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchDelayedMessagesModel.ProfileId)">
+                                    @Localizer["FormProfile"]
+                                </label>
+                                <div class="form-element">
+                                    <Select2Field id="@nameof(SearchDelayedMessagesModel.ProfileId)"
+                                                  @bind-Value="model.ProfileId"
+                                                  Url="nomenclatures/profiles" />
+                                    <ValidationMessage For="@(() => model.ProfileId)" />
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">@Localizer["BtnSearch"]</button>
+                    </section>
+                </div>
+            </EditForm>
+
+            @if (hasSentRequest)
+            {
+                <div style="padding: 15px 0px; height: 45px;">
+                    <a href="@profilesReportLink"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       download
+                       class="btn btn-border btn-m butright">
+                        @Localizer["BtnExport"]
+                    </a>
+                </div>
+
+                <Pager Page="@(Page)"
+                       PageSize="@PageSize"
+                       TotalItemsCount="@(profiles?.Length ?? 0)" />
+                <div class="table-responsive" style="position: relative">
+                    @if (IsLoading)
+                    {
+                        <div class="loader-container">
+                        </div>
+                    }
+                    <table class="list">
+                        <tbody>
+                            <tr>
+                                <th colspan="9">
+                                    @(string.Format(
+                                        Localizer["ColumnAll"],
+                                        fromDate.Value.ToString(Constants.DateTimeFormat),
+                                        Localizer[$"DayOfWeek_{(int)fromDate.Value.DayOfWeek}"]))
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>@Localizer["ColumnRecipient"]</th>
+                                <th>@Localizer["ColumnProfileRecipient"]</th>
+                                <th>@Localizer["ColumnTargetGroupRecipient"]</th>
+                                <th>@Localizer["ColumnEmailRecipient"]</th>
+                                <th>@Localizer["ColumnSender"]</th>
+                                <th>@Localizer["ColumnEmailSender"]</th>
+                                <th>@Localizer["ColumnMessageSubject"]</th>
+                                <th>@Localizer["ColumnDateSent"]</th>
+                                <th>@Localizer["ColumnDelay"]</th>
+                            </tr>
+
+                            @if (profiles == null)
+                            {
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="loader page-loader show">
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @if (!profiles.Result.Any())
+                                {
+                                    <tr>
+                                        <td colspan="9">@Localizer["NoItems"]</td>
+                                    </tr>
+                                }
+
+                                @foreach (var profile in profiles.Result)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="profiles/@profile.RecipientProfileId">
+                                                @profile.RecipientProfileName
+                                            </a>
+                                        </td>
+                                        @if (profile.IsRecipientProfileActivated)
+                                        {
+                                            <td style="color: green">
+                                                @Localizer["ProfileActivated"]
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="color: red">
+                                                @Localizer["ProfileNotActivated"]
+                                            </td>
+                                        }
+                                        <td>@profile.RecipientProfileTargetGroupName</td>
+                                        <td>@profile.RecipientEmail</td>
+                                        <td>
+                                            <a href="profiles/@profile.SenderProfileId">
+                                                @profile.SenderProfileName
+                                            </a>
+                                        </td>
+                                        <td>@profile.SenderEmail</td>
+                                        <td>@profile.MessageSubject</td>
+                                        <td>@profile.DateSent.ToLocalDateTime().ToString("g")</td>
+                                        <td>@profile.Delay</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <Pager Page="@(Page)"
+                       PageSize="@PageSize"
+                       TotalItemsCount="@(profiles?.Length ?? 0)" />
+            }
+        </div>
+    </div>
+</div>

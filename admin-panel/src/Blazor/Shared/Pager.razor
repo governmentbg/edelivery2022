@@ -1,0 +1,39 @@
+﻿<div class="pagination-container">
+    @if (page > 1)
+    {
+        <a rel="prev" @onclick="() => NavigateToPage(page - 1)">«</a>
+    }
+    @if (page == 1)
+    {
+        <a rel="prev" href="javascript:void(0);" class="disabled">«</a>
+    }
+    @foreach (var pageItem in pages)
+    {
+        @if (pageItem.IsCurrent)
+        {
+            <a href="javascript:void(0);" class="selected">@(pageItem.Number)</a>
+        }
+        else if (pageItem.ShowDots)
+        {
+            <a href="javascript:void(0);" class="disabled">...</a>
+        }
+        else
+        {
+            <a @onclick="() => NavigateToPage(pageItem.Number)">@(pageItem.Number)</a>
+        }
+    }
+    @if (page < totalPages)
+    {
+        <a rel="next" @onclick="() => NavigateToPage(page + 1)">»</a>
+    }
+    @if (page == totalPages)
+    {
+        <a rel="next" href="javascript:void(0);" class="disabled">»</a>
+    }
+    @if (TotalItemsCount > 0)
+    {
+        <div class="info">
+            <span>@string.Format(Localizer["InfoText"], TotalItemsCount, from, to)</span>
+        </div>
+    }
+</div>

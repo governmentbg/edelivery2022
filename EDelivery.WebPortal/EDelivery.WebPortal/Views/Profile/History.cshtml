@@ -1,0 +1,24 @@
+﻿@model PagedListLight<ProfileHistoryRecord>
+
+@{
+    ViewBag.Title = Common.TitleProfileAccessHistory;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleProfileAccessHistory</h2>
+        <a href="@Url.Action("Administration","Profile")"
+           class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+
+        @Html.Partial("Partials/_History", Model)
+
+        <a href="@Url.Action("Administration","Profile")"
+           class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

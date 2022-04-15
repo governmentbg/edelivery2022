@@ -1,0 +1,38 @@
+﻿@using EDelivery.WebPortal.Models.Messages
+
+@model List<MessageRecipientsViewModel>
+
+@{
+    ViewBag.Title = ProfilePage.TitleForwardedMessageHistory;
+}
+
+<div class="modal-content">
+    <table class="statistics">
+        <tbody>
+            <tr>
+                <th>@ProfilePage.TableHeaderMessageReceiver</th>
+                <th>@ProfilePage.TableHeaderMessageDateReceived</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProfileName</td>
+                    <td>
+                        @(item.DateReceived?.ToString(SystemConstants.DateTimeFormat) ?? string.Empty)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<section class="form-section form-row button-row-right">
+    <button class="btn-primary btn-m" id="cancel-message-recipients-info">Затвори</button>
+</section>
+
+<script type="text/javascript">
+    $(function () {
+        $('#cancel-message-recipients-info').on('click', function () { gf.hideModal(); });
+    });
+</script>

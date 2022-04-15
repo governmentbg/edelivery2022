@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="3cf2b746-ff9d-43fe-9952-86ea81ed1be1" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:23514/SEOSPostService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="SEOSPostService.xsd" MetadataType="Schema" ID="c0865d7e-e5d6-45e8-a640-9fca85a203f8" SourceId="1" SourceUrl="http://localhost:23514/SEOSPostService.svc?xsd=xsd2" />
+    <MetadataFile FileName="SEOSPostService4.xsd" MetadataType="Schema" ID="f6feb187-0710-4330-99f8-f0c38ad73b21" SourceId="1" SourceUrl="http://localhost:23514/SEOSPostService.svc?xsd=xsd4" />
+    <MetadataFile FileName="SEOSPostService.wsdl" MetadataType="Wsdl" ID="9d1ff174-e66c-437e-a2d1-6501d415e63f" SourceId="1" SourceUrl="http://localhost:23514/SEOSPostService.svc?wsdl" />
+    <MetadataFile FileName="SEOSPostService1.xsd" MetadataType="Schema" ID="f7e1a552-2a0a-425e-87de-d7626a29dbb3" SourceId="1" SourceUrl="http://localhost:23514/SEOSPostService.svc?xsd=xsd1" />
+    <MetadataFile FileName="SEOSPostService.disco" MetadataType="Disco" ID="2819d502-ddd9-49ab-901b-889e0254d8d3" SourceId="1" SourceUrl="http://localhost:23514/SEOSPostService.svc?disco" />
+    <MetadataFile FileName="SEOSPostService2.xsd" MetadataType="Schema" ID="7a600ba9-a8db-4c00-a906-72e9f0faf362" SourceId="1" SourceUrl="http://localhost:23514/SEOSPostService.svc?xsd=xsd3" />
+    <MetadataFile FileName="SEOSPostService3.xsd" MetadataType="Schema" ID="3d61ee03-29fb-4a12-9cce-e46f744eb652" SourceId="1" SourceUrl="http://localhost:23514/SEOSPostService.svc?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

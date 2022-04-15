@@ -1,0 +1,48 @@
+"api/v{version:apiVersion}/messages"
+
+"outbox"
+"inbox"
+
+ESB - credentials? vs Login in eDelivery?
+  - how to target and stop compromised login?
+
+
+0. target groups
+  ++ list target groups and matrix
+1.1 check profile 
+  ++ search by identifier?
+    !! use Guid as public id?
+  ++ list public profiles? (active only)
+    ++ is registered and visible? (according to target group)
+  ++ passive registering individuals?
+1.2 profile API login
+  -- register API login for profile (to use it for operations)?
+  -- get API login info
+1.3 profile recipient groups
+  -- recipient groups?
+2.1
+  ++ list templates
+  ++ get template structure
+    -- return json with different mapping objects?
+2. send message using template
+  ++ send normal
+  ++ send on behalf of?
+  ++ send code message?
+3. view message
+  ++ as sender
+    ++ links for downloading blobs
+  ++ as recipient
+    ++ links for downloading blobs
+  -- include digital signature info?
+  -- download timestamps, xml and pdf
+4. browse storage
+  -- browse free files
+  -- links for downloading
+  -- upload (free files or temp)
+5. add login to profile?
+6. settings?
+7. seos?
+
+--------------
+
+blob api

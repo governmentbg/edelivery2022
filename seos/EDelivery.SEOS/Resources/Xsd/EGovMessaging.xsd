@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified" attributeFormDefault="unqualified"
+	targetNamespace="http://schemas.egov.bg/messaging/v1"
+	xmlns:tns="http://schemas.egov.bg/messaging/v1"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:duri="http://ereg.egov.bg/segment/0009-000001">
+
+	<xsd:import namespace="http://www.w3.org/2000/09/xmldsig#" />
+	<xsd:import namespace="http://ereg.egov.bg/segment/0009-000001" />
+
+	<xsd:element name="Message">
+		<xsd:annotation>
+			<xsd:documentation>Съобщение за обмен</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Header">
+					<xsd:annotation>
+						<xsd:documentation>Заглавна част</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="Version" type="xsd:string">
+								<xsd:annotation>
+									<xsd:documentation>Версия на протокола (понастоящем "1")</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="MessageType" type="tns:MessageType">
+								<xsd:annotation>
+									<xsd:documentation>Тип</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="MessageDate" type="xsd:dateTime">
+								<xsd:annotation>
+									<xsd:documentation>Дата/час на създаване</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Sender" type="tns:EntityNodeType">
+								<xsd:annotation>
+									<xsd:documentation>Подател</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Recipient" type="tns:EntityNodeType">
+								<xsd:annotation>
+									<xsd:documentation>Получател</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="MessageGUID" type="tns:GUIDType">
+								<xsd:annotation>
+									<xsd:documentation>GUID (глобален уникален идентификатор)</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Body">
+					<xsd:annotation>
+						<xsd:documentation>Съдържание</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:choice>
+							<xsd:element name="DocumentRegistrationRequest" type="tns:DocumentRegistrationRequestType">
+								<xsd:annotation>
+									<xsd:documentation>Заявление за регистриране на документ</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="DocumentStatusRequest" type="tns:DocumentStatusRequestType">
+								<xsd:annotation>
+									<xsd:documentation>Заявление за проверка на състоянието на документ</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="DocumentStatusResponse" type="tns:DocumentStatusResponseType">
+								<xsd:annotation>
+									<xsd:documentation>Известие за състояние на документ</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="Error" type="tns:ErrorMessageType">
+								<xsd:annotation>
+									<xsd:documentation>Известие за грешка</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+						</xsd:choice>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element ref="ds:Signature" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Eлектронен подпис на съобщението по стандарта XML Signature Syntax and Processing (2nd Edition)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:simpleType name="MessageType">
+		<xsd:annotation>
+			<xsd:documentation>Тип съобщение</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="MSG_DocumentRegistrationRequest">
+				<xsd:annotation>
+					<xsd:documentation>Заявление за регистриране на документ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="MSG_DocumentStatusResponse">
+				<xsd:annotation>
+					<xsd:documentation>Известие за състояние на документ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="MSG_DocumentStatusRequest">
+				<xsd:annotation>
+					<xsd:documentation>Заявление за проверка на състоянието на документ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="MSG_Error">
+				<xsd:annotation>
+					<xsd:documentation>Съобщение за грешка при обработка</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="EntityNodeType">
+		<xsd:annotation>
+			<xsd:documentation>Участник в обмена</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Identifier" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>ЕИК/БУЛСТАТ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AdministrativeBodyName" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Наименование</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="GUID" type="tns:GUIDType">
+				<xsd:annotation>
+					<xsd:documentation>GUID (глобален уникален идентификатор)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="GUIDType">
+		<xsd:annotation>
+			<xsd:documentation>GUID (глобален уникален идентификатор)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\{[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="DocumentRegistrationRequestType">
+		<xsd:annotation>
+			<xsd:documentation>Заявление за регистриране на документ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Document" type="tns:DocumentType">
+				<xsd:annotation>
+					<xsd:documentation>Документ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Comment" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Коментар, свързан с изпращането</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DocumentType">
+		<xsd:annotation>
+			<xsd:documentation>Документ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="DocID" type="tns:DocumentIdentificationType">
+				<xsd:annotation>
+					<xsd:documentation>Идентификатор</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocParentID" type="tns:DocumentIdentificationType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Идентификатор на родителския документ/иницииращия документ/преписката</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocKind" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Вид (напр. Молба, Жалба и др.)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocCorrespondentList" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Списък на кореспондентите</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:annotation>
+						<xsd:documentation>Списък от кореспонденти</xsd:documentation>
+					</xsd:annotation>
+					<xsd:sequence>
+						<xsd:element name="Corespondent" type="tns:CorrespondentType" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>Кореспондент</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="DocAttachmentList" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Списък на прикачените файлове</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:annotation>
+						<xsd:documentation>Списък от прикачени файлове</xsd:documentation>
+					</xsd:annotation>
+					<xsd:sequence>
+						<xsd:element name="Attachment" type="tns:AttachmentFileType" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>Прикачен файл</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="DocAbout" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Относно (кратко описание на документа)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocService" type="tns:ServiceItemType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Услуга</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocComment" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Допълнителен коментар</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocAddData" type="tns:AdditionalDataType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Допълнителни данни</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocReqDateClose" type="xsd:date" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Краен срок за приключване на работата</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocAttentionTo" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Служител, на вниманието на който трябва да се насочи</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="ds:Signature" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Eлектронен подпис на документа по стандарта XML Signature Syntax and Processing (2nd Edition)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DocumentIdentificationType">
+		<xsd:annotation>
+			<xsd:documentation>Идентификатор на документ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:choice minOccurs="0">
+				<xsd:element name="DocumentNumber" type="tns:DocumentNumberType">
+					<xsd:annotation>
+						<xsd:documentation>Номер на документа</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="DocumentURI" type="duri:DocumentURI">
+					<xsd:annotation>
+						<xsd:documentation>УРИ (уникален регистров индекс)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:element name="DocumentGUID" type="tns:GUIDType">
+				<xsd:annotation>
+					<xsd:documentation>GUID (глобален уникален идентификатор)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DocumentNumberType">
+		<xsd:annotation>
+			<xsd:documentation>Номер на документ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="DocNumber" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Регистрационен номер</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocDate" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Дата на регистрация</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="CorrespondentType">
+		<xsd:annotation>
+			<xsd:documentation>Кореспондент</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="CorName" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Имена/наименование</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorCity" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Населено място</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorAddress" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Адрес</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorEGN" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>ЕГН/ЛНЧ/СлНЧ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorIDCard" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Лична карта №</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorBULSTAT" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>ЕИК/БУЛСТАТ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorEMail" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Имейл адрес</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorPhone" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Телефонен номер</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorMobilePhone" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Мобилен номер</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorMOL" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Материалноотговорно лице</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorComment" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Коментар</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="CorKind" type="tns:CorrespondentKindType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Вид</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="CorrespondentKindType">
+		<xsd:annotation>
+			<xsd:documentation>Вид кореспондент</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Corr_Applicant">
+				<xsd:annotation>
+					<xsd:documentation>Заявител (в случая на електронна услуга)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="Corr_Other">
+				<xsd:annotation>
+					<xsd:documentation>Обикновен кореспондент</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="AttachmentFileType">
+		<xsd:annotation>
+			<xsd:documentation>Прикачен файл</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AttFileName" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Наименование</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AttBody" type="xsd:base64Binary">
+				<xsd:annotation>
+					<xsd:documentation>Съдържание</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AttComment" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Коментар</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AttMIMEType" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>MIME/Media/Content тип</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ServiceItemType">
+		<xsd:annotation>
+			<xsd:documentation>Oписание на услуга</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ServiceName" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Наименование</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ServiceType" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Тип (напр. "Нормална", "Бърза" или "Експресна")</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ServiceCode" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Kод (идентификатор/УРИ)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AdditionalDataType">
+		<xsd:annotation>
+			<xsd:documentation>Допълнителни данни</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="xsd:anyType" />
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="DocumentStatusResponseType">
+		<xsd:annotation>
+			<xsd:documentation>Известие за състоянието на документ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="DocID" type="tns:DocumentIdentificationType">
+				<xsd:annotation>
+					<xsd:documentation>Идентификатор на документа (съдържа номер/УРИ на документа при получателя му)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocRegStatus" type="tns:DocumentStatusType">
+				<xsd:annotation>
+					<xsd:documentation>Статус на документа</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="RejectionReason" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Причина за отказ от регистрация (когато регистрацията на документа е отказана)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocExpectCloseDate" type="xsd:date" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Очаквана дата за приключване на работата</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DocAddData" type="tns:AdditionalDataType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Допълнителни данни</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="DocumentStatusType">
+		<xsd:annotation>
+			<xsd:documentation>Статус на документ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="DS_WAIT_REGISTRATION">
+				<xsd:annotation>
+					<xsd:documentation>Документът очаква регистрация.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DS_REGISTERED">
+				<xsd:annotation>
+					<xsd:documentation>Документът е регистриран.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DS_STOPPED">
+				<xsd:annotation>
+					<xsd:documentation>Работата по документа е прекратена.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DS_CLOSED">
+				<xsd:annotation>
+					<xsd:documentation>Работата по документа е приключена.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DS_NOT_FOUND">
+				<xsd:annotation>
+					<xsd:documentation>Документът не е открит.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DS_ALREADY_RECEIVED">
+				<xsd:annotation>
+					<xsd:documentation>Документът вече е получен.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DS_REJECTED">
+				<xsd:annotation>
+					<xsd:documentation>Регистрацията на документа е отказана.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="DocumentStatusRequestType">
+		<xsd:annotation>
+			<xsd:documentation>Заявление за проверка на състоянието на документ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="DocID" type="tns:DocumentIdentificationType">
+				<xsd:annotation>
+					<xsd:documentation>Идентификатор на документа (съдържа номер/УРИ на документа при получателя му)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ErrorMessageType">
+		<xsd:annotation>
+			<xsd:documentation>Съобщение за грешка, възникнала в процеса на обработка на съобщение</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="MessageGUID" type="tns:GUIDType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>GUID (глобален уникален идентификатор) на съобщението, което е предизвикало грешката</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ErrorType" type="tns:ErrorKindType">
+				<xsd:annotation>
+					<xsd:documentation>Вид на грешката</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ErrorDescription" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Описание на грешката</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="ErrorKindType">
+		<xsd:annotation>
+			<xsd:documentation>Вид грешка</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ERR_INTERNAL">
+				<xsd:annotation>
+					<xsd:documentation>Вътрешна грешка (напр. липса на връзка с БД)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="ERR_EXTERNAL">
+				<xsd:annotation>
+					<xsd:documentation>Външна грешка (напр. грешен формат на съобщението)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

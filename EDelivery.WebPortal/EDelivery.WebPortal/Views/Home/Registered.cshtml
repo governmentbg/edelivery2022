@@ -1,0 +1,85 @@
+﻿@using EDelivery.WebPortal.Enums
+
+@model RegisteredSubjectsModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutNonav.cshtml";
+
+    ViewBag.Title = Common.TitleRegisteredSubjects;
+}
+
+<div class="wrapper content-wrapper page-title">
+    <h1 class="pt-0-h-m-0">@ViewBag.Title</h1>
+</div>
+
+<div class="single-col">
+    <nav class="tabs-nav res-700">
+        <button id="tab_btn_1"
+                class="btn btn-m @(Model.Type == eRegisteredSubjectsType.Administration ? "active" : string.Empty)"
+                type="button"
+                data-tab-id="tab_box_1">
+            @UIControls.MainMavInstitutions
+        </button>
+        <button id="tab_btn_2"
+                class="btn btn-m @(Model.Type == eRegisteredSubjectsType.SocialOrganisation ? "active" : string.Empty)"
+                type="button"
+                data-tab-id="tab_box_2">
+            @UIControls.MainNavSocialOrganisations
+        </button>
+        <button id="tab_btn_3"
+                class="btn btn-m @(Model.Type == eRegisteredSubjectsType.LegalPerson ? "active" : string.Empty)"
+                type="button"
+                data-tab-id="tab_box_3">
+            @UIControls.MainMavLegalPersons
+        </button>
+    </nav>
+
+    <div id="tab_box_1" class="tab-box @(Model.Type == eRegisteredSubjectsType.Administration ? "active" : string.Empty)">
+        <div class="tab-box-content">
+            @{
+                var vm1 = new RegisteredSubjectsListModel(
+                    EDelivery.WebPortal.Enums.eRegisteredSubjectsType.Administration);
+            }
+
+            @Html.Partial("Partials/_RegisteredSubjectsList", vm1)
+        </div>
+    </div>
+
+    <div id="tab_box_2" class="tab-box @(Model.Type == eRegisteredSubjectsType.SocialOrganisation ? "active" : string.Empty)">
+        <div class="tab-box-content">
+            @{
+                var vm2 = new RegisteredSubjectsListModel(
+                    EDelivery.WebPortal.Enums.eRegisteredSubjectsType.SocialOrganisation);
+            }
+
+            @Html.Partial("Partials/_RegisteredSubjectsList", vm2)
+        </div>
+    </div>
+
+    <div id="tab_box_3" class="tab-box @(Model.Type == eRegisteredSubjectsType.LegalPerson ? "active" : string.Empty)">
+        <div class="tab-box-content">
+            @{
+                var vm3 = new RegisteredSubjectsListModel(
+                    EDelivery.WebPortal.Enums.eRegisteredSubjectsType.LegalPerson);
+            }
+
+            @Html.Partial("Partials/_RegisteredSubjectsList", vm3)
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            $('form[id^="registered-"]').submit();
+
+            $('button[id^="tab_btn_"]').myTabs(
+                'button[id^="tab_btn_"]',
+                'div[id^="tab_box_"]',
+                'data-tab-id',
+                'active');
+        });
+    </script>
+}
+
+

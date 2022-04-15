@@ -1,0 +1,64 @@
+﻿@inherits LayoutComponentBase
+@inject IStringLocalizer<MainLayout> Localizer
+
+<header id="scale-wrapper">
+    <div class="wrapper header-wrapper">
+        <div class="logo-wrapper" id="scale-in">
+            <a href="">
+                <img src="images/lion-form.svg" class="icon-lion-form">
+            </a>
+            <div class="titles-box">
+                <h2 class="main-title-long">@Localizer["MainTitle"]</h2>
+                <h4 class="sub-title">@Localizer["SubTitle"]</h4>
+            </div>
+        </div>
+        <div class="right-content">
+            <ul>
+                <LoginDisplay />
+                <CultureSelector />
+            </ul>
+        </div>
+    </div>
+</header>
+
+<main class="inner">
+    <div class="gradient-decor"></div>
+    <ErrorBoundary @ref="@errorBoundary">
+        <ChildContent>
+            @Body
+        </ChildContent>
+        <ErrorContent>
+            <div class="wrapper content-wrapper">
+                <h2>@Localizer["ErrorHasOccurred"]</h2>
+                <div>
+                    <a href="" class="btn btn-border btn-m">@Localizer["BtnHomePage"]</a>
+                </div>
+            </div>
+        </ErrorContent>
+    </ErrorBoundary>
+</main>
+
+<footer>
+    <div class="wrapper">
+        <div class="flex-between content-wrapper">
+            <div>
+                <p class="explain">
+                    @Localizer["FooterProject"]
+                </p>
+                <p class="small">
+                    @Localizer["FooterCopyright"]
+                </p>
+            </div>
+            <img src="images/footer-flags.png">
+        </div>
+    </div>
+</footer>
+
+@code
+{
+    private ErrorBoundary errorBoundary;
+    protected override void OnParametersSet()
+    {
+        errorBoundary?.Recover();
+    }
+}

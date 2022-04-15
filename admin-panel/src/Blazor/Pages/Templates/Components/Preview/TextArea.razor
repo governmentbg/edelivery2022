@@ -1,0 +1,24 @@
+﻿@using ED.AdminPanel.Blazor.Pages.Templates.Components.Models
+
+<label for="@Model.Id">@Model.Label:</label>
+<div class="form-element">
+    <textarea id="@Model.Id"
+                placeholder="@Model.Placeholder"
+                class="@Model.CustomClass"
+                @bind="Model.Value"
+                rows="10">
+    </textarea>
+</div>
+
+@code
+{
+    [Parameter] public TextAreaComponent Model { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (this.Model == null)
+        {
+            throw new Exception($"Required parameter {nameof(Model)} is null");
+        }
+    }
+}

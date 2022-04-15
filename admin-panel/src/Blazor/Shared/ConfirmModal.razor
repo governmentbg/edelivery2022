@@ -1,0 +1,43 @@
+﻿@inject IStringLocalizer<ConfirmModal> Localizer
+
+<form onsubmit="return false;">
+    <h3>@Message</h3>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-primary btn-m @ConfirmButtonClass" type="submit" @onclick="ConfirmAsync">
+            @ConfirmButtonText
+        </button>
+        <button class="btn-border btn-m" type="button" @onclick="CancelAsync">
+            @CancelButtonText
+        </button>
+    </section>
+</form>
+
+@code
+{
+    [Parameter] public string Message { get; set; }
+
+    [Parameter] public string ConfirmButtonText { get; set; }
+
+    [Parameter] public string ConfirmButtonClass { get; set; }
+
+    [Parameter] public string CancelButtonText { get; set; }
+
+    [CascadingParameter] private BlazoredModalInstance ModalInstance { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        this.ConfirmButtonText = this.ConfirmButtonText ?? this.Localizer["ConfirmButtonTextDefault"];
+        this.CancelButtonText = this.CancelButtonText ?? this.Localizer["CancelButtonTextDefault"];
+    }
+
+    private async Task ConfirmAsync()
+    {
+        await this.ModalInstance.CloseAsync();
+    }
+
+    private async Task CancelAsync()
+    {
+        await this.ModalInstance.CancelAsync();
+    }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.w3.org/2000/09/xmldsig#" elementFormDefault="qualified" targetNamespace="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Signature">
+    <xs:annotation>
+      <xs:documentation>
+        <summary>
+            Подпис, върху контейнера с данни
+            </summary>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType mixed="true">
+      <xs:annotation>
+        <xs:documentation>
+          <summary>
+            Подпис, върху контейнера с данни
+            </summary>
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:any maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:anyAttribute />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

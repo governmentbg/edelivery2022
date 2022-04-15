@@ -1,0 +1,118 @@
+﻿@page "/profile"
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "profile", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            @if (editModel != null)
+            {
+                <EditForm Model="@editModel" OnValidSubmit="SaveAsync">
+                    <DataAnnotationsValidator />
+
+                    <h3 class="line20 topbrdr">@Localizer["TitleSectionEdit"]</h3>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(EditModel.FirstName)">@Localizer[$"Form{nameof(EditModel.FirstName)}"]</label>
+                                <InputText type="text" id="@nameof(EditModel.FirstName)" @bind-Value="editModel.FirstName" />
+                                <ValidationMessage For="@(() => editModel.FirstName)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(EditModel.MiddleName)">@Localizer[$"Form{nameof(EditModel.MiddleName)}"]</label>
+                                <InputText type="text" id="@nameof(EditModel.MiddleName)" @bind-Value="editModel.MiddleName" />
+                                <ValidationMessage For="@(() => editModel.MiddleName)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(EditModel.LastName)">@Localizer[$"Form{nameof(EditModel.LastName)}"]</label>
+                                <InputText type="text" id="@nameof(EditModel.LastName)" @bind-Value="editModel.LastName" />
+                                <ValidationMessage For="@(() => editModel.LastName)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(EditModel.Identifier)">@Localizer[$"Form{nameof(EditModel.Identifier)}"]</label>
+                                <InputText type="text" id="@nameof(EditModel.Identifier)" @bind-Value="editModel.Identifier" />
+                                <ValidationMessage For="@(() => editModel.Identifier)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(EditModel.Phone)">@Localizer[$"Form{nameof(EditModel.Phone)}"]</label>
+                                <InputText type="text" id="@nameof(EditModel.Phone)" @bind-Value="editModel.Phone" />
+                                <ValidationMessage For="@(() => editModel.Phone)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(EditModel.Email)">@Localizer[$"Form{nameof(EditModel.Email)}"]</label>
+                                <InputText type="text" id="@nameof(EditModel.Email)" @bind-Value="editModel.Email" />
+                                <ValidationMessage For="@(() => editModel.Email)" />
+                            </div>
+                        </div>
+                    </div>
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">
+                            @Localizer["BtnSubmit"]
+                        </button>
+                    </section>
+                </EditForm>
+
+                <EditForm Model="@changePasswordModel" OnValidSubmit="ChangePasswordAsync">
+                    <DataAnnotationsValidator />
+                    <ServerSideValidator @ref="changePasswordServerSideValidator" />
+
+                    <h3 class="line20 topbrdr">@Localizer["TitleSectionEdit"]</h3>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(ChangePasswordModel.OldPassword)">@Localizer[$"Form{nameof(ChangePasswordModel.OldPassword)}"]</label>
+                                <InputText type="password" id="@nameof(ChangePasswordModel.OldPassword)" @bind-Value="changePasswordModel.OldPassword" />
+                                <ValidationMessage For="@(() => changePasswordModel.OldPassword)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(ChangePasswordModel.Password)">@Localizer[$"Form{nameof(ChangePasswordModel.Password)}"]</label>
+                                <InputText type="password" id="@nameof(ChangePasswordModel.Password)" @bind-Value="changePasswordModel.Password" />
+                                <ValidationMessage For="@(() => changePasswordModel.Password)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(ChangePasswordModel.ConfirmPassword)">@Localizer[$"Form{nameof(ChangePasswordModel.ConfirmPassword)}"]</label>
+                                <InputText type="password" id="@nameof(ChangePasswordModel.ConfirmPassword)" @bind-Value="changePasswordModel.ConfirmPassword" />
+                                <ValidationMessage For="@(() => changePasswordModel.ConfirmPassword)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">
+                            @Localizer["BtnSubmit"]
+                        </button>
+                    </section>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>

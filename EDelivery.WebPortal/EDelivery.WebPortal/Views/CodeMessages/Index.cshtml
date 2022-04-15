@@ -1,0 +1,32 @@
+﻿@model OpenCodeMessageViewModel
+
+@{
+    ViewBag.Title = Common.TitleOpenMessageWithAccessCode;
+}
+
+<div class="content-right">
+    <h2>@ViewBag.Title</h2>
+
+    <div class="wrapper content-wrapper message-flex-center">
+        @using (Html.BeginForm("Index", "CodeMessages", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <ul class="col-list col-short">
+                <li class="form-row">
+                    <label for="AccessCode">@ProfilePage.LabelEnterAccessCode</label>
+                    <div class="form-element">
+                        @Html.TextBoxFor(x => x.AccessCode, new { @class = "input-validation-valid" })
+                        @Html.ValidationMessageFor(x => x.AccessCode, null, new { @class = "validation-message" })
+                    </div>
+                </li>
+            </ul>
+
+            <section class="form-section form-row button-row-left">
+                <button type="submit" class="btn-primary btn-l">
+                    @ProfilePage.ButtonConfirmAccessCode
+                </button>
+            </section>
+        }
+    </div>
+</div>

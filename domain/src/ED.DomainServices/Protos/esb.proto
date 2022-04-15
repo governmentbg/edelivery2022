@@ -1,0 +1,456 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices.Esb";
+
+package esb;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "enums.proto";
+
+service Esb {
+  // messages
+  rpc OpenMessage (OpenMessageRequest) returns (OpenMessageResponse);
+  rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
+
+  rpc Inbox (BoxRequest) returns (InboxResponse);
+  rpc Outbox (BoxRequest) returns (OutboxResponse);
+  rpc ViewMessage (ViewMessageRequest) returns (ViewMessageResponse);
+  rpc GetMessage (GetMessageRequest) returns (GetMessageResponse); // open message query
+  rpc CheckMessageRecipients (CheckMessageRecipientsRequest) returns (CheckMessageRecipientsResponse);
+  rpc GetBlobsInfo (GetBlobsInfoRequest) returns (GetBlobsInfoResponse);
+
+  // stats
+  rpc GetMessageSentStatistics (GetMessagesStatisticsRequest) returns (GetMessagesStatisticsResponse);
+  rpc GetMessageReceivedStatistics(GetMessagesStatisticsRequest) returns (GetMessagesStatisticsResponse);
+  rpc GetSentMessageCount (GetSentMessageCountRequest) returns (GetSentMessageCountResponse);
+  rpc GetReceivedMessageCount (GetReceivedMessageCountRequest) returns (GetReceivedMessageCountResponse);
+
+  // profiles
+  rpc CreatePassiveIndividual (CreatePassiveIndividualRequest) returns (CreatePassiveIndividualResponse);
+
+  rpc CheckProfileTargetGroupAccess (CheckProfileTargetGroupAccessRequest) returns (CheckProfileTargetGroupAccessResponse);
+  rpc CheckProfileOnBehalfOfAccess (CheckProfileOnBehalfOfAccessRequest) returns (CheckProfileOnBehalfOfAccessResponse);
+  rpc CheckExistingIndividual (CheckExistingIndividualRequest) returns (CheckExistingIndividualResponse);
+  rpc GetTargetGroupProfiles (GetTargetGroupProfilesRequest) returns (GetTargetGroupProfilesResponse);
+  rpc GetTargetGroupProfileByIdentifier (GetTargetGroupProfileByIdentifierRequest) returns (GetTargetGroupProfileByIdentifierResponse);
+  rpc GetProfileByIdentifier (GetProfileByIdentifierRequest) returns (GetProfileByIdentifierResponse);
+  rpc GetEsbUser (GetEsbUserRequest) returns (GetEsbUserResponse);
+
+  // target groups
+  rpc GetTargetGroups (GetTargetGroupsRequest) returns (GetTargetGroupsResponse);
+
+  // templates
+  rpc CheckProfileTemplateAccess (CheckProfileTemplateAccessRequest) returns (CheckProfileTemplateAccessResponse);
+  rpc GetTemplates (GetTemplatesRequest) returns (GetTemplatesResponse);
+  rpc GetTemplate (GetTemplateRequest) returns (GetTemplateResponse);
+}
+
+message BoxRequest {
+  int32 profile_id = 1;
+  google.protobuf.Int32Value offset = 2;
+  google.protobuf.Int32Value limit = 3;
+}
+
+message InboxResponse{
+  message Message {
+    int32 message_id = 1;
+    google.protobuf.Timestamp date_sent = 2;
+    google.protobuf.Timestamp date_received = 3;
+    string subject = 4;
+    string sender_profile_name = 5;
+    string sender_login_name = 6;
+    string recipient_profile_name = 7;
+    string recipient_login_name = 8;
+    string url = 9;
+    google.protobuf.StringValue orn = 10;
+    google.protobuf.StringValue referenced_orn = 11;
+    google.protobuf.StringValue additional_identifier = 12;
+  }
+
+  repeated Message result = 1;
+  int32 length = 2;
+}
+
+
+message OutboxResponse{
+  message Message {
+    int32 message_id = 1;
+    google.protobuf.Timestamp date_sent = 2;
+    string subject = 3;
+    string sender_profile_name = 4;
+    string sender_login_name = 5;
+    string recipients = 6;
+    string url = 7;
+    google.protobuf.StringValue orn = 8;
+    google.protobuf.StringValue referenced_orn = 9;
+    google.protobuf.StringValue additional_identifier = 10;
+  }
+
+  repeated Message result = 1;
+  int32 length = 2;
+}
+
+message GetMessagesStatisticsRequest {
+  google.protobuf.Timestamp mont_date = 1;
+}
+
+message GetMessagesStatisticsResponse {
+  message Statistics {
+    string month = 1;
+    int32 value = 2;
+  }
+
+  repeated Statistics result = 1;
+}
+
+message GetSentMessageCountRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+}
+
+message GetSentMessageCountResponse {
+  int32 value = 1;
+}
+
+message GetReceivedMessageCountRequest {
+  google.protobuf.Timestamp from_date = 1;
+  google.protobuf.Timestamp to_date = 2;
+}
+
+message GetReceivedMessageCountResponse {
+  int32 value = 1;
+}
+
+message CheckProfileTargetGroupAccessRequest {
+  int32 profile_id = 1;
+  int32 target_group_id = 2;
+}
+
+message CheckProfileTargetGroupAccessResponse {
+  bool has_access = 1;
+}
+
+message CheckProfileOnBehalfOfAccessRequest {
+  int32 profile_id = 1;
+}
+
+message CheckProfileOnBehalfOfAccessResponse {
+  bool has_access = 1;
+}
+
+message CheckExistingIndividualRequest {
+  string identifier = 1;
+}
+
+message CheckExistingIndividualResponse {
+  bool is_existing = 1;
+}
+
+message GetTargetGroupProfilesRequest {
+  int32 target_group_id = 1;
+  google.protobuf.Int32Value offset = 2;
+  google.protobuf.Int32Value limit = 3;
+}
+
+message GetTargetGroupProfilesResponse {
+  message Profile {
+    int32 profile_id = 1;
+    string identifier = 2;
+    string name = 3;
+    string email = 4;
+    string phone = 5;
+  }
+
+  repeated Profile result = 1;
+  int32 length = 2;
+}
+
+message GetTargetGroupProfileByIdentifierRequest {
+  int32 target_group_id = 1;
+  string identifier = 2;
+}
+
+message GetTargetGroupProfileByIdentifierResponse {
+  message Profile {
+    int32 profile_id = 1;
+    string identifier = 2;
+    string name = 3;
+    string email = 4;
+    string phone = 5;
+  }
+
+  optional Profile result = 1;
+}
+
+message GetProfileByIdentifierRequest {
+  string identifier = 1;
+}
+
+message GetProfileByIdentifierResponse {
+  message Profile {
+    int32 profile_id = 1;
+    string identifier = 2;
+    string name = 3;
+    string email = 4;
+    string phone = 5;
+  }
+
+  optional Profile result = 1;
+}
+
+message GetTargetGroupsRequest {
+  int32 profile_id = 1;
+}
+
+message GetTargetGroupsResponse {
+  message TargetGroup {
+    int32 target_group_id = 1;
+    string name = 2;
+    bool can_select_recipients = 3;
+  }
+
+  repeated TargetGroup result = 1;
+}
+
+message CreatePassiveIndividualRequest {
+  string identifier = 1;
+  string first_name = 2;
+  string middle_name = 3;
+  string last_name = 4;
+  string email = 5;
+  string phone = 6;
+  string residence = 7;
+  int32 action_login_id = 8;
+  string ip = 9;
+}
+
+message CreatePassiveIndividualResponse {
+  int32 profile_id = 1;
+}
+
+message GetTemplatesRequest {
+  int32 profile_id = 1;
+}
+
+message GetTemplatesResponse {
+  message Temaplate {
+    int32 template_id = 1;
+    string name = 2;
+    string identity_number = 3;
+    enums.TemplateSecurityLevel read = 4;
+    enums.TemplateSecurityLevel write = 5;
+    google.protobuf.Int32Value response_template_id = 6;
+  }
+
+  repeated Temaplate result = 1;
+}
+
+message CheckProfileTemplateAccessRequest {
+  int32 profile_id = 1;
+  int32 template_id = 2;
+}
+
+message CheckProfileTemplateAccessResponse {
+  bool has_access = 1;
+}
+
+message GetTemplateRequest {
+  int32 template_id = 1;
+}
+
+message GetTemplateResponse {
+  message Template {
+    int32 template_id = 1;
+    string name = 2;
+    string identity_number = 3;
+    enums.TemplateSecurityLevel read = 4;
+    enums.TemplateSecurityLevel write = 5;
+    string content = 6;
+    google.protobuf.Int32Value response_template_id = 7;
+  }
+
+  optional Template result = 1;
+}
+
+message ViewMessageRequest {
+  int32 message_id = 1;
+}
+
+message ViewMessageResponse {
+  message Profile {
+    int32 profile_id = 1;
+    string name = 2;
+    google.protobuf.Timestamp date_received = 3;
+  }
+
+  message Blob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    google.protobuf.Int64Value size = 3;
+    google.protobuf.StringValue document_registration_number = 4;
+    google.protobuf.BoolValue is_malicious = 6;
+    google.protobuf.StringValue hash = 7;
+    google.protobuf.StringValue hash_algorithm = 8;
+    repeated BlobSignature signatures = 9;
+  }
+
+  message BlobSignature {
+    bool covers_document = 1;
+    google.protobuf.Timestamp sign_date = 2;
+    bool is_timestamp = 3;
+    bool valid_at_time_of_signing = 4;
+    string issuer = 5;
+    string subject = 6;
+    google.protobuf.Timestamp valid_to = 7;
+    google.protobuf.Timestamp valid_from = 8;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    google.protobuf.Timestamp date_sent = 2;
+    repeated Profile recipients = 3;
+    string subject = 4;
+    int32 template_id = 5;
+    string body = 6;
+    repeated Blob blobs = 7;
+    google.protobuf.Int32Value forwarded_message_id = 8;
+    google.protobuf.StringValue orn = 9;
+    google.protobuf.StringValue referenced_orn = 10;
+    google.protobuf.StringValue additional_identifier = 11;
+  }
+
+  Message message = 1;
+}
+
+message GetMessageRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+}
+
+message GetMessageResponse {
+  message SenderProfile {
+    int32 profile_id = 1;
+    string name = 2;
+  }
+
+  message RecipientLogin {
+    int32 login_id = 1;
+    string name = 2;
+  }
+
+  message Blob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    google.protobuf.Int64Value size = 3;
+    google.protobuf.StringValue document_registration_number = 4;
+    google.protobuf.BoolValue is_malicious = 6;
+    google.protobuf.StringValue hash = 7;
+    google.protobuf.StringValue hash_algorithm = 8;
+    repeated BlobSignature signatures = 9;
+  }
+
+  message BlobSignature {
+    bool covers_document = 1;
+    google.protobuf.Timestamp sign_date = 2;
+    bool is_timestamp = 3;
+    bool valid_at_time_of_signing = 4;
+    string issuer = 5;
+    string subject = 6;
+    google.protobuf.Timestamp valid_to = 7;
+    google.protobuf.Timestamp valid_from = 8;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    google.protobuf.Timestamp date_sent = 2;
+    SenderProfile sender = 3;
+    google.protobuf.Timestamp date_received = 4;
+    RecipientLogin recipient_login = 5;
+    string subject = 6;
+    int32 template_id = 7;
+    string body = 8;
+    repeated Blob blobs = 9;
+    google.protobuf.Int32Value forwarded_message_id = 10;
+    google.protobuf.StringValue orn = 11;
+    google.protobuf.StringValue referenced_orn = 12;
+    google.protobuf.StringValue additional_identifier = 13;
+  }
+
+  Message message = 1;
+}
+
+message OpenMessageRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+  int32 login_id = 3;
+}
+
+message OpenMessageResponse {
+  message MessageInfo {
+    google.protobuf.Timestamp date_received = 1;
+    int32 login_id = 2;
+    string login_name = 3;
+  }
+
+  optional MessageInfo result = 1;
+}
+
+message GetEsbUserRequest {
+  string o_id = 1;
+  string client_id = 2;
+  google.protobuf.StringValue operator_identifier = 3;
+  google.protobuf.StringValue represented_profile_identifier = 4;
+}
+
+message GetEsbUserResponse {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  google.protobuf.Int32Value operator_login_id = 3;
+  google.protobuf.Int32Value represented_profile_id = 4;
+}
+
+message CheckMessageRecipientsRequest {
+  repeated int32 recipient_profile_ids = 1;
+  int32 profile_id = 2;
+}
+
+message CheckMessageRecipientsResponse {
+  bool is_ok = 1;
+}
+
+message SendMessageRequest {
+  repeated int32 recipient_profile_ids = 1;
+  int32 sender_profile_id = 2;
+  int32 sender_login_id = 3;
+  google.protobuf.Int32Value sender_via_login_id = 4;
+  int32 template_id = 5;
+  string subject = 6;
+  string body = 7;
+  string meta_fields = 8;
+  repeated int32 blob_ids = 9;
+  google.protobuf.Int32Value forwarded_message_id = 10;
+  google.protobuf.StringValue referenced_orn = 11;
+  google.protobuf.StringValue additional_identifier = 12;
+}
+
+message SendMessageResponse {
+  int32 message_id = 1;
+}
+
+message GetBlobsInfoRequest {
+  repeated int32 blob_ids = 1;
+}
+
+message GetBlobsInfoResponse {
+  message Blob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    google.protobuf.StringValue hash_algorithm = 3;
+    google.protobuf.StringValue hash = 4;
+    google.protobuf.Int64Value size = 5;
+  }
+
+  repeated Blob result = 1;
+}

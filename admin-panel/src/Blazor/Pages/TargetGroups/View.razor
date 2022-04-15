@@ -1,0 +1,109 @@
+﻿@page "/target-groups/{TargetGroupId:int}"
+@attribute [Authorize]
+
+@inject IStringLocalizer<View> Localizer
+@inject CommonStringLocalizer CommonLocalizer
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "target-groups", "target-groups" },
+        { "view", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            @if (targetGroup != null)
+            {
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            @if (targetGroup.ArchiveDate != null)
+                            {
+                                <li class="form-row">
+                                    <label for="Name">@Localizer["ArchiveDate"]:</label>
+                                    <div class="form-element">
+                                        @targetGroup.ArchiveDate.ToLocalDateTime().ToString("g")
+                                    </div>
+                                </li>
+                            }
+                            <li class="form-row">
+                                <label for="Name">@Localizer["Name"]:</label>
+                                <div class="form-element">
+                                    @targetGroup.Name
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="Name">@Localizer["ModifyDate"]:</label>
+                                <div class="form-element">
+                                    @targetGroup.ModifyDate.ToLocalDateTime().ToString("g")
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="Name">@Localizer["CreateDate"]:</label>
+                                <div class="form-element">
+                                    @targetGroup.CreateDate.ToLocalDateTime().ToString("g")
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="form-section">
+                        <h3>@Localizer["SectionTitleMatrix"]</h3>
+                        <button type="button" class="btn-light btn-l" @onclick="AddTargetGroupMatrixAsync">
+                            + @Localizer["BtnAddMatrix"]
+                        </button>
+                        <div class="form-row">
+                            <div class="table-responsive">
+                                <table class="statistics">
+                                    <tbody>
+                                        <tr>
+                                            <th>@Localizer["ColumnName"]</th>
+                                            <th></th>
+                                        </tr>
+                                        @foreach (var item in matrix.TargetGroups)
+                                        {
+                                            <tr @key="item.TargetGroupId">
+                                                <td>@item.Name</td>
+                                                <td class="file-actions">
+                                                    <div>
+                                                        <a href="javascript:void(0);"
+                                                            @onclick="async () => await RemoveTargetGroupMatrixAsync(item.TargetGroupId)">
+                                                            <img src="img/trash-icon.png" class="delete" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @if (matrix.TargetGroups.Count == 0)
+                                        {
+                                            <tr><td colspan="4">@Localizer["NoMatrix"]</td></tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="form-section form-row button-row-right">
+                        <a class="btn btn-border btn-l" href="target-groups">&lt; @Localizer["BtnBack"]</a>
+                        @if (targetGroup.ArchiveDate == null
+                            && targetGroup.TargetGroupId != Constants.IndividualTargetGroupId
+                            && targetGroup.TargetGroupId != Constants.LegalEntityTargetGroupId
+                            && targetGroup.TargetGroupId != Constants.PublicAdministrationTargetGroupId
+                            && targetGroup.TargetGroupId != Constants.SocialOrganizationTargetGroupId)
+                        {
+                            <button class="btn btn-primary btn-l" @onclick="ArchiveAsync">@Localizer["BtnArchive"]</button>
+                        }
+                        <a class="btn btn-primary btn-l" href="target-groups/edit/@targetGroup.TargetGroupId">@Localizer["BtnEdit"]</a>
+                    </section>
+                </div>
+            }
+        </div>
+    </div>
+</div>

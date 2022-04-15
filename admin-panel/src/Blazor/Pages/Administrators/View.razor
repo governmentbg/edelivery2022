@@ -1,0 +1,130 @@
+﻿@page "/administrators/{Id:int}"
+@attribute [Authorize]
+
+@using ED.DomainServices.Admin
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "administrators", "administrators" },
+        { "view", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+
+        <div class="content-right">
+            <div class="col-list">
+                <h3>
+                    @Localizer["Title"]
+
+                    @if (administrator != null && administrator.Id != currentUserId)
+                    {
+                        if (administrator.IsActive)
+                        {
+                            <button type="button" class="btn btn-s btn-primary butright warn"
+                                    @onclick="DeactivateAsync"
+                                    disabled="@deactivating">
+                                <span>@Localizer["BtnDeactivate"]</span>
+                                @if (deactivating)
+                                {
+                                    <div class="loader-container"></div>
+                                }
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-s btn-primary butright"
+                                    @onclick="ActivateAsync"
+                                    disabled="@activating">
+                                <span>@Localizer["BtnActivate"]</span>
+                                @if (activating)
+                                {
+                                    <div class="loader-container"></div>
+                                }
+                            </button>
+                        }
+                    }
+                </h3>
+
+                @if (administrator != null)
+                {
+                    <h3 class="line20 topbrdr">
+                        @Localizer["TitleSectionLogin"]
+
+                        @if (administrator.Id == currentUserId)
+                        {
+                            <a class="btn btn-s btn-primary butright"
+                               href="@($"profile")">
+                                <span>@Localizer["BtnEdit"]</span>
+                            </a>
+                        }
+                    </h3>
+                    <div class="form-group">
+                        <label>@Localizer["FieldUserName"]</label>
+                        <label class="strong">@administrator.UserName</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldStatus"]</label>
+                        <label class="strong">@Localizer[$"FieldStatus_{administrator.IsActive}"]</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldCreatedOn"]</label>
+                        <label class="strong">
+                            @administrator.CreatedOn.ToLocalDateTime().ToString("g")
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldCreatedBy"]</label>
+                        <label class="strong">@administrator.CreatedBy</label>
+                    </div>
+                    @if (!administrator.IsActive)
+                    {
+                        <div class="form-group">
+                            <label>@Localizer["FieldDisabledOn"]</label>
+                            <label class="strong">
+                                @administrator.DisabledOn.ToLocalDateTime().ToString("g")
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["FieldDisabledBy"]</label>
+                            <label class="strong">@administrator.DisabledBy</label>
+                        </div>
+                        <div class="form-group">
+                            <label>@Localizer["FieldDisableReason"]</label>
+                            <label class="strong">@administrator.DisableReason</label>
+                        </div>
+                    }
+
+                    <h3 class="line20 topbrdr">@Localizer["TitleSectionPersonalData"]</h3>
+                    <div class="form-group">
+                        <label>@Localizer["FieldFirstName"]</label>
+                        <label class="strong">@administrator.FirstName</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldMiddleName"]</label>
+                        <label class="strong">@administrator.MiddleName</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldLastName"]</label>
+                        <label class="strong">@administrator.LastName</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldIdentifier"]</label>
+                        <label class="strong">@administrator.Identifier</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldEmail"]</label>
+                        <label class="strong">@administrator.Email</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldPhone"]</label>
+                        <label class="strong">@administrator.Phone</label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

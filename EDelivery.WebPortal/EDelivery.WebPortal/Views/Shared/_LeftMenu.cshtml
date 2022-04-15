@@ -1,0 +1,143 @@
+﻿@using EDelivery.WebPortal.Enums
+@using EDelivery.WebPortal.Utils
+
+@{
+    BreadCrumb b = null;
+    var userData = Context.GetCachedUserData();
+    if (userData != null)
+    {
+        b = userData.BreadCrumb;
+    }
+
+    var profile = userData.ActiveProfile;
+}
+
+<nav class="left-nav-wrapper collapsed">
+    <button class="btn btn-left-nav-menu">
+        <span class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        @Common.Menu
+    </button>
+    <ul class="left-nav-menu">
+        <li>
+            <a href="@Url.Action("Index", "Profile")">
+                @Common.BreadCrumbHomePage
+            </a>
+        </li>
+        <li class="@(b?.ELeftMenu == eLeftMenu.CreateMessage ? "selected" : string.Empty)">
+            <a href="@Url.Action("Template", "Messages")">
+                @Common.FooterNavCreateNew
+            </a>
+        </li>
+
+        @if (userData.ActiveProfile.EnableMessagesWithCode)
+        {
+            <li class="@(b?.ELeftMenu == eLeftMenu.CreateMessageWithCode ? "selected" : string.Empty)">
+                <a href="@Url.Action("New", "CodeMessages")">
+                    @Common.FooterNavCreateMessageWithCode
+                </a>
+            </li>
+        }
+
+        <li class="@(b?.ELeftMenu == eLeftMenu.ReceivedMessages ? "selected" : string.Empty)">
+            <a href="@Url.Action("Inbox", "Messages")">
+                @Common.FooterNavReceived
+            </a>
+            <span class="number"
+                  data-type="delivery"
+                  data-profileid="@profile.ProfileId"
+                  style="display: none;">
+            </span>
+        </li>
+        <li class="@(b?.ELeftMenu == eLeftMenu.SentMessages ? "selected" : string.Empty)">
+            <a href="@Url.Action("Outbox", "Messages")">
+                @Common.FooterNavSent
+            </a>
+        </li>
+
+        <li class="@(b?.ELeftMenu == eLeftMenu.Storage ? "selected" : string.Empty)">
+            <a href="@Url.Action("Index", "Storage")">
+                @Common.TitleStorageHome
+            </a>
+        </li>
+
+        @if (userData.ActiveProfile.HasSEOS.HasValue && userData.ActiveProfile.HasSEOS.Value)
+        {
+            <li class="@(b?.ELeftMenu == eLeftMenu.Seos ? "selected" : string.Empty)">
+                <a href="@Url.Action("Index", "SEOS")">
+                    @SEOS.TitleSEOS
+                </a>
+                <span class="number"
+                      data-type="seos"
+                      data-profileid="@profile.ProfileId"
+                      style="display: none;">
+                </span>
+            </li>
+        }
+
+        @if (userData.ActiveProfile.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.PublicAdministration
+            && userData.ActiveProfile.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.SocialOrganization)
+        {
+            <li>
+                <a href="@Url.Action("BulSI", "Profile")"
+                   rel="noopener"
+                   target="_blank">
+                    @Common.BlanksLink
+                </a>
+            </li>
+            <li>
+                <a href="@Url.Action("Pay","Profile")"
+                   rel="noopener"
+                   target="_blank">
+                    @Common.PayLink
+                </a>
+            </li>
+        }
+        else if (userData.ActiveProfile.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.PublicAdministration)
+        {
+            <li>
+                <a href="https://pay.egov.bg/eforms"
+                   rel="noopener"
+                   target="_blank">
+                    @Common.PayLink
+                </a>
+            </li>
+        }
+
+        @if (userData.ActiveProfile.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+        {
+            <li>
+                <a href="@Url.Action("Ahu", "Profile")"
+                   rel="noopener"
+                   target="_blank">
+                    @Common.InfoDisallowedPeople
+                </a>
+            </li>
+        }
+
+        <li class="@(b?.ELeftMenu == eLeftMenu.Administration ? "selected" : string.Empty)">
+            <a href="@Url.Action("Administer", "Profile")">
+                @Common.FooterNavAdministration
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Help")">
+                @Common.FooterNavHelp
+            </a>
+        </li>
+
+        @if (userData.ActiveProfile.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+        {
+            <li>
+                <a href="@Url.Action("Reports", "Profile")"
+                   rel="noopener"
+                   target="_blank">
+                    @Common.ReportsLinkPerson
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

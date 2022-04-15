@@ -1,0 +1,20 @@
+﻿@model RecipientGroupViewModel
+
+@{
+    ViewBag.Title = $"Получателска група {Model.Name}";
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@($"Получателска група {Model.Name}")</h2>
+
+        @Html.Partial("Partials/GroupDetails", Model)
+
+        <a href="@Url.Action("Groups", "Profile")"
+           class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

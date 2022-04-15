@@ -1,0 +1,36 @@
+﻿@model InstitutionSpecificModel
+
+<div class="wrapper content-wrapper message-box">
+    <div class="message-content">
+        <h3 class="line">@ProfilePage.TitleDataInstitution</h3>
+
+        <div class="form-row">
+            <div class="da-tooltip attached iconed red">
+                <div class="icon-info"></div>
+                @ProfilePage.MessageUpdateInstitutionSpecific
+            </div>
+        </div>
+
+        <div class="form-row">
+            <table class="blank-list">
+                <tbody>
+                    <tr>
+                        <td>@ProfilePage.LabelInstName:</td>
+                        <td>@Model.InstitutionName</td>
+                    </tr>
+                    <tr>
+                        <td>@ProfilePage.LabelInstEIK:</td>
+                        <td>@Model.EIK</td>
+                    </tr>
+                    @if (Model.HeadInstitutionId.HasValue)
+                    {
+                        <tr>
+                            <td>@ProfilePage.LabelHeadInstName:</td>
+                            <td>@Model.HeadInstitutionName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

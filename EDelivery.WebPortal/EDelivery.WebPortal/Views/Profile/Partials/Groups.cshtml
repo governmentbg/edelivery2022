@@ -1,0 +1,58 @@
+﻿@using EDelivery.WebPortal.Extensions
+
+@model PagedListLight<RecipientGroupItemViewModel>
+
+@{
+    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
+    new AjaxOptions
+    {
+        HttpMethod = "GET",
+        InsertionMode = System.Web.Mvc.Ajax.InsertionMode.Replace,
+        UpdateTargetId = "recipient-groups-content"
+    });
+
+    options.Display = PagedListDisplayMode.IfNeeded;
+    options.MaximumPageNumbersToDisplay = 6;
+    options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToFirstPage = PagedListDisplayMode.Never;
+    options.DisplayLinkToLastPage = PagedListDisplayMode.Never;
+}
+
+<div class="table-responsive" id="recipient-groups-content">
+    @Html.CustomPagedListPager(Model, p => Url.Action("Groups", new { page = p }), options)
+
+    <table class="statistics">
+        <tbody>
+            <tr>
+                <th>Наименование</th>
+                <th>Дата на създаване</th>
+                <th>Дата на промяна</th>
+                <th>Членове</th>
+                <th></th>
+            </tr>
+
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="5">Няма създадени групи.</td>
+                </tr>
+            }
+
+            @foreach (var group in Model)
+            {
+                <tr>
+                    <td>@group.Name</td>
+                    <td>@group.CreateDate.ToString(SystemConstants.DateTimeFormat)</td>
+                    <td>@group.ModifyDate.ToString(SystemConstants.DateTimeFormat)</td>
+                    <td>@group.NumberOfMembers</td>
+                    <td>
+                        @Html.ActionLink("Преглед", "GroupDetails", new { id = group.RecipientGroupId })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.CustomPagedListPager(Model, p => Url.Action("Groups", new { page = p }), options)
+</div>

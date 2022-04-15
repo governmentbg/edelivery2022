@@ -1,0 +1,113 @@
+﻿@page "/templates"
+@inherits PagedComponent
+@attribute [Authorize]
+
+@using System.Threading
+@using ED.DomainServices.Admin
+@inject Admin.AdminClient AdminClient
+@inject IStringLocalizer<Index> Localizer
+@inject CommonStringLocalizer CommonLocalizer
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "templates", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <div style="padding-bottom: 15px;">
+                <a href="templates/create"
+                   class="btn btn-border btn-m butright">
+                    @Localizer["CreateTemplate"]
+                </a>
+
+                <h3>@Localizer["Title"]</h3>
+            </div>
+
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(templates?.Length ?? 0)" />
+            <div class="table-responsive" style="position: relative">
+                @if (IsLoading)
+                {
+                    <div class="loader-container">
+                    </div>
+                }
+                <table class="list">
+                    <tbody>
+                        <tr>
+                            <th>@Localizer["NameColumn"]</th>
+                            <th>@Localizer["CreateDateColumn"]</th>
+                            <th>@Localizer["ReadLoginSecurityLevelNameColumn"]</th>
+                            <th>@Localizer["WriteLoginSecurityLevelNameColumn"]</th>
+                            <th>@Localizer["IsSystemTemplateColumn"]</th>
+                            <th>@Localizer["PublishDateColumn"]</th>
+                            <th>@Localizer["ArchiveDateColumn"]</th>
+                            <th></th>
+                        </tr>
+
+                        @if (templates == null)
+                        {
+                            <tr>
+                                <td colspan="8">
+                                    <div class="loader page-loader show">
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @if (!templates.Result.Any())
+                            {
+                                <tr>
+                                    <td colspan="8">@Localizer["NoItems"]</td>
+                                </tr>
+                            }
+
+                            @foreach (var template in templates.Result)
+                            {
+                                <tr>
+                                    <td>@template.Name</td>
+                                    <td>@template.CreateDate.ToLocalDateTime().ToString("g")</td>
+                                    <td>@template.ReadLoginSecurityLevelName</td>
+                                    <td>@template.WriteLoginSecurityLevelName</td>
+                                    <td>@CommonLocalizer[template.IsSystemTemplate.ToString()]</td>
+                                    <td>@(template.PublishDate?.ToLocalDateTime().ToString("g") ?? "-")</td>
+                                    <td>@(template.ArchiveDate?.ToLocalDateTime().ToString("g") ?? "-")</td>
+                                    <td>
+                                        <a href="templates/create/@template.TemplateId">@Localizer["CopyBtn"]</a>
+                                        <a href="templates/@template.TemplateId">@Localizer["ViewBtn"]</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(templates?.Length ?? 0)" />
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private GetTemplateListResponse templates;
+
+    protected override async Task LoadDataAsync(CancellationToken ct)
+    {
+        this.templates =
+            await this.AdminClient.GetTemplateListAsync(
+                new GetTemplateListRequest
+                {
+                    Offset = base.Offset,
+                    Limit = base.Limit,
+                },
+                cancellationToken: ct);
+    }
+}

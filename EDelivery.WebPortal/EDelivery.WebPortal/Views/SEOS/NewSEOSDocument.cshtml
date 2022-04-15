@@ -1,0 +1,225 @@
+﻿@model SEOSDocumentDetailsModel
+
+@{
+    ViewBag.Title = SEOS.TitleCreateNewSEOSMessage;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@ViewBag.Title</h2>
+        <p class="explain">Полетата, означени със символа <span class="txt-red">*</span>, са задължителни за попълване.</p>
+
+        @using (Html.BeginForm(
+            "SubmitSEOSDocument",
+            "SEOS",
+            FormMethod.Post,
+            new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.ElectronicSubjectId)
+            @Html.HiddenFor(x => x.ReceiverGuid)
+
+            <section class="form-section">
+                <ul class="col-list col-short">
+                    <li class="form-row">
+                        <label for="Receiver">@SEOS.LabelReceiverName<span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.Receiver, new { @readonly = "readonly" })
+                            @Html.ValidationMessageFor(x => x.Receiver, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="Subject">@SEOS.LabelSubject <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.Subject)
+                            @Html.ValidationMessageFor(x => x.Subject, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="DocumentKind">@SEOS.LabelDocKind <span class="txt-red">*</span>:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.DocumentKind)
+                            @Html.ValidationMessageFor(x => x.DocumentKind, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="ReferenceNumber">@SEOS.LabelDocReferenceNumber:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.ReferenceNumber)
+                            @Html.ValidationMessageFor(x => x.ReferenceNumber, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="DocumentAttentionTo">@SEOS.LabelDocAttentionTo:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.DocumentAttentionTo)
+                            @Html.ValidationMessageFor(x => x.DocumentAttentionTo, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="DocumentRequestCloseDate">@SEOS.LabelReqEndDate:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.DocumentRequestCloseDate)
+                            @Html.ValidationMessageFor(x => x.DocumentRequestCloseDate, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section class="form-section">
+                <ul class="col-list">
+                    <li class="form-row">
+                        <label for="DocumentComment">@SEOS.LabelDocAdditionalComment:</label>
+                        <div class="form-element">
+                            @Html.TextAreaFor(x => x.DocumentComment, new { rows = "10" })
+                            @Html.ValidationMessageFor(x => x.DocumentComment, null, new { @class = "validation-message" })
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <h3>@SEOS.LabelDocAttList</h3>
+
+            <section class="form-section">
+                <ul class="col-list">
+                    <li class="form-row">
+                        <label for="DocumenAttachmentFirstContent">@SEOS.LabelDocumentAttPath:</label>
+                        <div class="f-grow-100">
+
+                            @Html.HiddenFor(x => x.DocumenAttachmentFirstContent, new { id = "DocumenAttachmentFirstContent" })
+
+                            <div class="row-group">
+                                <div class="">
+                                    <div class="pos-relative">
+                                        @Html.TextBoxFor(x => x.DocumenAttachmentFirstFileName, new { id = "DocumenAttachmentFirstContent-text", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(x => x.DocumenAttachmentFirstContent, null, new { id = "DocumenAttachmentFirstContent-err", @class = "validation-message" })
+                                        
+                                        <div class="loader file-upload" id="DocumenAttachmentFirstContent-progress"></div>
+                                    </div>
+                                </div>
+                                <button id="DocumenAttachmentFirstContent-btn" class="btn-border btn-l file-upload">
+                                    @UIControls.ButtonAttach
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="form-row">
+                        <label for="DocumenAttachmentFirstComment">@SEOS.LabelDocumentAttComment:</label>
+                        <div class="form-element">
+                            @Html.TextBoxFor(x => x.DocumenAttachmentFirstComment)
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            for (int i = 0; i < 3; i++)
+            {
+                <section class="form-section file-input-holder-@i" style="display: none;">
+                    <ul class="col-list">
+                        <li class="form-row">
+                            <label for="DocumenAttachments_@(i)__TempId">@SEOS.LabelDocumentAttPath:</label>
+                            <div class="f-grow-100">
+
+                                @Html.HiddenFor(x => x.DocumenAttachments[i].TempId, new { id = "DocumenAttachments_" + i })
+
+                                <div class="row-group">
+                                    <div class="">
+                                        <div class="pos-relative">
+                                            @Html.TextBoxFor(x => x.DocumenAttachments[i].FileName, new { id = "DocumenAttachments_" + i + "-text", @readonly = "readonly" })
+                                            <span id="DocumenAttachments_@i-err"
+                                                  class="validation-message field-validation-error"
+                                                  style="display:none">
+                                            </span>
+                                            <div class="loader file-upload" id="DocumenAttachments_@i-progress"></div>
+                                        </div>
+                                    </div>
+                                    <button id="DocumenAttachments_@i-btn" class="btn-border btn-l file-upload">
+                                        @UIControls.ButtonAttach
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="form-row">
+                            <label for="DocumenAttachments_@(i)__Comment">@SEOS.LabelDocumentAttComment:</label>
+                            <div class="form-element">
+                                @Html.TextBoxFor(x => x.DocumenAttachments[i].Comment)
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            }
+
+            <section class="form-section">
+                <ul class="col-list">
+                    <li class="mt-spacer button-row-right">
+                        <button class="btn-light btn-l" id="add-input-file">+ @SEOS.ButtonAddMoreDos</button>
+                    </li>
+                </ul>
+            </section>
+            <section class="form-section form-row button-row-right">
+                <button class="btn-border btn-l" type="button" onclick="goBack()">Откажи</button>
+                <button class="btn-primary btn-l" type="submit">@SEOS.ButtonSendMessage</button>
+            </section>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/file-uploader")
+
+    <script type="text/javascript">
+
+        function goBack() {
+            if (confirm('@ErrorMessages.ConfigrmLeaveMessage')) {
+                window.history.back();
+            }
+        }
+
+        $(function () {
+            var currentFileInputIndex = 0;
+
+            $('#add-input-file').on('click', function (e) {
+                e.preventDefault();
+
+                if (currentFileInputIndex > 2) {
+                    return;
+                }
+
+                $('.file-input-holder-' + currentFileInputIndex).show();
+                currentFileInputIndex++;
+            });
+
+            var uploadUrl = '@Url.Action("SubmitSEOSDocumentAttachment")';
+
+            var errorMessages = {
+                maxFileSize: '@EDeliveryResources.SEOS.ErrorMaxFileLength',
+                maliciousFile: '@EDeliveryResources.SEOS.ErrorMaliciousFile',
+                fileNotUploaded: '@EDeliveryResources.SEOS.ErrorCantUploadFile',
+                notMaliciousFile: '@EDeliveryResources.SEOS.InfoFileIsNotMalicious'
+            }
+
+            fileUploader.initAjaxUploadWithProgress(
+                uploadUrl,
+                '#DocumenAttachmentFirstContent',
+                errorMessages,
+                'seosattachment',
+                1,
+                1024 * 100);
+
+            for (var i = 0; i < 3; i++)
+            {
+                fileUploader.initAjaxUploadWithProgress(
+                    uploadUrl,
+                    '#DocumenAttachments_' + i,
+                    errorMessages,
+                    'seosattachment',
+                    3,
+                    1024 * 100);
+            }
+
+        });
+
+    </script>
+}

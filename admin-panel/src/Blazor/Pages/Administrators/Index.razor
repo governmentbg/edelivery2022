@@ -1,0 +1,108 @@
+﻿@page "/administrators"
+@inherits PagedComponent
+@attribute [Authorize]
+
+@using System.Threading
+@using ED.DomainServices.Admin
+@inject Admin.AdminClient AdminClient
+@inject IStringLocalizer<Index> Localizer
+@inject CommonStringLocalizer CommonLocalizer
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "administrators", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <div style="padding-bottom: 15px;">
+                <a href="administrators/create"
+                   class="btn btn-border btn-m butright">
+                    @Localizer["BtnCreateAdministrator"]
+                </a>
+
+                <h3>@Localizer["Title"]</h3>
+            </div>
+
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(administrators?.Length ?? 0)" />
+            <div class="table-responsive" style="position: relative">
+                @if (IsLoading)
+                {
+                    <div class="loader-container">
+                    </div>
+                }
+                <table class="list">
+                    <tbody>
+                        <tr>
+                            <th>@Localizer["ColumnStatus"]</th>
+                            <th>@Localizer["ColumnName"]</th>
+                            <th>@Localizer["ColumnCreatedOn"]</th>
+                            <th>@Localizer["ColumnCreatedBy"]</th>
+                            <th>@Localizer["ColumnDisabledBy"]</th>
+                        </tr>
+
+                        @if (administrators == null)
+                        {
+                            <tr>
+                                <td colspan="5">
+                                    <div class="loader page-loader show">
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @if (!administrators.Result.Any())
+                            {
+                                <tr>
+                                    <td colspan="5">@Localizer["NoItems"]</td>
+                                </tr>
+                            }
+
+                            @foreach (var administrator in administrators.Result)
+                            {
+                                <tr>
+                                    <td>@Localizer[$"ColumnStatus_{administrator.IsActive}"]</td>
+                                    <td>
+                                        <a href="administrators/@administrator.Id">
+                                            @administrator.Name
+                                        </a>
+                                    </td>
+                                    <td>@administrator.CreatedOn.ToLocalDateTime().ToString("g")</td>
+                                    <td>@administrator.CreatedBy</td>
+                                    <td>@administrator.DisabledBy</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(administrators?.Length ?? 0)" />
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private GetAdministratorListResponse administrators;
+
+    protected override async Task LoadDataAsync(CancellationToken ct)
+    {
+        this.administrators =
+            await this.AdminClient.GetAdministratorListAsync(
+                new GetAdministratorListRequest
+                {
+                    Offset = base.Offset,
+                    Limit = base.Limit,
+                },
+                cancellationToken: ct);
+    }
+}

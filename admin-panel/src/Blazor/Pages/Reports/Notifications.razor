@@ -1,0 +1,203 @@
+﻿@page "/reports/notifications"
+@using ED.DomainServices.Admin
+@using ED.DomainServices
+@inherits PagedComponent
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "reports", "reports" },
+        { "notifications", null }
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            <EditForm EditContext="@editContext" OnValidSubmit="Search">
+                <DataAnnotationsValidator />
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="@nameof(SearchNotificationsModel.FromDate)">
+                                    @Localizer["FormFromDate"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <DateField id="@nameof(SearchNotificationsModel.FromDate)" @bind-Value="model.FromDate" Placeholder=@Constants.DateTimeFormat  />
+                                    <ValidationMessage For="@(() => model.FromDate)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchNotificationsModel.ToDate)">@Localizer["FormToDate"]<span class="txt-red">*</span></label>
+                                <div class="form-element">
+                                    <DateField id="@nameof(SearchNotificationsModel.ToDate)" @bind-Value="model.ToDate" Placeholder=@Constants.DateTimeFormat  />
+                                    <ValidationMessage For="@(() => model.ToDate)" />
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">@Localizer["BtnSearch"]</button>
+                    </section>
+                </div>
+            </EditForm>
+
+            @if (hasSentRequest)
+            {
+                <div style="padding: 15px 0px; height: 45px;">
+                    <a href="@recordsReportLink"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       download
+                       class="btn btn-border btn-m butright">
+                        @Localizer["BtnExport"]
+                    </a>
+                </div>
+
+                <div class="table-responsive" style="position: relative">
+                    @if (IsLoading)
+                    {
+                        <div class="loader-container">
+                        </div>
+                    }
+
+                    <table class="list">
+                        <tbody>
+                            <tr>
+                                <th colspan="4">
+                                    @recordsTableTitle
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>@Localizer["ColumnName"]</th>
+                                <th>@Localizer["ColumnSent"]</th>
+                                <th>@Localizer["ColumnError"]</th>
+                                <th>@Localizer["ColumnTotal"]</th>
+                            </tr>
+
+                            @if (records == null)
+                            {
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="loader page-loader show">
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @if (!records.Result.Any())
+                                {
+                                    <tr>
+                                        <td colspan="4">@Localizer["NoItems"]</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    var groupedRecords = records.Result
+                                        .GroupBy(q => q.Type)
+                                        .Select(g => new
+                                        {
+                                            Type = g.Key,
+                                            Sent = g.Sum(sent => sent.Sent),
+                                            Error = g.Sum(error => error.Error),
+                                            Count = g.Sum(all => all.Error + all.Sent)
+                                        });
+
+                                    @foreach (var record in groupedRecords)
+                                    {
+                                        <tr>
+                                            <td>@record.Type</td>
+                                            <td>@record.Sent</td>
+                                            <td>@record.Error</td>
+                                            <td>@record.Count</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                    <br />
+
+                    <table class="list">
+                        <tbody>
+                            <tr>
+                                <th colspan="5">@Localizer["ColumnDates"]</th>
+                            </tr>
+                            <tr>
+                                <th>@Localizer["ColumnDay"]</th>
+                                <th>@Localizer["ColumnName"]</th>
+                                <th>@Localizer["ColumnSent"]</th>
+                                <th>@Localizer["ColumnError"]</th>
+                                <th>@Localizer["ColumnTotal"]</th>
+                            </tr>
+                            @if (records == null)
+                            {
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="loader page-loader show">
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @if (!records.Result.Any())
+                                {
+                                    <tr>
+                                        <td colspan="5">@Localizer["NoItems"]</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (DateTime day in EachDay(model.FromDate!.Value, model.ToDate!.Value))
+                                    {
+                                        var sms = records.Result
+                                            .FirstOrDefault(x => x.Date.ToLocalDateTime() == day && x.Type == NotificationType.Sms);
+
+                                        <tr>
+                                            <td>@day.Date.ToString(Constants.DateTimeFormat)</td>
+                                            <td>@(sms?.Type ?? NotificationType.Sms)</td>
+                                            <td>@(sms?.Sent ?? 0)</td>
+                                            <td>@(sms?.Error ?? 0)</td>
+                                            <td>@((sms?.Error ?? 0) + (sms?.Sent ?? 0))</td>
+                                        </tr>
+
+                                        var email = records.Result
+                                            .FirstOrDefault(x => x.Date.ToLocalDateTime() == day && x.Type == NotificationType.Email);
+
+                                        <tr>
+                                            <td>@day.Date.ToString(Constants.DateTimeFormat)</td>
+                                            <td>@(email?.Type ?? NotificationType.Email)</td>
+                                            <td>@(email?.Sent ?? 0)</td>
+                                            <td>@(email?.Error ?? 0)</td>
+                                            <td>@((email?.Error ?? 0) + (email?.Sent ?? 0))</td>
+                                        </tr>
+
+                                        var viber = records.Result
+                                            .FirstOrDefault(x => x.Date.ToLocalDateTime() == day && x.Type == NotificationType.Viber);
+
+                                        <tr>
+                                            <td>@day.Date.ToString(Constants.DateTimeFormat)</td>
+                                            <td>@(viber?.Type ?? NotificationType.Viber)</td>
+                                            <td>@(viber?.Sent ?? 0)</td>
+                                            <td>@(viber?.Error ?? 0)</td>
+                                            <td>@((viber?.Error ?? 0) + (viber?.Sent ?? 0))</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

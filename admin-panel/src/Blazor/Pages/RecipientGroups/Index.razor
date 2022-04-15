@@ -1,0 +1,104 @@
+﻿@page "/recipient-groups"
+@inherits PagedComponent
+@attribute [Authorize]
+
+@using System.Threading
+@using ED.DomainServices.Admin
+@inject Admin.AdminClient AdminClient
+@inject IStringLocalizer<Index> Localizer
+@inject CommonStringLocalizer CommonLocalizer
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "recipient-groups", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <div style="padding-bottom: 15px;">
+                <a href="recipient-groups/create"
+                   class="btn btn-border btn-m butright">
+                    @Localizer["CreateRecipientGroup"]
+                </a>
+
+                <h3>@Localizer["Title"]</h3>
+            </div>
+
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(recipientGroups?.Length ?? 0)" />
+            <div class="table-responsive" style="position: relative">
+                @if (IsLoading)
+                {
+                    <div class="loader-container">
+                    </div>
+                }
+                <table class="list">
+                    <tbody>
+                        <tr>
+                            <th>@Localizer["ColumnName"]</th>
+                            <th>@Localizer["ColumnCreateDate"]</th>
+                            <th>@Localizer["ColumnArchiveDate"]</th>
+                            <th></th>
+                        </tr>
+
+                        @if (recipientGroups == null)
+                        {
+                            <tr>
+                                <td colspan="4">
+                                    <div class="loader page-loader show">
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @if (!recipientGroups.Result.Any())
+                            {
+                                <tr>
+                                    <td colspan="4">@Localizer["NoItems"]</td>
+                                </tr>
+                            }
+
+                            @foreach (var recipientGroup in recipientGroups.Result)
+                            {
+                                <tr>
+                                    <td>@recipientGroup.Name</td>
+                                    <td>@recipientGroup.CreateDate.ToLocalDateTime().ToString("g")</td>
+                                    <td>@(recipientGroup.ArchiveDate?.ToLocalDateTime().ToString("g") ?? "-")</td>
+                                    <td>
+                                        <a href="recipient-groups/@recipientGroup.RecipientGroupId">@Localizer["BtnView"]</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(recipientGroups?.Length ?? 0)" />
+        </div>
+    </div>
+</div>
+
+@code
+{
+    private GetRecipientGroupListResponse recipientGroups;
+
+    protected override async Task LoadDataAsync(CancellationToken ct)
+    {
+        this.recipientGroups =
+            await this.AdminClient.GetRecipientGroupListAsync(
+                new GetRecipientGroupListRequest
+                {
+                    Offset = base.Offset,
+                    Limit = base.Limit,
+                },
+                cancellationToken: ct);
+    }
+}

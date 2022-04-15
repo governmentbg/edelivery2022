@@ -1,0 +1,48 @@
+﻿<EditForm Model="@model" OnValidSubmit="SubmitFormAsync">
+    <DataAnnotationsValidator />
+
+    <h2>@Localizer["CheckboxTitle"]</h2>
+
+    <section class="form-section">
+        <div class="form-col">
+            <label for="Label">@Localizer["Label"]<span class="txt-red">*</span></label>
+            <div class="form-element">
+                <InputText type="text" id="Label" @bind-Value="model.Label" />
+                <ValidationMessage For="@(() => model.Label)" />
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="DocumentField">@Localizer["DocumentField"]</label>
+            <div class="form-element">
+                <InputText type="text" id="DocumentField" @bind-Value="model.DocumentField" />
+                <ValidationMessage For="@(() => model.DocumentField)" />
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="CustomClass">@Localizer["CustomClass"]</label>
+            <div class="form-element">
+                <InputText type="text" id="CustomClass" @bind-Value="model.CustomClass" />
+            </div>
+        </div>
+
+        <!-- custom -->
+        <div class="form-col">
+            <div class="form-element">
+                <InputCheckbox id="Value" @bind-Value="model.Value" />
+                <label for="Value" style="width: 100%;">@Localizer["Value"]</label>
+            </div>
+        </div>
+
+        <div class="form-col">
+            <div class="form-group">
+                <InputCheckbox id="IsEncrypted" @bind-Value="model.IsEncrypted" />
+                <label for="IsEncrypted" style="width: 100%;">@Localizer["IsEncrypted"]</label>
+            </div>
+        </div>
+    </section>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-border btn-m" type="button" @onclick="CancelAsync">@Localizer["CancelBtn"]</button>
+        <button class="btn-primary btn-m" type="submit">@Localizer[IsEdit ? "SaveBtn" : "AddBtn"]</button>
+    </section>
+</EditForm>

@@ -1,0 +1,130 @@
+﻿@page "/reports/eforms"
+@inherits PagedComponent
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "reports", "reports" },
+        { "eforms", null }
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            <EditForm EditContext="@editContext" OnValidSubmit="Search">
+                <DataAnnotationsValidator />
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="@nameof(SearchEFormsModel.FromDate)">
+                                    @Localizer["FormFromDate"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <DateField id="@nameof(SearchEFormsModel.FromDate)" @bind-Value="model.FromDate" Placeholder=@Constants.DateTimeFormat/>
+                                    <ValidationMessage For="@(() => model.FromDate)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchEFormsModel.ToDate)">
+                                    @Localizer["FormToDate"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <DateField id="@nameof(SearchEFormsModel.ToDate)" @bind-Value="model.ToDate" Placeholder=@Constants.DateTimeFormat />
+                                    <ValidationMessage For="@(() => model.ToDate)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchEFormsModel.EFormServiceNumber)">
+                                    @Localizer["FormEFormServiceNumber"]
+                                </label>
+                                <div class="form-element">
+                                    <InputText id="@nameof(SearchEFormsModel.EFormServiceNumber)"
+                                               type="text"
+                                               @bind-Value="model.EFormServiceNumber" />
+                                    <ValidationMessage For="@(() => model.EFormServiceNumber)" />
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">@Localizer["BtnSearch"]</button>
+                    </section>
+                </div>
+            </EditForm>
+
+            @if (hasSentRequest)
+            {
+                <div style="padding: 15px 0px; height: 45px;">
+                    <a href="@recordsReportLink"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       download
+                       class="btn btn-border btn-m butright">
+                        @Localizer["BtnExport"]
+                    </a>
+                </div>
+
+                <Pager Page="@(Page)"
+                       PageSize="@PageSize"
+                       TotalItemsCount="@(records?.Length ?? 0)" />
+                <div class="table-responsive" style="position: relative">
+                    @if (IsLoading)
+                    {
+                        <div class="loader-container">
+                        </div>
+                    }
+                    <table class="list">
+                        <tbody>
+                            <tr>
+                                <th colspan="2">
+                                    @recordsTableTitle
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>@Localizer["ColumnName"]</th>
+                                <th>@Localizer["ColumnCount"]</th>
+                            </tr>
+
+                            @if (records == null)
+                            {
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="loader page-loader show">
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @if (!records.Result.Any())
+                                {
+                                    <tr>
+                                        <td colspan="2">@Localizer["NoItems"]</td>
+                                    </tr>
+                                }
+
+                                @foreach (var record in records.Result)
+                                {
+                                    <tr>
+                                        <td>@record.MessageSubject</td>
+                                        <td>@record.Count</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <Pager Page="@(Page)"
+                       PageSize="@PageSize"
+                       TotalItemsCount="@(records?.Length ?? 0)" />
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+﻿@model OutboxViewModel
+
+@{
+    ViewBag.Title = Common.TitleSentMessages;
+    ViewBag.SearchTitle = ProfilePage.TableHeaderMessageTitle;
+    ViewBag.SearchElSubject = ProfilePage.TableHeaderMessageReceiver;
+    ViewBag.SearchDates = ProfilePage.LabelSentInPeriod;
+    ViewBag.Legend = ProfilePage.TitleSearchInSentMessages;
+
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleSentMessages</h2>
+
+        @Html.Partial("Partials/_SearchMessages", Model.SearchFilter)
+
+        @Html.Partial("Partials/_OutboxMessageList", Model)
+    </div>
+</div>

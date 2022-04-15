@@ -1,0 +1,44 @@
+﻿@using EDelivery.WebPortal.Models.Templates.Components
+
+@model IEnumerable<BaseComponent>
+
+<ul class="col-list">
+
+    @foreach (var item in Model)
+    {
+        switch (item.Type)
+        {
+            case ComponentType.hidden:
+                @Html.Partial("Partials/Render/_Hidden", item as HiddenComponent)
+                break;
+
+            case ComponentType.textfield:
+                @Html.Partial("Partials/Render/_TextField", item as TextFieldComponent)
+                break;
+
+            case ComponentType.textarea:
+                @Html.Partial("Partials/Render/_TextArea", item as TextAreaComponent)
+                break;
+
+            case ComponentType.datetime:
+                @Html.Partial("Partials/Render/_DateTime", item as DateTimeComponent)
+                break;
+
+            case ComponentType.select:
+                @Html.Partial("Partials/Render/_Select", item as SelectComponent)
+                break;
+
+            case ComponentType.checkbox:
+                @Html.Partial("Partials/Render/_Checkbox", item as CheckboxComponent)
+                break;
+
+            case ComponentType.file:
+                @Html.Partial("Partials/Render/_File", item as FileComponent)
+                break;
+
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
+</ul>

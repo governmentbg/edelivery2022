@@ -1,0 +1,33 @@
+﻿@using EDelivery.WebPortal.Models.Home
+
+@model StatisticsViewModel
+
+<div class="content-wrapper col-2 bgr-gray">
+    <h2>@Landing.TitleRegisteredUsers</h2>
+    <ul class="list-clear">
+        @if (Model != null)
+        {
+            <li>
+                @Landing.RegisteredAdministrations
+                <a href="@Url.Action("Registered", "Home", new { id = EDelivery.WebPortal.Enums.eRegisteredSubjectsType.Administration })">
+                    @Model.PublicAdministrationsCount
+                </a>
+            </li>
+            <li>
+                @Landing.RegisteredSocialOrganisations
+                <a href="@Url.Action("Registered", "Home", new { id = EDelivery.WebPortal.Enums.eRegisteredSubjectsType.SocialOrganisation })">
+                    @Model.SocialOrganizationsCount
+                </a>
+            </li>
+            <li>
+                @Landing.RegisteredLegals
+                <a href="@Url.Action("Registered", "Home", new { id = EDelivery.WebPortal.Enums.eRegisteredSubjectsType.LegalPerson })">
+                    @Model.LegalEntitiesCount
+                </a>
+            </li>
+        }
+        <li>
+            @Html.Raw(String.Format(Landing.RegistrationsFullLink, "<a href='" + Url.Action("Registered", "Home") + "'>", "</a>"))
+        </li>
+    </ul>
+</div>

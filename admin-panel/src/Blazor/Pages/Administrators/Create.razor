@@ -1,0 +1,114 @@
+﻿@page "/administrators/create"
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "administrators", "administrators" },
+        { "create", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            @if (model != null)
+            {
+                <EditForm Model="@model" OnValidSubmit="SaveAsync">
+                    <DataAnnotationsValidator />
+                    <ServerSideValidator @ref="serverSideValidator" />
+
+                    <h3 class="line20 topbrdr">@Localizer["TitleSectionPersonalData"]</h3>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.FirstName)">@Localizer[$"Form{nameof(CreateModel.FirstName)}"]</label>
+                                <InputText type="text" id="@nameof(CreateModel.FirstName)" @bind-Value="model.FirstName" />
+                                <ValidationMessage For="@(() => model.FirstName)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.MiddleName)">@Localizer[$"Form{nameof(CreateModel.MiddleName)}"]</label>
+                                <InputText type="text" id="@nameof(CreateModel.MiddleName)" @bind-Value="model.MiddleName" />
+                                <ValidationMessage For="@(() => model.MiddleName)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.LastName)">@Localizer[$"Form{nameof(CreateModel.LastName)}"]</label>
+                                <InputText type="text" id="@nameof(CreateModel.LastName)" @bind-Value="model.LastName" />
+                                <ValidationMessage For="@(() => model.LastName)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.Identifier)">@Localizer[$"Form{nameof(CreateModel.Identifier)}"]</label>
+                                <InputText type="text" id="@nameof(CreateModel.Identifier)" @bind-Value="model.Identifier" />
+                                <ValidationMessage For="@(() => model.Identifier)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.Phone)">@Localizer[$"Form{nameof(CreateModel.Phone)}"]</label>
+                                <InputText type="text" id="@nameof(CreateModel.Phone)" @bind-Value="model.Phone" />
+                                <ValidationMessage For="@(() => model.Phone)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.Email)">@Localizer[$"Form{nameof(CreateModel.Email)}"]</label>
+                                <InputText type="text" id="@nameof(CreateModel.Email)" @bind-Value="model.Email" />
+                                <ValidationMessage For="@(() => model.Email)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="line20 topbrdr">@Localizer["TitleSectionLogin"]</h3>
+
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.UserName)">@Localizer[$"Form{nameof(CreateModel.UserName)}"]</label>
+                                <InputText type="text" id="@nameof(CreateModel.UserName)" @bind-Value="model.UserName" />
+                                <ValidationMessage For="@(() => model.UserName)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.Password)">@Localizer[$"Form{nameof(CreateModel.Password)}"]</label>
+                                <InputText type="password" id="@nameof(CreateModel.Password)" @bind-Value="model.Password" />
+                                <ValidationMessage For="@(() => model.Password)" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-col">
+                                <label for="@nameof(CreateModel.ConfirmPassword)">@Localizer[$"Form{nameof(CreateModel.ConfirmPassword)}"]</label>
+                                <InputText type="password" id="@nameof(CreateModel.ConfirmPassword)" @bind-Value="model.ConfirmPassword" />
+                                <ValidationMessage For="@(() => model.ConfirmPassword)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="form-section form-row button-row-right">
+                        <a class="btn btn-border btn-l" href="administrators">
+                            @Localizer["BtnCancel"]
+                        </a>
+                        <button class="btn-primary btn-l" type="submit">
+                            @Localizer["BtnSubmit"]
+                        </button>
+                    </section>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>

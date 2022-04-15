@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <noWarn>1573;1591</noWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\esb.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\esb.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\authorization.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\authorization.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\enums.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\enums.proto</Link>
+    </Protobuf>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.4.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.44.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Mapster" Version="7.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.15.10" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.43.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.43.0" />
+    <PackageReference Include="Grpc.Net.Client.Web" Version="2.43.0" />
+    <PackageReference Include="Scrutor" Version="4.1.0" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>

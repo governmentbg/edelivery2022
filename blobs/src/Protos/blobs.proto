@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.Blobs";
+
+package blobs;
+
+import "google/protobuf/wrappers.proto";
+
+service Blobs {
+  rpc UploadProfileBlob(stream UploadProfileBlobRequest) returns (UploadProfileBlobResponse);
+  rpc DownloadProfileBlob(DownloadProfileBlobRequest) returns (stream DownloadProfileBlobResponse);
+
+  rpc DownloadMessageBlob(DownloadMessageBlobRequest) returns (stream DownloadMessageBlobResponse);
+}
+
+message BlobChunk {
+  bytes data = 1;
+}
+
+message BlobDownloadHeader {
+  string file_name = 1;
+  int64 size = 2;
+}
+
+enum ProfileBlobAccessKeyType {
+  TEMPORARY = 0;
+  STORAGE = 1;
+  REGISTRATION = 2;
+  TEMPLATE = 3;
+  PDF_STAMP = 4;
+}
+
+message UploadProfileBlobRequest {
+  message BlobUploadHeader {
+    string file_name = 1;
+    int64 size = 2;
+    bool extract_pdf_signatures = 3;
+    int32 profile_id = 4;
+    int32 login_id = 5;
+    ProfileBlobAccessKeyType type = 6;
+    google.protobuf.StringValue document_registration_number = 7;
+  }
+
+  oneof header_or_chunk {
+    BlobUploadHeader header = 1;
+    BlobChunk chunk = 2;
+  }
+}
+
+message UploadProfileBlobResponse {
+  google.protobuf.Int32Value blob_id = 1;
+  bool is_malicious = 2;
+  google.protobuf.StringValue hash = 3;
+  google.protobuf.StringValue hash_algorithm = 4;
+}
+
+message DownloadProfileBlobRequest {
+  int32 blob_id = 1;
+  int32 profile_id = 2;
+}
+
+message DownloadProfileBlobResponse {
+  oneof header_or_chunk {
+    BlobDownloadHeader header = 1;
+    BlobChunk chunk = 2;
+  }
+}
+
+message DownloadMessageBlobRequest {
+  int32 profile_id = 1;
+  int32 message_id = 2;
+  int32 blob_id = 3;
+}
+
+message DownloadMessageBlobResponse {
+  oneof header_or_chunk {
+    BlobDownloadHeader header = 1;
+    BlobChunk chunk = 2;
+  }
+}

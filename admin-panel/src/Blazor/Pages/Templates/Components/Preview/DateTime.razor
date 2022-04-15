@@ -1,0 +1,36 @@
+﻿@using System.Globalization
+@using ED.AdminPanel.Blazor.Pages.Templates.Components.Models
+
+<label for="@Model.Id">@Model.Label:</label>
+<div class="form-element">
+    <DateField @bind-Value="value" id="@Model.Id" class="@Model.CustomClass" />
+</div>
+
+@code
+{
+    [Parameter] public DateTimeComponent Model { get; set; }
+
+    private System.DateTime? value;
+
+    protected override void OnParametersSet()
+    {
+        if (this.Model == null)
+        {
+            throw new Exception($"Required parameter {nameof(Model)} is null");
+        }
+
+        if (!string.IsNullOrWhiteSpace(this.Model.Value))
+        {
+            // ignore incorrectly formatted values
+            if (System.DateTime.TryParseExact(
+                this.Model.Value,
+                Constants.DateTimeFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out System.DateTime dt))
+            {
+                this.value = dt;
+            }
+        }
+    }
+}

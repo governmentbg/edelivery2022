@@ -1,0 +1,55 @@
+﻿@using ED.AdminPanel.Blazor.Pages.Templates.Components.Models
+
+@switch (Model.Type)
+{
+    case ComponentType.hidden:
+        HiddenComponent hiddenModel = (HiddenComponent)Model;
+        <Hidden Model="@hiddenModel" />
+        break;
+
+    case ComponentType.textfield:
+        TextFieldComponent textFieldModel = (TextFieldComponent)Model;
+        <TextField Model="@textFieldModel" />
+        break;
+
+    case ComponentType.textarea:
+        TextAreaComponent textAreaModel = (TextAreaComponent)Model;
+        <TextArea Model="@textAreaModel" />
+        break;
+
+    case ComponentType.datetime:
+        DateTimeComponent dateTimeModel = (DateTimeComponent)Model;
+        <DateTime Model="@dateTimeModel" />
+        break;
+
+    case ComponentType.select:
+        SelectComponent selectModel = (SelectComponent)Model;
+        <Select Model="@selectModel" />
+        break;
+
+    case ComponentType.checkbox:
+        CheckboxComponent checkboxModel = (CheckboxComponent)Model;
+        <Checkbox Model="@checkboxModel" />
+        break;
+
+    case ComponentType.file:
+        FileComponent fileModel = (FileComponent)Model;
+        <File Model="@fileModel" />
+        break;
+
+    default:
+        throw new NotImplementedException();
+}
+
+@code {
+    [Parameter]
+    public BaseComponent Model { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (this.Model == null)
+        {
+            throw new Exception($"Required parameter {nameof(Model)} is null");
+        }
+    }
+}

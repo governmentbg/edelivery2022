@@ -1,0 +1,36 @@
+.admin .content-wrapper.page-title { min-height: auto; padding: 10px 50px; }
+.breadcrumb { position: relative; width: 100%; top: 0; left: 0;}
+.breadcrumb li:not(:nth-child(-n+1)):before { display: inline-block; padding-right: 0.5rem; color: #6c757d; content: "/"; }
+table.list { width: 100%; border-bottom: 1px solid #333333; }
+table.list th, table.list td { padding: 15px; }
+table.list th img, table.list td img { display: block; vertical-align: middle; margin: auto; }
+table.list th { font-weight: 700; border-top: 1px solid #333333; border-bottom: 1px solid #333333; }
+table.list th a.ordered { padding-right: 21px; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-align: center; -ms-flex-align: center; align-items: center; position: relative; }
+table.list th a.ordered:after { content: ""; display: block; position: absolute; top: auto; right: 0px; width: 17px; height: 12px; background-repeat: no-repeat; }
+table.list th a.change-order:after { background-image: url(../img/change-order-up.png); }
+table.list th a.change-order.down:after { background-image: url(../img/change-order-down.png); }
+table.list tr:nth-child(odd) td { background-color: #f7f7f7; }
+.butright { float: right; }
+.mt20 { margin-top: 20px; clear: both; }
+.mb20 { margin-bottom: 20px; clear: both; }
+.ml20 { margin-left: 20px; }
+.mr20 { margin-right: 20px; }
+.mr10 { margin-right: 10px; }
+.line20 { margin-top: 20px; padding-top: 20px; }
+.topbrdr { border-top: 1px solid #999; }
+.col-list label { width: 250px; }
+.strong { font-weight: bold; }
+.form-group.aright { text-align: right; display: block; }
+button.btn-primary.warn { background-color: red; }
+.leftlink { float: left; display: inline-block; padding: 14px 0; }
+.loader { display: none; }
+.wauto { width: auto !important; }
+.w300 { width: 300px !important; }
+.nodisp { display: none; }
+.innernav { border-top: 1px solid #999; }
+.innernav li { float: left; width: 25%; text-align: center; padding: 7px 0; }
+.innernav li.active, .innernav li.active a { background: #01497c; color: #fff; }
+.clear { clear: both; }
+.field-validation-valid:before, .valid:before { content: '\A'; }
+.loginpage h3 { text-align: center; }
+.loginpage form { max-width: 500px; margin: 0 auto; }

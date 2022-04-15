@@ -1,0 +1,152 @@
+﻿@page "/"
+@attribute [Authorize]
+@inject IStringLocalizer<Index> Localizer
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <h3 style="display: block;">@Localizer["Home"]</h3><br />
+    <div class="wrapper flex-row mt-spacer">
+        <div class="col-3">
+            <a href="requests" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M30 46H2V10h54v23"></path>
+                        <path d="M2 10l27 20.6L56 10"></path>
+                        <circle cx="46" cy="46" r="16"></circle>
+                        <path d="M46 38v14.9m5.9-5.8L46 52.9l-5.9-5.8"></path>
+                    </svg>
+                </div>
+                <h6>@Localizer["RegistrationRequests"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="profiles" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 35.67 29.65" class="icon icon-svg" style="stroke-width: 1.2;">
+                        <circle cx="10.62" cy="10.62" r="9.93" />
+                        <polygon points="24.69,18.74 34.98,25.52 32.71,28.95 22.43,22.17 " />
+                        <line x1="19.2" y1="17.55" x2="22.63" y2="19.81" />
+                        <path d="M4.3 8.54c0.34,-0.91 0.85,-1.71 1.48,-2.39 1.25,-1.35 2.98,-2.19 4.81,-2.34" />
+                    </svg>
+                </div>
+                <h6>@Localizer["Search"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="reports" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 66.5 67.16" class="icon icon-svg">
+                        <rect x="53.88" y="1.58" width="11.04" height="63.99" />
+                        <rect x="36.83" y="34.28" width="11.04" height="31.3" />
+                        <rect x="19.2" y="20.64" width="11.04" height="44.94" />
+                        <rect x="1.58" y="48.49" width="11.04" height="17.08" />
+                    </svg>
+                </div>
+                <h6>@Localizer["Reports"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="administrators" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M34 46.9c4-.9 4-2.3 4-3.3v-1.5a9.3 9.3 0 0 1-2.9-6.9v-4.5a7 7 0 0 1 13.9 0v4.5a9.3 9.3 0 0 1-3 6.9v1.5c0 .9 0 2.4 4.1 3.3S54 52 54 52H30a5.1 5.1 0 0 1 4-5.1z"></path>
+                        <path d="M10 10H2v50h60V10h-8M26 24H10m10 8H10m14 8H10m8-30h28"></path>
+                        <path d="M10 4h8v12h-8zm36 0h8v12h-8z"></path>
+                    </svg>
+                </div>
+                <h6>@Localizer["Administrators"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="registrations" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 62.6 57.91" class="icon icon-svg">
+                        <path d="M56.7 28.95c0,15.33 -12.42,27.75 -27.75,27.75 -15.32,0 -27.74,-12.42 -27.74,-27.75 0,-15.32 12.42,-27.74 27.74,-27.74 6.49,0 12.46,2.22 17.18,5.95" />
+                        <circle cx="28.95" cy="23.86" r="7.58" />
+                        <ellipse cx="28.95" cy="43.89" rx="14.41" ry="7.17" />
+                        <polygon points="50.26,8.44 55.94,8.44 55.94,13.89 61.39,13.89 61.39,19.58 55.94,19.58 55.94,25.03 50.26,25.03 50.26,19.58 44.81,19.58 44.81,13.89 50.26,13.89 " />
+                    </svg>
+                </div>
+                <h6>@Localizer["Registration"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="recipient-groups" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 67.88 48.72" class="icon icon-svg">
+                        <path d="M30.23 28.02c-10.7,-2.77 -9.94,-19.44 3.7,-20.52l0 0 0.01 0 0.01 0 0 0c13.64,1.08 14.01,17.75 3.31,20.52 8.08,0.28 11.96,3.97 15.02,12.17l0 7.57 -18.33 0 -0.02 0 -18.33 0 0 -7.57c3.06,-8.2 6.54,-11.89 14.63,-12.17z" />
+                        <path d="M28.11 5.55c-1.39,-2.77 -3.65,-4.19 -8.8,-4.59l0 -0.01 -0.01 0.01 -0.01 -0.01 0 0.01c-13.64,1.08 -14.01,17.75 -3.31,20.52 -8.08,0.28 -11.96,3.97 -15.03,12.17l0 7.57 11.2 0" />
+                        <path d="M39.77 5.55c1.39,-2.77 3.65,-4.19 8.8,-4.59l0 -0.01 0.01 0.01 0.01 -0.01 0 0.01c13.64,1.08 14.01,17.75 3.31,20.52 8.08,0.28 11.96,3.97 15.03,12.17l0 7.57 -11.2 0" />
+                    </svg>
+                </div>
+                <h6>@Localizer["RecipientGroups"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="target-groups" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 67.88 48.72" class="icon icon-svg">
+                        <path d="M30.23 28.02c-10.7,-2.77 -9.94,-19.44 3.7,-20.52l0 0 0.01 0 0.01 0 0 0c13.64,1.08 14.01,17.75 3.31,20.52 8.08,0.28 11.96,3.97 15.02,12.17l0 7.57 -18.33 0 -0.02 0 -18.33 0 0 -7.57c3.06,-8.2 6.54,-11.89 14.63,-12.17z" />
+                        <path d="M28.11 5.55c-1.39,-2.77 -3.65,-4.19 -8.8,-4.59l0 -0.01 -0.01 0.01 -0.01 -0.01 0 0.01c-13.64,1.08 -14.01,17.75 -3.31,20.52 -8.08,0.28 -11.96,3.97 -15.03,12.17l0 7.57 11.2 0" />
+                        <path d="M39.77 5.55c1.39,-2.77 3.65,-4.19 8.8,-4.59l0 -0.01 0.01 0.01 0.01 -0.01 0 0.01c13.64,1.08 14.01,17.75 3.31,20.52 8.08,0.28 11.96,3.97 15.03,12.17l0 7.57 -11.2 0" />
+                    </svg>
+                </div>
+                <h6>@Localizer["TargetGroups"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="profile" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 69.02 57.69" class="icon icon-svg">
+                        <path d="M55.89 29.04c0,15.05 -12.2,27.25 -27.24,27.25 -15.05,0 -27.24,-12.2 -27.24,-27.25 0,-15.04 12.19,-27.24 27.24,-27.24 6.36,0 12.22,2.19 16.86,5.85" />
+                        <circle cx="28.65" cy="24.04" r="7.44" />
+                        <ellipse cx="28.65" cy="43.71" rx="14.15" ry="7.03" />
+                        <rect transform="matrix(0.882288 0.780391 -0.632185 0.714731 58.8445 4.99568)" width="6.34" height="23.87" />
+                        <polygon points="42.96,22.95 48.56,27.9 39.87,32.09 " />
+                        <rect transform="matrix(0.882288 0.780391 0.105528 -0.119308 59.5015 4.25282)" width="6.34" height="23.87" />
+                    </svg>
+                </div>
+                <h6>@Localizer["Profile"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="templates" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                        <path d="M30 46H2V10h54v23"></path>
+                        <path d="M2 10l27 20.6L56 10"></path>
+                        <circle cx="46" cy="46" r="16"></circle>
+                        <path d="M46 38v14.9m5.9-5.8L46 52.9l-5.9-5.8"></path>
+                    </svg>
+                </div>
+                <h6>@Localizer["Templates"]</h6>
+            </a>
+        </div>
+
+        <div class="col-3">
+            <a href="seos-participants" class="content-wrapper icon-menu-item bgr-gray">
+                <div class="icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 67.88 48.72" class="icon icon-svg">
+                        <path d="M30.23 28.02c-10.7,-2.77 -9.94,-19.44 3.7,-20.52l0 0 0.01 0 0.01 0 0 0c13.64,1.08 14.01,17.75 3.31,20.52 8.08,0.28 11.96,3.97 15.02,12.17l0 7.57 -18.33 0 -0.02 0 -18.33 0 0 -7.57c3.06,-8.2 6.54,-11.89 14.63,-12.17z" />
+                        <path d="M28.11 5.55c-1.39,-2.77 -3.65,-4.19 -8.8,-4.59l0 -0.01 -0.01 0.01 -0.01 -0.01 0 0.01c-13.64,1.08 -14.01,17.75 -3.31,20.52 -8.08,0.28 -11.96,3.97 -15.03,12.17l0 7.57 11.2 0" />
+                        <path d="M39.77 5.55c1.39,-2.77 3.65,-4.19 8.8,-4.59l0 -0.01 0.01 0.01 0.01 -0.01 0 0.01c13.64,1.08 14.01,17.75 3.31,20.52 8.08,0.28 11.96,3.97 15.03,12.17l0 7.57 -11.2 0" />
+                    </svg>
+                </div>
+                <h6>@Localizer["SeosParticipants"]</h6>
+            </a>
+        </div>
+    </div>
+</div>

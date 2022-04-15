@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ED.ServiceContracts</RootNamespace>
+    <AssemblyName>ED.ServiceContracts</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'EGovTestV2|AnyCPU'">
+    <OutputPath>bin\EGovTestV2\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ProdV2|AnyCPU'">
+    <OutputPath>bin\ProdV2\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataContracts\DcAdminInfo.cs" />
+    <Compile Include="DataContracts\DcAdminProfileQuota.cs" />
+    <Compile Include="DataContracts\DcDocument.cs" />
+    <Compile Include="DataContracts\DcDocumentAdditional.cs" />
+    <Compile Include="DataContracts\DcDocumentMalwareScanned.cs" />
+    <Compile Include="DataContracts\DcDocumentSize.cs" />
+    <Compile Include="DataContracts\DcEFormsMessageReport.cs" />
+    <Compile Include="DataContracts\DcEFormsRequestedServicesReport.cs" />
+    <Compile Include="DataContracts\DcInstitutionListItem.cs" />
+    <Compile Include="DataContracts\DcIntegrationDetails.cs" />
+    <Compile Include="DataContracts\DCIntegrationService\DcMessage.cs" />
+    <Compile Include="DataContracts\DCIntegrationService\DcMessageDetails.cs" />
+    <Compile Include="DataContracts\DcIntitutionUpdateInfo.cs" />
+    <Compile Include="DataContracts\DcLegalPersonRegistrationInfo.cs" />
+    <Compile Include="DataContracts\DcLegalPersonUpdateInfo.cs" />
+    <Compile Include="DataContracts\DcLogin.cs" />
+    <Compile Include="DataContracts\DcLoginAccess.cs" />
+    <Compile Include="DataContracts\DcLoginProfileSettings.cs" />
+    <Compile Include="DataContracts\DcLoginWithProfilesAndMessages.cs" />
+    <Compile Include="DataContracts\DcMalwareScanDocumentResult.cs" />
+    <Compile Include="DataContracts\DcMalwareServiceEvaluation.cs" />
+    <Compile Include="DataContracts\DcMalwareServiceEvaluationFile.cs" />
+    <Compile Include="DataContracts\DcMessageDetailsWithMalwareScanInfo.cs" />
+    <Compile Include="DataContracts\DcMessageFilter.cs" />
+    <Compile Include="DataContracts\DcNotificationInfo.cs" />
+    <Compile Include="DataContracts\DcNotificationPlaceholder.cs" />
+    <Compile Include="DataContracts\DcNotificationReceiver.cs" />
+    <Compile Include="DataContracts\DcOperationError.cs" />
+    <Compile Include="DataContracts\DcPartialList.cs" />
+    <Compile Include="DataContracts\DcPdfStampMessageContent.cs" />
+    <Compile Include="DataContracts\DcPersonRegistrationInfo.cs" />
+    <Compile Include="DataContracts\DcProfile.cs" />
+    <Compile Include="DataContracts\DcProfileHistoryRecord.cs" />
+    <Compile Include="DataContracts\DcProfileHistoryRecordDetails.cs" />
+    <Compile Include="DataContracts\DcProfileInfo.cs" />
+    <Compile Include="DataContracts\DcProfileQuota.cs" />
+    <Compile Include="DataContracts\DcProfileWithNewMsgCount.cs" />
+    <Compile Include="DataContracts\DcRegixReportAuditLog.cs" />
+    <Compile Include="DataContracts\DcSendFileSizeLimitsReport.cs" />
+    <Compile Include="DataContracts\DcSendFileSizeLimitsReportList.cs" />
+    <Compile Include="DataContracts\DcStatisticsDelayedMessages.cs" />
+    <Compile Include="DataContracts\DcStatisticsGeneral.cs" />
+    <Compile Include="DataContracts\DcStatisticsMessagesPerMonth.cs" />
+    <Compile Include="DataContracts\DcStatisticsTimeStamp.cs" />
+    <Compile Include="DataContracts\DcSubjectAdditionalDocument.cs" />
+    <Compile Include="DataContracts\DcSubjectProfileInfo.cs" />
+    <Compile Include="DataContracts\DcSubjectRegistrationDocument.cs" />
+    <Compile Include="DataContracts\DcSubjectRegistrationInfo.cs" />
+    <Compile Include="DataContracts\DcSubjectShortInfo.cs" />
+    <Compile Include="DataContracts\DcTimeStamp.cs" />
+    <Compile Include="DataContracts\DcTimeStampMessageContent.cs" />
+    <Compile Include="DataContracts\DigitalSignature\DcChainCertificate.cs" />
+    <Compile Include="DataContracts\DigitalSignature\DcSignatureValidationResult.cs" />
+    <Compile Include="DataContracts\ESubject\DcAddress.cs" />
+    <Compile Include="DataContracts\ESubject\DcAdministrativeActInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcCertificateInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcElectronicIdentityInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcInstitutionInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcInstitutionRegistrationInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcLegalPersonInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcMessageWithCodeReceiver.cs" />
+    <Compile Include="DataContracts\ESubject\DcPersonInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcProcessRequestInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcSubjectDataUpdates.cs" />
+    <Compile Include="DataContracts\ESubject\DcSubjectInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcSubjectPublicInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcSubjectRequestInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcSubjectRequestShortInfo.cs" />
+    <Compile Include="DataContracts\ESubject\DcTokenVerificationInfo.cs" />
+    <Compile Include="DataContracts\ESubject\WebDcInstitutionInfo.cs" />
+    <Compile Include="DataContracts\ESubject\WebDcLegalPersonInfo.cs" />
+    <Compile Include="DataContracts\ESubject\WebInstitutionInfo.cs" />
+    <Compile Include="DataContracts\ESubject\WebLegalPersonInfo.cs" />
+    <Compile Include="DataContracts\WebDcForwardedMessageDetails.cs" />
+    <Compile Include="DataContracts\WebDcForwardedMessageHistory.cs" />
+    <Compile Include="DataContracts\WebDcMessage.cs" />
+    <Compile Include="DataContracts\WebDcMessageDetails.cs" />
+    <Compile Include="DataContracts\WebDcSubjectInfo.cs" />
+    <Compile Include="DataContracts\WebDcSubjectPublicInfo.cs" />
+    <Compile Include="Enums\eErrorCode.cs" />
+    <Compile Include="Enums\eForwardStatus.cs" />
+    <Compile Include="Enums\eHashAlgorithm.cs" />
+    <Compile Include="Enums\eMalwareServiceEvaluationStatus.cs" />
+    <Compile Include="Enums\eNotificationPurpose.cs" />
+    <Compile Include="Enums\eNotificationType.cs" />
+    <Compile Include="Enums\eProfileHistoryAction.cs" />
+    <Compile Include="Enums\eProfileType.cs" />
+    <Compile Include="Enums\eRequestStatus.cs" />
+    <Compile Include="Enums\eRequestType.cs" />
+    <Compile Include="Enums\eRevokationResult.cs" />
+    <Compile Include="Enums\eSortColumn.cs" />
+    <Compile Include="Enums\eSortOrder.cs" />
+    <Compile Include="Enums\eTimeStampType.cs" />
+    <Compile Include="Enums\eVerificationInfoType.cs" />
+    <Compile Include="Enums\eVerificationResult.cs" />
+    <Compile Include="Enums\InstitutionType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,62 @@
+﻿@using System.Web.Configuration
+@using EDelivery.WebPortal.Enums
+@using EDelivery.WebPortal.Extensions
+@using EDelivery.WebPortal.Utils
+
+@model RecipientGroupMembersViewModel
+@{
+  var isIndividual = Context.GetCachedUserData().ActiveProfile.TargetGroupId == (int)TargetGroupId.Individual;
+}
+<h3>Членове</h3>
+
+@if (isIndividual && Model.Members.Count >= Convert.ToInt32(WebConfigurationManager.AppSettings["MaxRecipientGroupMembers"]))
+{
+  <p style="color: #c09853">*Достигнат е максималният брой от 20 члена в групата</p>
+}
+else
+{
+  <button class="btn-light btn-l"
+          data-modal-href="@Url.Action("AddGroupMember", new { id = Model.RecipientGroupId })">
+    + Добави
+  </button>
+}
+
+<div class="form-row">
+    <div class="table-responsive">
+        <table class="statistics">
+            <tbody>
+                <tr>
+                    <th>Наименование</th>
+                    <th>Целева група</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.Members)
+                {
+                    <tr>
+                        <td>@item.ProfileName</td>
+                        <td>@item.ProfileTargetGroup</td>
+                        <td>
+                            @Ajax.RawActionLink(
+                                "<img src='/Content/img/trash-icon.png'>",
+                                "RemoveGroupMember",
+                                "Profile",
+                                new { profileId = item.ProfileId, recipientGroupId = Model.RecipientGroupId},
+                                new AjaxOptions
+                                {
+                                    HttpMethod = "POST",
+                                    UpdateTargetId = "recipient-group-members"
+                                },
+                                new { @class = "delete" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-modal-href]').myModal();
+    });
+</script>

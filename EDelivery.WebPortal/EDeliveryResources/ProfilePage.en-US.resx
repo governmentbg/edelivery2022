@@ -1,0 +1,447 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ButtonAddMoreDos" xml:space="preserve">
+    <value>Add more</value>
+  </data>
+  <data name="ButtonAddReceiver" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="ButtonAttach" xml:space="preserve">
+    <value>Attach</value>
+  </data>
+  <data name="ButtonGrantAccess" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="ButtonRequestProfileChange" xml:space="preserve">
+    <value>Request data change</value>
+  </data>
+  <data name="ButtonSaveMessage" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ButtonSendMessage" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="HistoryActionAccessProfile" xml:space="preserve">
+    <value>Access to account</value>
+  </data>
+  <data name="HistoryActionCreateProfile" xml:space="preserve">
+    <value>Account crated</value>
+  </data>
+  <data name="HistoryActionDetailsCreateProfile" xml:space="preserve">
+    <value>Account crated by {0}.</value>
+  </data>
+  <data name="HistoryActionDetailsGrantAccessToProfile" xml:space="preserve">
+    <value>Access provided to the account of {0}.</value>
+  </data>
+  <data name="HistoryActionDetailsProfileActivated" xml:space="preserve">
+    <value>Activated account {0}.</value>
+  </data>
+  <data name="HistoryActionDetailsProfileUpdated" xml:space="preserve">
+    <value>Updated the following information: {0}</value>
+  </data>
+  <data name="HistoryActionDetailsRemoveAccessToProfile" xml:space="preserve">
+    <value>Access to the account of {0} disabled.</value>
+  </data>
+  <data name="HistoryActionGrantAccessToProfile" xml:space="preserve">
+    <value>Access provided to the account</value>
+  </data>
+  <data name="HistoryActionProfileActivated" xml:space="preserve">
+    <value>Account has been activated</value>
+  </data>
+  <data name="HistoryActionProfileDeactivated" xml:space="preserve">
+    <value>Account has been deactivated</value>
+  </data>
+  <data name="HistoryActionProfileUpdated" xml:space="preserve">
+    <value>Account has been updated</value>
+  </data>
+  <data name="HistoryActionRemoveAccessToProfile" xml:space="preserve">
+    <value>Access to account disabled</value>
+  </data>
+  <data name="HistoryTableAction" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="HistoryTableActor" xml:space="preserve">
+    <value>Carried out by</value>
+  </data>
+  <data name="HistoryTableDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="HistoryTableDetails" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="HistoryTableIP" xml:space="preserve">
+    <value>IP address</value>
+  </data>
+  <data name="LabelAttachedDocument" xml:space="preserve">
+    <value>Path to the document</value>
+  </data>
+  <data name="LabelAttachedDocumentName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="LabelChooseDocument" xml:space="preserve">
+    <value>Path to the document</value>
+  </data>
+  <data name="LabelCurrentPassword" xml:space="preserve">
+    <value>Current password:</value>
+  </data>
+  <data name="LabelDocumentRegNumber" xml:space="preserve">
+    <value>Incoming number</value>
+  </data>
+  <data name="LabelDocuments" xml:space="preserve">
+    <value>Documents to be delivered</value>
+  </data>
+  <data name="LabelEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="LabelHeadInstName" xml:space="preserve">
+    <value>Main authority</value>
+  </data>
+  <data name="LabelInstEIK" xml:space="preserve">
+    <value>UIC</value>
+  </data>
+  <data name="LabelInstName" xml:space="preserve">
+    <value>Company name</value>
+  </data>
+  <data name="LabelLegalInForce" xml:space="preserve">
+    <value>Date of entry into force</value>
+  </data>
+  <data name="LabelLegalName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="LabelLegalOutForce" xml:space="preserve">
+    <value>Date of coming ofut of force</value>
+  </data>
+  <data name="LabelLegalRegisteredBy" xml:space="preserve">
+    <value>Registered by</value>
+  </data>
+  <data name="LabelLegalRegNum" xml:space="preserve">
+    <value>UIC</value>
+  </data>
+  <data name="LabelMessageReceivedOn" xml:space="preserve">
+    <value>Received on:</value>
+  </data>
+  <data name="LabelMessageReceiver" xml:space="preserve">
+    <value>Recipient</value>
+  </data>
+  <data name="LabelMessageSender" xml:space="preserve">
+    <value>Sender</value>
+  </data>
+  <data name="LabelMessageSentOn" xml:space="preserve">
+    <value>Sent on:</value>
+  </data>
+  <data name="LabelMessageText" xml:space="preserve">
+    <value>Contants</value>
+  </data>
+  <data name="LabelMessageTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="LabelNewPassword" xml:space="preserve">
+    <value>New password:</value>
+  </data>
+  <data name="LabelNewPasswordAgain" xml:space="preserve">
+    <value>Confirm new password:</value>
+  </data>
+  <data name="LabelPersonBirthDay" xml:space="preserve">
+    <value>Date of birth</value>
+  </data>
+  <data name="LabelPersonEGN" xml:space="preserve">
+    <value>UCN</value>
+  </data>
+  <data name="LabelPersonFirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="LabelPersonLastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="LabelPersonMiddleName" xml:space="preserve">
+    <value>Middle name</value>
+  </data>
+  <data name="LabelPhone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="LinkGrantAccess" xml:space="preserve">
+    <value>Add a natural person who has access to the account</value>
+  </data>
+  <data name="LinkSignatureDataMore" xml:space="preserve">
+    <value>More</value>
+  </data>
+  <data name="LinkSignatureEgnInfo" xml:space="preserve">
+    <value>Signature data. Open the link</value>
+  </data>
+  <data name="MessageConfirmRemoveAccessForLogin" xml:space="preserve">
+    <value>Are you sure you want to disable access to the account of {0}?</value>
+  </data>
+  <data name="MessageSaveSettingsSuccess" xml:space="preserve">
+    <value>Your settings were successfully updated.</value>
+  </data>
+  <data name="MessageUpdateInstitutionSpecific" xml:space="preserve">
+    <value>Change of data name, UIC and representation can be made only after approval by a system administrator!</value>
+  </data>
+  <data name="MessageUpdateLegalSpecific" xml:space="preserve">
+    <value>Change of data name, tax number and date of entry into force can be made only after approval by a system administrator!</value>
+  </data>
+  <data name="MessageUpdatePersonSpecific" xml:space="preserve">
+    <value>Change of data first name,middle name, last name, UCN and date of birth can be made only after approval by a system administrator!</value>
+  </data>
+  <data name="TableActionOpenMessage" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="TableActionViewMessage" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="TableGrantAccessHeaderGivenBy" xml:space="preserve">
+    <value>Added by</value>
+  </data>
+  <data name="TableGrantAccessHeaderGivenOn" xml:space="preserve">
+    <value>Date Added</value>
+  </data>
+  <data name="TableGrantAccessHeaderName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="TableHeaderMessageDateReceived" xml:space="preserve">
+    <value>Delivered on</value>
+  </data>
+  <data name="TableHeaderMessageDateSent" xml:space="preserve">
+    <value>Sent on:</value>
+  </data>
+  <data name="TableHeaderMessageReceivedBy" xml:space="preserve">
+    <value>Received by</value>
+  </data>
+  <data name="TableHeaderMessageReceiver" xml:space="preserve">
+    <value>Recipient</value>
+  </data>
+  <data name="TableHeaderMessageSender" xml:space="preserve">
+    <value>Delivered by</value>
+  </data>
+  <data name="TableHeaderMessageSentBy" xml:space="preserve">
+    <value>Sent by</value>
+  </data>
+  <data name="TableHeaderMessageStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="TableHeaderMessageTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="TextSigatureValidationValid" xml:space="preserve">
+    <value>Successfully validated signature</value>
+  </data>
+  <data name="TextSignatureValidationWithErroс" xml:space="preserve">
+    <value>The signature on the document has problem</value>
+  </data>
+  <data name="TextUpdatedTo" xml:space="preserve">
+    <value>has been updated on</value>
+  </data>
+  <data name="TitleDataInstitution" xml:space="preserve">
+    <value>Data on the administrative authority</value>
+  </data>
+  <data name="TitleDataLegal" xml:space="preserve">
+    <value>Data on the legal person</value>
+  </data>
+  <data name="TitleDataPerson" xml:space="preserve">
+    <value>Data on the natural person</value>
+  </data>
+  <data name="TitleEgnInfo" xml:space="preserve">
+    <value>Signature Data to document {0}</value>
+  </data>
+  <data name="TitleGrantAccessToProfile" xml:space="preserve">
+    <value>Access to the account</value>
+  </data>
+  <data name="TitleProfileAccess" xml:space="preserve">
+    <value>Access to the account</value>
+  </data>
+  <data name="TitleSectionNotificationSettings" xml:space="preserve">
+    <value>Notification settings</value>
+  </data>
+  <data name="TitleSectionPasswordChange" xml:space="preserve">
+    <value>Password change</value>
+  </data>
+  <data name="TitleSignatureInfo" xml:space="preserve">
+    <value>Validation of signature to document {0}</value>
+  </data>
+  <data name="TooltipAddInstitution" xml:space="preserve">
+    <value>Add authority of the TA</value>
+  </data>
+  <data name="TooltipAddPersonOrLegal" xml:space="preserve">
+    <value>Add natural or legal person</value>
+  </data>
+  <data name="TooltipDocumentTimestamp" xml:space="preserve">
+    <value>Certificate of sending time</value>
+  </data>
+  <data name="TooltipDownloadDocument" xml:space="preserve">
+    <value>Download document</value>
+  </data>
+  <data name="TooltipDownloadNRD" xml:space="preserve">
+    <value>Download certificate of delivery time</value>
+  </data>
+  <data name="TooltipDownloadNRO" xml:space="preserve">
+    <value>Download certificate of sending time</value>
+  </data>
+  <data name="TooltipDownloadTimestampedMessage" xml:space="preserve">
+    <value>Download message in xml.</value>
+  </data>
+  <data name="TooltipMessageNew" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="TooltipMessageNotReceived" xml:space="preserve">
+    <value>Not received</value>
+  </data>
+  <data name="TooltipMessageOpened" xml:space="preserve">
+    <value>Opened</value>
+  </data>
+  <data name="TooltipMessageReceived" xml:space="preserve">
+    <value>Received</value>
+  </data>
+  <data name="LabelMySpace" xml:space="preserve">
+    <value>My space</value>
+  </data>
+  <data name="LabelMessageTextMaxLength" xml:space="preserve">
+    <value>(up to100 000 chars)</value>
+  </data>
+  <data name="TableHeaderSubjectDocument" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="TableHeaderSubjectDocumentAddedBy" xml:space="preserve">
+    <value>Attached by</value>
+  </data>
+  <data name="TableHeaderSubjectDocumentAddedOn" xml:space="preserve">
+    <value>Date attached</value>
+  </data>
+  <data name="TitleSectionAttachedDocuments" xml:space="preserve">
+    <value>Profile attached documents</value>
+  </data>
+  <data name="SectionAttachedDocumentsEmpty" xml:space="preserve">
+    <value>There are no attached documents yet</value>
+  </data>
+  <data name="LabelPersonalIdentifier" xml:space="preserve">
+    <value>UCN/PNF</value>
+  </data>
+  <data name="ButtonGRAONamesSync" xml:space="preserve">
+    <value>Sync names</value>
+  </data>
+  <data name="LabelPersonUpdateNames" xml:space="preserve">
+    <value>To change the name, middle name, surname by extracting data from the Civil Registration and Administrative Services (CRAS) (for users with UCN), please click the button "Sync names"!</value>
+  </data>
+  <data name="TableHeaderMessageOrn" xml:space="preserve">
+    <value>ORN</value>
+  </data>
+  <data name="TableHeaderMessageReferencedOrn" xml:space="preserve">
+    <value>ref. ORN</value>
+  </data>
+</root>

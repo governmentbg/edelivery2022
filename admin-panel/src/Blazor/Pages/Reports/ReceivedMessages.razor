@@ -1,0 +1,188 @@
+﻿@page "/reports/received-messages"
+@inherits PagedComponent
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "reports", "reports" },
+        { "received-messages", null }
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            <EditForm EditContext="@editContext" OnValidSubmit="Search">
+                <DataAnnotationsValidator />
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="@nameof(SearchReceivedMessagesModel.FromDate)">
+                                    @Localizer["FormFromDate"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <DateField id="@nameof(SearchReceivedMessagesModel.FromDate)" @bind-Value="model.FromDate" Placeholder=@Constants.DateTimeFormat  />
+                                    <ValidationMessage For="@(() => model.FromDate)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchReceivedMessagesModel.ToDate)">
+                                    @Localizer["FormToDate"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <DateField id="@nameof(SearchReceivedMessagesModel.ToDate)" @bind-Value="model.ToDate" Placeholder=@Constants.DateTimeFormat />
+                                    <ValidationMessage For="@(() => model.ToDate)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchReceivedMessagesModel.SenderProfileId)">
+                                    @Localizer["FormSenderProfile"]
+                                </label>
+                                <div class="form-element">
+                                    <Select2Field id="@nameof(SearchReceivedMessagesModel.SenderProfileId)"
+                                                  @bind-Value="model.SenderProfileId"
+                                                  Url="nomenclatures/profiles" />
+                                    <ValidationMessage For="@(() => model.SenderProfileId)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchReceivedMessagesModel.RecipientProfileId)">
+                                    @Localizer["FormRecipientProfile"]
+                                </label>
+                                <div class="form-element">
+                                    <Select2Field id="@nameof(SearchReceivedMessagesModel.RecipientProfileId)"
+                                                  @bind-Value="model.RecipientProfileId"
+                                                  Url="nomenclatures/profiles" />
+                                    <ValidationMessage For="@(() => model.RecipientProfileId)" />
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">@Localizer["BtnSearch"]</button>
+                    </section>
+                </div>
+            </EditForm>
+
+            @if (hasSentRequest)
+            {
+                <div style="padding: 15px 0px; height: 45px;">
+                    <a href="@messagesReportLink"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       download
+                       class="btn btn-border btn-m butright">
+                        @Localizer["BtnExport"]
+                    </a>
+                </div>
+
+                <Pager Page="@(Page)"
+                       PageSize="@PageSize"
+                       TotalItemsCount="@(messages?.Length ?? 0)" />
+                <div class="table-responsive" style="position: relative">
+                    @if (IsLoading)
+                    {
+                        <div class="loader-container">
+                        </div>
+                    }
+                    <p>
+                        Заявката е направена към : @requestDate.ToString(Constants.DateTimeFormat)
+                    </p>
+                    <table class="list">
+                        <tbody>
+                            <tr>
+                                <th colspan="9">
+                                    @messagesTableTitle
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>@Localizer["ColumnSender"]</th>
+                                <th>@Localizer["ColumnProfileSender"]</th>
+                                <th>@Localizer["ColumnTargetGroupSender"]</th>
+                                <th>@Localizer["ColumnRecipient"]</th>
+                                <th>@Localizer["ColumnProfileRecipient"]</th>
+                                <th>@Localizer["ColumnTargetGroupRecipient"]</th>
+                                <th>@Localizer["ColumnMessageSubject"]</th>
+                                <th>@Localizer["ColumnDateSent"]</th>
+                                <th>@Localizer["ColumnDateReceived"]</th>
+                            </tr>
+
+                            @if (messages == null)
+                            {
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="loader page-loader show">
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @if (!messages.Result.Any())
+                                {
+                                    <tr>
+                                        <td colspan="9">@Localizer["NoItems"]</td>
+                                    </tr>
+                                }
+
+                                @foreach (var message in messages.Result)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="profiles/@message.SenderProfileId">
+                                                @message.SenderProfileName
+                                            </a>
+                                        </td>
+                                        @if (message.IsSenderProfileActivated)
+                                        {
+                                            <td style="color: green">
+                                                @Localizer["ProfileActivated"]
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="color: red">
+                                                @Localizer["ProfileNotActivated"]
+                                            </td>
+                                        }
+                                        <td>@message.SenderProfileTargetGroupName</td>
+                                        <td>
+                                            <a href="profiles/@message.RecipientProfileId">
+                                                @message.RecipientProfileName
+                                            </a>
+                                        </td>
+                                        @if (message.IsRecipientProfileActivated)
+                                        {
+                                            <td style="color: green">
+                                                @Localizer["ProfileActivated"]
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="color: red">
+                                                @Localizer["ProfileNotActivated"]
+                                            </td>
+                                        }
+                                        <td>@message.RecipientProfileTargetGroupName</td>
+                                        <td>@message.MessageSubject</td>
+                                        <td>@message.DateSent.ToLocalDateTime().ToString("g")</td>
+                                        <td>@(message.DateReceived?.ToLocalDateTime().ToString("g") ?? "-")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <Pager Page="@(Page)"
+                       PageSize="@PageSize"
+                       TotalItemsCount="@(messages?.Length ?? 0)" />
+            }
+        </div>
+    </div>
+</div>

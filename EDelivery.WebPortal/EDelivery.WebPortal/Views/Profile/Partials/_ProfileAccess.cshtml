@@ -1,0 +1,79 @@
+﻿@model ProfileAccessViewModel
+
+<section class="form-section" id="section-profile-access">
+    <h3>@ProfilePage.TitleProfileAccess</h3>
+    <button class="btn-light btn-l js-add-access"
+            data-modal-href="@Url.Action("GrantAccess", new { profileId = Model.ProfileId })">
+        + @ProfilePage.LinkGrantAccess
+    </button>
+    <div class="form-row">
+        <div class="table-responsive">
+            <table class="statistics" id="profile-access-content">
+                <tbody>
+                    <tr>
+                        <th>@ProfilePage.TableGrantAccessHeaderName</th>
+                        <th>@ProfilePage.TableGrantAccessHeaderGivenBy</th>
+                        <th>@ProfilePage.TableGrantAccessHeaderGivenOn</th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.AccessList)
+                    {
+                        var formId = "removeItem_" + item.LoginId;
+
+                        <tr>
+                            <td>
+                                @item.LoginName
+                            </td>
+                            <td>
+                                @item.AccessGrantedByName
+                            </td>
+                            <td>
+                                @item.AccessGrantedDate.ToString(SystemConstants.DateTimeFormat)
+                            </td>
+                            <td class="file-actions">
+                                <div>
+                                    <a href="#"
+                                       class="delete"
+                                       data-modal-href="@Url.Action("UpdateLoginProfilePermissions", new { loginId = item.LoginId })">
+                                        <img src="~/Content/img/edit-icon.png">
+                                    </a>
+
+                                    @if (!item.IsDefault)
+                                    {
+                                        using (Ajax.BeginForm("RevokeAccess", "Profile", null, new AjaxOptions()
+                                        {
+                                            Confirm = String.Format(ProfilePage.MessageConfirmRemoveAccessForLogin, item.LoginName),
+                                            HttpMethod = "POST",
+                                            InsertionMode = InsertionMode.ReplaceWith,
+                                            UpdateTargetId = "section-profile-access"
+                                        }, new { id = formId }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.Hidden("loginId", item.LoginId)
+                                            @Html.Hidden("profileId", Model.ProfileId)
+
+                                            <button type="submit" id="submit_@formId" style="display:none"></button>
+
+                                            <a href="#"
+                                               class="delete"
+                                               onclick="javascript:document.getElementById('submit_@formId').click();return false;">
+                                                <img src="~/Content/img/trash-icon.png">
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-modal-href]').myModal();
+    });
+</script>

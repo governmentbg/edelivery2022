@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DescriptionRegisterLegal" xml:space="preserve">
+    <value>Профилът на Юридическо лице може да се достъпва от едно или повече физически лица, на които е даден достъп. За регистрацията на Юридическо лице е нужно да имате вече създаден профил като физическо лице. След това трябва да попълните и подишете с персонален ектронен подпис формуляра за регистрация. След създаване на регистрацията, моля изчакайте да бъдете информирани за нейната активация!</value>
+  </data>
+  <data name="DescriptionRegisterPerson" xml:space="preserve">
+    <value>Като Физическо лице ще имате достъп до личните си получени и изпратени съобщения, както и да управлявате своя профил.</value>
+  </data>
+  <data name="DownloadRegistrationForm" xml:space="preserve">
+    <value>Application for registration in the eDelivery System</value>
+  </data>
+  <data name="HeadingRegistrationSuccess" xml:space="preserve">
+    <value>Successful registration in the  eDelivery System!</value>
+  </data>
+  <data name="LabelAddress" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="LabelBirthDate" xml:space="preserve">
+    <value>Date of birth</value>
+  </data>
+  <data name="LabelChoosePDF" xml:space="preserve">
+    <value>Registration form</value>
+  </data>
+  <data name="LabelCity" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="LabelConfirmPassword" xml:space="preserve">
+    <value>Please, confirm password</value>
+  </data>
+  <data name="LabelCountry" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="LabelEGN" xml:space="preserve">
+    <value>UCN</value>
+  </data>
+  <data name="LabelEmailAddress" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="LabelEmailNotifications" xml:space="preserve">
+    <value>Send me notifications via е-mail</value>
+  </data>
+  <data name="LabelFirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="LabelLastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="LabelLicenceAgreement" xml:space="preserve">
+    <value>I accept &lt;a href="{0}" target="_blank"&gt;terms of use&lt;/a&gt; of the eDelivery System</value>
+  </data>
+  <data name="LabelMiddleName" xml:space="preserve">
+    <value>Middle name</value>
+  </data>
+  <data name="LabelPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="LabelPhoneNotifications" xml:space="preserve">
+    <value>Send me notifications via SMS</value>
+  </data>
+  <data name="LabelPhoneNumber" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="LabelState" xml:space="preserve">
+    <value>District</value>
+  </data>
+  <data name="LabelUserName" xml:space="preserve">
+    <value>User name</value>
+  </data>
+  <data name="LinkLogin" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="LinkLostPassword" xml:space="preserve">
+    <value>Forgotten password</value>
+  </data>
+  <data name="LoginAuthCertificateNote" xml:space="preserve">
+    <value>Please make sure that your digital signature device is placed on your computer. If it is not inserted, insert it and then proceed.</value>
+  </data>
+  <data name="LoginWithKep" xml:space="preserve">
+    <value>Log in with qualified electronic signature</value>
+  </data>
+  <data name="RadioChooseRegisterTypeCert" xml:space="preserve">
+    <value>Qualified electronic signature (QES)</value>
+  </data>
+  <data name="RadioChooseRegisterTypeEID" xml:space="preserve">
+    <value>Electronic Identity Card (eID)</value>
+  </data>
+  <data name="RadioChooseRegisterTypePIK" xml:space="preserve">
+    <value>NOI Personal Identifier (PIK)</value>
+  </data>
+  <data name="TextChooseRegisterType" xml:space="preserve">
+    <value>Please, choose a manner to authenticate your identity upon registration in the eDelivery System.</value>
+  </data>
+  <data name="TextInformationEID" xml:space="preserve">
+    <value>You have to validate your identity by еID. Please,  connect the card reader, insert your card in it and click the button "Registration". If you need any further information on the use of electronic identity card, check out the link below.</value>
+  </data>
+  <data name="TextLegalRepresentative" xml:space="preserve">
+    <value>In order to register an account of a legal entity, you need registration of a natural person first. &lt;br/&gt;Please fill in the username and password of your account:</value>
+  </data>
+  <data name="TextLogin" xml:space="preserve">
+    <value>Already a user of the system? You can start using it by logging in.</value>
+  </data>
+  <data name="TextRegister" xml:space="preserve">
+    <value>Not registered yet? You can register as a natural or legal person and  take advantage of the convenience of electronic delivery of documents.</value>
+  </data>
+  <data name="TextRegistrationInstructionsLegal" xml:space="preserve">
+    <value>In order to register by electronic signature it is necessary to download the electronic form "Application for registration in the system for secure electronic service - Legal entity ", fill in the data of a legal entity and sign it with Electronic signature.
+Complete the registration by uploading the completed and signed form in the form below and filling in the remaining fields.</value>
+  </data>
+  <data name="TextRegistrationInstructionsPerson" xml:space="preserve">
+    <value>In order to register by electronic signature it is necessary to download the electronic "Application for registration in the secure electronic delivery system" form, fill in your personal details and sign it with your electronic signature.
+Complete your registration by uploading the completed and signed form in the form below and filling in the remaining fields.</value>
+  </data>
+  <data name="TextRegistrationSuccess" xml:space="preserve">
+    <value>Registration successful! A system administrator will verify and activate your registration. You will be notified via e-mail and / or phone when you can start using the system.</value>
+  </data>
+  <data name="TextValidDataResponsibility" xml:space="preserve">
+    <value>I declare that the information provided in this form is true and correct. I am aware that for the deliberate filling of false data I bear the responsibility under Art. 313 Penal code.</value>
+  </data>
+  <data name="TitleKepAuthFailed" xml:space="preserve">
+    <value>QES log in failed.</value>
+  </data>
+  <data name="TitleLoginCredentials" xml:space="preserve">
+    <value>Log in with username and password</value>
+  </data>
+  <data name="TitleLoginEID" xml:space="preserve">
+    <value>Log in with eID</value>
+  </data>
+  <data name="TitleLoginKEP" xml:space="preserve">
+    <value>Log in with QES</value>
+  </data>
+  <data name="TitleLoginNoiPIK" xml:space="preserve">
+    <value>Log in with PIK</value>
+  </data>
+  <data name="TitleRegisterLegal" xml:space="preserve">
+    <value>Registration of legal entity</value>
+  </data>
+  <data name="TitleRegisterPerson" xml:space="preserve">
+    <value>Registration of natural person</value>
+  </data>
+  <data name="TitleSectinLegalRepresentative" xml:space="preserve">
+    <value>Representative of the Legal Entity</value>
+  </data>
+  <data name="TitleSectionAddress" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="TitleSectionEIDData" xml:space="preserve">
+    <value>eID data</value>
+  </data>
+  <data name="TitleSectionKEPData" xml:space="preserve">
+    <value>QES data</value>
+  </data>
+  <data name="TitleSectionPersonalData" xml:space="preserve">
+    <value>Personal data</value>
+  </data>
+  <data name="TitleSectionPIKData" xml:space="preserve">
+    <value>Data from the authentication Authority</value>
+  </data>
+  <data name="TitleSectionProfileData" xml:space="preserve">
+    <value>Account data</value>
+  </data>
+  <data name="TitleSectionRegistrationInstructions" xml:space="preserve">
+    <value>Registration instructions</value>
+  </data>
+  <data name="LoginKepNotice" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LabelPersonalIdentifier" xml:space="preserve">
+    <value>UCN/PNF</value>
+  </data>
+  <data name="NamesInLatin" xml:space="preserve">
+    <value>Names in Latin alphabet</value>
+  </data>
+  <data name="AreYouAUser" xml:space="preserve">
+    <value>Вече сте потребител на системата?</value>
+  </data>
+  <data name="YouCanUseIt" xml:space="preserve">
+    <value>Можете да започнете да я използвате.</value>
+  </data>
+  <data name="LabelViberNotifications" xml:space="preserve">
+    <value>Send me notifications via Viber</value>
+  </data>
+  <data name="LabelViberNotificationsOnDelivery" xml:space="preserve">
+    <value>Send me notifications via Viber on message delivering</value>
+  </data>
+  <data name="LabelViberNotificationsOnReceiving" xml:space="preserve">
+    <value>Send me notifications via Viber on message receiving</value>
+  </data>
+</root>

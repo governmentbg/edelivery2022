@@ -1,0 +1,35 @@
+﻿@using EDelivery.WebPortal.Models.Messages
+
+@model ViewMessageViewModel
+
+@{
+    ViewBag.Title = Common.TitleOpenSentMessage + " - " + Model.Subject;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+    <div class="content-right">
+        <h2>@Common.TitleOpenSentMessage</h2>
+
+        <a href="@Url.Action("Outbox", "Messages")" class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+
+        <div class="wrapper content-wrapper message-box">
+            <div class="message-content">
+                <section class="form-section">
+                    @Html.Partial("Partials/_View", Model)
+                </section>
+
+                @if (Model.ForwardedMessage != null)
+                {
+                    @Html.Partial("Partials/_ViewForwardedMessage", Model.ForwardedMessage)
+                }
+            </div>
+        </div>
+
+        <a href="@Url.Action("Outbox", "Messages")" class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

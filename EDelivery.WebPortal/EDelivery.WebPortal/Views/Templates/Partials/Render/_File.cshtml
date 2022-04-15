@@ -1,0 +1,311 @@
+﻿@using EDelivery.WebPortal.Models.Templates.Components
+
+@model FileComponent
+
+<script type="text/javascript">
+    function setUppy(id, instance, profileId, messages) {
+        var pristineClass = 'field-validation-valid';
+        var successClass = 'validation-message field-validation-valid file-valid';
+        var errorClass = 'validation-message field-validation-error';
+
+        // IMPORTANT!!!
+        // If you add/modify/remove any of the file metadata fields,
+        // change the gf.setFileUpload function and all its callers as well
+        var $fileId = $('#' + id + '_' + instance);
+        var $fileInput = $('#' + id + '_' + instance + '-file');
+        var $fileName = $('#' + id + '_' + instance + '-text');
+        var $fileHash = $('#' + id + '_' + instance + '-hash');
+
+        var $fileProgress = $('#' + id + '_' + instance + '-progress');
+        var $attachButton = $('#' + id + '_' + instance + '-btn');
+        var $fileValidation = $('#' + id + '_' + instance + '-err');
+        var $clearButton = $('#' + id + '_' + instance + '-clear');
+
+        function addFile(name, size) {
+            var fileName = name + '(' + gf.humanFileSize(size) + ')';
+            $fileName.val(fileName);
+            $fileProgress.addClass('show');
+            $clearButton.hide();
+        }
+
+        var match = /(^|;\s?)EDelivery\.Identity=(.+?)($|;)/.exec(document.cookie);
+        var accessToken = match && match[2];
+
+        var maxFileSize = +'@(Model.MaxSize > 0 ? Model.MaxSize : 0)';
+        var allowedFileTypes = '@(string.IsNullOrEmpty(Model.AllowedExtensions) ? "" : Model.AllowedExtensions)';
+
+        if (allowedFileTypes) {
+            allowedFileTypes = allowedFileTypes.split(',');
+        }
+        else {
+            allowedFileTypes = [];
+        }
+
+        var uppyRestrictions = {
+            maxFileSize: maxFileSize ? maxFileSize * 1024 * 1024 : null,
+            allowedFileTypes: allowedFileTypes.length > 0 ? allowedFileTypes : null
+        };
+
+        var uppy = new Uppy.Core({
+            debug: true,
+            autoProceed: true,
+            restrictions: uppyRestrictions,
+            locale: Uppy.locales.bg_BG
+        });
+
+        uppy.use(Uppy.XHRUpload, {
+            endpoint: '@System.Web.Configuration.WebConfigurationManager.AppSettings["BlobServiceWebUrl"]/profile/' + profileId + '/temporary',
+            timeout: 120 * 1000, // 2 minutes for the maximum time between progress events,
+            limit: 5,
+            headers: {
+                'authorization': 'Bearer ' + accessToken
+            }
+        });
+
+        uppy.on('upload-error', function (file, error, response) {
+            $fileValidation.removeClass();
+            $fileValidation.text(messages.fileNotUploaded);
+            $fileValidation.addClass(errorClass);
+
+            $fileProgress.removeClass('show');
+            $fileName.val('');
+
+            console.log(error);
+        });
+
+        uppy.on('restriction-failed', function(file, error) {
+            $fileValidation.removeClass();
+            $fileValidation.text(error);
+            $fileValidation.addClass(errorClass);
+
+            $fileProgress.removeClass('show');
+            $fileName.val('');
+
+            console.log(error);
+        })
+
+        uppy.on('complete', function () {
+            var uppyFiles = uppy.getFiles();
+            var i;
+            for (i = 0; i < uppyFiles.length; i++) {
+                uppy.removeFile(uppyFiles[i].id);
+            }
+        });
+
+        uppy.on('upload-success', function (file, response) {
+            var blobId = response.body.blobId;
+            var blobHash = response.body.hashAlgorithm + ': ' + response.body.hash;
+            var malwareScanStatus = response.body.malwareScanStatus;
+
+            var statusClass;
+            var message;
+            switch (malwareScanStatus) {
+                case 'NotMalicious':
+                    statusClass = successClass;
+                    message = messages.notMaliciousFile;
+                    break;
+                case 'NotSure':
+                    statusClass = errorClass;
+                    message = messages.notSureFile;
+                    break;
+                case 'IsMalicious':
+                    statusClass = errorClass;
+                    message = messages.maliciousFile;
+                    break;
+            }
+
+            $fileInput.attr('disabled', 'disabled');
+
+            $fileValidation.removeClass();
+            $fileValidation.text(message);
+            $fileValidation.addClass(statusClass);
+
+            $fileProgress.removeClass('show');
+
+            $clearButton.show();
+
+            if (blobId) {
+                $fileId.val(blobId);
+                $fileHash.val(blobHash);
+            }
+        });
+
+        $attachButton.on('click', function () {
+            $fileInput.removeAttr('disabled');
+            $fileInput.trigger('click');
+        });
+
+        $clearButton.on('click', function () {
+            $fileId.val('');
+            $fileInput.val('');
+            $fileName.val('');
+            $fileHash.val('');
+
+            $fileValidation.removeClass();
+            $fileValidation.text('');
+            $fileValidation.addClass(pristineClass);
+
+            uppy.reset();
+
+            $clearButton.hide();
+        })
+
+        $fileInput.on('change', function (event) {
+            $fileValidation.removeClass();
+            $fileValidation.text('');
+
+            var files = Array.prototype.slice.call(event.target.files);
+
+            files.forEach(function (file) {
+                try {
+                    uppy.cancelAll();
+
+                    uppy.addFile({
+                        source: 'file input',
+                        name: file.name,
+                        type: file.type,
+                        data: file
+                    });
+
+                    addFile(file.name, file.size);
+                } catch (err) {
+                    if (err.isRestriction) {
+                        // handle restrictions
+                        console.log('Restriction error:', err);
+                    } else {
+                        // handle other errors
+                        console.error(err);
+                    }
+                }
+            })
+        });
+    }
+</script>
+
+@{
+    var lastIdx = Array.FindLastIndex(Model.FileIds, e => e.HasValue);
+    if (lastIdx == -1)
+    {
+        lastIdx = 0;
+    }
+}
+
+@for (int i = 0; i < Model.Instances; i++)
+{
+    <li class="form-row nowrap file-input-holder-@($"{Model.Id}_{i}")"
+        style="@(i <= lastIdx ? string.Empty : "display: none;")">
+        <label for="@($"{Model.Id}_{i}")">@Model.Label:</label>
+        <div class="f-grow-100 file-holder">
+            <div class="row-group">
+                <div class="">
+                    <div class="pos-relative">
+                        <input type="file"
+                               id="@($"{Model.Id}_{i}")-file"
+                               disabled="disabled"
+                               style="position: absolute; top: 0px; left: 0px; opacity: 0" />
+                        <input type="hidden"
+                               id="@($"{Model.Id}_{i}")"
+                               name="@Model.Id"
+                               value="@Model.FileIds[i]" />
+                        <input type="hidden"
+                               id="@($"{Model.Id}_{i}-hash")"
+                               name="@Model.Id-FileHash"
+                               value="@Model.FileHashes[i]" />
+                        <input type="text"
+                               id="@($"{Model.Id}_{i}")-text"
+                               name="@Model.Id-FileName"
+                               value="@Model.FileNames[i]"
+                               readonly="readonly" />
+
+                        <div class="icon-hint icon-hint--clear icon-hint--input-text"
+                             id="@($"{Model.Id}_{i}")-clear"
+                             style="display: none;">
+                        </div>
+
+                        @Html.ValidationMessage($"{Model.Id}_{i}", new { @class = "", @id = $"{Model.Id}_{i}-err" })
+
+                        <div id="@($"{Model.Id}_{i}")-progress"
+                             class="loader file-upload">
+                        </div>
+                    </div>
+                </div>
+                <button id="@($"{Model.Id}_{i}")-btn"
+                        class="btn-border btn-l file-upload"
+                        type="button">
+                    @UIControls.ButtonAttach
+                </button>
+                <button id="@($"{Model.Id}_{i}")-btn2"
+                        class="btn-border btn-l"
+                        type="button"
+                        data-modal-href="@Url.Action("Browse", "Storage",
+                                            new {
+                                                fileId = $"{Model.Id}_{i}",
+                                                allowedFileTypes = Model.AllowedExtensions,
+                                                maxFileSize = Model.MaxSize * 1024 * 1024
+                                            })">
+                    Хранилище
+                </button>
+            </div>
+        </div>
+    </li>
+}
+
+@if (Model.Instances > 1)
+{
+    <li class="form-row mt-spacer button-row-right">
+        <button id="btn-add-input-@Model.Id"
+                class="btn-light btn-l"
+                type="button">
+            + @ProfilePage.ButtonAddMoreDos
+        </button>
+    </li>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('[data-modal-href]').myModal();
+
+        var id = '@Model.Id';
+        var profileId = $('#profileId').val();
+        var lastIdx = parseInt('@lastIdx', 10);
+
+        var messages = {
+            notMaliciousFile: '@EDeliveryResources.SEOS.InfoFileIsNotMalicious',
+            notSureFile: '@EDeliveryResources.SEOS.ErrorUnsuccessfulScan',
+            maliciousFile: '@EDeliveryResources.SEOS.ErrorMaliciousFile',
+            maxFileSize: '@EDeliveryResources.SEOS.ErrorMaxFileLength',
+            fileNotUploaded: '@EDeliveryResources.SEOS.ErrorCantUploadFile',
+        }
+
+        var uppyArr = [];
+        for (var i = 0; i <= lastIdx; i++) {
+            setUppy(id, i, profileId, messages);
+            uppyArr.push(i);
+        }
+
+        $('button#btn-add-input-' + id).on('click', function (e) {
+            e.preventDefault();
+
+            var hidden = $('li[class^="form-row nowrap file-input-holder-' + id + '"]:hidden');
+
+            if (hidden.length > 0) {
+                var last = hidden[0].className.lastIndexOf('_');
+                var idx = parseInt(hidden[0].className.substr(last + 1), 10);
+
+                if (uppyArr.indexOf(idx) == -1) {
+                    setUppy(id, idx, profileId, messages);
+                    uppyArr.push(idx);
+
+                    $(hidden[0]).show();
+
+                    if (hidden.length == 1) {
+                        $(this).hide();
+                    }
+                }
+            }
+            else {
+                $(this).hide();
+            }
+        });
+    });
+</script>

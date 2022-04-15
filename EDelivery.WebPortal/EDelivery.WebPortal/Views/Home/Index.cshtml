@@ -1,0 +1,238 @@
+﻿@using EDelivery.WebPortal.Models.Home
+@model IndexViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutLanding.cshtml";
+}
+
+@{
+    var NOIAuthUrl = System.Configuration.ConfigurationManager.AppSettings["NOIAuthUrl"];
+
+    var loginKEP = Url.Action(
+        EDelivery.WebPortal.Utils.SamlHelper.SamlConfiguration.LoginUrl,
+        "Account",
+        new { login = true, returnUrl = Model.ReturnUrl });
+
+    var loginPIK = NOIAuthUrl
+        + HttpUtility.UrlEncode(
+            Url.Action(
+                "AuthenticateNoiPik",
+                "Account",
+                new { returnUrl = Model.ReturnUrl },
+                this.Request.Url.Scheme));
+}
+
+<div class="gradient-decor"></div>
+<div class="wrapper tabs">
+    <ul id="nav-login-reg" class="nav-tabs home-tabs collapsed">
+        <li class="ham-menu-item">
+            <button class="btn-tabs-ham btn-l ">
+                <span>Избор на идентичност</span>
+                <span class="ham-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </button>
+        </li>
+        <li class="nav-item btn_homeTab1 active" id="#btn_homeTab1">
+            <button class="btn-tabs-item btn-l">Физическо лице</button>
+        </li>
+        <li class="nav-item btn_homeTab2" id="#btn_homeTab2">
+            <button class="btn-tabs-item btn-l">Юридическо лице</button>
+        </li>
+        <li class="nav-item btn_homeTab3" id="#btn_homeTab3">
+            <button class="btn-tabs-item btn-l">Администрация</button>
+        </li>
+    </ul>
+
+    <!-- Tabs content -->
+    <div class="home-tabs-target show" id="homeTab1-1">
+        <div class="login-panel-home content-wrapper">
+            <div class="top-content-box">
+                <h2>@UIControls.ButtonLogin</h2>
+                @Html.ActionLink($"{Common.FooterNavHelp} >", "Index", "Help", new { }, new { @class = "btn btn-m btn-clear" })
+            </div>
+            <p class="explain">
+                @LoginRegisterPage.LoginKepNotice
+            </p>
+            <a href="@loginKEP" class="btn btn-primary btn-l width-100">@LoginRegisterPage.TitleLoginKEP</a>
+            <a href="@loginPIK" class="btn btn-light btn-l width-100">@LoginRegisterPage.TitleLoginNoiPIK</a>
+        </div>
+        <div class="home-right-col content-wrapper">
+            <h2>@LoginRegisterPage.TitleRegisterPerson</h2>
+            <p>@LoginRegisterPage.DescriptionRegisterPerson @LoginRegisterPage.TextChooseRegisterType</p>
+            <p>
+                @LoginRegisterPage.LoginKepNotice
+            </p>
+            @using (Html.BeginForm("ChooseRegisterType", "Account", FormMethod.Post, new { id = "registerPersonForm" }))
+            {
+                @Html.Hidden("TargetGroupId", EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+                <div class="form-row">
+                    <div class="form-group">
+                        @Html.RadioButton("RegistrationType", EDelivery.WebPortal.Enums.eRegistrationType.Certificate, true, new { id = "digi-sign" })
+                        <label for="digi-sign">@LoginRegisterPage.RadioChooseRegisterTypeEauth</label>
+                    </div>
+                    <div class="form-group">
+                        @Html.RadioButton("RegistrationType", EDelivery.WebPortal.Enums.eRegistrationType.PIK, new { id = "personal-code" })
+                        <label for="personal-code">@LoginRegisterPage.RadioChooseRegisterTypePIK</label>
+                    </div>
+                </div>
+                <div class="form-row btn-row">
+                    <button class="btn-border btn-l" type="submit" form="registerPersonForm">@UIControls.ButtonRegister</button>
+                    @Html.ActionLink($"{Common.FooterNavHelp} >", "Index", "Help", new { }, new { @class = "btn btn-m btn-clear" })
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Tab content 2 -->
+    @{
+        var registerLegalPersonKEP = Request.IsAuthenticated
+            ? Url.Action("LegalEntity", "Register")
+            : Url.Action(
+                EDelivery.WebPortal.Utils.SamlHelper.SamlConfiguration.LoginUrl,
+                "Account",
+                new
+                {
+                    login = true,
+                    returnUrl = "/Register/LegalEntity"
+                });
+
+        var urlEncoded = HttpUtility.UrlEncode(
+            Url.Action(
+                "AuthenticateNoiPikRegisterLegal",
+                "Account",
+                null,
+                this.Request.Url.Scheme));
+        var registerLegalPersonPIK = NOIAuthUrl + urlEncoded;
+    }
+
+    <div class="home-tabs-target" id="homeTab2">
+        <div class="content-wrapper">
+            <section>
+                <h2>@LoginRegisterPage.TitleRegisterLegal</h2>
+                <p>@LoginRegisterPage.DescriptionRegisterLegal</p>
+                <p>Уведомяваме Ви, че във връзка с надграждане функционалностите на системата за сигурно електронно връчване, към настоящия момент заявления за присъединяване към системата за сигурно електронно връчване на юридически лица, могат да се подават само от лице представляващо дружеството (управител, прокурист, представляващ и др.). С цел осигуряване на сигурност на профила и на цялостния процес по заявяване и получаване на електронни административни услуги и връчване на административни актове, към настоящия момент подаване на заявление за присъединяване на ЮЛ чрез пълномощник не е възможно.</p>
+            </section>
+            <section>
+                <h2>@LoginRegisterPage.TitleSectionRegistrationInstructions</h2>
+                <p>@LoginRegisterPage.TextRegistrationInstructionsLegal</p>
+                <div class="flex-col mt-spacer">
+                    <a href="@Url.Content("~/Content/Documents/eDeliery-registration form legal person-v4.pdf")"
+                       class="bold-txt"
+                       download="eDeliery-registration form legal person-v4.pdf"
+                       rel="noopener"
+                       target="_blank"
+                       title="@LoginRegisterPage.DownloadRegistrationForm">
+                        @LoginRegisterPage.DownloadRegistrationForm
+                    </a>
+                    <div class="da-tooltip attached arrow-up iconed">
+                        <div class="icon-info"></div>
+                        @Common.InfoLegalRegistration
+                    </div>
+                </div>
+            </section>
+            <section>
+                <p class="explain">@LoginRegisterPage.MessageLoginToRegisterLegalPerson</p>
+                <div class="form-row">
+                    @Html.ActionLink($"{Common.FooterNavHelp} >", "Index", "Help", new { }, new { @class = "btn btn-m btn-clear" })
+                </div>
+                <div class="form-row btn-row">
+                    <a href="@registerLegalPersonKEP" class="btn btn-primary btn-l">@LoginRegisterPage.TitleLoginKEP</a>
+                    <a href="@registerLegalPersonPIK" class="btn btn-light btn-l">@LoginRegisterPage.TitleLoginNoiPIK</a>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- Tab content 3 -->
+    <div class="home-tabs-target" id="homeTab3">
+        <div class="content-wrapper">
+            <section>
+                <h2>Регистрация на администрация</h2>
+                <ul class="list-clear">
+                    <li>
+                        <a href="~/Content/Documents/eDelivery-registration form institution chl1al2-v4.pdf"
+                           download="Заявление за включване на лице по чл1ал2-v4.pdf"
+                           rel="noopener"
+                           target="_blank">
+                            Заявление за създаване на профил в Системата за сигурно електронно връчване на лице по чл. 1 ал. 1 и ал. 2 от Закона за електронното управление
+                        </a>
+                    </li>
+                    <li>
+                        <a href="~/Content/Documents/eDelivery-registration form institution chl1al1-v5.pdf"
+                           download="Заявление за присъединяване на административен орган по чл1ал1-v5.pdf"
+                           rel="noopener"
+                           target="_blank">
+                            Заявление за присъединяване към Системата за сигурно електронно връчване на структура/и на административен орган по чл. 1, ал. 1 от Закона за електронното управление
+                        </a>
+                    </li>
+                </ul>
+                <p class="explain">
+                    За повече информация <a href="https://e-gov.bg/wps/portal/agency/about-us/administration-service/info-administrations/info-integration/e-delivery?contentIDR=a93e47c7-8549-4895-87a9-c9c10e9e2e1c&useDefaultText=0&useDefaultDesc=0" rel="noopener" target="_blank">виж на страницата на ДАЕУ</a>
+                </p>
+            </section>
+            <section>
+                <h2>@LoginRegisterPage.AreYouAUser</h2>
+                <p>@LoginRegisterPage.YouCanUseIt</p>
+                <div class="form-row btn-row">
+                    <a href="@loginKEP" class="btn btn-primary btn-l">@LoginRegisterPage.TitleLoginKEP</a>
+                    <a href="@loginPIK" class="btn btn-light btn-l">@LoginRegisterPage.TitleLoginNoiPIK</a>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div class="wrapper flex-row mt-spacer">
+    <div class="content-wrapper col-2 bgr-gray">
+        <h2>Съобщение</h2>
+        <p>От 17.01.2022 г. функционира надградената Система за сигурно електронно връчване. При проблеми и затруднения, отнасящи се до новоизградените функционалности, може да сигнализирате на <a href="mailto:eDelivery-Help@e-gov.bg">eDelivery-Help@e-gov.bg</a>, като за по-голяма оперативност e необходимо да предоставите Ваш (мобилен) телефон.</p>
+    </div>
+    <div class="content-wrapper col-2 bgr-gray">
+        <h2 class="txt-center">Помощен контактен център</h2>
+        <p class="txt-center">
+            За информационни системи на ДАЕУ:
+            <span class="help-phone">0700 20 341</span>
+            <a href="mailto:help@e-gov.bg" class="display-block">help@e-gov.bg</a>
+            <a href="https://e-gov.bg/wps/portal/agency/about-us/administration-service/helpdesk/helpdesk/!ut/p/z1/pVFbT8IwFP4tPvDYnLIVVh7nZOJlyjQT1hdTug4qrBtbuf17izESMGKMfTrN-c6X7wIMxsA0X6spN6rUfGH_Keu-DmLqtx-pc3cdYopjf0iSYRzESZ_A6BiAryzAH9w_JD0atnHQAXb-_gUYsEqoDFIhhZe1BUeS5j1EaFcgLtwOIiR3HCwm0st6e7TQpjIzSDMuVy3cKCNbmE_KlUGrxk5ZobRqTP1hATWyXithETO5qDLZzA_Tqfbv4vba8Q_Px_aeHds7dU8-AWc4UqvBOzDQy8jFcfx0E4Zd4mDPg9FayQ0kuqwL28fzH-MaYLj9rQLbsVNHQTS1zNzMkNJ5CeOvlOxavS2XzLfJl9rIrYHxv6OviqSg7g7N86jvEjbZbfyLd2ZnU-o!/dz/d5/L2dBISEvZ0FBIS9nQSEh/?urile=wcm%3Apath%3A%2Fdaeu%2Fsite%2Fabout-us%2Fadministration-service%2Fhelpdesk%2Fhelpdesk"
+               rel="noopener"
+               target="_blank"
+               class="display-block">
+                Помощен контактен център
+            </a>
+        </p>
+    </div>
+</div>
+<div class="wrapper flex-row mt-spacer">
+    <div class="content-wrapper col-2">
+        <h2>@Landing.TitleAdvantages</h2>
+        <ul class="list-default">
+            <li>@Landing.Advantages1</li>
+            <li>@Landing.Advantages2</li>
+            <li>@Landing.Advantages3</li>
+            <li>@Landing.Advantages4</li>
+            <li>@Landing.Advantages5</li>
+        </ul>
+    </div>
+    <div class="content-wrapper col-2">
+        <h2>@Landing.TitleHowToUse</h2>
+        <ul class="list-numbered-decor">
+            <li>@Landing.Step1 </li>
+            <li>@Landing.Step2</li>
+            <li>@Landing.Step3</li>
+        </ul>
+    </div>
+</div>
+<div class="wrapper flex-row mt-spacer">
+    @Html.Action("GetStatistics")
+
+    <div class="content-wrapper col-2 bgr-gray">
+        <h2>@Landing.TitlePartOfBgGov</h2>
+        <ul class="list-links">
+            <li><a target="_blank" rel="noopener" href="http://www.egov.bg/">@Landing.BgGovLink1</a></li>
+            <li><a target="_blank" rel="noopener" href="http://www.strategy.bg/">@Landing.BgGovLink3</a></li>
+            <li><a target="_blank" rel="noopener" href="http://opendata.government.bg/">@Landing.BgGovLink4</a></li>
+            <li>@Html.ActionLink(Common.FooterNavHelp, "Index", "Help")</li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,146 @@
+﻿@using EDelivery.WebPortal.Extensions
+
+@model OutboxViewModel
+
+@{
+    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
+    new AjaxOptions
+    {
+        HttpMethod = "GET",
+        InsertionMode = System.Web.Mvc.Ajax.InsertionMode.ReplaceWith,
+        UpdateTargetId = "messages-list-content"
+    });
+
+    options.Display = PagedListDisplayMode.IfNeeded;
+    options.MaximumPageNumbersToDisplay = 6;
+    options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToFirstPage = PagedListDisplayMode.Never;
+    options.DisplayLinkToLastPage = PagedListDisplayMode.Never;
+}
+
+<div class="table-responsive" id="messages-list-content">
+    @Html.CustomPagedListPager(
+        Model.Messages,
+        p => Url.Action(
+            "Outbox",
+            new
+            {
+                page = p,
+                Model.SearchFilter.Title,
+                Model.SearchFilter.Subject,
+                Model.SearchFilter.FromDateAsString,
+                Model.SearchFilter.ToDateAsString
+            }),
+        options)
+
+    <table class="statistics unbreakable mails">
+        <tbody>
+            <tr>
+                <th>@ProfilePage.TableHeaderMessageStatus</th>
+                <th>@ProfilePage.TableHeaderMessageReceiver</th>
+                <th>@ProfilePage.TableHeaderMessageTitle</th>
+                <th>@ProfilePage.TableHeaderMessageOrn</th>
+                <th>@ProfilePage.TableHeaderMessageReferencedOrn</th>
+                <th>@ProfilePage.TableHeaderMessageDateSent</th>
+                @if (Model.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+                {
+                    <th>@ProfilePage.TableHeaderMessageSentBy</th>
+                }
+                <th>@ProfilePage.TableHeaderMessageReceivedBy</th>
+                <th>Препратено</th>
+            </tr>
+
+            @if (Model.Messages.Count == 0)
+            {
+                <tr>
+                    <td colspan="10">
+                        @ViewBag.NoMessages
+                    </td>
+                </tr>
+            }
+
+            @foreach (var message in Model.Messages)
+            {
+                var received = message.NumberOfRecipients > 0;
+                var addForward =
+                    message.ForwardStatusId == ED.DomainServices.ForwardStatus.IsOriginalForwarded
+                    || message.ForwardStatusId == ED.DomainServices.ForwardStatus.IsInForwardChainAndForwarded;
+
+                string statusClass = $"{(received ? "read" : "unread")}{(addForward ? "-forward" : string.Empty)}";
+                string statusName = (addForward ? ProfilePage.TooltipMessageForwarded + " - " : string.Empty) + (received ? ProfilePage.TooltipMessageReceived : ProfilePage.TooltipMessageNotReceived);
+
+                <tr>
+                    <td class="mail @statusClass">
+                        <div data-toggle="tooltip"
+                             data-original-title="@statusName">
+                            <a href="@Url.Action("View", "Messages", new { id = message.MessageId })"
+                               style="display:block; height:100%; width: 100%;">
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        @message.Recipients
+                    </td>
+                    <td class="title">
+                        <a href="@Url.Action("View", "Messages", new { id = message.MessageId })"
+                           title="@ProfilePage.TableActionViewMessage">
+                            @message.Subject
+                        </a>
+                    </td>
+                    <td>
+                        @message.Orn
+                    </td>
+                    <td>
+                        @message.ReferencedOrn
+                    </td>
+                    <td>
+                        @message.DateSent.ToLocalDateTime().ToString(SystemConstants.DateTimeFormat)
+                    </td>
+                    @if (Model.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+                    {
+                        <td>
+                            @message.SenderLoginName
+                        </td>
+                    }
+                    <td>
+                        <a href="#"
+                           data-modal-href="@Url.Action("GetMessageRecipients", "Messages", new { id = message.MessageId })">
+                            @($"{message.NumberOfRecipients}/{message.NumberOfTotalRecipients}")
+                        </a>
+                    </td>
+                    <td>
+                        @if (message.ForwardStatusId == ED.DomainServices.ForwardStatus.IsOriginalForwarded)
+                        {
+                            <a href="#"
+                               class="btn btn-s btn-light"
+                               data-modal-href="@Url.Action("GetForwardedMessageHistory", "Messages", new { id = message.MessageId })">
+                                @ProfilePage.ForwardedHistoryLink
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.CustomPagedListPager(
+        Model.Messages,
+        p => Url.Action(
+            "Outbox",
+            new
+            {
+                page = p,
+                Model.SearchFilter.Title,
+                Model.SearchFilter.Subject,
+                Model.SearchFilter.FromDateAsString,
+                Model.SearchFilter.ToDateAsString
+            }),
+        options)
+
+    <script type="text/javascript">
+        $(function () {
+            $('#messages-list-content [data-modal-href]').myModal();
+        })
+    </script>
+</div>

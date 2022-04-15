@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="IdentityDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ExternalLogins">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Logins">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="1024" />
+          <Property Name="SecurityStamp" Type="nvarchar" MaxLength="1024" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="ElectronicSubjectId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ElectronicSubjectName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LoginsClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar" MaxLength="100" />
+          <Property Name="ClaimValue" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="LoginsRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ExternalLogins_Logins">
+          <End Role="Logins" Type="Self.Logins" Multiplicity="1" />
+          <End Role="ExternalLogins" Type="Self.ExternalLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Logins">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExternalLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoginsClaims_Logins">
+          <End Role="Logins" Type="Self.Logins" Multiplicity="1" />
+          <End Role="LoginsClaims" Type="Self.LoginsClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Logins">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LoginsClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoginsRoles_Logins">
+          <End Role="Logins" Type="Self.Logins" Multiplicity="1" />
+          <End Role="LoginsRoles" Type="Self.LoginsRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Logins">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LoginsRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoginsRoles_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="LoginsRoles" Type="Self.LoginsRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LoginsRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="IdentityDBModelStoreContainer">
+          <EntitySet Name="ExternalLogins" EntityType="Self.ExternalLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Logins" EntityType="Self.Logins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginsClaims" EntityType="Self.LoginsClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginsRoles" EntityType="Self.LoginsRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ExternalLogins_Logins" Association="Self.FK_ExternalLogins_Logins">
+            <End Role="Logins" EntitySet="Logins" />
+            <End Role="ExternalLogins" EntitySet="ExternalLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginsClaims_Logins" Association="Self.FK_LoginsClaims_Logins">
+            <End Role="Logins" EntitySet="Logins" />
+            <End Role="LoginsClaims" EntitySet="LoginsClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginsRoles_Logins" Association="Self.FK_LoginsRoles_Logins">
+            <End Role="Logins" EntitySet="Logins" />
+            <End Role="LoginsRoles" EntitySet="LoginsRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginsRoles_Roles" Association="Self.FK_LoginsRoles_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="LoginsRoles" EntitySet="LoginsRoles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IdentityDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="EDeliveryIdentityDB" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Logins" EntityType="IdentityDBModel.Login" />
+          <EntitySet Name="ExternalLogins" EntityType="IdentityDBModel.ExternalLogin" />
+          <EntitySet Name="LoginsClaims" EntityType="IdentityDBModel.LoginsClaim" />
+          <EntitySet Name="LoginsRoles" EntityType="IdentityDBModel.LoginsRole" />
+          <EntitySet Name="Roles" EntityType="IdentityDBModel.Role" />
+          <AssociationSet Name="FK_ExternalLogins_Logins" Association="IdentityDBModel.FK_ExternalLogins_Logins">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="ExternalLogin" EntitySet="ExternalLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginsClaims_Logins" Association="IdentityDBModel.FK_LoginsClaims_Logins">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="LoginsClaim" EntitySet="LoginsClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginsRoles_Logins" Association="IdentityDBModel.FK_LoginsRoles_Logins">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="LoginsRole" EntitySet="LoginsRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginsRoles_Roles" Association="IdentityDBModel.FK_LoginsRoles_Roles">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="LoginsRole" EntitySet="LoginsRoles" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="ElectronicSubjectId" Type="Guid" Nullable="false" />
+          <Property Name="ElectronicSubjectName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Logins" Relationship="IdentityDBModel.FK_ExternalLogins_Logins" FromRole="Login" ToRole="ExternalLogin" />
+          <NavigationProperty Name="Claims" Relationship="IdentityDBModel.FK_LoginsClaims_Logins" FromRole="Login" ToRole="LoginsClaim" />
+          <NavigationProperty Name="Roles" Relationship="IdentityDBModel.FK_LoginsRoles_Logins" FromRole="Login" ToRole="LoginsRole" />
+        </EntityType>
+        <EntityType Name="ExternalLogin">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Login" Relationship="IdentityDBModel.FK_ExternalLogins_Logins" FromRole="ExternalLogin" ToRole="Login" />
+        </EntityType>
+        <EntityType Name="LoginsClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ClaimType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Login" Relationship="IdentityDBModel.FK_LoginsClaims_Logins" FromRole="LoginsClaim" ToRole="Login" />
+        </EntityType>
+        <EntityType Name="LoginsRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Login" Relationship="IdentityDBModel.FK_LoginsRoles_Logins" FromRole="LoginsRole" ToRole="Login" />
+          <NavigationProperty Name="Role" Relationship="IdentityDBModel.FK_LoginsRoles_Roles" FromRole="LoginsRole" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Users" Relationship="IdentityDBModel.FK_LoginsRoles_Roles" FromRole="Role" ToRole="LoginsRole" />
+        </EntityType>
+        <Association Name="FK_ExternalLogins_Logins">
+          <End Type="IdentityDBModel.Login" Role="Login" Multiplicity="1" />
+          <End Type="IdentityDBModel.ExternalLogin" Role="ExternalLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ExternalLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoginsClaims_Logins">
+          <End Type="IdentityDBModel.Login" Role="Login" Multiplicity="1" />
+          <End Type="IdentityDBModel.LoginsClaim" Role="LoginsClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LoginsClaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoginsRoles_Logins">
+          <End Type="IdentityDBModel.Login" Role="Login" Multiplicity="1" />
+          <End Type="IdentityDBModel.LoginsRole" Role="LoginsRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LoginsRole">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoginsRoles_Roles">
+          <End Type="IdentityDBModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="IdentityDBModel.LoginsRole" Role="LoginsRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LoginsRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IdentityDBModelStoreContainer" CdmEntityContainer="EDeliveryIdentityDB">
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="IdentityDBModel.Login">
+              <MappingFragment StoreEntitySet="Logins">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ElectronicSubjectName" ColumnName="ElectronicSubjectName" />
+                <ScalarProperty Name="ElectronicSubjectId" ColumnName="ElectronicSubjectId" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExternalLogins">
+            <EntityTypeMapping TypeName="IdentityDBModel.ExternalLogin">
+              <MappingFragment StoreEntitySet="ExternalLogins">
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginsClaims">
+            <EntityTypeMapping TypeName="IdentityDBModel.LoginsClaim">
+              <MappingFragment StoreEntitySet="LoginsClaims">
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginsRoles">
+            <EntityTypeMapping TypeName="IdentityDBModel.LoginsRole">
+              <MappingFragment StoreEntitySet="LoginsRoles">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="IdentityDBModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

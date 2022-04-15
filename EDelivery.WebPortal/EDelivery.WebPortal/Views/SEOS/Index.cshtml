@@ -1,0 +1,88 @@
+﻿@model SEOSIndexModel
+
+@{
+    ViewBag.Title = String.Format("{0} {1}", SEOS.TitleSEOS, Model.ProfileName);
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.BreadCrumbHomePage</h2>
+        <div class="wrapper flex-row mt-spacer">
+            <div class="col-2">
+                <a href="@Url.Action("RegisteredEntitiesSendDocument", "SEOS")" class="content-wrapper icon-menu-item bgr-gray">
+                    <div class="icon-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                            <path d="M32,48H2V12h54v23" />
+                            <path d="M2,12l27,20.6L56,12" />
+                            <path d="M47,40v14 M54,47H40" />
+                            <circle cx="47" cy="47" r="15" />
+                        </svg>
+                    </div>
+                    <h6>@SEOS.SendDocumentToEntity</h6>
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="@Url.Action("ReceivedDocuments", "SEOS")" class="content-wrapper icon-menu-item bgr-gray">
+                    <div class="icon-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                            <path d="M30 46H2V10h54v23" />
+                            <path d="M2 10l27 20.6L56 10" />
+                            <circle cx="46" cy="46" r="16" />
+                            <path d="M46 38v14.9m5.9-5.8L46 52.9l-5.9-5.8" />
+                        </svg>
+                    </div>
+                    <h6>@SEOS.ReceivedDocumentsTitle</h6>
+                    <span id="seos-message-count"
+                          class="number"
+                          style="display: none;">
+                    </span>
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="@Url.Action("SentDocuments", "SEOS")" class="content-wrapper icon-menu-item bgr-gray">
+                    <div class="icon-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                            <path d="M30 46H2V10h54v23" />
+                            <path d="M2 10l27 20.6L56 10" />
+                            <circle cx="46" cy="46" r="16" />
+                            <path d="M46 53.9V39m5.9 5.9L46 39l-5.9 5.9" />
+                        </svg>
+                    </div>
+                    <h6>@SEOS.SentDocumentsTitle</h6>
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="@Url.Action("RegisteredEntities", "SEOS")" class="content-wrapper icon-menu-item bgr-gray">
+                    <div class="icon-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                            <circle class="st0" cx="32" cy="39" r="7" />
+                            <path class="st0" d="M32,46c-6.6,0.1-11.9,5.4-12,12v2h24v-2C43.9,51.4,38.6,46.1,32,46z" />
+                            <circle class="st0" cx="52" cy="10" r="6" />
+                            <path class="st0" d="M62,28c0-7.5-4.5-12-10-12s-10,4.5-10,12H62z" />
+                            <circle class="st0" cx="12" cy="10" r="6" />
+                            <path class="st0" d="M22,28c0-7.5-4.5-12-10-12S2,20.5,2,28H22z" />
+                            <path class="st0" d="M12,34l8,8 M52,34l-8,8 M24,14h16" />
+                        </svg>
+                    </div>
+                    <h6>@SEOS.RegisteredEntities</h6>
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="@Url.Content("~/Content/Documents/EDeliverySEOSHelp.pdf")"
+                   rel="noopener"
+                   target="_blank"
+                   class="content-wrapper icon-menu-item bgr-gray">
+                    <div class="icon-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                            <path d="M18,46l7-21l21-7l-7,21L18,46z M25,25l14,14" />
+                            <circle cx="32" cy="32" r="30" />
+                        </svg>
+                    </div>
+                    <h6>@SEOS.TitleHelp</h6>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

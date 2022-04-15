@@ -1,0 +1,23 @@
+﻿<EditForm Model="@model" OnValidSubmit="SubmitFormAsync">
+    <DataAnnotationsValidator />
+
+    <h2>@Localizer["Title"]</h2>
+
+    <section class="form-section">
+        <div class="form-col">
+            <label for="TargetGroupIds">@Localizer["TargetGroupIds"]<span class="txt-red">*</span></label>
+            <div class="form-element">
+                <Select2MultiField id="TargetGroupIds"
+                                   @bind-Value="model.TargetGroupIds"
+                                   Url="nomenclatures/targetGroups" />
+            </div>
+        </div>
+
+        <ValidationSummary />
+    </section>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-border btn-m" type="button" @onclick="CancelAsync">@Localizer["BtnCancel"]</button>
+        <button class="btn-primary btn-m" type="submit">@Localizer["BtnAdd"]</button>
+    </section>
+</EditForm>

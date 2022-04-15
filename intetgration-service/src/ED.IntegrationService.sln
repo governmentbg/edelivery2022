@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ED.IntegrationService", "ED.IntegrationService\ED.IntegrationService.csproj", "{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ED.ServiceContracts", "ED.ServiceContracts\ED.ServiceContracts.csproj", "{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		EGovTestV2|Any CPU = EGovTestV2|Any CPU
+		ProdV2|Any CPU = ProdV2|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}.EGovTestV2|Any CPU.ActiveCfg = EGovTestV2|Any CPU
+		{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}.EGovTestV2|Any CPU.Build.0 = EGovTestV2|Any CPU
+		{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}.ProdV2|Any CPU.ActiveCfg = ProdV2|Any CPU
+		{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}.ProdV2|Any CPU.Build.0 = ProdV2|Any CPU
+		{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F32DC6-BD5C-48B3-AD1C-46A29FEE2E61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}.EGovTestV2|Any CPU.ActiveCfg = EGovTestV2|Any CPU
+		{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}.EGovTestV2|Any CPU.Build.0 = EGovTestV2|Any CPU
+		{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}.ProdV2|Any CPU.ActiveCfg = ProdV2|Any CPU
+		{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}.ProdV2|Any CPU.Build.0 = ProdV2|Any CPU
+		{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{723E0FCA-EF7B-4AAC-93A7-3F89DF40C14E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F1F76E99-DB05-4B1F-9DF8-BB9856A624C7}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,65 @@
+﻿@using EDelivery.WebPortal.Utils
+
+@if (Request.IsAuthenticated)
+{
+    var userData = Context.GetCachedUserData();
+
+    if (userData != null)
+    {
+        EDelivery.WebPortal.Utils.Cache.CachedLoginProfile currentProfile = null;
+        IOrderedEnumerable<EDelivery.WebPortal.Utils.Cache.CachedLoginProfile> profiles =
+            userData
+                .Profiles
+                .OrderByDescending(p => p.IsDefault)
+                .ThenBy(p => p.DateAccessGranted);
+
+        <div class="wrapper content-wrapper page-title">
+            @if (profiles.Any())
+            {
+                <button class="btn-m btn-light btn-select-profile">
+                    <span>Смяна на профила</span>
+                    <svg viewBox="0 0 11 7" class="icon arrow-down">
+                        <path d="M5.5,6.4C5.3,6.4,5,6.3,4.8,6.2L0.3,1.6c-0.4-0.4-0.4-1,0-1.3c0.4-0.4,1-0.4,1.3,0l3.9,3.9l3.9-3.9c0.4-0.4,1-0.4,1.3,0c0.4,0.4,0.4,1,0,1.3L6.2,6.2C6,6.3,5.7,6.4,5.5,6.4z" />
+                    </svg>
+                </button>
+
+                <nav class="nav-select-profile">
+                    <ul>
+                        @foreach (var profile in profiles)
+                        {
+                            bool isreadonly = profile.IsReadOnly;
+                            bool activeProfile = userData.ActiveProfileId == profile.ProfileId;
+                            if (activeProfile)
+                            {
+                                currentProfile = profile;
+                            }
+
+                            <li class="@(activeProfile ? "active" : "")">
+                                <a href="@(activeProfile ? Url.Action("Index", "Profile") : Url.Action("SwitchActiveProfile", "Profile", new { profileId = profile.ProfileId }))"
+                                   class="btn-profile-item">
+                                    <h5>
+                                        @profile.ProfileName
+                                        <span class="number"
+                                              data-profileid="@profile.ProfileId"
+                                              style="display: none;">
+                                        </span>
+                                        <span class="number"
+                                              data-profileid="@profile.ProfileId"
+                                              style="display: none;">
+                                        </span>
+                                    </h5>
+                                    @if (profile.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
+                                    {
+                                        <span>Физическо лице</span>
+                                    }
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+
+            <h3>@(currentProfile?.ProfileName ?? userData.DefaultProfileName)</h3>
+        </div>
+    }
+}
