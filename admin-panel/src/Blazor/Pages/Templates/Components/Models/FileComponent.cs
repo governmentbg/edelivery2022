@@ -11,11 +11,11 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Models
             this.Type = ComponentType.file;
         }
 
-        public string FileName { get; set; }
+        public string FileName { get; set; } // TODO: should not be used?
 
         [JsonInclude]
         [JsonPropertyName("FileId")]
-        public string fileIdString;
+        public string fileIdString; // TODO: should not be used?
         private int? fileId;
         [JsonIgnore]
         public int? FileId

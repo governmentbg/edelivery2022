@@ -12,25 +12,18 @@
                     <ValidationMessage For="@(() => model.Label)" />
                 </div>
             </div>
-            <div class="form-col">
-                <label for="DocumentField">@Localizer["DocumentField"]</label>
-                <div class="form-element">
-                    <InputText type="text" id="DocumentField" @bind-Value="model.DocumentField" />
-                    <ValidationMessage For="@(() => model.DocumentField)" />
-                </div>
-            </div>
-            <div class="form-col">
-                <label for="CustomClass">@Localizer["CustomClass"]</label>
-                <div class="form-element">
-                    <InputText type="text" id="CustomClass" @bind-Value="model.CustomClass" />
-                </div>
-            </div>
 
             <!-- custom -->
             <div class="form-col">
                 <label for="Value">@Localizer["Value"]</label>
                 <div class="form-element">
                     <DateField id="Value" @bind-Value="model.Value" />
+                </div>
+            </div>
+            <div class="form-col">
+                <div class="form-group">
+                    <InputCheckbox id="UseNowAsDefaultValue" @bind-Value="model.UseNowAsDefaultValue" />
+                    <label for="UseNowAsDefaultValue" style="width: 100%;">@Localizer["UseNowAsDefaultValue"]</label>
                 </div>
             </div>
 

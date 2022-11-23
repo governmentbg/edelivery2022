@@ -2,7 +2,9 @@
 @attribute [Authorize]
 
 @using ED.DomainServices.Admin
-@inject Admin.AdminClient AdminClient
+@using Grpc.Net.ClientFactory
+
+@inject GrpcClientFactory GrpcClientFactory
 @inject IStringLocalizer<Statistics> Localizer
 @inject AuthenticationStateHelper AuthenticationStateHelper
 
@@ -88,16 +90,19 @@
 {
     private GetStatisticsReportResponse statistics;
     private DateTime requestDate;
+    private Admin.AdminClient adminClient;
 
     protected override async Task OnInitializedAsync()
     {
+        this.adminClient = this.GrpcClientFactory.CreateClient<Admin.AdminClient>(Startup.GrpcReportsClient);
+
         int currentUserId =
             await this.AuthenticationStateHelper.GetAuthenticatedUserId();
 
         requestDate = DateTime.Now;
 
         this.statistics =
-            await this.AdminClient.GetStatisticsReportAsync(
+            await this.adminClient.GetStatisticsReportAsync(
                 new GetStatisticsReportRequest
                     {
                         AdminUserId = currentUserId

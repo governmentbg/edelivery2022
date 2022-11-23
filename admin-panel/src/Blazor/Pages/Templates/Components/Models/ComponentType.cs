@@ -8,6 +8,7 @@
         datetime,
         checkbox,
         select,
-        file
+        file,
+        markdown
     }
 }

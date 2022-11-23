@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BlobId" xml:space="preserve">
-    <value>PDF формат</value>
-  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Откажи</value>
   </data>
@@ -132,26 +129,8 @@
   <data name="FileField" xml:space="preserve">
     <value>Файл</value>
   </data>
-  <data name="FormDateReceivedDocumentField" xml:space="preserve">
-    <value>PDF поле - дата на получаване</value>
-  </data>
-  <data name="FormDateSentDocumentField" xml:space="preserve">
-    <value>PDF поле - дата на изпращане</value>
-  </data>
-  <data name="FormRecipientDocumentField" xml:space="preserve">
-    <value>PDF поле - получател</value>
-  </data>
-  <data name="FormRecipientSignatureDocumentField" xml:space="preserve">
-    <value>PDF поле - подпис при получаване</value>
-  </data>
-  <data name="FormSenderDocumentField" xml:space="preserve">
-    <value>PDF поле - връчител</value>
-  </data>
-  <data name="FormSenderSignatureDocumentField" xml:space="preserve">
-    <value>PDF поле - подпис при изпращане</value>
-  </data>
-  <data name="FormSubjectDocumentField" xml:space="preserve">
-    <value>PDF поле - заглавие на съобщение</value>
+  <data name="FormCategory" xml:space="preserve">
+    <value>Категория</value>
   </data>
   <data name="HiddenField" xml:space="preserve">
     <value>Скрито поле</value>
@@ -161,6 +140,9 @@
   </data>
   <data name="IsSystemTemplate" xml:space="preserve">
     <value>Системен шаблон</value>
+  </data>
+  <data name="MarkdownField" xml:space="preserve">
+    <value>Markdown</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Наименование</value>

@@ -6,7 +6,6 @@
 @using ED.DomainServices.Admin
 @inject Admin.AdminClient AdminClient
 @inject IStringLocalizer<Index> Localizer
-@inject CommonStringLocalizer CommonLocalizer
 
 <Breadcrumb Items="@(
     new Dictionary<string, string>()
@@ -40,13 +39,14 @@
                 <table class="list">
                     <tbody>
                         <tr>
-                            <th>@Localizer["NameColumn"]</th>
-                            <th>@Localizer["CreateDateColumn"]</th>
-                            <th>@Localizer["ReadLoginSecurityLevelNameColumn"]</th>
-                            <th>@Localizer["WriteLoginSecurityLevelNameColumn"]</th>
-                            <th>@Localizer["IsSystemTemplateColumn"]</th>
-                            <th>@Localizer["PublishDateColumn"]</th>
-                            <th>@Localizer["ArchiveDateColumn"]</th>
+                            <th>@Localizer["ColumnName"]</th>
+                            <th>@Localizer["ColumnCategory"]</th>
+                            <th>@Localizer["ColumnCreateDate"]</th>
+                            <th>@Localizer["ColumnLoginSecurityLevelNames"]</th>
+                            <th>@Localizer["ColumnIsSystemTemplate"]</th>
+                            <th>@Localizer["ColumnPublishDate"]</th>
+                            <th>@Localizer["ColumnArchiveDate"]</th>
+                            <th></th>
                             <th></th>
                         </tr>
 
@@ -71,16 +71,26 @@
                             @foreach (var template in templates.Result)
                             {
                                 <tr>
-                                    <td>@template.Name</td>
+                                    <td>
+                                        <a href="templates/@template.TemplateId" title="@Localizer["ViewBtn"]">
+                                            @template.Name
+                                        </a>
+                                    </td>
+                                    <td>@(template.Category ?? "-")</td>
                                     <td>@template.CreateDate.ToLocalDateTime().ToString("g")</td>
-                                    <td>@template.ReadLoginSecurityLevelName</td>
-                                    <td>@template.WriteLoginSecurityLevelName</td>
-                                    <td>@CommonLocalizer[template.IsSystemTemplate.ToString()]</td>
+                                    <td>@($"{template.ReadLoginSecurityLevelName}/{template.WriteLoginSecurityLevelName}")</td>
+                                    <td>@Localizer[$"ColumnIsSystemTemplate_{template.IsSystemTemplate}"]</td>
                                     <td>@(template.PublishDate?.ToLocalDateTime().ToString("g") ?? "-")</td>
                                     <td>@(template.ArchiveDate?.ToLocalDateTime().ToString("g") ?? "-")</td>
-                                    <td>
-                                        <a href="templates/create/@template.TemplateId">@Localizer["CopyBtn"]</a>
-                                        <a href="templates/@template.TemplateId">@Localizer["ViewBtn"]</a>
+                                    <td style="padding: 10px;">
+                                        <a href="templates/create/@template.TemplateId" title="@Localizer["CopyBtn"]">
+                                            <img src="img/download-file.png" alt="@Localizer["CopyBtn"]" />
+                                        </a>
+                                    </td>
+                                    <td style="padding: 10px;">
+                                        <a href="templates/@template.TemplateId" title="@Localizer["ViewBtn"]">
+                                            <img src="img/view_icon.png" alt="@Localizer["ViewBtn"]" />
+                                        </a>
                                     </td>
                                 </tr>
                             }
@@ -104,10 +114,10 @@
         this.templates =
             await this.AdminClient.GetTemplateListAsync(
                 new GetTemplateListRequest
-                {
-                    Offset = base.Offset,
-                    Limit = base.Limit,
-                },
+                    {
+                        Offset = base.Offset,
+                        Limit = base.Limit,
+                    },
                 cancellationToken: ct);
     }
 }

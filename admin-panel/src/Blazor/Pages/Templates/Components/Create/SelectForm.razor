@@ -1,5 +1,6 @@
 ﻿<EditForm Model="@model" OnValidSubmit="SubmitFormAsync">
     <DataAnnotationsValidator />
+    <ServerSideValidator @ref="serverSideValidator" />
 
     <h2>@Localizer["SelectTitle"]</h2>
 
@@ -10,19 +11,6 @@
                 <div class="form-element">
                     <InputText type="text" id="Label" @bind-Value="model.Label" />
                     <ValidationMessage For="@(() => model.Label)" />
-                </div>
-            </div>
-            <div class="form-col">
-                <label for="DocumentField">@Localizer["DocumentField"]</label>
-                <div class="form-element">
-                    <InputText type="text" id="DocumentField" @bind-Value="model.DocumentField" />
-                    <ValidationMessage For="@(() => model.DocumentField)" />
-                </div>
-            </div>
-            <div class="form-col">
-                <label for="CustomClass">@Localizer["CustomClass"]</label>
-                <div class="form-element">
-                    <InputText type="text" id="CustomClass" @bind-Value="model.CustomClass" />
                 </div>
             </div>
 
@@ -42,8 +30,7 @@
             <div class="form-col">
                 <label for="Options">@Localizer["Options"]</label>
                 <div class="form-element">
-                    <InputText type="text" id="Options" @bind-Value="model.Options" />
-                    <ValidationMessage For="@(() => model.Options)" />
+                    <InputLargeTextArea id="largeTextArea" @ref="TextArea" OnChange="TextAreaChanged" />
                 </div>
             </div>
             <div class="form-col">
@@ -52,6 +39,7 @@
                     <InputText type="text" id="Value" @bind-Value="model.Value" />
                 </div>
             </div>
+
             <div class="form-col">
                 <div class="form-group">
                     <InputCheckbox id="IsRequired" @bind-Value="model.IsRequired" />

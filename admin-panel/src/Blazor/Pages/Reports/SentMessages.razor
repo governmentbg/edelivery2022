@@ -104,6 +104,7 @@
                                 </th>
                             </tr>
                             <tr>
+                                <th>@Localizer["ColumnMessageId"]</th>
                                 <th>@Localizer["ColumnSender"]</th>
                                 <th>@Localizer["ColumnProfileSender"]</th>
                                 <th>@Localizer["ColumnTargetGroupSender"]</th>
@@ -136,6 +137,7 @@
                                 @foreach (var message in messages.Result)
                                 {
                                     <tr>
+                                        <td>@message.MessageId</td>
                                         <td>
                                             <a href="profiles/@message.SenderProfileId">
                                                 @message.SenderProfileName

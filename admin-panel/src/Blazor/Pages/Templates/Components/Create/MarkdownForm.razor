@@ -1,7 +1,7 @@
 ﻿<EditForm Model="@model" OnValidSubmit="SubmitFormAsync">
     <DataAnnotationsValidator />
 
-    <h2>@Localizer["CheckboxTitle"]</h2>
+    <h2>@Localizer["TitleMarkdown"]</h2>
 
     <section class="form-section">
         <div class="form-col">
@@ -14,18 +14,26 @@
 
         <!-- custom -->
         <div class="form-col">
+            <label for="Value">@Localizer["Value"]</label>
             <div class="form-element">
-                <InputCheckbox id="Value" @bind-Value="model.Value" />
-                <label for="Value" style="width: 100%;">@Localizer["Value"]</label>
+                <textarea id="Value"
+                          @bind="model.Value"
+                          rows="10">
+                </textarea>
+                <ValidationMessage For="@(() => model.Value)" />
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="PdfValue">@Localizer["PdfValue"]</label>
+            <div class="form-element">
+                <textarea id="PdfValue"
+                          @bind="model.PdfValue"
+                          rows="10">
+                </textarea>
+                <ValidationMessage For="@(() => model.PdfValue)" />
             </div>
         </div>
 
-        <div class="form-col">
-            <div class="form-group">
-                <InputCheckbox id="IsEncrypted" @bind-Value="model.IsEncrypted" />
-                <label for="IsEncrypted" style="width: 100%;">@Localizer["IsEncrypted"]</label>
-            </div>
-        </div>
     </section>
 
     <section class="form-section form-row button-row-right">

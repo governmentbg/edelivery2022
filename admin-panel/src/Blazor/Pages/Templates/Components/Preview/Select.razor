@@ -5,7 +5,7 @@
     @{
         var options =
             Model.Options
-            ?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            ?.Split(Constants.OptionSeparator, StringSplitOptions.RemoveEmptyEntries)
             ?.Select(o => o.Trim())
             ?.Select(o =>
                 new Select2Option
@@ -16,6 +16,7 @@
     }
     <Select2Field id="@Model.Id.ToString()"
                   Options="@options"
+                  Placeholder="@Model.Placeholder"
                   @bind-Value="Model.Value"
                   class="@("form-select select2 " + Model.CustomClass)">
     </Select2Field>

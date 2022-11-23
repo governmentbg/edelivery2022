@@ -26,7 +26,7 @@
                                     @Localizer["FormFromDate"]<span class="txt-red">*</span>
                                 </label>
                                 <div class="form-element">
-                                    <DateField id="@nameof(SearchEFormsModel.FromDate)" @bind-Value="model.FromDate" Placeholder=@Constants.DateTimeFormat/>
+                                    <DateField id="@nameof(SearchEFormsModel.FromDate)" @bind-Value="model.FromDate" Placeholder=@Constants.DateTimeFormat />
                                     <ValidationMessage For="@(() => model.FromDate)" />
                                 </div>
                             </li>
@@ -40,14 +40,14 @@
                                 </div>
                             </li>
                             <li class="form-row">
-                                <label for="@nameof(SearchEFormsModel.EFormServiceNumber)">
-                                    @Localizer["FormEFormServiceNumber"]
+                                <label for="@nameof(SearchEFormsModel.Subject)">
+                                    @Localizer["FormSubject"]
                                 </label>
                                 <div class="form-element">
-                                    <InputText id="@nameof(SearchEFormsModel.EFormServiceNumber)"
+                                    <InputText id="@nameof(SearchEFormsModel.Subject)"
                                                type="text"
-                                               @bind-Value="model.EFormServiceNumber" />
-                                    <ValidationMessage For="@(() => model.EFormServiceNumber)" />
+                                               @bind-Value="model.Subject" />
+                                    <ValidationMessage For="@(() => model.Subject)" />
                                 </div>
                             </li>
                         </ul>
@@ -63,17 +63,14 @@
             {
                 <div style="padding: 15px 0px; height: 45px;">
                     <a href="@recordsReportLink"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       download
-                       class="btn btn-border btn-m butright">
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   download
+                   class="btn btn-border btn-m butright">
                         @Localizer["BtnExport"]
                     </a>
                 </div>
 
-                <Pager Page="@(Page)"
-                       PageSize="@PageSize"
-                       TotalItemsCount="@(records?.Length ?? 0)" />
                 <div class="table-responsive" style="position: relative">
                     @if (IsLoading)
                     {
@@ -83,19 +80,20 @@
                     <table class="list">
                         <tbody>
                             <tr>
-                                <th colspan="2">
+                                <th colspan="3">
                                     @recordsTableTitle
                                 </th>
                             </tr>
                             <tr>
                                 <th>@Localizer["ColumnName"]</th>
+                                <th>@Localizer["ColumnReceiver"]</th>
                                 <th>@Localizer["ColumnCount"]</th>
                             </tr>
 
                             @if (records == null)
                             {
                                 <tr>
-                                    <td colspan="2">
+                                    <td colspan="3">
                                         <div class="loader page-loader show">
                                         </div>
                                     </td>
@@ -106,24 +104,35 @@
                                 @if (!records.Result.Any())
                                 {
                                     <tr>
-                                        <td colspan="2">@Localizer["NoItems"]</td>
+                                        <td colspan="3">@Localizer["NoItems"]</td>
                                     </tr>
                                 }
 
-                                @foreach (var record in records.Result)
+                                @foreach (var groupbyMessageSubject in records.Result.GroupBy(x => x.MessageSubject).OrderBy(e => e.Key))
                                 {
+                                    int count = groupbyMessageSubject.Count();
+                                    string serviceName = groupbyMessageSubject.Key;
+                                    var orderedRecords = groupbyMessageSubject.OrderBy(e => e.Recipient);
+                                    var firstRecord = orderedRecords.First();
+
                                     <tr>
-                                        <td>@record.MessageSubject</td>
-                                        <td>@record.Count</td>
+                                        <td rowspan="@count">@serviceName</td>
+                                        <td>@firstRecord.Recipient</td>
+                                        <td>@firstRecord.Count</td>
                                     </tr>
+
+                                    @foreach (var record in orderedRecords.Skip(1))
+                                    {
+                                        <tr>
+                                            <td>@record.Recipient</td>
+                                            <td>@record.Count</td>
+                                        </tr>
+                                    }
                                 }
                             }
                         </tbody>
                     </table>
                 </div>
-                <Pager Page="@(Page)"
-                       PageSize="@PageSize"
-                       TotalItemsCount="@(records?.Length ?? 0)" />
             }
         </div>
     </div>

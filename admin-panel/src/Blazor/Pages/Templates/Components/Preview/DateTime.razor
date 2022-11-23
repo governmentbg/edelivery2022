@@ -32,5 +32,9 @@
                 this.value = dt;
             }
         }
+        else if (this.Model.UseNowAsDefaultValue)
+        {
+            this.value = System.DateTime.Now;
+        }
     }
 }

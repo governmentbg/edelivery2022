@@ -10,7 +10,7 @@ using Microsoft.Extensions.Localization;
 
 namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create
 {
-    public class DateTimeFormModel
+    public class MarkdownFormModel
     {
         [Required(
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
@@ -20,65 +20,58 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create
             ResourceType = typeof(FieldFormResources))]
         public string Label { get; set; }
 
+        [Required(
+            ErrorMessageResourceName = nameof(ErrorMessages.Required),
+            ErrorMessageResourceType = typeof(ErrorMessages))]
+        public string Value { get; set; }
+
+        public string PdfValue { get; set; }
+
         public string DocumentField { get; set; }
 
         public string CustomClass { get; set; }
 
-        public DateTime? Value { get; set; }
-
-        public bool UseNowAsDefaultValue { get; set; }
-
-        public bool IsRequired { get; set; }
-
-        public bool IsEncrypted { get; set; }
-
-        public DateTimeFormModel()
+        public MarkdownFormModel()
         {
         }
 
-        public DateTimeFormModel(DateTimeComponent model)
+        public MarkdownFormModel(MarkdownComponent model)
         {
             this.Label = model.Label;
             this.DocumentField = model.DocumentField;
             this.CustomClass = model.CustomClass;
-            this.Value =
-                string.IsNullOrEmpty(model.Value)
-                    ? (DateTime?)null
-                    : DateTime.ParseExact(model.Value, Constants.DateTimeFormat, null);
-            this.UseNowAsDefaultValue = model.UseNowAsDefaultValue;
-            this.IsRequired = model.IsRequired;
-            this.IsEncrypted = model.IsEncrypted;
+            this.Value = model.Value;
+            this.PdfValue = model.PdfValue;
         }
 
-        public DateTimeComponent ToModel()
+        public MarkdownComponent ToModel()
         {
-            DateTimeComponent model = new()
+            MarkdownComponent model = new()
             {
                 Id = Guid.NewGuid(),
                 Label = this.Label,
                 DocumentField = this.DocumentField,
+                Value = this.Value,
+                PdfValue = this.PdfValue,
                 CustomClass = this.CustomClass,
-                Value = this.Value?.ToString(Constants.DateTimeFormat),
-                UseNowAsDefaultValue = this.UseNowAsDefaultValue,
-                IsRequired = this.IsRequired,
-                IsEncrypted = this.IsEncrypted,
+                IsEncrypted = false,
             };
 
             return model;
         }
     }
 
-    public partial class DateTimeForm
+    public partial class MarkdownForm
     {
         [Inject] IStringLocalizer<FieldFormResources> Localizer { get; set; }
 
         [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
 
-        [Parameter] public DateTimeComponent Model { get; set; }
+        [Parameter] public MarkdownComponent Model { get; set; }
 
         public bool IsEdit { get => this.Model != null; }
 
-        private DateTimeFormModel model;
+        private MarkdownFormModel model;
 
         protected override void OnParametersSet()
         {

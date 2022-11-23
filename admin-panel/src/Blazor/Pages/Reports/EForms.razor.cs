@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ED.AdminPanel.Resources;
 using ED.DomainServices.Admin;
+using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Localization;
@@ -31,25 +32,25 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
         public DateTime? ToDate { get; set; }
 
         [Display(
-            Name = nameof(EFormsResources.FormEFormServiceNumber),
+            Name = nameof(EFormsResources.FormSubject),
             ResourceType = typeof(EFormsResources))]
-        public string EFormServiceNumber { get; set; }
+        public string Subject { get; set; }
 
         public bool HasValues =>
             this.FromDate.HasValue
             || this.ToDate.HasValue
-            || !string.IsNullOrEmpty(this.EFormServiceNumber);
+            || !string.IsNullOrEmpty(this.Subject);
 
         public bool IsValid => ValidationExtensions.TryValidateObject(this);
     }
 
     public partial class EForms
     {
-        [Inject] private Admin.AdminClient AdminClient { get; set; }
-
         [Inject] private IStringLocalizer<EFormsResources> Localizer { get; set; }
 
         [Inject] private AuthenticationStateHelper AuthenticationStateHelper { get; set; }
+
+        [Inject] private GrpcClientFactory GrpcClientFactory { get; set; }
 
         private EditContext editContext;
 
@@ -61,11 +62,15 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
 
         private bool hasSentRequest;
 
+        private Admin.AdminClient adminClient;
+
         protected override void OnInitialized()
         {
             this.model = new();
 
             this.editContext = new EditContext(this.model);
+
+            this.adminClient = this.GrpcClientFactory.CreateClient<Admin.AdminClient>(Startup.GrpcReportsClient);
         }
 
         protected override void ExtractQueryStringParams()
@@ -74,7 +79,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
 
             this.model.FromDate = this.NavigationManager.GetQueryItemAsDateTime("fromDate");
             this.model.ToDate = this.NavigationManager.GetQueryItemAsDateTime("toDate");
-            this.model.EFormServiceNumber = this.NavigationManager.GetCurrentQueryItem<string>("eFormServiceNumber");
+            this.model.Subject = this.NavigationManager.GetCurrentQueryItem<string>("subject");
         }
 
         protected override async Task LoadDataAsync(CancellationToken ct)
@@ -88,19 +93,17 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
                 await this.AuthenticationStateHelper.GetAuthenticatedUserId();
 
             this.records =
-                await this.AdminClient.GetEFormReportAsync(
+                await this.adminClient.GetEFormReportAsync(
                     new GetEFormReportRequest
                     {
                         AdminUserId = currentUserId,
                         FromDate = this.model.FromDate?.ToTimestamp(),
                         ToDate = this.model.ToDate?.ToTimestamp(),
-                        EFormServiceNumber = this.model.EFormServiceNumber ?? string.Empty,
-                        Offset = base.Offset,
-                        Limit = base.Limit,
+                        Subject = this.model.Subject,
                     },
                     cancellationToken: ct);
 
-            this.recordsReportLink = $"Reports/ExportEForms?fromDate={this.model.FromDate!.Value.ToString(Constants.DateTimeFormat)}&toDate={this.model.ToDate!.Value.ToString(Constants.DateTimeFormat)}&eFormServiceNumber={this.model.EFormServiceNumber}";
+            this.recordsReportLink = $"Reports/ExportEForms?fromDate={this.model.FromDate!.Value.ToString(Constants.DateTimeFormat)}&toDate={this.model.ToDate!.Value.ToString(Constants.DateTimeFormat)}&subject={this.model.Subject}";
             this.recordsTableTitle = string.Format(
                 this.Localizer["ColumnAll"],
                 this.model.FromDate.Value.ToString(Constants.DateTimeFormat),
@@ -127,7 +130,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
                     { "page", 1.ToString() },
                     { "fromDate", this.model.FromDate.ToQueryItem() },
                     { "toDate", this.model.ToDate.ToQueryItem() },
-                    { "eFormServiceNumber", this.model.EFormServiceNumber }
+                    { "subject", this.model.Subject }
                 });
         }
     }

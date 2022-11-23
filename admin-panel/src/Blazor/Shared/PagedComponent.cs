@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Grpc.Core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
@@ -31,8 +32,7 @@ namespace ED.AdminPanel.Blazor.Shared
         {
             this.NavigationManager.LocationChanged += this.OnLocationChanged;
             this.ExtractQueryStringParams();
-            await this.LoadDataAsync(this.cts.Token);
-            this.cts.Token.ThrowIfCancellationRequested();
+            await this.LoadDataInternalAsync(this.cts.Token);
         }
 
         protected virtual void ExtractQueryStringParams()
@@ -51,11 +51,22 @@ namespace ED.AdminPanel.Blazor.Shared
 
             base.InvokeAsync(async () =>
             {
-                await this.LoadDataAsync(this.cts.Token);
-                this.cts.Token.ThrowIfCancellationRequested();
+                await this.LoadDataInternalAsync(this.cts.Token);
                 this.IsLoading = false;
                 this.StateHasChanged();
             });
+        }
+
+        private async Task LoadDataInternalAsync(CancellationToken ct)
+        {
+            try
+            {
+                await this.LoadDataAsync(ct);
+            }
+            catch (Exception ex) when (ex is RpcException { StatusCode: StatusCode.Cancelled })
+            {
+                // all cancellations should fail silently
+            }
         }
 
         public void Dispose()

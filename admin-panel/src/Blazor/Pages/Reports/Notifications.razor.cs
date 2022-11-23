@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ED.AdminPanel.Resources;
 using ED.DomainServices.Admin;
+using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Localization;
@@ -52,11 +53,11 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
 
     public partial class Notifications
     {
-        [Inject] private Admin.AdminClient AdminClient { get; set; }
-
         [Inject] private IStringLocalizer<NotificationsResources> Localizer { get; set; }
 
         [Inject] private AuthenticationStateHelper AuthenticationStateHelper { get; set; }
+
+        [Inject] private GrpcClientFactory GrpcClientFactory { get; set; }
 
         private EditContext editContext;
 
@@ -67,11 +68,15 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
 
         private bool hasSentRequest;
 
+        private Admin.AdminClient adminClient;
+
         protected override void OnInitialized()
         {
             this.model = new();
 
             this.editContext = new EditContext(this.model);
+
+            this.adminClient = this.GrpcClientFactory.CreateClient<Admin.AdminClient>(Startup.GrpcReportsClient);
         }
 
         protected override void ExtractQueryStringParams()
@@ -101,7 +106,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
                 await this.AuthenticationStateHelper.GetAuthenticatedUserId();
 
             this.records =
-                await this.AdminClient.GetNotificationsReportAsync(
+                await this.adminClient.GetNotificationsReportAsync(
                     new GetNotificationsReportRequest()
                     {
                         AdminUserId = currentUserId,

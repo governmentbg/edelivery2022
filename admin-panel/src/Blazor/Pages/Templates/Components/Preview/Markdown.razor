@@ -1,0 +1,25 @@
+﻿@using ED.AdminPanel.Blazor.Pages.Templates.Components.Models
+@using Markdig
+
+@{
+    var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+    var html = Markdig.Markdown.ToHtml(Model.Value, pipeline);
+}
+
+<label for="@Model.Id">@Model.Label:</label>
+<div class="form-element">
+    @((MarkupString)html)
+</div>
+
+@code
+{
+    [Parameter] public MarkdownComponent Model { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (this.Model == null)
+        {
+            throw new Exception($"Required parameter {nameof(Model)} is null");
+        }
+    }
+}

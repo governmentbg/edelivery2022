@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ED.AdminPanel.Resources;
 using ED.DomainServices.Admin;
+using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Localization;
@@ -44,11 +45,11 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
 
     public partial class DelayedMessages
     {
-        [Inject] private Admin.AdminClient AdminClient { get; set; }
-
         [Inject] private IStringLocalizer<DelayedMessagesResources> Localizer { get; set; }
 
         [Inject] private AuthenticationStateHelper AuthenticationStateHelper { get; set; }
+
+        [Inject] private GrpcClientFactory GrpcClientFactory { get; set; }
 
         private EditContext editContext;
 
@@ -56,14 +57,18 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
         private DateTime? fromDate;
         private GetDelayedMessagesReportResponse profiles;
         private SearchDelayedMessagesModel model = new();
-         
+
         private bool hasSentRequest;
+
+        private Admin.AdminClient adminClient;
 
         protected override void OnInitialized()
         {
             this.model = new();
 
             this.editContext = new EditContext(this.model);
+
+            this.adminClient = this.GrpcClientFactory.CreateClient<Admin.AdminClient>(Startup.GrpcReportsClient);
         }
 
         protected override void ExtractQueryStringParams()
@@ -72,7 +77,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
 
             this.model.Delay = this.NavigationManager.GetCurrentQueryItem<int?>("delay");
             this.model.TargetGroupId = this.NavigationManager.GetCurrentQueryItem<string>("targetGroupId");
-            this.model.ProfileId = this.NavigationManager.GetCurrentQueryItem<string>("profileId");
+            this.model.ProfileId = this.NavigationManager.GetCurrentQueryItem<string>("recipientProfileId");
         }
 
         protected override async Task LoadDataAsync(CancellationToken ct)
@@ -86,7 +91,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
                 await this.AuthenticationStateHelper.GetAuthenticatedUserId();
 
             this.profiles =
-                await this.AdminClient.GetDelayedMessagesReportAsync(
+                await this.adminClient.GetDelayedMessagesReportAsync(
                     new GetDelayedMessagesReportRequest
                     {
                         AdminUserId = currentUserId,
@@ -101,7 +106,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
                     cancellationToken: ct);
 
             this.fromDate = DateTime.Now.Date.AddDays(-this.model.Delay.Value);
-            this.profilesReportLink = $"Reports/ExportDelayedMessages?delay={this.model.Delay}&targetGroupId={this.model.TargetGroupId}&profileId={this.model.ProfileId}&fromDate={this.fromDate!.Value.ToString(Constants.DateTimeFormat)}";
+            this.profilesReportLink = $"Reports/ExportDelayedMessages?delay={this.model.Delay}&targetGroupId={this.model.TargetGroupId}&recipientProfileId={this.model.ProfileId}&fromDate={this.fromDate!.Value.ToString(Constants.DateTimeFormat)}";
 
             this.hasSentRequest = true;
         }
@@ -124,7 +129,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
                     { "page", 1.ToString() },
                     { "delay", this.model.Delay.ToString() },
                     { "targetGroupId", this.model.TargetGroupId },
-                    { "profileId", this.model.ProfileId },
+                    { "recipientProfileId", this.model.ProfileId },
                 });
         }
     }

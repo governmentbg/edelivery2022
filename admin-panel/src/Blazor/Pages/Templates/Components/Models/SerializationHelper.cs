@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Unicode;
 
 #nullable enable
 
@@ -11,8 +13,14 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Models
     public static class SerializationHelper
     {
         private static JsonSerializerOptions jsonSerializerOptions =
-            new() { Converters = { new JsonStringEnumConverter() } };
-        
+            new()
+            {
+                Encoder = JavaScriptEncoder.Create(
+                    UnicodeRanges.BasicLatin,
+                    UnicodeRanges.Cyrillic),
+                Converters = { new JsonStringEnumConverter() }
+            };
+
         public static string SerializeModel(IList<BaseComponent> model)
         {
             return JsonSerializer.Serialize(
@@ -91,6 +99,13 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Models
                             item.ToObject<FileComponent>(jsonSerializerOptions)
                             ?? throw new Exception($"The model should be serializable to {nameof(FileComponent)}");
                         result.Add(fileComponent);
+                        break;
+
+                    case ComponentType.markdown:
+                        var labelComponent =
+                            item.ToObject<MarkdownComponent>(jsonSerializerOptions)
+                            ?? throw new Exception($"The model should be serializable to {nameof(MarkdownComponent)}");
+                        result.Add(labelComponent);
                         break;
 
                     default:

@@ -19,7 +19,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class CreateEditResources {
@@ -61,15 +61,6 @@ namespace ED.AdminPanel.Blazor.Pages.Templates {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PDF формат.
-        /// </summary>
-        public static string BlobId {
-            get {
-                return ResourceManager.GetString("BlobId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Откажи.
         /// </summary>
         public static string Cancel {
@@ -106,65 +97,11 @@ namespace ED.AdminPanel.Blazor.Pages.Templates {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PDF поле - дата на получаване.
+        ///   Looks up a localized string similar to Категория.
         /// </summary>
-        public static string FormDateReceivedDocumentField {
+        public static string FormCategory {
             get {
-                return ResourceManager.GetString("FormDateReceivedDocumentField", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PDF поле - дата на изпращане.
-        /// </summary>
-        public static string FormDateSentDocumentField {
-            get {
-                return ResourceManager.GetString("FormDateSentDocumentField", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PDF поле - получател.
-        /// </summary>
-        public static string FormRecipientDocumentField {
-            get {
-                return ResourceManager.GetString("FormRecipientDocumentField", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PDF поле - подпис при получаване.
-        /// </summary>
-        public static string FormRecipientSignatureDocumentField {
-            get {
-                return ResourceManager.GetString("FormRecipientSignatureDocumentField", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PDF поле - връчител.
-        /// </summary>
-        public static string FormSenderDocumentField {
-            get {
-                return ResourceManager.GetString("FormSenderDocumentField", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PDF поле - подпис при изпращане.
-        /// </summary>
-        public static string FormSenderSignatureDocumentField {
-            get {
-                return ResourceManager.GetString("FormSenderSignatureDocumentField", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PDF поле - заглавие на съобщение.
-        /// </summary>
-        public static string FormSubjectDocumentField {
-            get {
-                return ResourceManager.GetString("FormSubjectDocumentField", resourceCulture);
+                return ResourceManager.GetString("FormCategory", resourceCulture);
             }
         }
         
@@ -192,6 +129,15 @@ namespace ED.AdminPanel.Blazor.Pages.Templates {
         public static string IsSystemTemplate {
             get {
                 return ResourceManager.GetString("IsSystemTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Markdown.
+        /// </summary>
+        public static string MarkdownField {
+            get {
+                return ResourceManager.GetString("MarkdownField", resourceCulture);
             }
         }
         
