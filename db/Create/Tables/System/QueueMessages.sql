@@ -22,10 +22,9 @@ CREATE TABLE [dbo].[QueueMessages](
   [CreateDate] [datetime2](7) NOT NULL,
   [StatusDate] [datetime2](7) NOT NULL,
   [Version] [timestamp] NOT NULL,
-  
   CONSTRAINT [PK_QueueMessages] PRIMARY KEY ([Status], [Type], [DueDate], [QueueMessageId]),
   CONSTRAINT [CHK_QueueMessages_Status] CHECK ([Status] IN (1, 2, 3, 4, 5)),
-  CONSTRAINT [CHK_QueueMessages_Type] CHECK (([Type]=1) OR ([Type]=2) OR ([Type]=3) OR ([Type]=4)),
+  CONSTRAINT [CHK_QueueMessages_Type] CHECK (([Type]=1) OR ([Type]=2) OR ([Type]=3) OR ([Type]=4) OR ([Type]=5) OR ([Type]=6)),
 )
 GO
 

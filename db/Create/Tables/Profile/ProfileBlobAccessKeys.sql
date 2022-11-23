@@ -29,8 +29,16 @@ CREATE TABLE [dbo].[ProfileBlobAccessKeys](
     FOREIGN KEY([ProfileId])
     REFERENCES [dbo].[Profiles] ([Id]),
   CONSTRAINT [CHK_ProfileBlobAccessKeys_Type] CHECK (
-    -- Storage/Temporary Type is applicable only for non-system profiles
-    ([Type] NOT IN (0, 1) /*Temporary,Storage*/ OR [ProfileId] != 1 /*SystemProfileId*/)
+  [Type] IN (
+        0, -- Temporary
+        1, -- Storage
+        2, -- Registration
+        3, -- Template
+        4,  -- PdfStamp
+        10 -- Unknown
+    ) 
+    -- Storage Type is applicable only for non-system profiles
+    AND ([Type] NOT IN (1) /*Storage*/ OR [ProfileId] != 1 /*SystemProfileId*/)
     -- Template Type is applicable only for system profiles
     AND ([Type] != 3 /*Template*/ OR [ProfileId] = 1 /*SystemProfileId*/)
   ),
