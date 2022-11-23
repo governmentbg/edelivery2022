@@ -71,12 +71,11 @@ namespace ED.DomainServices
                         request.ProfileId,
                         request.Offset,
                         request.Limit,
-                        request.TitleQuery,
-                        request.ProfileNameQuery,
+                        request.Subject,
+                        request.Profile,
                         request.FromDate?.ToLocalDateTime(),
                         request.ToDate?.ToLocalDateTime(),
-                        request.Orn,
-                        request.ReferencedOrn,
+                        request.Rnu,
                         context.CancellationToken);
 
             return new InboxResponse
@@ -100,12 +99,11 @@ namespace ED.DomainServices
                         request.ProfileId,
                         request.Offset,
                         request.Limit,
-                        request.TitleQuery,
-                        request.ProfileNameQuery,
+                        request.Subject,
+                        request.Profile,
                         request.FromDate?.ToLocalDateTime(),
                         request.ToDate?.ToLocalDateTime(),
-                        request.Orn,
-                        request.ReferencedOrn,
+                        request.Rnu,
                         context.CancellationToken);
 
             return new OutboxResponse
@@ -372,8 +370,7 @@ namespace ED.DomainServices
                         request.SenderLoginId,
                         request.TemplateId,
                         request.Subject,
-                        request.ReferencedOrn,
-                        request.AdditionalIdentifier,
+                        request.Rnu,
                         request.Body,
                         request.MetaFields,
                         request.SenderLoginId,
@@ -384,72 +381,65 @@ namespace ED.DomainServices
             return new Empty();
         }
 
-        public override async Task<FindIndividualResponse> FindIndividual(
-            FindIndividualRequest request,
+        public override async Task<FindRecipientIndividualResponse> FindRecipientIndividual(
+            FindRecipientIndividualRequest request,
             ServerCallContext context)
         {
-            IMessageSendQueryRepository.FindIndividualVO? individual =
+            IMessageSendQueryRepository.FindRecipientIndividualVO? individual =
                 await this.serviceProvider
                     .GetRequiredService<IMessageSendQueryRepository>()
-                    .FindIndividualAsync(
+                    .FindRecipientIndividualAsync(
                         request.FirstName,
                         request.LastName,
                         request.Identifier,
+                        request.TemplateId,
                         context.CancellationToken);
 
-            FindIndividualResponse response = new();
-
-            if (individual != null)
+            return new FindRecipientIndividualResponse
             {
-                response.Individual =
-                    individual.Adapt<FindIndividualResponse.Types.Individual>();
-            }
-
-            return response;
+                Individual = individual?.Adapt<FindRecipientIndividualResponse.Types.Individual>()
+            };
         }
 
-        public override async Task<FindLegalEntityResponse> FindLegalEntity(
-            FindLegalEntityRequest request,
+        public override async Task<FindRecipientLegalEntityResponse> FindRecipientLegalEntity(
+            FindRecipientLegalEntityRequest request,
             ServerCallContext context)
         {
-            IMessageSendQueryRepository.FindLegalEntityVO? legalEntity =
+            IMessageSendQueryRepository.FindRecipientLegalEntityVO? legalEntity =
                 await this.serviceProvider
                     .GetRequiredService<IMessageSendQueryRepository>()
-                    .FindLegalEntityAsync(
+                    .FindRecipientLegalEntityAsync(
                         request.Identifier,
+                        request.TemplateId,
                         context.CancellationToken);
 
-            FindLegalEntityResponse response = new();
-
-            if (legalEntity != null)
+            return new FindRecipientLegalEntityResponse
             {
-                response.LegalEntity =
-                    legalEntity.Adapt<FindLegalEntityResponse.Types.LegalEntity>();
-            }
-
-            return response;
+                LegalEntity = legalEntity?.Adapt<FindRecipientLegalEntityResponse.Types.LegalEntity>()
+            };
         }
 
-        public override async Task<FindProfilesResponse> FindProfiles(
-            FindProfilesRequest request,
+        public override async Task<FindRecipientProfilesResponse> FindRecipientProfiles(
+            FindRecipientProfilesRequest request,
             ServerCallContext context)
         {
-            TableResultVO<IMessageSendQueryRepository.FindProfilesVO> profiles =
+            TableResultVO<IMessageSendQueryRepository.FindRecipientProfilesVO> profiles =
                 await this.serviceProvider
                     .GetRequiredService<IMessageSendQueryRepository>()
-                    .FindProfilesAsync(
+                    .FindRecipientProfilesAsync(
                         request.Term,
                         request.TargetGroupId,
+                        request.TemplateId,
                         request.Offset,
                         request.Limit,
                         context.CancellationToken);
 
-            return new FindProfilesResponse
+            return new FindRecipientProfilesResponse
             {
                 Length = profiles.Length,
                 Result =
                 {
-                    profiles.Result.ProjectToType<FindProfilesResponse.Types.ProfileMessage>()
+                    profiles.Result.ProjectToType<FindRecipientProfilesResponse.Types.ProfileMessage>()
                 }
             };
         }
@@ -506,7 +496,11 @@ namespace ED.DomainServices
                 await this.serviceProvider
                     .GetRequiredService<IMessageSendQueryRepository>()
                     .GetRecipientGroupsAsync(
+                        request.Term,
                         request.ProfileId,
+                        request.TemplateId,
+                        request.Offset,
+                        request.Limit,
                         context.CancellationToken);
 
             return new GetRecipientGroupsResponse
@@ -523,33 +517,33 @@ namespace ED.DomainServices
             GetReplyRequest request,
             ServerCallContext context)
         {
-            IMessageSendQueryRepository.GetReplyInfoVO replyInfo =
+            IMessageSendQueryRepository.GetMessageReplyInfoVO replyInfo =
                 await this.serviceProvider
                     .GetRequiredService<IMessageSendQueryRepository>()
-                    .GetInfoAsync(
+                    .GetMessageReplyInfoAsync(
                         request.MessageId,
                         context.CancellationToken);
 
             return replyInfo.Adapt<GetReplyResponse>();
         }
 
-        public override async Task<GetTargetGroupsResponse> GetTargetGroups(
-            GetTargetGroupsRequest request,
+        public override async Task<GetTargetGroupsFromMatrixResponse> GetTargetGroupsFromMatrix(
+            GetTargetGroupsFromMatrixRequest request,
             ServerCallContext context)
         {
-            TableResultVO<IMessageSendQueryRepository.GetTargetGroupsVO> targetGroups =
+            TableResultVO<IMessageSendQueryRepository.GetTargetGroupsFromMatrixVO> targetGroups =
                 await this.serviceProvider
                     .GetRequiredService<IMessageSendQueryRepository>()
-                    .GetTargetGroupsAsync(
+                    .GetTargetGroupsFromMatrixAsync(
                         request.ProfileId,
                         context.CancellationToken);
 
-            return new GetTargetGroupsResponse
+            return new GetTargetGroupsFromMatrixResponse
             {
                 Length = targetGroups.Length,
                 Result =
                 {
-                    targetGroups.Result.ProjectToType<GetTargetGroupsResponse.Types.TargetGroupMessage>()
+                    targetGroups.Result.ProjectToType<GetTargetGroupsFromMatrixResponse.Types.TargetGroupMessage>()
                 }
             };
         }
@@ -583,6 +577,29 @@ namespace ED.DomainServices
                         context.CancellationToken);
 
             return forwardMessageInfo.Adapt<GetForwardMessageInfoResponse>();
+        }
+
+        public override async Task<GetTemplatesByCategoryResponse> GetTemplatesByCategory(
+            GetTemplatesByCategoryRequest request,
+            ServerCallContext context)
+        {
+            TableResultVO<IMessageSendQueryRepository.GetTemplatesByCategoryVO> templates =
+                await this.serviceProvider
+                    .GetRequiredService<IMessageSendQueryRepository>()
+                    .GetTemplatesByCategoryAsync(
+                        request.ProfileId,
+                        request.LoginId,
+                        request.Category,
+                        context.CancellationToken);
+
+            return new GetTemplatesByCategoryResponse
+            {
+                Length = templates.Length,
+                Result =
+                {
+                    templates.Result.ProjectToType<GetTemplatesByCategoryResponse.Types.TemplateMessage>()
+                }
+            };
         }
     }
 }

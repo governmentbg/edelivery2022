@@ -15,7 +15,7 @@ namespace EDelivery.SEOS.Utils
         {
             try
             {
-                using (var service = new EDeliveryAS4Node.BackendInterfaceClient())
+                using (var service = new WebServicePluginInterfaceClient())
                 {
                     var message = CreateMessaging(eDeliveryAS4, receiverAS4, senderAS4);
                     var submitRequest = CreateSubmitRequest(Encoding.UTF8.GetBytes(xmlMessage));
@@ -69,27 +69,56 @@ namespace EDelivery.SEOS.Utils
             }
         }
 
-        public static MsgData DownloadMessage(String msgId)
+        public static MsgData DownloadMessage(string id)
         {
             var msgData = new MsgData();
-            var result = String.Empty;
 
-            using (var service = new EDeliveryAS4Node.BackendInterfaceClient())
+            using (var service = new WebServicePluginInterfaceClient())
             {
-                var messageId = CreateRetrieveMessageRequest(msgId);
-                var messageRequest = new EDeliveryAS4Node.retrieveMessageResponse();
+                var response = new EDeliveryAS4Node.retrieveMessageResponse();
+                var request =  new retrieveMessageRequest { messageID = id };
 
-                var retrieveResult = service.retrieveMessage(messageId, out messageRequest);
+                var retrieveResult = service.retrieveMessage(request, out response);
 
-                msgData.l1Timestamp = retrieveResult.UserMessage.MessageInfo.Timestamp.ToString("G");
-                msgData.l1MessageId = retrieveResult.UserMessage.MessageInfo.MessageId;
-                msgData.l1From = retrieveResult.UserMessage.PartyInfo.From.PartyId.Value;
-                msgData.l1To = retrieveResult.UserMessage.PartyInfo.To.PartyId.Value;
-                msgData.originalSender = retrieveResult.UserMessage.MessageProperties.FirstOrDefault(p => p.name.Equals("originalSender")).Value;
-                msgData.finalRecepient = retrieveResult.UserMessage.MessageProperties.FirstOrDefault(p => p.name.Equals("finalRecipient")).Value;
+                msgData.l1Timestamp = retrieveResult
+                    .UserMessage
+                    .MessageInfo
+                    .Timestamp
+                    .ToString("G");
 
-                result = Encoding.UTF8.GetString(messageRequest.payload.FirstOrDefault().value);
-                msgData.payload = result;
+                msgData.l1MessageId = retrieveResult
+                    .UserMessage
+                    .MessageInfo
+                    .MessageId;
+
+                msgData.l1From = retrieveResult
+                    .UserMessage
+                    .PartyInfo
+                    .From
+                    .PartyId.Value;
+
+                msgData.l1To = retrieveResult
+                    .UserMessage
+                    .PartyInfo
+                    .To
+                    .PartyId.Value;
+
+                msgData.originalSender = retrieveResult
+                    .UserMessage
+                    .MessageProperties
+                    .FirstOrDefault(p => p.name.Equals("originalSender"))
+                    .Value;
+
+                msgData.finalRecepient = retrieveResult
+                    .UserMessage
+                    .MessageProperties
+                    .FirstOrDefault(p => p.name.Equals("finalRecipient"))
+                    .Value;
+
+                var content = Encoding.UTF8.GetString(
+                    response.payload.FirstOrDefault().value);
+
+                msgData.payload = content;
             }
 
             return msgData;
@@ -99,9 +128,10 @@ namespace EDelivery.SEOS.Utils
         {
             var result = new string[0];
 
-            using (var service = new EDeliveryAS4Node.BackendInterfaceClient())
+            using (var service = new WebServicePluginInterfaceClient())
             {
-                result = service.listPendingMessages(String.Empty);
+                var request = new listPendingMessagesRequest { };
+                result = service.listPendingMessages(request);
             }
 
             return result;
@@ -109,7 +139,7 @@ namespace EDelivery.SEOS.Utils
 
         public static messageStatus? GetMessageStatus(string id)
         {
-            using (var service = new BackendInterfaceClient())
+            using (var service = new WebServicePluginInterfaceClient())
             {
                 var request = new statusRequest { messageID = id };
                 return service.getStatus(request);
@@ -118,7 +148,7 @@ namespace EDelivery.SEOS.Utils
 
         public static errorResultImpl[] GetMessageErrors(string id)
         {
-            using (var service = new BackendInterfaceClient())
+            using (var service = new WebServicePluginInterfaceClient())
             {
                 var request = new getErrorsRequest { messageID = id };
                 return service.getMessageErrors(request);
@@ -198,11 +228,6 @@ namespace EDelivery.SEOS.Utils
             submitRequest.payload = new EDeliveryAS4Node.LargePayloadType[] { payload };
 
             return submitRequest;
-        }
-
-        private static EDeliveryAS4Node.retrieveMessageRequest CreateRetrieveMessageRequest(string msgId)
-        {
-            return new EDeliveryAS4Node.retrieveMessageRequest { messageID = msgId };
         }
     }
 }

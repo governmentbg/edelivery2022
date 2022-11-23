@@ -21,7 +21,8 @@ namespace EDelivery.WebPortal.Models
             ResourceManager resourceManager)
         {
             this.Date = history.ActionDate.ToLocalDateTime();
-            this.UserName = history.ActionLoginName;
+            this.LoginName = history.LoginName;
+            this.AdminName = history.AdminName;
             this.Ip = history.Ip ?? string.Empty;
             this.Action = GetActionName(history.Action, resourceManager);
             this.Details = GetDetails(
@@ -32,7 +33,11 @@ namespace EDelivery.WebPortal.Models
 
         public DateTime Date { get; set; }
 
-        public string UserName { get; set; }
+        public string LoginName { get; set; }
+
+        public string AdminName { get; set; }
+
+        public string UserName => LoginName ?? $"{AdminName ?? string.Empty}*";
 
         public string Action { get; set; }
 
@@ -106,8 +111,6 @@ namespace EDelivery.WebPortal.Models
             string value = resourceManager.GetString(name);
             if (string.IsNullOrEmpty(value))
             {
-                ElmahLogger.Instance.Info("Resource key " + name + " does not exists!");
-
                 return string.Empty;
             }
 

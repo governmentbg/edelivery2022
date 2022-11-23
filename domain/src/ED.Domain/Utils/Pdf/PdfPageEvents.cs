@@ -49,12 +49,14 @@ namespace ED.Domain
             this.table.LockedWidth = true;
             this.table.TotalWidth = PageSize.A4.Width - (2 * PdfWriterUtils.SideMargin);
 
-            PdfPCell logoCell = new(Image);
-            logoCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
-            logoCell.VerticalAlignment = PdfPCell.ALIGN_MIDDLE;
-            logoCell.Padding = 5;
-            logoCell.Border = Rectangle.BOTTOM_BORDER;
-            logoCell.BorderWidthBottom = 1;
+            PdfPCell logoCell = new(Image)
+            {
+                HorizontalAlignment = PdfPCell.ALIGN_RIGHT,
+                VerticalAlignment = PdfPCell.ALIGN_MIDDLE,
+                Padding = 5,
+                Border = Rectangle.BOTTOM_BORDER,
+                BorderWidthBottom = 1
+            };
 
             Paragraph paragraph = new(this.title, font);
 

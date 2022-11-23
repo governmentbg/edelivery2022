@@ -15,7 +15,6 @@ namespace ED.Domain
             string TemplateName,
             int NumberOfRecipients,
             int NumberOfTotalRecipients,
-            string? Orn,
-            string? ReferencedOrn);
+            string? Rnu);
     }
 }

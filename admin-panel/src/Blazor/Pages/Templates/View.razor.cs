@@ -25,7 +25,17 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
         private GetTemplatePermissionsResponse permissions;
         private IList<BaseComponent> content;
 
+        private bool archiving;
+        private bool publishing;
+        private bool unpublishing;
+
         protected override async Task OnInitializedAsync()
+        {
+            await this.LoadTemplateAsync();
+            await this.LoadPermissionAsync();
+        }
+
+        private async Task LoadTemplateAsync()
         {
             GetTemplateResponse resp =
                await this.AdminClient.GetTemplateAsync(
@@ -36,12 +46,12 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
 
             this.template = resp.Template;
             this.content = SerializationHelper.DeserializeModel(this.template.Content);
-
-            await this.LoadPermissionAsync();
         }
 
         private async Task ArchiveAsync()
         {
+            this.archiving = true;
+
             int currentUserId = await this.AuthenticationStateHelper.GetAuthenticatedUserId();
 
             await this.AdminClient.ArchiveTemplateAsync(
@@ -51,21 +61,45 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                     ArchivedByAdminUserId = currentUserId
                 });
 
-            this.NavigationManager.NavigateTo("templates");
+            await this.LoadTemplateAsync();
+
+            this.archiving = false;
         }
 
         private async Task PublishAsync()
         {
+            this.publishing = true;
+
             int currentUserId = await this.AuthenticationStateHelper.GetAuthenticatedUserId();
 
-            await this.AdminClient.PublishTemplateAsync(
+            _ = await this.AdminClient.PublishTemplateAsync(
                 new PublishTemplateRequest
                 {
                     TemplateId = this.TemplateId,
                     PublishedByAdminUserId = currentUserId
                 });
 
-            this.NavigationManager.NavigateTo("templates");
+            await this.LoadTemplateAsync();
+
+            this.publishing = true;
+        }
+
+        private async Task UnpublishAsync()
+        {
+            this.unpublishing = true;
+
+            int currentUserId = await this.AuthenticationStateHelper.GetAuthenticatedUserId();
+
+            _ = await this.AdminClient.UnpublishTemplateAsync(
+                new UnpublishTemplateRequest
+                {
+                    TemplateId = this.TemplateId,
+                    PublishedByAdminUserId = currentUserId
+                });
+
+            await this.LoadTemplateAsync();
+
+            this.unpublishing = true;
         }
 
         private async Task AddPermissionsAsync()
@@ -78,7 +112,6 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
 
             if (!result.Cancelled)
             {
-                // refresh the permissions
                 await this.LoadPermissionAsync();
             }
         }
@@ -97,7 +130,6 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                     ProfileId = profileId,
                 });
 
-            // refresh the permissions
             await this.LoadPermissionAsync();
         }
 

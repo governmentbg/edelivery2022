@@ -4,6 +4,7 @@ using Blazored.Modal;
 using ED.AdminPanel.Blazor;
 using ED.AdminPanel.Resources;
 using Grpc.Net.Client.Web;
+using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -27,6 +28,8 @@ namespace ED.AdminPanel
 {
     public class Startup
     {
+        public const string GrpcReportsClient = "ReportsClient";
+
         private AdminPanelOptions Options { get; init; }
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
@@ -49,9 +52,9 @@ namespace ED.AdminPanel
             services.AddOptions<AdminPanelOptions>()
                 .Bind(this.Configuration.GetSection("ED:AdminPanel"))
                 .ValidateDataAnnotations();
-                // TODO: use eager options validation in .NET 6
-                // see https://github.com/dotnet/runtime/issues/36391
-                // .ValidateOnStart();
+            // TODO: use eager options validation in .NET 6
+            // see https://github.com/dotnet/runtime/issues/36391
+            // .ValidateOnStart();
 
             // identity
             services.AddDbContext<IdentityDbContext>(options =>
@@ -89,7 +92,8 @@ namespace ED.AdminPanel
             // with the added ability to inject dependencies (IDataProtector)
             services.AddOptions<CookieAuthenticationOptions>(IdentityConstants.ApplicationScheme)
                 .Configure<IDataProtector>(
-                    (options, dataProtector) => {
+                    (options, dataProtector) =>
+                    {
                         options.TicketDataFormat =
                             new TicketDataFormat(
                                 dataProtector.CreateProtector("ED.AdminPanel"));
@@ -120,6 +124,11 @@ namespace ED.AdminPanel
             services.AddBlazoredModal();
 
             // grpc
+            this.AddNamedGrpClient<AdminClient>(
+                Startup.GrpcReportsClient,
+                services,
+                this.Options.DomainServicesUrl,
+                this.Options.DomainServicesUseGrpcWeb);
             this.AddGrpcClient<AdminClient>(
                 services,
                 this.Options.DomainServicesUrl,
@@ -214,7 +223,54 @@ namespace ED.AdminPanel
                         SslOptions = new()
                         {
 #pragma warning disable CA5359 // Do Not Disable Certificate Validation
-                            RemoteCertificateValidationCallback = delegate { return true; },
+                            RemoteCertificateValidationCallback = delegate
+                            { return true; },
+#pragma warning restore CA5359 // Do Not Disable Certificate Validation
+                        }
+                    });
+            }
+        }
+
+        private void AddNamedGrpClient<T>(
+            string name,
+            IServiceCollection services,
+            string? address,
+            bool useGrpcWeb)
+            where T : class
+        {
+            address = address ?? throw new Exception($"Missing address for GrpcClient {typeof(T).Name}");
+
+            IHttpClientBuilder grpcHttpClientBuilder = services.AddGrpcClient<T>(
+                name,
+                (options) =>
+                {
+                    options.Address = new Uri(address);
+                    options.ChannelOptionsActions.Add(
+                        (opts) =>
+                        {
+                            opts.MaxReceiveMessageSize = null;
+                        });
+                });
+
+            if (useGrpcWeb)
+            {
+                grpcHttpClientBuilder.ConfigurePrimaryHttpMessageHandler(
+                    () => new GrpcWebHandler(new HttpClientHandler())
+                    {
+                        HttpVersion = new Version(1, 1)
+                    });
+            }
+            else
+            {
+                grpcHttpClientBuilder.ConfigurePrimaryHttpMessageHandler(
+                    () => new SocketsHttpHandler()
+                    {
+                        EnableMultipleHttp2Connections = true,
+                        SslOptions = new()
+                        {
+#pragma warning disable CA5359 // Do Not Disable Certificate Validation
+                            RemoteCertificateValidationCallback = delegate
+                            { return true; },
 #pragma warning restore CA5359 // Do Not Disable Certificate Validation
                         }
                     });

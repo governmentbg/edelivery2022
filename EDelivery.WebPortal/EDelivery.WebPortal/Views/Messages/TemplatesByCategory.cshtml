@@ -1,0 +1,34 @@
+﻿@using EDelivery.WebPortal.Models.Messages
+
+@model IEnumerable<MessageTemplateInfoViewModel>
+
+@{
+    ViewBag.Title = "Избор на шаблон на съобщение";
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@ViewBag.Title</h2>
+        <div class="wrapper flex-row mt-spacer">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-3">
+                    <a href="@Url.Action("New", "Messages", new { templateId = item.TemplateId })" class="content-wrapper icon-menu-item bgr-gray">
+                        <div class="icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                                <path d="M32,48H2V12h54v23" />
+                                <path d="M2,12l27,20.6L56,12" />
+                                <path d="M47,40v14 M54,47H40" />
+                                <circle cx="47" cy="47" r="15" />
+                            </svg>
+                        </div>
+                        <h6>@item.Name</h6>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

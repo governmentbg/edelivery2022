@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FooterCopyright" xml:space="preserve">
-    <value>© 2018  State e-Government Agency</value>
+    <value>© 2018  Ministry of e-Government</value>
   </data>
   <data name="FooterProject" xml:space="preserve">
     <value>ПРОЕКТ: „Надграждане на съществуващите и изграждане на нови централни системи за електронното правителство с оглед на усъвършенстване на информационно-комуникационната среда за по-добро административно обслужване на гражданите и бизнеса“</value>
@@ -127,6 +127,6 @@
     <value>Secure electronic delivery system</value>
   </data>
   <data name="SubTitle" xml:space="preserve">
-    <value>State e-Government Agency</value>
+    <value>Ministry of e-Government</value>
   </data>
 </root>

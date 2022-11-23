@@ -37,6 +37,11 @@
         <File Model="@fileModel" />
         break;
 
+    case ComponentType.markdown:
+        MarkdownComponent labelModel = (MarkdownComponent)Model;
+        <Markdown Model="@labelModel" />
+        break;
+
     default:
         throw new NotImplementedException();
 }

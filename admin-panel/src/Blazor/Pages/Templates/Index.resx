@@ -117,40 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ArchiveDateColumn" xml:space="preserve">
+  <data name="ColumnArchiveDate" xml:space="preserve">
     <value>Архивиран</value>
+  </data>
+  <data name="ColumnCategory" xml:space="preserve">
+    <value>Категория</value>
+  </data>
+  <data name="ColumnCreateDate" xml:space="preserve">
+    <value>Създаден</value>
+  </data>
+  <data name="ColumnIsSystemTemplate" xml:space="preserve">
+    <value>Системен шаблон</value>
+  </data>
+  <data name="ColumnIsSystemTemplate_False" xml:space="preserve">
+    <value>Не</value>
+  </data>
+  <data name="ColumnIsSystemTemplate_True" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="ColumnLoginSecurityLevelNames" xml:space="preserve">
+    <value>Мин. ниво - четене/писане</value>
+  </data>
+  <data name="ColumnName" xml:space="preserve">
+    <value>Наименование</value>
+  </data>
+  <data name="ColumnPublishDate" xml:space="preserve">
+    <value>Публикуван</value>
   </data>
   <data name="CopyBtn" xml:space="preserve">
     <value>Копирай</value>
   </data>
-  <data name="CreateDateColumn" xml:space="preserve">
-    <value>Създаден</value>
-  </data>
   <data name="CreateTemplate" xml:space="preserve">
     <value>Създай шаблон</value>
   </data>
-  <data name="IsSystemTemplateColumn" xml:space="preserve">
-    <value>Системен шаблон</value>
-  </data>
-  <data name="NameColumn" xml:space="preserve">
-    <value>Наименование</value>
-  </data>
   <data name="NoItems" xml:space="preserve">
     <value>Няма създадени шаблони.</value>
-  </data>
-  <data name="PublishDateColumn" xml:space="preserve">
-    <value>Публикуван</value>
-  </data>
-  <data name="ReadLoginSecurityLevelNameColumn" xml:space="preserve">
-    <value>Мин. ниво - четене</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Шаблони на съобщения</value>
   </data>
   <data name="ViewBtn" xml:space="preserve">
     <value>Преглед</value>
-  </data>
-  <data name="WriteLoginSecurityLevelNameColumn" xml:space="preserve">
-    <value>Мин. ниво - писане</value>
   </data>
 </root>

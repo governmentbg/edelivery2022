@@ -25,9 +25,9 @@ namespace ED.Domain
         IEncryptorFactory EncryptorFactory,
         ED.Keystore.Keystore.KeystoreClient KeystoreClient,
         TimestampServiceClient TimestampServiceClient,
-        OrnServiceClient OrnServiceClient,
         IIntegrationServiceMessagesSendQueryRepository IntegrationServiceMessagesSendQueryRepository,
         IProfilesService ProfilesService,
+        IRnuService RnuService,
         IQueueMessagesService QueueMessagesService,
         IOptions<DomainOptions> DomainOptionsAccessor)
         : IRequestHandler<SendMessage1OnBehalfOfToIndividualCommand, SendMessage1OnBehalfOfToIndividualCommandResult>
@@ -41,7 +41,7 @@ namespace ED.Domain
             bool checkLoginSendOnBehalfOf =
                 await this.IntegrationServiceMessagesSendQueryRepository
                     .CheckLoginSendOnBehalfOfAsync(
-                        command.OnBehalfOfLoginId,
+                        command.SentViaLoginId,
                         ct);
 
             if (!checkLoginSendOnBehalfOf)
@@ -149,34 +149,6 @@ namespace ED.Domain
 
             using IEncryptor encryptor = this.EncryptorFactory.CreateEncryptor();
 
-            int[] blobIds = new int[command.Documents.Length];
-
-            (string, string, string, ulong)[] blobAttributes =
-                new (string, string, string, ulong)[command.Documents.Length];
-
-            for (int i = 0; i < blobIds.Length; i++)
-            {
-                BlobsServiceClient.UploadBlobVO uploadedBlob =
-                    await this.BlobsServiceClient.UploadProfileBlobAsync(
-                        command.Documents[i].FileName,
-                        command.Documents[i].FileContent.AsMemory(0, command.Documents[i].FileContent.Length),
-                        sender.ProfileId,
-                        command.OnBehalfOfLoginId, // TODO: check this logic
-                        ProfileBlobAccessKeyType.Temporary,
-                        command.Documents[i].DocumentRegistrationNumber,
-                        ct);
-
-                blobIds[i] = uploadedBlob.BlobId!.Value;
-
-                blobAttributes[i] =
-                    (
-                        command.Documents[i].FileName,
-                        uploadedBlob.HashAlgorithm ?? string.Empty,
-                        uploadedBlob.Hash ?? string.Empty,
-                        Convert.ToUInt64(command.Documents[i].FileContent.Length)
-                    );
-            }
-
             GetProfileNamesVO[] profileNames = new GetProfileNamesVO[]
             {
                 new GetProfileNamesVO(sender.ProfileId, sender.ProfileName),
@@ -207,9 +179,11 @@ namespace ED.Domain
                     encryptor.Key,
                     ct);
 
+            int[] blobIds = command.Blobs.Select(x => x.BlobId).ToArray();
+
             DecryptedTemporaryBlobVO[] decryptedTemporaryBlobs =
                 (await this.GetTemporaryBlobsAsync(
-                    sender.ProfileId,
+                    Profile.SystemProfileId,
                     blobIds,
                     ct))
                 .ToArray();
@@ -223,33 +197,37 @@ namespace ED.Domain
 
             string messageBody = SystemTemplateUtils.GetNewMessageBodyJson(
                 command.MessageBody,
-                blobAttributes);
+                command.Blobs
+                    .Select(
+                        x => new ValueTuple<string, string, string, ulong>
+                        {
+                            Item1 = x.FileName,
+                            Item2 = x.HashAlgorithm,
+                            Item3 = x.Hash,
+                            Item4 = x.Size
+                        })
+                    .ToArray());
 
             string senderIdentifier =
                 await this.IntegrationServiceMessagesSendQueryRepository.GetProfileIdentifierAsync(
                     sender.ProfileId,
                     ct);
 
-            string orn =
-                await this.OrnServiceClient.SubmitAsync(senderIdentifier, ct);
-
             await using ITransaction messageTransaction =
                 await this.UnitOfWork.BeginTransactionAsync(ct);
 
             Message message = new(
-                command.OnBehalfOfLoginId,
+                command.SentViaOperatorLoginId ?? command.SentViaLoginId,
                 sender.ProfileId,
                 new int[] { RecipientProfileId.Value },
                 RecipientProfileName!,
                 Template.SystemTemplateId,
                 command.MessageSubject,
-                orn,
-                null,
-                null,
+                this.RnuService.Get(),
                 this.HandleJson(encryptor, messageBody),
                 "{}",
-                command.OnBehalfOfLoginId,
-                command.OnBehalfOfOperatorLoginId ?? command.OnBehalfOfLoginId,
+                command.SentViaOperatorLoginId ?? command.SentViaLoginId,
+                command.SentViaLoginId,
                 encryptor.IV,
                 messageAccessKeys,
                 messageBlobs);
@@ -261,12 +239,10 @@ namespace ED.Domain
             (string messageSummaryXml, byte[] messageSummary, byte[] sendTimestamp) =
                 await this.CreateMessageSummary(
                     message.MessageId,
-                    message.Orn,
-                    message.ReferencedOrn,
-                    message.AdditionalIdentifier,
+                    message.Rnu,
                     sender.ProfileId,
-                    command.OnBehalfOfLoginId,
-                    command.OnBehalfOfOperatorLoginId,
+                    command.SentViaLoginId,
+                    command.SentViaOperatorLoginId,
                     profileKeys,
                     profileNames,
                     message.DateSent,
@@ -540,9 +516,7 @@ namespace ED.Domain
 
         private async Task<(string, byte[], byte[])> CreateMessageSummary(
             int messageId,
-            string? orn,
-            string? referencedOrn,
-            string? additionalIdentifier,
+            string? rnu,
             int senderProfileId,
             int sentViaLoginId,
             int? sentViaOperatorLoginId,
@@ -580,9 +554,7 @@ namespace ED.Domain
 
             Message.MessageSummaryDO messageSummaryDO = new(
                 messageId,
-                orn,
-                referencedOrn,
-                additionalIdentifier,
+                rnu,
                 new Message.MessageSummaryDO.MessageSummaryVOProfile(
                     senderProfileId,
                     senderProfileName,

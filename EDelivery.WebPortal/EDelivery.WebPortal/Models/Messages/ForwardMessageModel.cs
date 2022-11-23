@@ -16,7 +16,7 @@ namespace EDelivery.WebPortal.Models.Messages
         {
             this.ForwardMessageId = messageId;
             this.ForwardSubject = $"FW: {info.Subject}";
-            this.ReferencedOrn = info.Orn;
+            this.Rnu = info.Rnu;
         }
 
         [Required]
@@ -29,11 +29,8 @@ namespace EDelivery.WebPortal.Models.Messages
         [StringLength(255, ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages), ErrorMessageResourceName = "ErrorMessageFieldLength")]
         public string ForwardSubject { get; set; }
 
-        [StringLength(32, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
-        public string ReferencedOrn { get; set; }
-
-        [StringLength(32, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
-        public string AdditionalIdentifier { get; set; }
+        [StringLength(64, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
+        public string Rnu { get; set; }
 
         [Required]
         public int ForwardTemplateId { get; set; }

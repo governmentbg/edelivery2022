@@ -11,6 +11,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using ED.AdminPanel.Utils;
 using ED.DomainServices;
 using ED.DomainServices.Admin;
+using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,13 +24,20 @@ namespace ED.AdminPanel.Controllers
     [Route("[controller]/[action]")]
     public class ReportsController
     {
+        private readonly Admin.AdminClient adminClient;
+
+        public ReportsController(GrpcClientFactory grpcClientFactory)
+        {
+            this.adminClient =
+                grpcClientFactory.CreateClient<Admin.AdminClient>(Startup.GrpcReportsClient);
+        }
+
         public async Task<ActionResult<object>> ExportReceivedMessagesAsync(
             [FromQuery, Required][DateTimeModelBinder] DateTime? fromDate,
             [FromQuery, Required][DateTimeModelBinder] DateTime? toDate,
             [FromQuery, Required][DateTimeModelBinder] DateTime? requestDate,
             [FromQuery] int? recipientProfileId,
             [FromQuery] int? senderProfileId,
-            [FromServices] Admin.AdminClient adminClient,
             [FromServices] IHttpContextAccessor httpContextAccessor,
             CancellationToken ct)
         {
@@ -40,7 +48,7 @@ namespace ED.AdminPanel.Controllers
             int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
 
             GetReceivedMessageReportResponse report =
-                await adminClient.GetReceivedMessageReportAsync(
+                await this.adminClient.GetReceivedMessageReportAsync(
                     new GetReceivedMessageReportRequest
                     {
                         AdminUserId = currentUserId,
@@ -201,16 +209,16 @@ namespace ED.AdminPanel.Controllers
 
             return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-                FileDownloadName = "audit.xlsx"
+                FileDownloadName = "received_messages.xlsx"
             };
         }
+
         public async Task<ActionResult<object>> ExportSentMessagesAsync(
             [FromQuery, Required][DateTimeModelBinder] DateTime? fromDate,
             [FromQuery, Required][DateTimeModelBinder] DateTime? toDate,
             [FromQuery, Required][DateTimeModelBinder] DateTime? requestDate,
             [FromQuery] int? recipientProfileId,
             [FromQuery] int? senderProfileId,
-            [FromServices] Admin.AdminClient adminClient,
             [FromServices] IHttpContextAccessor httpContextAccessor,
             CancellationToken ct)
         {
@@ -221,7 +229,7 @@ namespace ED.AdminPanel.Controllers
             int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
 
             GetSentMessageReportResponse report =
-                await adminClient.GetSentMessageReportAsync(
+                await this.adminClient.GetSentMessageReportAsync(
                     new GetSentMessageReportRequest
                     {
                         AdminUserId = currentUserId,
@@ -303,6 +311,7 @@ namespace ED.AdminPanel.Controllers
             string[] headerRowColumnTitles =
                 new string[]
                 {
+                    "Идентификатор",
                     "Подател",
                     "Профил подател",
                     "Целева група подател",
@@ -326,11 +335,12 @@ namespace ED.AdminPanel.Controllers
 
             double primaryColWidth = 13;
             worksheetPart.Worksheet.GetColumns()
-                .AppendCustomWidthColumn(1, 1, primaryColWidth * 2)
-                .AppendCustomWidthColumn(2, 2, primaryColWidth)
-                .AppendCustomWidthColumn(3, 3, primaryColWidth * 3)
-                .AppendCustomWidthColumn(4, 4, primaryColWidth)
-                .AppendCustomWidthColumn(5, 5, primaryColWidth);
+                .AppendCustomWidthColumn(1, 1, primaryColWidth)
+                .AppendCustomWidthColumn(2, 2, primaryColWidth * 2)
+                .AppendCustomWidthColumn(3, 3, primaryColWidth)
+                .AppendCustomWidthColumn(4, 4, primaryColWidth * 3)
+                .AppendCustomWidthColumn(5, 5, primaryColWidth)
+                .AppendCustomWidthColumn(6, 6, primaryColWidth);
 
             var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
             foreach (var columnTitle in headerRowColumnTitles)
@@ -344,6 +354,9 @@ namespace ED.AdminPanel.Controllers
             foreach (var message in report.Result)
             {
                 var messageRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+                messageRow.AppendRelativeNumberCell(
+                    number: message.MessageId);
 
                 messageRow.AppendRelativeInlineStringCell(
                     text: message.SenderProfileName);
@@ -382,25 +395,24 @@ namespace ED.AdminPanel.Controllers
 
             return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-                FileDownloadName = "audit.xlsx"
+                FileDownloadName = "sent_messages.xlsx"
             };
         }
 
         public async Task<ActionResult<object>> ExportDelayedMessagesAsync(
-           [FromQuery, Required] int? delay,
-           [FromQuery, Required] int? targetGroupId,
-           [FromQuery] string? recipientProfileId,
-           [FromQuery][DateTimeModelBinder] DateTime fromDate,
-           [FromServices] Admin.AdminClient adminClient,
-           [FromServices] IHttpContextAccessor httpContextAccessor,
-           CancellationToken ct)
+            [FromQuery, Required] int? delay,
+            [FromQuery, Required] int? targetGroupId,
+            [FromQuery] string? recipientProfileId,
+            [FromQuery][DateTimeModelBinder] DateTime fromDate,
+            [FromServices] IHttpContextAccessor httpContextAccessor,
+            CancellationToken ct)
         {
             delay = delay ?? throw new ArgumentNullException(nameof(delay));
             targetGroupId = targetGroupId ?? throw new ArgumentNullException(nameof(targetGroupId));
             int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
 
             GetDelayedMessagesReportResponse report =
-                await adminClient.GetDelayedMessagesReportAsync(
+                await this.adminClient.GetDelayedMessagesReportAsync(
                     new GetDelayedMessagesReportRequest()
                     {
                         AdminUserId = currentUserId,
@@ -561,17 +573,16 @@ namespace ED.AdminPanel.Controllers
 
             return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-                FileDownloadName = "audit.xlsx"
+                FileDownloadName = "delayed_messages.xlsx"
             };
         }
 
         public async Task<ActionResult<object>> ExportEFormsAsync(
             [FromQuery, Required][DateTimeModelBinder] DateTime? fromDate,
             [FromQuery, Required][DateTimeModelBinder] DateTime? toDate,
-            [FromQuery] string? eFormServiceNumber,
-            [FromServices] Admin.AdminClient adminClient,
+            [FromQuery] string? subject,
             [FromServices] IHttpContextAccessor httpContextAccessor,
-           CancellationToken ct)
+            CancellationToken ct)
         {
 
             fromDate = fromDate ?? throw new ArgumentNullException(nameof(fromDate));
@@ -580,15 +591,13 @@ namespace ED.AdminPanel.Controllers
             int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
 
             GetEFormReportResponse report =
-                await adminClient.GetEFormReportAsync(
+                await this.adminClient.GetEFormReportAsync(
                     new GetEFormReportRequest()
                     {
                         AdminUserId = currentUserId,
                         FromDate = fromDate?.ToTimestamp(),
                         ToDate = toDate?.ToTimestamp(),
-                        EFormServiceNumber = eFormServiceNumber ?? string.Empty,
-                        Offset = 0,
-                        Limit = int.MaxValue
+                        Subject = subject
                     },
                     cancellationToken: ct);
 
@@ -662,6 +671,7 @@ namespace ED.AdminPanel.Controllers
                 new string[]
                 {
                     "Наименование",
+                    "Получател",
                     "Брой"
                 };
 
@@ -677,11 +687,9 @@ namespace ED.AdminPanel.Controllers
 
             double primaryColWidth = 13;
             worksheetPart.Worksheet.GetColumns()
-                .AppendCustomWidthColumn(1, 1, primaryColWidth * 2)
-                .AppendCustomWidthColumn(2, 2, primaryColWidth)
-                .AppendCustomWidthColumn(3, 3, primaryColWidth * 3)
-                .AppendCustomWidthColumn(4, 4, primaryColWidth)
-                .AppendCustomWidthColumn(5, 5, primaryColWidth);
+                .AppendCustomWidthColumn(1, 1, primaryColWidth * 8)
+                .AppendCustomWidthColumn(2, 2, primaryColWidth * 3)
+                .AppendCustomWidthColumn(3, 3, primaryColWidth);
 
             var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
             foreach (var columnTitle in headerRowColumnTitles)
@@ -692,14 +700,21 @@ namespace ED.AdminPanel.Controllers
                         styleIndex: headerTableCell);
             }
 
-            foreach (var message in report.Result)
+            foreach (var groupbyMessageSubject in report.Result.GroupBy(e => e.MessageSubject).OrderBy(e => e.Key))
             {
-                var messageRow = worksheetPart.Worksheet.AppendRelativeRow();
+                string serviceName = groupbyMessageSubject.Key;
 
-                messageRow.AppendRelativeInlineStringCell(
-                    text: message.MessageSubject);
-                messageRow.AppendRelativeNumberCell(
-                    number: message.Count);
+                foreach (var record in groupbyMessageSubject.OrderBy(e => e.Recipient))
+                {
+                    var row = worksheetPart.Worksheet.AppendRelativeRow();
+
+                    row.AppendRelativeInlineStringCell(
+                        text: serviceName);
+                    row.AppendRelativeInlineStringCell(
+                        text: record.Recipient);
+                    row.AppendRelativeNumberCell(
+                        number: record.Count);
+                }
             }
 
             worksheetPart.Worksheet.Finalize();
@@ -709,22 +724,21 @@ namespace ED.AdminPanel.Controllers
 
             return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-                FileDownloadName = "audit.xlsx"
+                FileDownloadName = "eform_report.xlsx"
             };
         }
 
         public async Task<ActionResult<object>> ExportStatisticsAsync(
             [FromQuery, Required][DateTimeModelBinder] DateTime? toDate,
-            [FromServices] Admin.AdminClient adminClient,
             [FromServices] IHttpContextAccessor httpContextAccessor,
-           CancellationToken ct)
+            CancellationToken ct)
         {
             toDate = toDate ?? throw new ArgumentNullException(nameof(toDate));
 
             int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
 
             GetStatisticsReportResponse report =
-                await adminClient.GetStatisticsReportAsync(
+                await this.adminClient.GetStatisticsReportAsync(
                     new GetStatisticsReportRequest()
                     {
                         AdminUserId = currentUserId
@@ -848,7 +862,7 @@ namespace ED.AdminPanel.Controllers
 
             return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-                FileDownloadName = "audit.xlsx"
+                FileDownloadName = "statistics_report.xlsx"
             };
 
             static Row CreateMessageRow(WorksheetPart worksheetPart, string text, int? number = null)
@@ -866,14 +880,13 @@ namespace ED.AdminPanel.Controllers
         public async Task<ActionResult<object>> ExportNotificationsAsync(
             [FromQuery, Required][DateTimeModelBinder] DateTime fromDate,
             [FromQuery, Required][DateTimeModelBinder] DateTime toDate,
-            [FromServices] Admin.AdminClient adminClient,
             [FromServices] IHttpContextAccessor httpContextAccessor,
-           CancellationToken ct)
+            CancellationToken ct)
         {
             int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
 
             GetNotificationsReportResponse report =
-                await adminClient.GetNotificationsReportAsync(
+                await this.adminClient.GetNotificationsReportAsync(
                     new GetNotificationsReportRequest()
                     {
                         AdminUserId = currentUserId,
@@ -953,8 +966,11 @@ namespace ED.AdminPanel.Controllers
                 {
                     "Тип",
                     "Изпратени",
+                    "Изпратени с проверка",
                     "Грешни",
-                    "Тотал"
+                    "Грешни с проверка",
+                    "Тотал",
+                    "Тотал с проверка",
                 };
 
             string[] headerRowColumnTitlesDatesTable =
@@ -963,8 +979,11 @@ namespace ED.AdminPanel.Controllers
                     "Ден",
                     "Тип",
                     "Изпратени",
+                    "Изпратени с проверка",
                     "Грешни",
-                    "Тотал"
+                    "Грешни с проверка",
+                    "Тотал",
+                    "Тотал с проверка",
                 };
 
             var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
@@ -979,11 +998,14 @@ namespace ED.AdminPanel.Controllers
 
             double primaryColWidth = 13;
             worksheetPart.Worksheet.GetColumns()
-                .AppendCustomWidthColumn(1, 1, primaryColWidth * 2)
-                .AppendCustomWidthColumn(2, 2, primaryColWidth)
-                .AppendCustomWidthColumn(3, 3, primaryColWidth * 3)
+                .AppendCustomWidthColumn(1, 1, primaryColWidth)
+                .AppendCustomWidthColumn(2, 2, primaryColWidth * 2)
+                .AppendCustomWidthColumn(3, 3, primaryColWidth)
                 .AppendCustomWidthColumn(4, 4, primaryColWidth)
-                .AppendCustomWidthColumn(5, 5, primaryColWidth);
+                .AppendCustomWidthColumn(5, 5, primaryColWidth)
+                .AppendCustomWidthColumn(6, 6, primaryColWidth)
+                .AppendCustomWidthColumn(7, 7, primaryColWidth)
+                .AppendCustomWidthColumn(8, 8, primaryColWidth);
 
             var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
 
@@ -995,33 +1017,109 @@ namespace ED.AdminPanel.Controllers
                         styleIndex: headerTableCell);
             }
 
-            foreach (var message in report.Result
-                .GroupBy(q => q.Type)
-                .Select(g => new
-                {
-                    Type = g.Key,
-                    Sent = g.Sum(sent => sent.Sent),
-                    Error = g.Sum(error => error.Error),
-                    SumSentError = g.Sum(all => all.Error + all.Sent)
-                }))
             {
-                var messageRow = worksheetPart.Worksheet.AppendRelativeRow();
+                var groupedRecords = report.Result
+                    .GroupBy(q => q.Type)
+                    .Select(g => new
+                    {
+                        Type = g.Key,
+                        Sent = g.Sum(sent => sent.Sent),
+                        Error = g.Sum(error => error.Error),
+                        Total = g.Sum(all => all.Error + all.Sent)
+                    })
+                    .ToList();
 
-                messageRow.AppendRelativeInlineStringCell(
-                    text: message.Type.ToString());
+                var emails = groupedRecords
+                    .Where(e => e.Type == NotificationType.Email)
+                    .FirstOrDefault();
+                var sms = groupedRecords
+                    .Where(e => e.Type == NotificationType.Sms)
+                    .FirstOrDefault();
+                var smsDeliveryCheck = groupedRecords
+                    .Where(e => e.Type == NotificationType.SmsDeliveryCheck)
+                    .FirstOrDefault();
+                var viber = groupedRecords
+                    .Where(e => e.Type == NotificationType.Viber)
+                    .FirstOrDefault();
+                var viberDeliveryCheck = groupedRecords
+                    .Where(e => e.Type == NotificationType.ViberDeliveryCheck)
+                    .FirstOrDefault();
 
-                messageRow.AppendRelativeNumberCell(
-                    number: message.Sent);
+                // emails
+                var row = worksheetPart.Worksheet.AppendRelativeRow();
 
-                messageRow.AppendRelativeNumberCell(
-                    number: message.Error);
+                row.AppendRelativeInlineStringCell(
+                    text: emails?.Type.ToString() ?? NotificationType.Email.ToString());
 
-                messageRow.AppendRelativeNumberCell(
-                    number: message.SumSentError);
+                row.AppendRelativeNumberCell(
+                    number: emails?.Sent ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: emails?.Sent ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: emails?.Error ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: emails?.Error ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: emails?.Total ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: emails?.Total ?? 0);
+
+                // sms
+                row = worksheetPart.Worksheet.AppendRelativeRow();
+
+                row.AppendRelativeInlineStringCell(
+                    text: sms?.Type.ToString() ?? NotificationType.Sms.ToString());
+
+                row.AppendRelativeNumberCell(
+                    number: sms?.Sent ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: smsDeliveryCheck?.Sent ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: sms?.Error ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: smsDeliveryCheck?.Error ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: sms?.Total ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: smsDeliveryCheck?.Total ?? 0);
+
+                // viber
+                row = worksheetPart.Worksheet.AppendRelativeRow();
+
+                row.AppendRelativeInlineStringCell(
+                    text: viber?.Type.ToString() ?? NotificationType.Viber.ToString());
+
+                row.AppendRelativeNumberCell(
+                    number: viber?.Sent ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: viberDeliveryCheck?.Sent ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: viber?.Error ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: viberDeliveryCheck?.Error ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: viber?.Total ?? 0);
+
+                row.AppendRelativeNumberCell(
+                    number: viberDeliveryCheck?.Total ?? 0);
             }
 
-            //Second Table with information for each date
-            var emptyRow = worksheetPart.Worksheet.AppendRelativeRow(); //Empty row to separate tables
+            var emptyRow = worksheetPart.Worksheet.AppendRelativeRow();
+
             var headerRow2 = worksheetPart.Worksheet.AppendRelativeRow();
             foreach (var columnTitle in headerRowColumnTitlesDatesTable)
             {
@@ -1035,50 +1133,108 @@ namespace ED.AdminPanel.Controllers
             {
                 foreach (DateTime day in this.EachDay(fromDate, toDate))
                 {
-                    GetNotificationsReportResponse.Types.NotificationsMessage? sms = report.Result
-                        .FirstOrDefault(x => x.Date.ToLocalDateTime() == day && x.Type == NotificationType.Sms);
-
-                    var smsMessageRow = worksheetPart.Worksheet.AppendRelativeRow();
-                    smsMessageRow.AppendRelativeInlineStringCell(
-                        text: day.Date.ToString("dd/MM/yyyy"));
-                    smsMessageRow.AppendRelativeInlineStringCell(
-                        text: (sms?.Type.ToString() ?? NotificationType.Sms.ToString()));
-                    smsMessageRow.AppendRelativeNumberCell(
-                        number: (sms?.Sent ?? 0));
-                    smsMessageRow.AppendRelativeNumberCell(
-                        number: (sms?.Error ?? 0));
-                    smsMessageRow.AppendRelativeNumberCell(
-                        number: ((sms?.Error ?? 0) + (sms?.Sent ?? 0)));
-
                     GetNotificationsReportResponse.Types.NotificationsMessage? email = report.Result
-                        .FirstOrDefault(x => x.Date.ToLocalDateTime() == day && x.Type == NotificationType.Email);
+                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
+                            && x.Date.ToLocalDateTime().Month == day.Month
+                            && x.Type == NotificationType.Email);
 
-                    var emailMessageRow = worksheetPart.Worksheet.AppendRelativeRow();
-                    emailMessageRow.AppendRelativeInlineStringCell(
+                    var emailRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+                    emailRow.AppendRelativeInlineStringCell(
                         text: day.Date.ToString("dd/MM/yyyy"));
-                    emailMessageRow.AppendRelativeInlineStringCell(
+
+                    emailRow.AppendRelativeInlineStringCell(
                         text: (email?.Type.ToString() ?? NotificationType.Email.ToString()));
-                    emailMessageRow.AppendRelativeNumberCell(
+
+                    emailRow.AppendRelativeNumberCell(
                         number: (email?.Sent ?? 0));
-                    emailMessageRow.AppendRelativeNumberCell(
+
+                    emailRow.AppendRelativeNumberCell(
+                        number: (email?.Sent ?? 0));
+
+                    emailRow.AppendRelativeNumberCell(
                         number: (email?.Error ?? 0));
-                    emailMessageRow.AppendRelativeNumberCell(
+
+                    emailRow.AppendRelativeNumberCell(
+                        number: (email?.Error ?? 0));
+
+                    emailRow.AppendRelativeNumberCell(
                         number: ((email?.Error ?? 0) + (email?.Sent ?? 0)));
 
-                    GetNotificationsReportResponse.Types.NotificationsMessage? viber = report.Result
-                        .FirstOrDefault(x => x.Date.ToLocalDateTime() == day && x.Type == NotificationType.Viber);
+                    emailRow.AppendRelativeNumberCell(
+                        number: ((email?.Error ?? 0) + (email?.Sent ?? 0)));
 
-                    var viberMessageRow = worksheetPart.Worksheet.AppendRelativeRow();
-                    viberMessageRow.AppendRelativeInlineStringCell(
+                    GetNotificationsReportResponse.Types.NotificationsMessage? sms = report.Result
+                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
+                            && x.Date.ToLocalDateTime().Month == day.Month
+                            && x.Type == NotificationType.Sms);
+
+                    GetNotificationsReportResponse.Types.NotificationsMessage? smsDeliveryCheck = report.Result
+                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
+                            && x.Date.ToLocalDateTime().Month == day.Month
+                            && x.Type == NotificationType.SmsDeliveryCheck);
+
+                    var smsRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+                    smsRow.AppendRelativeInlineStringCell(
                         text: day.Date.ToString("dd/MM/yyyy"));
-                    viberMessageRow.AppendRelativeInlineStringCell(
-                        text: (viber?.Type.ToString() ?? NotificationType.Viber.ToString()));
-                    viberMessageRow.AppendRelativeNumberCell(
-                        number: (viber?.Sent ?? 0));
-                    viberMessageRow.AppendRelativeNumberCell(
-                        number: (viber?.Error ?? 0));
-                    viberMessageRow.AppendRelativeNumberCell(
-                        number: ((viber?.Error ?? 0) + (viber?.Sent ?? 0)));
+
+                    smsRow.AppendRelativeInlineStringCell(
+                        text: sms?.Type.ToString() ?? NotificationType.Sms.ToString());
+
+                    smsRow.AppendRelativeNumberCell(
+                        number: sms?.Sent ?? 0);
+
+                    smsRow.AppendRelativeNumberCell(
+                        number: smsDeliveryCheck?.Sent ?? 0);
+
+                    smsRow.AppendRelativeNumberCell(
+                        number: sms?.Error ?? 0);
+
+                    smsRow.AppendRelativeNumberCell(
+                        number: smsDeliveryCheck?.Error ?? 0);
+
+                    smsRow.AppendRelativeNumberCell(
+                        number: (sms?.Sent ?? 0) + (sms?.Error ?? 0));
+
+                    smsRow.AppendRelativeNumberCell(
+                        number: (smsDeliveryCheck?.Sent ?? 0) + (smsDeliveryCheck?.Error ?? 0));
+
+                    GetNotificationsReportResponse.Types.NotificationsMessage? viber = report.Result
+                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
+                            && x.Date.ToLocalDateTime().Month == day.Month
+                            && x.Type == NotificationType.Viber);
+
+                    GetNotificationsReportResponse.Types.NotificationsMessage? viberDeliveryCheck = report.Result
+                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
+                            && x.Date.ToLocalDateTime().Month == day.Month
+                            && x.Type == NotificationType.ViberDeliveryCheck);
+
+                    var viberRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+                    viberRow.AppendRelativeInlineStringCell(
+                        text: day.Date.ToString("dd/MM/yyyy"));
+
+                    viberRow.AppendRelativeInlineStringCell(
+                        text: viber?.Type.ToString() ?? NotificationType.Viber.ToString());
+
+                    viberRow.AppendRelativeNumberCell(
+                       number: viber?.Sent ?? 0);
+
+                    viberRow.AppendRelativeNumberCell(
+                        number: viberDeliveryCheck?.Sent ?? 0);
+
+                    viberRow.AppendRelativeNumberCell(
+                        number: viber?.Error ?? 0);
+
+                    viberRow.AppendRelativeNumberCell(
+                        number: viberDeliveryCheck?.Error ?? 0);
+
+                    viberRow.AppendRelativeNumberCell(
+                        number: (viber?.Sent ?? 0) + (viber?.Error ?? 0));
+
+                    viberRow.AppendRelativeNumberCell(
+                        number: (viberDeliveryCheck?.Sent ?? 0) + (viberDeliveryCheck?.Error ?? 0));
                 }
             }
 
@@ -1089,7 +1245,7 @@ namespace ED.AdminPanel.Controllers
 
             return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-                FileDownloadName = "audit.xlsx"
+                FileDownloadName = "notification_report.xlsx"
             };
         }
 
@@ -1097,16 +1253,15 @@ namespace ED.AdminPanel.Controllers
             [FromQuery, Required][DateTimeModelBinder] DateTime fromDate,
             [FromQuery, Required][DateTimeModelBinder] DateTime toDate,
             [FromQuery, Required][DateTimeModelBinder] DateTime? requestDate,
-            [FromServices] Admin.AdminClient adminClient,
             [FromServices] IHttpContextAccessor httpContextAccessor,
-           CancellationToken ct)
+            CancellationToken ct)
         {
             requestDate ??= DateTime.Now;
 
             int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
 
             GetTimestampsReportResponse report =
-                await adminClient.GetTimestampsReportAsync(
+                await this.adminClient.GetTimestampsReportAsync(
                     new GetTimestampsReportRequest
                     {
                         AdminUserId = currentUserId,
@@ -1231,7 +1386,7 @@ namespace ED.AdminPanel.Controllers
 
             return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
-                FileDownloadName = "audit.xlsx"
+                FileDownloadName = "timestamp_report.xlsx"
             };
         }
 

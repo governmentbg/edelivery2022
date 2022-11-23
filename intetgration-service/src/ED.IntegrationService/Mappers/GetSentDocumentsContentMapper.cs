@@ -28,7 +28,6 @@ namespace ED.IntegrationService
                     ContentType = string.IsNullOrEmpty(ext)
                         ? null
                         : MimeTypeMap.GetMimeType(ext),
-                    Content = item.Content.ToByteArray(),
                     TimeStamp = new DcTimeStamp(
                         item.FileName,
                         item.Timestamp.ToByteArray()),

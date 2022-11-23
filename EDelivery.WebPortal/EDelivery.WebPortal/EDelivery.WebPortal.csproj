@@ -53,6 +53,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.10.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.10\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.17.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.17.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="Elmah, Version=1.2.13605.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
       <Private>True</Private>
@@ -95,6 +98,9 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Markdig, Version=0.30.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markdig.0.30.2\lib\net452\Markdig.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -399,6 +405,8 @@
     <Compile Include="Authorization\AuthorizationExtensions.cs" />
     <Compile Include="Authorization\Owin\Log4NetLoggerWrapper.cs" />
     <Compile Include="Authorization\RequirementContext.cs" />
+    <Compile Include="Authorization\Requirements\ReplyMessageRequirement.cs" />
+    <Compile Include="Authorization\Requirements\MessageAccessKeyRequirement.cs" />
     <Compile Include="Authorization\Requirements\SearchMessageRecipientLegalEntitiesRequirement.cs" />
     <Compile Include="Authorization\Requirements\SearchMessageRecipientIndividualsRequirement.cs" />
     <Compile Include="Authorization\Requirements\AdministerProfileRecipientGroupRequirement.cs" />
@@ -416,9 +424,13 @@
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\TemplatesController.cs" />
     <Compile Include="Controllers\SEOSController.cs" />
+    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="Extensions\OpenXmlExtensions.cs" />
     <Compile Include="Extensions\TimestampExtensions.cs" />
     <Compile Include="Models\Messages\MessageRecipientsViewModel.cs" />
     <Compile Include="Models\Profile\CreateProfileViewModel.cs" />
+    <Compile Include="Models\Templates\Components\MarkdownComponent.cs" />
+    <Compile Include="Services\ExportService.cs" />
     <Compile Include="Utils\Attributes\BreadCrumbAttribute.cs" />
     <Compile Include="Utils\Attributes\ChildActionOnlyOrAjaxAttribute.cs" />
     <Compile Include="Utils\Attributes\PersonalIdentifierValidationAttribute.cs" />
@@ -447,7 +459,6 @@
     <Compile Include="Enums\eSortOrder.cs" />
     <Compile Include="Enums\eTimeStampType.cs" />
     <Compile Include="Enums\TargetGroupId.cs" />
-    <Compile Include="Errors\LogErrorsAttribute.cs" />
     <Compile Include="Extensions\AjaxHtml.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\PagedListHelper.cs" />
@@ -518,8 +529,8 @@
     <Compile Include="Models\Profile\ProfileModel.cs" />
     <Compile Include="Models\Profile\Info\CommonDataModel.cs" />
     <Compile Include="Models\Home\RegisteredSubjectsModel.cs" />
-    <Compile Include="Models\Search\SearchLegalModel.cs" />
-    <Compile Include="Models\Search\SearchPersonModel.cs" />
+    <Compile Include="Models\Search\SearchLegalEntityModel.cs" />
+    <Compile Include="Models\Search\SearchIndividualModel.cs" />
     <Compile Include="Models\Search\SearchModels.cs" />
     <Compile Include="Models\SEOS\ChangeDocumentStatusModel.cs" />
     <Compile Include="Models\SEOS\MalwareScanResultModel.cs" />
@@ -570,7 +581,6 @@
     <Compile Include="Utils\DbAuditLogs\JWTTokenAuditLog.cs" />
     <Compile Include="Utils\DbAuditLogs\JWTTokenType.cs" />
     <Compile Include="Errors\ElmahLogger.cs" />
-    <Compile Include="Errors\InfoMessage.cs" />
     <Compile Include="Utils\EncriptionHelper.cs" />
     <Compile Include="Utils\Filters\StripAuthCookieAttribute.cs" />
     <Compile Include="Utils\Filters\SeosFilterAttribute.cs" />
@@ -585,6 +595,8 @@
     <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\RobotsText\robots.ProdV2.txt" />
+    <Content Include="App_Data\RobotsText\robots.txt" />
     <Content Include="Content\css\alertify.css" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\custom.css" />
@@ -649,7 +661,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Documents\eDelivery-registration form physical person.pdf" />
     <Content Include="Parameters.xml" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -665,14 +676,7 @@
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Content\Documents\EDeliverySeosHelp.pdf" />
-    <Content Include="Content\Documents\eDeliery-registration form legal person-v3.pdf" />
-    <Content Include="Content\Documents\eDeliery-registration form legal person-v4.pdf" />
     <Content Include="Content\Documents\LicenceAgreement-v4.pdf" />
-    <Content Include="Content\Documents\eDelivery-registration form institution chl1al1-v3.pdf" />
-    <Content Include="Content\Documents\eDelivery-registration form institution chl1al1-v4.pdf" />
-    <Content Include="Content\Documents\eDelivery-registration form institution chl1al1-v5.pdf" />
-    <Content Include="Content\Documents\eDelivery-registration form institution chl1al2-v3.pdf" />
-    <Content Include="Content\Documents\eDelivery-registration form institution chl1al2-v4.pdf" />
     <Content Include="Content\fonts\FiraSans-Bold.ttf" />
     <Content Include="Content\fonts\FiraSans-Bold.woff" />
     <Content Include="Content\fonts\FiraSans-Bold.woff2" />
@@ -697,6 +701,10 @@
     <Content Include="Content\fonts\FiraSans-Regular.ttf" />
     <Content Include="Content\fonts\FiraSans-Regular.woff" />
     <Content Include="Content\fonts\FiraSans-Regular.woff2" />
+    <Content Include="Content\Documents\eDeliery-registration_form_legal_person.pdf" />
+    <Content Include="Content\Documents\eDelivery-registration_administration.pdf" />
+    <Content Include="Content\Documents\eDelivery-reject_registration.pdf" />
+    <Content Include="Content\Documents\eDelivery-registration_sub-administration.pdf" />
     <None Include="log4net.Debug.config">
       <DependentUpon>log4net.config</DependentUpon>
       <IsTransformFile>true</IsTransformFile>
@@ -861,8 +869,8 @@
     <Content Include="Views\Messages\Inbox.cshtml" />
     <Content Include="Views\Messages\Outbox.cshtml" />
     <Content Include="Views\Messages\New.cshtml" />
-    <Content Include="Views\Search\Partials\_SearchPerson.cshtml" />
-    <Content Include="Views\Search\Partials\_SearchLegal.cshtml" />
+    <Content Include="Views\Search\Partials\_SearchIndividual.cshtml" />
+    <Content Include="Views\Search\Partials\_SearchLegalEntity.cshtml" />
     <Content Include="Views\Messages\View.cshtml" />
     <Content Include="Views\Profile\Settings.cshtml" />
     <Content Include="Views\Profile\Partials\_NotificationSettings.cshtml" />
@@ -983,6 +991,8 @@
     <Content Include="Views\Shared\_Matomo.cshtml" />
     <Content Include="Views\Home\New.cshtml" />
     <Content Include="Views\Profile\NoProfile.cshtml" />
+    <Content Include="Views\Messages\TemplatesByCategory.cshtml" />
+    <Content Include="Views\Templates\Partials\Render\_Markdown.cshtml" />
     <None Include="Web.EGovTestV2.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -991,7 +1001,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Views\Error\" />
   </ItemGroup>
   <ItemGroup>
@@ -1005,10 +1014,6 @@
     <ProjectReference Include="..\EDeliveryResources\EDeliveryResources.csproj">
       <Project>{7ff4d8f6-0359-4a88-878f-788db1ddbdca}</Project>
       <Name>EDeliveryResources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RegixInfoClient\RegixInfoClient.csproj">
-      <Project>{88a62633-c22f-42b1-a216-0451c9e7d5c0}</Project>
-      <Name>RegixInfoClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

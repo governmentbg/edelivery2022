@@ -26,6 +26,8 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create
 
         public DateTime? Value { get; set; }
 
+        public bool UseNowAsDefaultValue { get; set; }
+
         public bool IsRequired { get; set; }
 
         public bool IsEncrypted { get; set; }
@@ -43,6 +45,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create
                 string.IsNullOrEmpty(model.Value)
                     ? (DateTime?)null
                     : DateTime.ParseExact(model.Value, Constants.DateTimeFormat, null);
+            this.UseNowAsDefaultValue = model.UseNowAsDefaultValue;
             this.IsRequired = model.IsRequired;
             this.IsEncrypted = model.IsEncrypted;
         }
@@ -56,6 +59,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create
                 DocumentField = this.DocumentField,
                 CustomClass = this.CustomClass,
                 Value = this.Value?.ToString(Constants.DateTimeFormat),
+                UseNowAsDefaultValue = this.UseNowAsDefaultValue,
                 IsRequired = this.IsRequired,
                 IsEncrypted = this.IsEncrypted,
             };

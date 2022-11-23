@@ -132,6 +132,9 @@
   <data name="ColumnDateSent" xml:space="preserve">
     <value>Дата на изпращане</value>
   </data>
+  <data name="ColumnMessageId" xml:space="preserve">
+    <value>#</value>
+  </data>
   <data name="ColumnMessageSubject" xml:space="preserve">
     <value>Наименование</value>
   </data>

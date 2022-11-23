@@ -33,16 +33,14 @@ namespace ED.Domain
                     m.RecipientsAsText,
                     m.TemplateId,
                     m.Subject,
-                    m.Orn,
-                    m.ReferencedOrn,
-                    m.AdditionalIdentifier,
+                    m.Rnu,
                     m.Body,
                     mak.ProfileKeyId,
                     mak.EncryptedKey,
                     m.IV,
                     ForwardedMessageId = (int?)fm.ForwardedMessageId,
                 })
-                .FirstOrDefaultAsync(ct);
+                .FirstAsync(ct);
 
             GetAsSenderVOProfile[] recipients = await (
                 from mr in this.DbContext.Set<MessageRecipient>()
@@ -126,9 +124,7 @@ namespace ED.Domain
                 message.DateSent,
                 recipients,
                 message.Subject,
-                message.Orn,
-                message.ReferencedOrn,
-                message.AdditionalIdentifier,
+                message.Rnu,
                 message.TemplateId!.Value,
                 message.Body,
                 message.ProfileKeyId,

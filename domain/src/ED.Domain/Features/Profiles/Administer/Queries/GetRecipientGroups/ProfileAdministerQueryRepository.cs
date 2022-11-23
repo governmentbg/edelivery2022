@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using static ED.Domain.IProfileAdministerQueryRepository;
 
 namespace ED.Domain
@@ -13,7 +14,21 @@ namespace ED.Domain
             int limit,
             CancellationToken ct)
         {
-            TableResultVO<GetRecipientGroupsVO> vos = await (
+            int count = await (
+                from rg in this.DbContext.Set<RecipientGroup>()
+
+                where rg.ProfileId == profileId
+                    && !rg.ArchiveDate.HasValue
+
+                select rg.RecipientGroupId)
+                .CountAsync(ct);
+
+            if (count == 0)
+            {
+                return TableResultVO.Empty<GetRecipientGroupsVO>();
+            }
+
+            GetRecipientGroupsVO[] vos = await (
                 from rg in this.DbContext.Set<RecipientGroup>()
 
                 join rgp in this.DbContext.Set<RecipientGroupProfile>()
@@ -40,9 +55,10 @@ namespace ED.Domain
                     g.Key.CreateDate,
                     g.Key.ModifyDate,
                     g.Count(e => e != null)))
-                .ToTableResultAsync(offset, limit, ct);
+                .WithOffsetAndLimit(offset, limit)
+                .ToArrayAsync(ct);
 
-            return vos;
+            return new TableResultVO<GetRecipientGroupsVO>(vos, count);
         }
     }
 }

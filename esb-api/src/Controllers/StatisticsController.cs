@@ -85,7 +85,7 @@ public class StatisticsController : ControllerBase
     }
 
     /// <summary>
-    /// Връща статистика за изпратените съобщения по месеци
+    /// Връща статистика за получените съобщения по месеци
     /// </summary>
     /// <param name="month"></param>
     /// <returns></returns>

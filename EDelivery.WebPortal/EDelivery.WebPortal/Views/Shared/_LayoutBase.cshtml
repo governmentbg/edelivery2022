@@ -5,7 +5,7 @@
 <head>
     @Html.Partial("_Matomo")
 
-    <title>@Common.EDeliveryTitle - @(Request.IsAuthenticated ? "ProfileName - " : "")@ViewBag.Title</title>
+    <title>@Common.EDeliveryTitle - @ViewBag.Title</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -15,7 +15,7 @@
 </head>
 
 @{
-    string importantBarMessage = "Считано от 24.03.2022 г. се въвежда максимален общ размер от 1 GB за всеки профил в секция \"Качени файлове\" в меню \"Хранилище\" на ССЕВ. Максималният размер на единичен файл, качен самостоятелно в Хранилището и прикачен към съобщение, е до 255 MB.";
+    string importantBarMessage = string.Empty;
     string importantBarMessageBase64 = Utils.ToUrlSafeBase64(importantBarMessage);
 }
 
@@ -27,8 +27,27 @@
                     <img src="~/Content/img/lion-form.svg" class="icon-lion-form">
                 </a>
                 <div class="titles-box">
-                    <h2 class="main-title-long">@Html.Raw(Site.Title)</h2>
-                    <h4 class="sub-title">@Html.Raw(Site.Subtitle)</h4>
+                    <h2 class="main-title-long">@Site.Title</h2>
+                    <h4 class="sub-title">@Site.Subtitle</h4>
+
+                    @if (Utils.IsTestEnvironment)
+                    {
+                        <style>
+                            .test-alert {
+                                position: fixed;
+                                top: 10px;
+                                right: 10px;
+                                z-index: 10;
+                                padding: 0.75rem 1.25rem;
+                                color: #721c24;
+                                background-color: #f8d7da;
+                                border: 1px solid transparent;
+                                border-radius: 0.25rem;
+                            }
+                        </style>
+
+                        <div class="test-alert">@Site.Title_TestEnv</div>
+                    }
                 </div>
             </div>
             <div class="right-content">
@@ -115,7 +134,9 @@
         </div>
     </header>
 
-    <script>
+    @if (!string.IsNullOrEmpty(importantBarMessage))
+    {
+        <script>
         @* see https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#testing_for_availability *@
         function storageAvailable(type) {
             var storage;
@@ -156,16 +177,17 @@
                 document.getElementById('important-bar').style.display = 'block';
             }
         });
-    </script>
+        </script>
 
-    <div id="important-bar" style="display: none; margin: 0; background: #FFd669; width: 100%; padding: 10px 20px; position: relative; text-align: center;">
-        <div style="display:inline-block; width:95%; text-align:center;">
-            <p style="max-width: none;">@importantBarMessage</p>
+        <div id="important-bar" style="display: none; margin: 0; background: #FFd669; width: 100%; padding: 10px 20px; position: relative; text-align: center;">
+            <div style="display:inline-block; width:95%; text-align:center;">
+                <p style="max-width: none;">@importantBarMessage</p>
+            </div>
+            <a style="font-size: 24px; font-family: 'Arial'; float: right; text-decoration: none;"
+               href="javascript:void(0);"
+               onclick="hideImportantBar();">×</a>
         </div>
-        <a style="font-size: 24px; font-family: 'Arial'; float: right; text-decoration: none;"
-           href="javascript:void(0);"
-           onclick="hideImportantBar();">×</a>
-    </div>
+    }
 
     <main class="inner">
         @RenderBody()

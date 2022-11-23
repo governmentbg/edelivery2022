@@ -60,7 +60,6 @@ namespace ED.Domain
             string? DocumentRegistrationNumber,
             string FileName,
             byte[] Timestamp,
-            byte[] Content,
             GetSentMessageContentVOSignature[] Signatures);
 
         public record GetSentMessageContentVOForwardedMessage(

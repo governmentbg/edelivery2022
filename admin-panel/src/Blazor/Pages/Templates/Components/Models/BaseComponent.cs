@@ -16,7 +16,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Models
 
         public string CustomClass { get; set; }
 
-        public string DocumentField { get; set; }
+        public string DocumentField { get; set; } // TODO: remove
 
         [JsonInclude]
         [JsonPropertyName("IsEncrypted")]

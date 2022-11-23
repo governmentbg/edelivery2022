@@ -11,18 +11,19 @@ namespace ED.Domain
         string? RecipientLastName,
         string MessageSubject,
         string MessageBody,
-        SendMessage1OnBehalfOfToIndividualCommandDocument[] Documents,
+        SendMessage1OnBehalfOfToIndividualCommandBlob[] Blobs,
         string? ServiceOid,
-        int OnBehalfOfProfileId,
-        int OnBehalfOfLoginId,
-        int? OnBehalfOfOperatorLoginId,
+        int SentViaLoginId,
+        int? SentViaOperatorLoginId,
         string SendEvent)
         : IRequest<SendMessage1OnBehalfOfToIndividualCommandResult>;
 
-    public record SendMessage1OnBehalfOfToIndividualCommandDocument(
+    public record SendMessage1OnBehalfOfToIndividualCommandBlob(
         string FileName,
-        string? DocumentRegistrationNumber,
-        byte[] FileContent);
+        string HashAlgorithm,
+        string Hash,
+        ulong Size,
+        int BlobId);
 
     public record SendMessage1OnBehalfOfToIndividualCommandResult(
         bool IsSuccessful,

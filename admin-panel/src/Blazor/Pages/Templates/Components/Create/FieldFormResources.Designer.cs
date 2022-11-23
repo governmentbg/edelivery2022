@@ -19,7 +19,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class FieldFormResources {
@@ -205,6 +205,15 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Стойност в PDF.
+        /// </summary>
+        public static string PdfValue {
+            get {
+                return ResourceManager.GetString("PdfValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Placeholder.
         /// </summary>
         public static string Placeholder {
@@ -259,11 +268,29 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Markdown.
+        /// </summary>
+        public static string TitleMarkdown {
+            get {
+                return ResourceManager.GetString("TitleMarkdown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Url.
         /// </summary>
         public static string Url {
             get {
                 return ResourceManager.GetString("Url", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Днешна дата като стойност по подразбиране.
+        /// </summary>
+        public static string UseNowAsDefaultValue {
+            get {
+                return ResourceManager.GetString("UseNowAsDefaultValue", resourceCulture);
             }
         }
         

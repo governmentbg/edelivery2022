@@ -83,11 +83,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LoginRegisterPage.resx</DependentUpon>
     </Compile>
-    <Compile Include="NotificationsAndHelp.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NotificationsAndHelp.resx</DependentUpon>
-    </Compile>
     <Compile Include="ProfilePage.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -143,8 +138,11 @@
     <EmbeddedResource Include="ErrorMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Landing.en-US.resx" />
+    <EmbeddedResource Include="Landing.en-US.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Landing.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Landing.Designer.cs</LastGenOutput>
@@ -161,16 +159,11 @@
       <LastGenOutput>LoginRegisterPage.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NotificationsAndHelp.en-US.resx" />
-    <EmbeddedResource Include="NotificationsAndHelp.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>NotificationsAndHelp.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="ProfilePage.en-US.resx" />
     <EmbeddedResource Include="ProfilePage.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ProfilePage.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Site.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Options;
 
@@ -7,8 +8,11 @@ namespace ED.EsbApi;
 public class BlobUrlCreator
 {
     private const string MessageBlobTokenPurpose = "ED.Blobs.MessageBlobToken";
+    private const string ProfileBlobTokenPurpose = "ED.Blobs.ProfileBlobToken";
 
-    private readonly ITimeLimitedDataProtector systemBlobTokenDataProtector;
+    private readonly Lazy<ITimeLimitedDataProtector> messageBlobTokenDataProtector;
+    private readonly Lazy<ITimeLimitedDataProtector> profileBlobTokenDataProtector;
+
     private readonly string blobServiceWebUrl;
     private readonly TimeSpan blobTokenLifetime;
 
@@ -16,9 +20,13 @@ public class BlobUrlCreator
         IDataProtector dataProtector,
         IOptions<EsbApiOptions> optionsAccessor)
     {
-        this.systemBlobTokenDataProtector =
-            dataProtector.CreateProtector(MessageBlobTokenPurpose)
-                .ToTimeLimitedDataProtector();
+        this.messageBlobTokenDataProtector = new Lazy<ITimeLimitedDataProtector>(
+            () => dataProtector.CreateProtector(MessageBlobTokenPurpose).ToTimeLimitedDataProtector(),
+            LazyThreadSafetyMode.None);
+
+        this.profileBlobTokenDataProtector = new Lazy<ITimeLimitedDataProtector>(
+            () => dataProtector.CreateProtector(ProfileBlobTokenPurpose).ToTimeLimitedDataProtector(),
+            LazyThreadSafetyMode.None);
 
         EsbApiOptions options = optionsAccessor.Value;
         this.blobServiceWebUrl = options.BlobServiceWebUrl;
@@ -30,22 +38,42 @@ public class BlobUrlCreator
         int messageId,
         int blobId)
     {
-        byte[] protectedData = CompactPositionalSerializer.Serialize(
+        return this.CreateBlobUrl(
+            this.messageBlobTokenDataProtector.Value,
+            "message",
             profileId,
             messageId,
             blobId);
+    }
 
-        byte[] tokenBytes =
-            this.systemBlobTokenDataProtector.Protect(
-                protectedData,
-                this.blobTokenLifetime);
+    public (string, DateTime) CreateProfileBlobUrl(
+        int profileId,
+        int blobId)
+    {
+        return this.CreateBlobUrl(
+            this.profileBlobTokenDataProtector.Value,
+            "profile",
+            profileId,
+            blobId);
+    }
+
+    private (string, DateTime) CreateBlobUrl(
+        ITimeLimitedDataProtector dataProtector,
+        string path,
+        params object[] tokenValues)
+    {
+        byte[] protectedData = CompactPositionalSerializer.Serialize(tokenValues);
+
+        byte[] tokenBytes = dataProtector.Protect(
+            protectedData,
+            this.blobTokenLifetime);
 
         DateTime expirationDate = DateTime.Now.Add(this.blobTokenLifetime);
 
         string token = ToUrlSafeBase64(tokenBytes);
 
         return (
-            $"{this.blobServiceWebUrl.TrimEnd('/')}/message?t={token}",
+            $"{this.blobServiceWebUrl.TrimEnd('/')}/{path.Trim('/')}?t={token}",
             expirationDate
         );
     }

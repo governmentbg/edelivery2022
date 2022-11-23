@@ -13,9 +13,27 @@ namespace EDelivery.WebPortal
 {
     public class FileObject
     {
+        public int? FileId { get; set; }
+
         public string FileName { get; set; }
 
         public string FileHash { get; set; }
+    }
+
+    public class FieldObject
+    {
+        public FieldObject(string label, ComponentType type, object value)
+        {
+            this.Label = label;
+            this.Type = type;
+            this.Value = value;
+        }
+
+        public string Label { get; set; }
+
+        public ComponentType Type { get; set; }
+
+        public object Value { get; set; }
     }
 
     public class TemplatesService
@@ -84,6 +102,8 @@ namespace EDelivery.WebPortal
                                 }
 
                                 break;
+                            case ComponentType.markdown:
+                                break;
                             default:
                                 throw new NotImplementedException();
                         }
@@ -144,7 +164,6 @@ namespace EDelivery.WebPortal
                     case ComponentType.select:
                     case ComponentType.textarea:
                     case ComponentType.textfield:
-                    default:
                         values = form.GetValues($"{component.Id}");
 
                         if (values == null
@@ -155,6 +174,9 @@ namespace EDelivery.WebPortal
                                 errors.Add($"{component.Id}", "Задължително поле.");
                             }
                         }
+                        break;
+                    case ComponentType.markdown:
+                    default:
                         break;
                 }
             }
@@ -200,12 +222,15 @@ namespace EDelivery.WebPortal
                             string[] splitFileNames = form.GetValues($"{key}-FileName");
                             string[] splitFileHashes = form.GetValues($"{key}-FileHash");
 
+                            List<int> fileIds = new List<int>();
                             for (int i = 0; i < values.Length; i++)
                             {
                                 if (!string.IsNullOrEmpty(values[i]))
                                 {
                                     int blobId = int.Parse(values[i]);
+
                                     blobs.Add(blobId);
+                                    fileIds.Add(blobId);
                                 }
                             }
 
@@ -224,6 +249,12 @@ namespace EDelivery.WebPortal
                                     {
                                         FileName = fn,
                                         FileHash = fh
+                                    })
+                                    .Zip(fileIds, (ff, fids) => new
+                                    {
+                                        FileId = fids,
+                                        ff.FileName,
+                                        ff.FileHash,
                                     });
 
                                 if (!component.IsEncrypted)
@@ -233,6 +264,12 @@ namespace EDelivery.WebPortal
                                         {
                                             FileName = fn,
                                             FileHash = fh
+                                        })
+                                        .Zip(fileIds, (ff, fids) => new
+                                        {
+                                            FileId = fids,
+                                            ff.FileName,
+                                            ff.FileHash,
                                         });
                                 }
                             }
@@ -252,13 +289,15 @@ namespace EDelivery.WebPortal
                         case ComponentType.select:
                         case ComponentType.textarea:
                         case ComponentType.textfield:
-                        default:
                             payloadValue = values.FirstOrDefault() ?? null;
 
                             if (!component.IsEncrypted)
                             {
                                 metaFieldValue = payloadValue;
                             }
+                            break;
+                        case ComponentType.markdown:
+                        default:
                             break;
                     }
 
@@ -292,52 +331,82 @@ namespace EDelivery.WebPortal
         /// <param name="messageJson">message values</param>
         /// <param name="templateJson">template json</param>
         /// <returns></returns>
-        public static Dictionary<string, (bool, object)> GetFields(
+        public static Dictionary<Guid, FieldObject> GetFields(
             string messageJson,
             string templateJson)
         {
-            Dictionary<string, (bool, object)> fields =
-                new Dictionary<string, (bool, object)>();
+            Dictionary<Guid, FieldObject> fields =
+                new Dictionary<Guid, FieldObject>();
 
             Dictionary<Guid, object> valuesDict =
                 JsonConvert.DeserializeObject<Dictionary<Guid, object>>(messageJson);
 
             List<BaseComponent> components = ParseJson(templateJson);
 
-            foreach (var component in components)
+            foreach (BaseComponent component in components)
             {
-                // TODO: maybe use switch for each type of component
-                if (component is FileComponent)
+                switch (component.Type)
                 {
-                    if (valuesDict.ContainsKey(component.Id))
-                    {
-                        fields.Add(
-                            component.Label,
-                            (true, ((JArray)valuesDict[component.Id]).ToObject<FileObject[]>()));
-                    }
-                    else
-                    {
-                        fields.Add(
-                            component.Label,
-                            (true, new FileObject[0]));
-                    }
-                }
-                else
-                {
-                    if (valuesDict.ContainsKey(component.Id))
-                    {
-                        fields.Add(
-                            component.Label,
-                            (false, valuesDict[component.Id]));
-                    }
-                    else
-                    {
-                        fields.Add(
-                            component.Label,
-                            (false, string.Empty));
-                    }
-                }
+                    case ComponentType.checkbox:
+                    case ComponentType.hidden:
+                    case ComponentType.textfield:
+                    case ComponentType.textarea:
+                    case ComponentType.datetime:
+                    case ComponentType.select:
+                        if (valuesDict.ContainsKey(component.Id))
+                        {
+                            fields.Add(
+                                component.Id,
+                                new FieldObject(
+                                    component.Label,
+                                    component.Type,
+                                    valuesDict[component.Id]));
+                        }
+                        else
+                        {
+                            fields.Add(
+                                component.Id,
+                                new FieldObject(
+                                    component.Label,
+                                    component.Type,
+                                    string.Empty));
+                        }
 
+                        break;
+                    case ComponentType.file:
+                        if (valuesDict.ContainsKey(component.Id))
+                        {
+                            fields.Add(
+                                component.Id,
+                                new FieldObject(
+                                    component.Label,
+                                    component.Type,
+                                    ((JArray)valuesDict[component.Id]).ToObject<FileObject[]>()));
+                        }
+                        else
+                        {
+                            fields.Add(
+                                component.Id,
+                                new FieldObject(
+                                    component.Label,
+                                    component.Type,
+                                    Array.Empty<FileObject>()));
+                        }
+
+                        break;
+                    case ComponentType.markdown:
+                        MarkdownComponent markdownComponent = (MarkdownComponent)component;
+                        fields.Add(
+                            markdownComponent.Id,
+                            new FieldObject(
+                                markdownComponent.Label,
+                                markdownComponent.Type,
+                                markdownComponent.Value));
+
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
 
             return fields;
@@ -398,6 +467,11 @@ namespace EDelivery.WebPortal
                         var fileComponent = item.ToObject<FileComponent>();
                         fileComponent.ForceInit();
                         result.Add(fileComponent);
+
+                        break;
+                    case ComponentType.markdown:
+                        var markdownComponent = item.ToObject<MarkdownComponent>();
+                        result.Add(markdownComponent);
 
                         break;
                     default:

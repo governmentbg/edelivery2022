@@ -143,7 +143,7 @@ namespace ED.Domain
             string certificateThumbprint)
         {
             using X509Certificate2? x509Certificate =
-                X509Certificate2Utils.LoadX509Certificate(
+                X509Certificate2Utils.LoadX509CertificateByThumbPrint(
                     certificateStore,
                     certificateStoreLocation,
                     certificateThumbprint)

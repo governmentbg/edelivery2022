@@ -34,6 +34,15 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
             ResourceType = typeof(CreateEditResources))]
         public string IdentityNumber { get; set; }
 
+        [StringLength(
+            maximumLength: 64,
+            ErrorMessageResourceName = nameof(ErrorMessages.StringLengthMax),
+            ErrorMessageResourceType = typeof(ErrorMessages))]
+        [Display(
+            Name = nameof(CreateEditResources.FormCategory),
+            ResourceType = typeof(CreateEditResources))]
+        public string Category { get; set; }
+
         public bool IsSystemTemplate { get; set; }
 
         public string ResponseTemplateId { get; set; }
@@ -53,49 +62,6 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
             Name = nameof(CreateEditResources.WriteLoginSecurityLevelId),
             ResourceType = typeof(CreateEditResources))]
         public string WriteLoginSecurityLevelId { get; set; }
-
-        [Required(
-            ErrorMessageResourceName = nameof(ErrorMessages.Required),
-            ErrorMessageResourceType = typeof(ErrorMessages))]
-        [Display(
-            Name = nameof(CreateEditResources.BlobId),
-            ResourceType = typeof(CreateEditResources))]
-        public BlobValue BlobValue { get; set; }
-
-        [Display(
-            Name = nameof(CreateEditResources.FormSenderDocumentField),
-            ResourceType = typeof(CreateEditResources))]
-        public string SenderDocumentField { get; set; }
-
-        [Display(
-            Name = nameof(CreateEditResources.FormRecipientDocumentField),
-            ResourceType = typeof(CreateEditResources))]
-        public string RecipientDocumentField { get; set; }
-
-        [Display(
-            Name = nameof(CreateEditResources.FormSubjectDocumentField),
-            ResourceType = typeof(CreateEditResources))]
-        public string SubjectDocumentField { get; set; }
-
-        [Display(
-            Name = nameof(CreateEditResources.FormDateSentDocumentField),
-            ResourceType = typeof(CreateEditResources))]
-        public string DateSentDocumentField { get; set; }
-
-        [Display(
-            Name = nameof(CreateEditResources.FormDateReceivedDocumentField),
-            ResourceType = typeof(CreateEditResources))]
-        public string DateReceivedDocumentField { get; set; }
-
-        [Display(
-            Name = nameof(CreateEditResources.FormSenderSignatureDocumentField),
-            ResourceType = typeof(CreateEditResources))]
-        public string SenderSignatureDocumentField { get; set; }
-
-        [Display(
-            Name = nameof(CreateEditResources.FormRecipientSignatureDocumentField),
-            ResourceType = typeof(CreateEditResources))]
-        public string RecipientSignatureDocumentField { get; set; }
 
 #pragma warning disable CA2227 // Collection properties should be read only
         public IList<BaseComponent> Content { get; set; } = new List<BaseComponent>();
@@ -124,6 +90,8 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
         private Select2Option[] loginSecurityLevels;
         private Select2Option[] responseTemplates;
 
+        private int currentIndex = -1;
+
         protected override async Task OnInitializedAsync()
         {
             this.model = new();
@@ -145,13 +113,6 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                     template.ReadLoginSecurityLevelId.ToString();
                 this.model.WriteLoginSecurityLevelId =
                     template.WriteLoginSecurityLevelId.ToString();
-                this.model.SenderDocumentField = template.SenderDocumentField;
-                this.model.RecipientDocumentField = template.RecipientDocumentField;
-                this.model.SubjectDocumentField = template.SubjectDocumentField;
-                this.model.DateSentDocumentField = template.DateSentDocumentField;
-                this.model.DateReceivedDocumentField = template.DateReceivedDocumentField;
-                this.model.SenderSignatureDocumentField = template.SenderSignatureDocumentField;
-                this.model.RecipientSignatureDocumentField = template.RecipientSignatureDocumentField;
             }
 
             if (this.EditTemplateId != null)
@@ -167,6 +128,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
 
                 this.model.Name = template.Name;
                 this.model.IdentityNumber = template.IdentityNumber;
+                this.model.Category = template.Category;
                 this.model.Content =
                     SerializationHelper.DeserializeModel(template.Content);
                 this.model.IsSystemTemplate = template.IsSystemTemplate;
@@ -176,19 +138,6 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                     template.ReadLoginSecurityLevelId.ToString();
                 this.model.WriteLoginSecurityLevelId =
                     template.WriteLoginSecurityLevelId.ToString();
-                if (template.BlobId.HasValue)
-                {
-                    this.model.BlobValue = new(
-                        template.BlobName,
-                        template.BlobId.Value);
-                }
-                this.model.SenderDocumentField = template.SenderDocumentField;
-                this.model.RecipientDocumentField = template.RecipientDocumentField;
-                this.model.SubjectDocumentField = template.SubjectDocumentField;
-                this.model.DateSentDocumentField = template.DateSentDocumentField;
-                this.model.DateReceivedDocumentField = template.DateReceivedDocumentField;
-                this.model.SenderSignatureDocumentField = template.SenderSignatureDocumentField;
-                this.model.RecipientSignatureDocumentField = template.RecipientSignatureDocumentField;
             }
 
             var loginSecurityLevelsResponse =
@@ -198,8 +147,8 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                         Term = string.Empty,
                     });
 
-            this.loginSecurityLevels =
-                loginSecurityLevelsResponse.Result
+            this.loginSecurityLevels = loginSecurityLevelsResponse.Result
+                .OrderBy(n => n.Id)
                 .Select(n =>
                     new Select2Option
                     {
@@ -216,8 +165,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                         Limit = 10000
                     });
 
-            this.responseTemplates =
-                responseTemplatesResponse.Result
+            this.responseTemplates = responseTemplatesResponse.Result
                 .Select(t =>
                     new Select2Option
                     {
@@ -271,6 +219,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                 ComponentType.select => typeof(SelectForm),
                 ComponentType.textfield => typeof(TextFieldForm),
                 ComponentType.textarea => typeof(TextAreaForm),
+                ComponentType.markdown => typeof(MarkdownForm),
                 _ => throw new Exception($"Unknown {nameof(componentType)} {componentType}"),
             };
 
@@ -278,6 +227,7 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
         {
             var name = this.model.Name;
             var identityNumber = this.model.IdentityNumber;
+            var category = this.model.Category;
             var content = SerializationHelper.SerializeModel(this.model.Content);
             var isSystemTemplate = this.model.IsSystemTemplate;
             var responseTemplateId =
@@ -286,14 +236,6 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                     : int.Parse(this.model.ResponseTemplateId);
             var readLoginSecurityLevelId = int.Parse(this.model.ReadLoginSecurityLevelId);
             var writeLoginSecurityLevelId = int.Parse(this.model.WriteLoginSecurityLevelId);
-            var blobId = this.model.BlobValue.BlobId;
-            var senderDocumentField = this.model.SenderDocumentField;
-            var recipientDocumentField = this.model.RecipientDocumentField;
-            var subjectDocumentField = this.model.SubjectDocumentField;
-            var dateSentDocumentField = this.model.DateSentDocumentField;
-            var dateReceivedDocumentField = this.model.DateReceivedDocumentField;
-            var senderSignatureDocumentField = this.model.SenderSignatureDocumentField;
-            var recipientSignatureDocumentField = this.model.RecipientSignatureDocumentField;
 
             if (this.EditTemplateId == null)
             {
@@ -305,20 +247,13 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                         {
                             Name = name,
                             IdentityNumber = identityNumber,
+                            Category = category,
                             Content = content,
                             IsSystemTemplate = isSystemTemplate,
                             ResponseTemplateId = responseTemplateId,
                             ReadLoginSecurityLevelId = readLoginSecurityLevelId,
                             WriteLoginSecurityLevelId = writeLoginSecurityLevelId,
                             CreatedByAdminUserId = currentUserId,
-                            BlobId = blobId,
-                            SenderDocumentField = senderDocumentField,
-                            RecipientDocumentField = recipientDocumentField,
-                            SubjectDocumentField = subjectDocumentField,
-                            DateSentDocumentField = dateSentDocumentField,
-                            DateReceivedDocumentField = dateReceivedDocumentField,
-                            SenderSignatureDocumentField = senderSignatureDocumentField,
-                            RecipientSignatureDocumentField = recipientSignatureDocumentField,
                         });
 
                 this.NavigationManager.NavigateTo($"templates/{resp.TemplateId}");
@@ -331,23 +266,42 @@ namespace ED.AdminPanel.Blazor.Pages.Templates
                         TemplateId = this.EditTemplateId.Value,
                         Name = name,
                         IdentityNumber = identityNumber,
+                        Category = category,
                         Content = content,
                         IsSystemTemplate = isSystemTemplate,
                         ResponseTemplateId = responseTemplateId,
                         ReadLoginSecurityLevelId = readLoginSecurityLevelId,
                         WriteLoginSecurityLevelId = writeLoginSecurityLevelId,
-                        BlobId = blobId,
-                        SenderDocumentField = senderDocumentField,
-                        RecipientDocumentField = recipientDocumentField,
-                        SubjectDocumentField = subjectDocumentField,
-                        DateSentDocumentField = dateSentDocumentField,
-                        DateReceivedDocumentField = dateReceivedDocumentField,
-                        SenderSignatureDocumentField = senderSignatureDocumentField,
-                        RecipientSignatureDocumentField = recipientSignatureDocumentField,
                     });
 
                 this.NavigationManager.NavigateTo($"templates/{this.EditTemplateId.Value}");
             }
+        }
+
+        private int GetIndex(Guid componentId) =>
+            this.model.Content.ToList().FindIndex(x => x.Id == componentId);
+
+        private void Drag(BaseComponent item)
+        {
+            this.currentIndex = this.GetIndex(item.Id);
+        }
+
+        private void Drop(BaseComponent item)
+        {
+            if (item == null || this.currentIndex == -1)
+                return;
+
+            var index = this.GetIndex(item.Id);
+            // get drag component
+            var current = this.model.Content[this.currentIndex];
+            // remove drag component from the old index and insert at the new index
+            this.model.Content.RemoveAt(this.currentIndex);
+            this.model.Content.Insert(index, current);
+
+            // update current selection
+            this.currentIndex = -1;
+
+            this.StateHasChanged();
         }
     }
 }

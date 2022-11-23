@@ -36,16 +36,17 @@ service Message {
   // send
   rpc Send (SendRequest) returns (google.protobuf.Empty);
 
-  rpc FindIndividual (FindIndividualRequest) returns (FindIndividualResponse);
-  rpc FindLegalEntity (FindLegalEntityRequest) returns (FindLegalEntityResponse);
-  rpc FindProfiles (FindProfilesRequest) returns (FindProfilesResponse);
+  rpc FindRecipientIndividual (FindRecipientIndividualRequest) returns (FindRecipientIndividualResponse);
+  rpc FindRecipientLegalEntity (FindRecipientLegalEntityRequest) returns (FindRecipientLegalEntityResponse);
+  rpc FindRecipientProfiles (FindRecipientProfilesRequest) returns (FindRecipientProfilesResponse);
   rpc GetAllowedTemplates (GetAllowedTemplatesRequest) returns (GetAllowedTemplatesResponse);
   rpc GetInstitutions (GetInstitutionsRequest) returns (GetInstitutionsResponse);
   rpc GetRecipientGroups(GetRecipientGroupsRequest) returns (GetRecipientGroupsResponse);
   rpc GetReply (GetReplyRequest) returns (GetReplyResponse);
-  rpc GetTargetGroups (GetTargetGroupsRequest) returns (GetTargetGroupsResponse);
+  rpc GetTargetGroupsFromMatrix (GetTargetGroupsFromMatrixRequest) returns (GetTargetGroupsFromMatrixResponse);
   rpc ExistsTemplate (ExistsTemplateRequest) returns (ExistsTemplateResponse);
   rpc GetForwardMessageInfo (GetForwardMessageInfoRequest) returns (GetForwardMessageInfoResponse);
+  rpc GetTemplatesByCategory (GetTemplatesByCategoryRequest) returns (GetTemplatesByCategoryResponse);
 }
 
 message BoxRequest {
@@ -53,12 +54,11 @@ message BoxRequest {
   int32 login_id = 2;
   int32 offset = 3;
   int32 limit = 4;
-  string title_query  = 5;
-  string profile_name_query = 6;
+  google.protobuf.StringValue subject  = 5;
+  google.protobuf.StringValue profile = 6;
   google.protobuf.Timestamp from_date = 7;
   google.protobuf.Timestamp to_date = 8;
-  google.protobuf.StringValue orn = 9;
-  google.protobuf.StringValue referenced_orn = 10;
+  google.protobuf.StringValue rnu = 9;
 }
 
 message InboxResponse{
@@ -73,8 +73,7 @@ message InboxResponse{
     string subject = 8;
     enums.ForwardStatus forward_status_id = 9;
     string template_name = 10;
-    google.protobuf.StringValue orn = 11;
-    google.protobuf.StringValue referenced_orn = 12;
+    google.protobuf.StringValue rnu = 11;
   }
 
   repeated Message result = 1;
@@ -93,8 +92,7 @@ message OutboxResponse{
     string template_name = 8;
     int32 number_of_recipients = 9;
     int32 number_of_total_recipients = 10;
-    google.protobuf.StringValue orn = 11;
-    google.protobuf.StringValue referenced_orn = 12;
+    google.protobuf.StringValue rnu = 11;
   }
 
   repeated Message result = 1;
@@ -150,6 +148,7 @@ message ViewResponse {
     enums.MalwareScanResultStatus status = 5;
     google.protobuf.BoolValue is_malicious = 6;
     repeated MessageBlobSignature signatures = 7;
+    string hash = 8;
   }
 
   message MessageBlobSignature {
@@ -174,9 +173,7 @@ message ViewResponse {
     enums.ForwardStatus forward_status_id = 8;
     string template_name = 9;
     repeated MessageBlob blobs = 10;
-    google.protobuf.StringValue orn = 11;
-    google.protobuf.StringValue referenced_orn = 12;
-    google.protobuf.StringValue additional_identifier = 13;
+    google.protobuf.StringValue rnu = 11;
   }
 
   message ForwardedMessage {
@@ -191,9 +188,7 @@ message ViewResponse {
     enums.ForwardStatus forward_status_id = 9;
     string template_name = 10;
     repeated MessageBlob blobs = 11;
-    google.protobuf.StringValue orn = 12;
-    google.protobuf.StringValue referenced_orn = 13;
-    google.protobuf.StringValue additional_identifier = 14;
+    google.protobuf.StringValue rnu = 12;
   }
 
   Message message = 1;
@@ -228,6 +223,7 @@ message ReadResponse {
     enums.MalwareScanResultStatus status = 5;
     google.protobuf.BoolValue is_malicious = 6;
     repeated MessageBlobSignature signatures = 7;
+    string hash = 8;
   }
 
   message MessageBlobSignature {
@@ -253,9 +249,7 @@ message ReadResponse {
     enums.ForwardStatus forward_status_id = 9;
     string template_name = 10;
     repeated MessageBlob blobs = 11;
-    google.protobuf.StringValue orn = 12;
-    google.protobuf.StringValue referenced_orn = 13;
-    google.protobuf.StringValue additional_identifier = 14;
+    google.protobuf.StringValue rnu = 12;
   }
 
   message ForwardedMessage {
@@ -267,9 +261,7 @@ message ReadResponse {
     string body = 6;
     string template_name = 7;
     repeated MessageBlob blobs = 8;
-    google.protobuf.StringValue orn = 9;
-    google.protobuf.StringValue referenced_orn = 10;
-    google.protobuf.StringValue additional_identifier = 11;
+    google.protobuf.StringValue rnu = 9;
   }
 
   Message message = 1;
@@ -371,17 +363,17 @@ message SendRequest {
   string meta_fields = 8;
   repeated int32 blob_ids = 9;
   google.protobuf.Int32Value forwarded_message_id = 10;
-  google.protobuf.StringValue referenced_orn = 11;
-  google.protobuf.StringValue additional_identifier = 12;
+  google.protobuf.StringValue rnu = 11; // when reply or forward
 }
 
-message FindIndividualRequest {
+message FindRecipientIndividualRequest {
   string first_name = 1;
   string last_name = 2;
   string identifier = 3;
+  int32 template_id = 4;
 }
 
-message FindIndividualResponse {
+message FindRecipientIndividualResponse {
   message Individual {
     int32 profile_id = 1;
     string name = 2;
@@ -390,11 +382,12 @@ message FindIndividualResponse {
   optional Individual individual = 1;
 }
 
-message FindLegalEntityRequest {
-  string identifier = 3;
+message FindRecipientLegalEntityRequest {
+  string identifier = 1;
+  int32 template_id = 2;
 }
 
-message FindLegalEntityResponse {
+message FindRecipientLegalEntityResponse {
   message LegalEntity {
     int32 profile_id = 1;
     string name = 2;
@@ -429,7 +422,7 @@ message GetReplyResponse {
   string recipient_name = 2;
   google.protobuf.Int32Value response_template_id = 3;
   string subject = 4;
-  google.protobuf.StringValue orn = 5;
+  google.protobuf.StringValue rnu = 5;
 }
 
 message GetAllowedTemplatesRequest {
@@ -447,11 +440,11 @@ message GetAllowedTemplatesResponse {
   int32 length = 2;
 }
 
-message GetTargetGroupsRequest {
+message GetTargetGroupsFromMatrixRequest {
   int32 profile_id = 1;
 }
 
-message GetTargetGroupsResponse {
+message GetTargetGroupsFromMatrixResponse {
   message TargetGroupMessage {
     int32 target_group_id = 1;
     string name = 2;
@@ -462,7 +455,11 @@ message GetTargetGroupsResponse {
 }
 
 message GetRecipientGroupsRequest {
-  int32 profile_id = 1;
+  google.protobuf.StringValue term = 1;
+  int32 profile_id = 2;
+  int32 template_id = 3;
+  int32 offset = 4;
+  int32 limit = 5;
 }
 
 message GetRecipientGroupsResponse {
@@ -475,14 +472,15 @@ message GetRecipientGroupsResponse {
   int32 length = 2;
 }
 
-message FindProfilesRequest {
+message FindRecipientProfilesRequest {
   string term = 1;
   google.protobuf.Int32Value target_group_id = 2;
-  int32 offset = 3;
-  int32 limit = 4;
+  int32 template_id = 3;
+  int32 offset = 4;
+  int32 limit = 5;
 }
 
-message FindProfilesResponse {
+message FindRecipientProfilesResponse {
   message ProfileMessage {
     string profile_id = 1;
     string name = 2;
@@ -519,5 +517,21 @@ message GetForwardMessageInfoRequest {
 
 message GetForwardMessageInfoResponse {
   string subject = 1;
-  google.protobuf.StringValue orn = 2;
+  google.protobuf.StringValue rnu = 2;
+}
+
+message GetTemplatesByCategoryRequest {
+  int32 profile_id = 1;
+  int32 login_id = 2;
+  google.protobuf.StringValue category = 3;
+}
+
+message GetTemplatesByCategoryResponse {
+  message TemplateMessage {
+    int32 template_id = 1;
+    string name = 2;
+  }
+
+  repeated TemplateMessage result = 1;
+  int32 length = 2;
 }

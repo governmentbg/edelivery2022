@@ -194,7 +194,14 @@
 {
     <li class="form-row nowrap file-input-holder-@($"{Model.Id}_{i}")"
         style="@(i <= lastIdx ? string.Empty : "display: none;")">
-        <label for="@($"{Model.Id}_{i}")">@Model.Label:</label>
+        <label for="@($"{Model.Id}_{i}")">
+            @Model.Label
+            @if (Model.IsRequired && i == 0)
+            {
+                <span class="txt-red">*</span>
+            }
+            :
+        </label>
         <div class="f-grow-100 file-holder">
             <div class="row-group">
                 <div class="">

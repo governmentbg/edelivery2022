@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using ED.AdminPanel.Blazor.Pages.Templates.Components.Models;
+using ED.AdminPanel.Blazor.Shared;
+using ED.AdminPanel.Blazor.Shared.Fields;
 using ED.AdminPanel.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
 namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create
 {
-    public class SelectFormModel : IValidatableObject
+    public class SelectFormModel
     {
         [Required(
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
@@ -72,17 +76,6 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create
 
             return model;
         }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (string.IsNullOrWhiteSpace(this.Options) &&
-                string.IsNullOrWhiteSpace(this.Url))
-            {
-                yield return new ValidationResult(
-                    FieldFormResources.SelectUrlOrOptionsRequiredErrorMessage,
-                    new[] { nameof(this.Options) });
-            }
-        }
     }
 
     public partial class SelectForm
@@ -97,19 +90,68 @@ namespace ED.AdminPanel.Blazor.Pages.Templates.Components.Create
 
         private SelectFormModel model;
 
-        protected override void OnParametersSet()
+        private ServerSideValidator serverSideValidator;
+
+        private InputLargeTextArea TextArea;
+        private long LastChangedLength { get; set; }
+
+        public void TextAreaChanged(InputLargeTextAreaChangeEventArgs args)
+        {
+            this.LastChangedLength = args.Length;
+        }
+
+        protected override void OnInitialized()
         {
             this.model =
                 this.Model == null
                     ? new()
                     : new(this.Model);
+
+            this.LastChangedLength =
+                Encoding.UTF8.GetByteCount(this.model.Options ?? string.Empty);
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                if (this.TextArea != null)
+                {
+                    var memoryStream = new MemoryStream();
+                    using var streamWriter = new StreamWriter(memoryStream);
+                    await streamWriter.WriteAsync(this.model.Options);
+                    await streamWriter.FlushAsync();
+                    await this.TextArea.SetTextAsync(streamWriter);
+                }
+            }
         }
 
         private async Task SubmitFormAsync()
         {
-            await this.ModalInstance.CloseAsync(
-                ModalResult.Ok(
-                    this.model.ToModel()));
+            var streamReader = await this.TextArea!.GetTextAsync(maxLength: this.LastChangedLength);
+            this.model.Options = await streamReader.ReadToEndAsync();
+
+            if (string.IsNullOrWhiteSpace(this.model.Options) &&
+                string.IsNullOrWhiteSpace(this.model.Url))
+            {
+                this.serverSideValidator.ClearErrors();
+
+                this.serverSideValidator.DisplayErrors(
+                    new Dictionary<string, List<string>>
+                    {
+                        {
+                            nameof(SelectFormModel.Options),
+                            new List<string> { FieldFormResources.SelectUrlOrOptionsRequiredErrorMessage }
+                        }
+                    });
+            }
+            else
+            {
+                await this.ModalInstance.CloseAsync(
+                    ModalResult.Ok(this.model.ToModel()));
+            }
         }
 
         private async Task CancelAsync()

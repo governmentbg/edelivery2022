@@ -41,6 +41,13 @@
                                     </div>
                                 </li>
                                 <li class="form-row">
+                                    <label for="Category">@Localizer["FormCategory"]</label>
+                                    <div class="form-element">
+                                        <InputText type="text" id="Category" @bind-Value="model.Category" />
+                                        <ValidationMessage For="@(() => model.Category)" />
+                                    </div>
+                                </li>
+                                <li class="form-row">
                                     <label></label>
                                     <div class="form-element">
                                         <InputCheckbox id="IsSystemTemplate" @bind-Value="model.IsSystemTemplate" />
@@ -74,108 +81,49 @@
                                         <ValidationMessage For="@(() => model.WriteLoginSecurityLevelId)" />
                                     </div>
                                 </li>
-                                <li class="form-row">
-                                    <label for="BlobId">@Localizer["BlobId"]<span class="txt-red">*</span></label>
-                                    <div class="form-element">
-                                        <BlobField id="BlobId"
-                                                   Type="@FileType.Template"
-                                                   @bind-Value="model.BlobValue"
-                                                   AllowedFileTypes="@(new string[] { ".pdf" })" />
-                                        <ValidationMessage For="() => model.BlobValue" />
-                                    </div>
-                                </li>
                             </ul>
                         </section>
 
                         <section class="form-section">
-                            <ul class="col-list">
-                                <li class="form-row">
-                                    <label for="SenderDocumentField">@Localizer["FormSenderDocumentField"]</label>
-                                    <div class="form-element">
-                                        <InputText type="text" id="SenderDocumentField" @bind-Value="model.SenderDocumentField" />
-                                        <ValidationMessage For="@(() => model.SenderDocumentField)" />
-                                    </div>
-                                </li>
-                                <li class="form-row">
-                                    <label for="RecipientDocumentField">@Localizer["FormRecipientDocumentField"]</label>
-                                    <div class="form-element">
-                                        <InputText type="text" id="RecipientDocumentField" @bind-Value="model.RecipientDocumentField" />
-                                        <ValidationMessage For="@(() => model.RecipientDocumentField)" />
-                                    </div>
-                                </li>
-                                <li class="form-row">
-                                    <label for="SubjectDocumentField">@Localizer["FormSubjectDocumentField"]</label>
-                                    <div class="form-element">
-                                        <InputText type="text" id="SubjectDocumentField" @bind-Value="model.SubjectDocumentField" />
-                                        <ValidationMessage For="@(() => model.SubjectDocumentField)" />
-                                    </div>
-                                </li>
-                                <li class="form-row">
-                                    <label for="DateSentDocumentField">@Localizer["FormDateSentDocumentField"]</label>
-                                    <div class="form-element">
-                                        <InputText type="text" id="DateSentDocumentField" @bind-Value="model.DateSentDocumentField" />
-                                        <ValidationMessage For="@(() => model.DateSentDocumentField)" />
-                                    </div>
-                                </li>
-                                <li class="form-row">
-                                    <label for="DateReceivedDocumentField">@Localizer["FormDateReceivedDocumentField"]</label>
-                                    <div class="form-element">
-                                        <InputText type="text" id="DateReceivedDocumentField" @bind-Value="model.DateReceivedDocumentField" />
-                                        <ValidationMessage For="@(() => model.DateReceivedDocumentField)" />
-                                    </div>
-                                </li>
-                                <li class="form-row">
-                                    <label for="SenderSignatureDocumentField">@Localizer["FormSenderSignatureDocumentField"]</label>
-                                    <div class="form-element">
-                                        <InputText type="text" id="SenderSignatureDocumentField" @bind-Value="model.SenderSignatureDocumentField" />
-                                        <ValidationMessage For="@(() => model.SenderSignatureDocumentField)" />
-                                    </div>
-                                </li>
-                                <li class="form-row">
-                                    <label for="RecipientSignatureDocumentField">@Localizer["FormRecipientSignatureDocumentField"]</label>
-                                    <div class="form-element">
-                                        <InputText type="text" id="RecipientSignatureDocumentField" @bind-Value="model.RecipientSignatureDocumentField" />
-                                        <ValidationMessage For="@(() => model.RecipientSignatureDocumentField)" />
-                                    </div>
-                                </li>
-                            </ul>
-                        </section>
-
-                        <section class="form-section">
-                            <button class="btn-light btn-l"
+                            <button class="btn-light btn-l mb5"
                                     type="button"
                                     @onclick="async () => await AddFieldAsync(ComponentType.textfield)">
                                 + @Localizer["TextField"]
                             </button>
-                            <button class="btn-light btn-l"
+                            <button class="btn-light btn-l mb5"
                                     type="button"
                                     @onclick="async () => await AddFieldAsync(ComponentType.textarea)">
                                 + @Localizer["TextAreaField"]
                             </button>
-                            <button class="btn-light btn-l"
+                            <button class="btn-light btn-l mb5"
                                     type="button"
                                     @onclick="async () => await AddFieldAsync(ComponentType.select)">
                                 + @Localizer["SelectField"]
                             </button>
-                            <button class="btn-light btn-l"
+                            <button class="btn-light btn-l mb5"
                                     type="button"
                                     @onclick="async () => await AddFieldAsync(ComponentType.datetime)">
                                 + @Localizer["DateTimeField"]
                             </button>
-                            <button class="btn-light btn-l"
+                            <button class="btn-light btn-l mb5"
                                     type="button"
                                     @onclick="async () => await AddFieldAsync(ComponentType.checkbox)">
                                 + @Localizer["CheckboxField"]
                             </button>
-                            <button class="btn-light btn-l"
+                            <button class="btn-light btn-l mb5"
                                     type="button"
                                     @onclick="async () => await AddFieldAsync(ComponentType.hidden)">
                                 + @Localizer["HiddenField"]
                             </button>
-                            <button class="btn-light btn-l"
+                            <button class="btn-light btn-l mb5"
                                     type="button"
                                     @onclick="async () => await AddFieldAsync(ComponentType.file)">
                                 + @Localizer["FileField"]
+                            </button>
+                            <button class="btn-light btn-l mb5"
+                                    type="button"
+                                    @onclick="async () => await AddFieldAsync(ComponentType.markdown)">
+                                + @Localizer["MarkdownField"]
                             </button>
                         </section>
 
@@ -186,12 +134,17 @@
                             }
                             else
                             {
-                                <ul class="col-list">
+                                <ul ondragover="event.preventDefault();" class="col-list grabbable">
                                     @foreach (var item in model.Content)
                                     {
-                                        <li @key="item.Id" class="form-row">
+                                        <li draggable="true"
+                                            @key="item.Id"
+                                            class="form-row nowrap template-field"
+                                            @ondrop="() => Drop(item)"
+                                            @ondrag="() => Drag(item)">
+
                                             <button type="button" @onclick="async () => await EditFieldAsync(item)">
-                                                <img src="img/more-info-icon.png" />
+                                                <img src="img/edit-icon.png" />
                                             </button>
                                             <button type="button" @onclick="() => RemoveField(item)">
                                                 <img src="img/trash-icon.png" />

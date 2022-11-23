@@ -3,7 +3,6 @@
 
 @using ED.AdminPanel.Blazor.Pages.Templates.Components.Preview
 @inject IStringLocalizer<View> Localizer
-@inject CommonStringLocalizer CommonLocalizer
 
 <Breadcrumb Items="@(
     new Dictionary<string, string>()
@@ -55,9 +54,15 @@
                                 </div>
                             </li>
                             <li class="form-row">
+                                <label for="Name">@Localizer["FieldCategory"]:</label>
+                                <div class="form-element">
+                                    @template.Category
+                                </div>
+                            </li>
+                            <li class="form-row">
                                 <label for="Name">@Localizer["IsSystemTemplate"]:</label>
                                 <div class="form-element">
-                                    @CommonLocalizer[template.IsSystemTemplate.ToString()]
+                                    @Localizer[$"FieldIsSystemTemplate_{template.IsSystemTemplate}"]
                                 </div>
                             </li>
                             <li class="form-row">
@@ -78,73 +83,6 @@
                                     @template.WriteLoginSecurityLevelName
                                 </div>
                             </li>
-                            <li class="form-row">
-                                <label for="Name">@Localizer["Blob"]:</label>
-                                <div class="form-element">
-                                    @template.BlobName
-                                </div>
-                            </li>
-                        </ul>
-                    </section>
-
-                    <section class="form-section">
-                        <ul class="col-list">
-                            <li class="form-row">
-                                <label for="SenderDocumentField">
-                                    @Localizer["FieldSenderDocumentField"]:
-                                </label>
-                                <div class="form-element">
-                                    @template.SenderDocumentField
-                                </div>
-                            </li>
-                            <li class="form-row">
-                                <label for="RecipientDocumentField">
-                                    @Localizer["FieldRecipientDocumentField"]:
-                                </label>
-                                <div class="form-element">
-                                    @template.RecipientDocumentField
-                                </div>
-                            </li>
-                            <li class="form-row">
-                                <label for="SubjectDocumentField">
-                                    @Localizer["FieldSubjectDocumentField"]:
-                                </label>
-                                <div class="form-element">
-                                    @template.SubjectDocumentField
-                                </div>
-                            </li>
-                            <li class="form-row">
-                                <label for="DateSentDocumentField">
-                                    @Localizer["FieldDateSentDocumentField"]:
-                                </label>
-                                <div class="form-element">
-                                    @template.DateSentDocumentField
-                                </div>
-                            </li>
-                            <li class="form-row">
-                                <label for="DateReceivedDocumentField">
-                                    @Localizer["FieldDateReceivedDocumentField"]:
-                                </label>
-                                <div class="form-element">
-                                    @template.DateReceivedDocumentField
-                                </div>
-                            </li>
-                            <li class="form-row">
-                                <label for="SenderSignatureDocumentField">
-                                    @Localizer["FieldSenderSignatureDocumentField"]:
-                                </label>
-                                <div class="form-element">
-                                    @template.SenderSignatureDocumentField
-                                </div>
-                            </li>
-                            <li class="form-row">
-                                <label for="RecipientSignatureDocumentField">
-                                    @Localizer["FieldRecipientSignatureDocumentField"]:
-                                </label>
-                                <div class="form-element">
-                                    @template.RecipientSignatureDocumentField
-                                </div>
-                            </li>
                         </ul>
                     </section>
 
@@ -152,7 +90,7 @@
                         <ul class="col-list">
                             @foreach (var item in content)
                             {
-                                <li @key="item.Id" class="form-row">
+                                <li @key="item.Id" class="form-row nowrap">
                                     <FieldPreview Model="@item" />
                                 </li>
                             }
@@ -238,16 +176,34 @@
                         @if (template.ArchiveDate == null)
                         {
                             <button class="btn btn-primary btn-l" @onclick="ArchiveAsync">
-                                @Localizer["ArchiveBtn"]
+                                <span>@Localizer["ArchiveBtn"]</span>
+                                @if (archiving)
+                                {
+                                    <div class="loader-container"></div>
+                                }
                             </button>
                         }
                         @if (template.PublishDate == null && template.ArchiveDate == null)
                         {
                             <a class="btn btn-primary btn-l" href="templates/edit/@template.TemplateId">
-                                @Localizer["EditBtn"]
+                                <span>@Localizer["EditBtn"]</span>
                             </a>
                             <button class="btn btn-primary btn-l" @onclick="PublishAsync">
-                                @Localizer["PublishBtn"]
+                                <span>@Localizer["PublishBtn"]</span>
+                                @if (publishing)
+                                {
+                                    <div class="loader-container"></div>
+                                }
+                            </button>
+                        }
+                        else if (template.PublishDate != null && !template.IsSystemTemplate && template.ArchiveDate == null)
+                        {
+                            <button class="btn btn-primary btn-l" @onclick="UnpublishAsync">
+                                <span>@Localizer["BtnUnpublish"]</span>
+                                @if (unpublishing)
+                                {
+                                    <div class="loader-container"></div>
+                                }
                             </button>
                         }
                     </section>

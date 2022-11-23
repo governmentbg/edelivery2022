@@ -6,7 +6,7 @@ namespace ED.Domain
     public partial interface IIntegrationServiceMessagesListQueryRepository
     {
         Task<TableResultVO<GetInboxVO>> GetInboxAsync(
-            string certificateThumbprint,
+            int profileId,
             bool showNewOnly,
             int offset,
             int limit,

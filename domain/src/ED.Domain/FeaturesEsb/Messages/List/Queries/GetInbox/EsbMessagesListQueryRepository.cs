@@ -54,9 +54,7 @@ namespace ED.Domain
                     rl != null ? rl.ElectronicSubjectName : string.Empty,
                     m.Subject,
                     $"{this.domainOptions.WebPortalUrl}/Messages/Open/{m.MessageId}",
-                    m.Orn,
-                    m.ReferencedOrn,
-                    m.AdditionalIdentifier))
+                    m.Rnu))
                 .ToTableResultAsync(offset, limit, ct);
 
             return vos;

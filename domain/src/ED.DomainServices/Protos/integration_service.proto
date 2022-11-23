@@ -26,6 +26,7 @@ service IntegrationService {
 
   // authentication
   rpc GetAuthenticationInfo (GetAuthenticationInfoRequest) returns (GetAuthenticationInfoResponse);
+  rpc CheckProfileOperatorAccess (CheckProfileOperatorAccessRequest) returns (CheckProfileOperatorAccessResponse);
 
   // send messages
   rpc GetCodeSender (GetCodeSenderRequest) returns (GetCodeSenderResponse);
@@ -121,7 +122,7 @@ message GetLoginByIdentifierResponse{
 }
 
 message OutboxRequest {
-  string certificate_thumbprint = 1;
+  int32 profile_id = 1;
   int32 offset = 2;
   int32 limit = 3;
 }
@@ -157,7 +158,7 @@ message OutboxResponse{
 }
 
 message InboxRequest {
-  string certificate_thumbprint = 1;
+  int32 profile_id = 1;
   bool show_only_new = 2;
   int32 offset = 3;
   int32 limit = 4;
@@ -335,6 +336,16 @@ message GetAuthenticationInfoResponse {
   optional AuthenticatedProfile authenticated_profile = 1;
 }
 
+message CheckProfileOperatorAccessRequest {
+  string profile_identifier = 1;
+  google.protobuf.StringValue operator_identifier = 2;
+}
+
+message CheckProfileOperatorAccessResponse {
+  bool has_access = 1;
+  google.protobuf.Int32Value operator_login_id = 2;
+}
+
 message GetCodeSenderRequest {
   string certificate_thumbprint = 1;
   google.protobuf.StringValue operator_identifier = 2;
@@ -350,10 +361,12 @@ message GetCodeSenderResponse {
 }
 
 message SendMessage1Request {
-  message Document {
+  message Blob {
     string file_name = 1;
-    google.protobuf.StringValue document_registration_number = 2;
-    bytes file_content = 3;
+    string hash_algorithm = 2;
+    string hash = 3;
+    uint64 size = 4;
+    int32 blob_id = 5;
   }
 
   string recipient_identifier = 1;
@@ -362,7 +375,7 @@ message SendMessage1Request {
   int32 recipient_target_group_id = 4;
   string message_subject = 5;
   string message_body = 6;
-  repeated Document documents = 7;
+  repeated Blob blobs = 7;
   google.protobuf.StringValue service_oid = 8;
   int32 sender_profile_id = 9;
   int32 sender_login_id = 10;
@@ -376,10 +389,12 @@ message SendMessage1Response {
 }
 
 message SendMessage1WithAccessCodeRequest {
-  message Document {
+  message Blob {
     string file_name = 1;
-    google.protobuf.StringValue document_registration_number = 2;
-    bytes file_content = 3;
+    string hash_algorithm = 2;
+    string hash = 3;
+    uint64 size = 4;
+    int32 blob_id = 5;
   }
 
   string recipient_first_name = 1;
@@ -390,7 +405,7 @@ message SendMessage1WithAccessCodeRequest {
   google.protobuf.StringValue recipient_email = 6;
   string message_subject = 7;
   string message_body = 8;
-  repeated Document documents = 9;
+  repeated Blob blobs = 9;
   google.protobuf.StringValue service_oid = 10;
   int32 sender_profile_id = 11;
   int32 sender_login_id = 12;
@@ -404,15 +419,17 @@ message SendMessage1WithAccessCodeResponse {
 }
 
 message SendMessageInReplyToRequest {
-  message Document {
+  message Blob {
     string file_name = 1;
-    google.protobuf.StringValue document_registration_number = 2;
-    bytes file_content = 3;
+    string hash_algorithm = 2;
+    string hash = 3;
+    uint64 size = 4;
+    int32 blob_id = 5;
   }
 
   string message_subject = 1;
   string message_body = 2;
-  repeated Document documents = 3;
+  repeated Blob blobs = 3;
   int32 reply_to_message_id = 4;
   google.protobuf.StringValue service_oid = 8;
   int32 sender_profile_id = 9;
@@ -427,10 +444,12 @@ message SendMessageInReplyToResponse {
 }
 
 message SendMessage1OnBehalfOfRequest {
-  message Document {
+  message Blob {
     string file_name = 1;
-    google.protobuf.StringValue document_registration_number = 2;
-    bytes file_content = 3;
+    string hash_algorithm = 2;
+    string hash = 3;
+    uint64 size = 4;
+    int32 blob_id = 5;
   }
 
   string sender_identifier = 1;
@@ -443,12 +462,11 @@ message SendMessage1OnBehalfOfRequest {
   int32 recipient_target_group_id = 8;
   string message_subject = 9;
   string message_body = 10;
-  repeated Document documents = 11;
+  repeated Blob blobs = 11;
   google.protobuf.StringValue service_oid = 12;
-  int32 on_behalf_of_profile_id = 13;
-  int32 on_behalf_of_login_id = 14;
-  google.protobuf.Int32Value on_behalf_of_operator_login_id = 15;
-  string send_event = 16;
+  int32 sent_via_login_id = 13;
+  google.protobuf.Int32Value sent_via_operator_login_id = 14;
+  string send_event = 15;
 }
 
 message SendMessage1OnBehalfOfResponse {
@@ -458,10 +476,12 @@ message SendMessage1OnBehalfOfResponse {
 }
 
 message SendMessage1OnBehalfOfToIndividualRequest {
-  message Document {
+  message Blob {
     string file_name = 1;
-    google.protobuf.StringValue document_registration_number = 2;
-    bytes file_content = 3;
+    string hash_algorithm = 2;
+    string hash = 3;
+    uint64 size = 4;
+    int32 blob_id = 5;
   }
 
   string sender_identifier = 1;
@@ -472,12 +492,11 @@ message SendMessage1OnBehalfOfToIndividualRequest {
   google.protobuf.StringValue recipient_last_name = 6;
   string message_subject = 7;
   string message_body = 8;
-  repeated Document documents = 9;
+  repeated Blob blobs = 9;
   google.protobuf.StringValue service_oid = 10;
-  int32 on_behalf_of_profile_id = 11;
-  int32 on_behalf_of_login_id = 12;
-  google.protobuf.Int32Value on_behalf_of_operator_login_id = 13;
-  string send_event = 14;
+  int32 sent_via_login_id = 11;
+  google.protobuf.Int32Value sent_via_operator_login_id = 12;
+  string send_event = 13;
 }
 
 message SendMessage1OnBehalfOfToIndividualResponse {
@@ -487,22 +506,23 @@ message SendMessage1OnBehalfOfToIndividualResponse {
 }
 
 message SendMessage1OnBehalfOfToLegalEntityRequest {
-  message Document {
+  message Blob {
     string file_name = 1;
-    google.protobuf.StringValue document_registration_number = 2;
-    bytes file_content = 3;
+    string hash_algorithm = 2;
+    string hash = 3;
+    uint64 size = 4;
+    int32 blob_id = 5;
   }
 
   string sender_identifier = 1;
   string recipient_identifier = 2;
   string message_subject = 3;
   string message_body = 4;
-  repeated Document documents = 5;
+  repeated Blob blobs = 5;
   google.protobuf.StringValue service_oid = 6;
-  int32 on_behalf_of_profile_id = 7;
-  int32 on_behalf_of_login_id = 8;
-  google.protobuf.Int32Value on_behalf_of_operator_login_id = 9;
-  string send_event = 10;
+  int32 sent_via_login_id = 7;
+  google.protobuf.Int32Value sent_via_operator_login_id = 8;
+  string send_event = 9;
 }
 
 message SendMessage1OnBehalfOfToLegalEntityResponse {
@@ -535,7 +555,7 @@ message GetSentDocumentContentByRegNumResponse {
   message Blob {
     int32 blob_id = 1;
     string file_name = 2;
-    bytes content  = 3;
+    int32 message_id = 3;
     bytes timestamp = 4;
     google.protobuf.StringValue document_registration_number = 5;
     repeated Signature signatures = 6;
@@ -568,10 +588,9 @@ message GetSentDocumentsContentResponse {
   message Blob {
     int32 blob_id = 1;
     string file_name = 2;
-    bytes content  = 3;
-    bytes timestamp = 4;
-    google.protobuf.StringValue document_registration_number = 5;
-    repeated Signature signatures = 6;
+    bytes timestamp = 3;
+    google.protobuf.StringValue document_registration_number = 4;
+    repeated Signature signatures = 5;
   }
 
   repeated Blob blobs = 1;
@@ -601,7 +620,7 @@ message GetSentDocumentContentResponse {
   message Blob {
     int32 blob_id = 1;
     string file_name = 2;
-    bytes content  = 3;
+    int32 message_id = 3;
     bytes timestamp = 4;
     google.protobuf.StringValue document_registration_number = 5;
     repeated Signature signatures = 6;
@@ -899,8 +918,7 @@ message GetSentMessageContentResponse {
     google.protobuf.StringValue document_registration_number = 2;
     string file_name = 3;
     bytes timestamp = 4;
-    bytes content = 5;
-    repeated Signature signatures = 6;
+    repeated Signature signatures = 5;
   }
 
   message TimestampContent {

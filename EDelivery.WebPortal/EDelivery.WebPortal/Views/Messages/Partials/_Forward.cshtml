@@ -1,4 +1,5 @@
 ﻿@using EDelivery.WebPortal.Models.Messages
+@using EDelivery.WebPortal.Extensions
 
 @model ForwardMessageModel
 
@@ -17,6 +18,7 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.ForwardMessageId, new { @id = "messageId" })
     @Html.HiddenFor(x => x.ForwardTemplateId)
+    @Html.HiddenFor(x => x.Rnu)
 
     <h2>@Common.TitleForwardMessage</h2>
 
@@ -40,20 +42,6 @@
                     </div>
                 </li>
                 <li class="form-row">
-                    <label for="ReferencedOrn">@ProfilePage.LabelReferencedOrn:</label>
-                    <div class="form-element">
-                        @Html.TextBoxFor(x => x.ReferencedOrn)
-                        @Html.ValidationMessageFor(x => x.ReferencedOrn, null, new { @class = "validation-message" })
-                    </div>
-                </li>
-                <li class="form-row">
-                    <label for="AdditionalIdentifier">@ProfilePage.LabelAdditionalIdentifier:</label>
-                    <div class="form-element">
-                        @Html.TextBoxFor(x => x.AdditionalIdentifier)
-                        @Html.ValidationMessageFor(x => x.AdditionalIdentifier, null, new { @class = "validation-message" })
-                    </div>
-                </li>
-                <li class="form-row">
                     <label for="ForwardSubject">@ProfilePage.LabelMessageTitle <span class="txt-red">*</span>:</label>
                     <div class="form-element">
                         @Html.TextBoxFor(x => x.ForwardSubject)
@@ -64,7 +52,7 @@
         </section>
         <style type="text/css">
             textarea {
-                height: 150px;
+                height: 80px;
             }
         </style>
         <section class="form-section" id="template">
@@ -121,8 +109,8 @@
 
             $('#cancel-forwarding').on('click', function () { gf.hideModal(); });
 
-            var values = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateValuesAsJson))' || '{}');
-            var errors = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateErrorsAsJson))' || '[]');
+            var values = JSON.parse(JSON.stringify(@Html.ToJson(Model.TemplateValuesAsJson))) || {};
+            var errors = JSON.parse(JSON.stringify(@Html.ToJson(Model.TemplateErrorsAsJson))) || [];
 
             $('#template').load(
                 '/Templates/Builder/@Model.ForwardTemplateId',

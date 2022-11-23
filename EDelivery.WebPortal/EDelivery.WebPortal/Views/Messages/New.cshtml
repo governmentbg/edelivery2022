@@ -1,4 +1,5 @@
 ﻿@using EDelivery.WebPortal.Models.Messages
+@using EDelivery.WebPortal.Extensions
 
 @model NewMessageViewModel
 
@@ -23,6 +24,7 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.TemplateId)
             @Html.HiddenFor(x => x.CurrentProfileId, new { id = "profileId" }) // used for file upload
+            @Html.HiddenFor(x => x.Rnu)
 
             @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
 
@@ -53,23 +55,9 @@
                             </div>
                             <button class="btn-border btn-l js-add-recipient"
                                     type="button"
-                                    data-modal-href="@Url.Action("Search", "Search")">
+                                    data-modal-href="@Url.Action("Search", "Search", new { templateId = Model.TemplateId })">
                                 @ProfilePage.ButtonAddReceiver
                             </button>
-                        </div>
-                    </li>
-                    <li class="form-row">
-                        <label for="ReferencedOrn">@ProfilePage.LabelReferencedOrn:</label>
-                        <div class="form-element">
-                            @Html.TextBoxFor(x => x.ReferencedOrn)
-                            @Html.ValidationMessageFor(x => x.ReferencedOrn, null, new { @class = "validation-message" })
-                        </div>
-                    </li>
-                    <li class="form-row">
-                        <label for="AdditionalIdentifier">@ProfilePage.LabelAdditionalIdentifier:</label>
-                        <div class="form-element">
-                            @Html.TextBoxFor(x => x.AdditionalIdentifier)
-                            @Html.ValidationMessageFor(x => x.AdditionalIdentifier, null, new { @class = "validation-message" })
                         </div>
                     </li>
                     <li class="form-row">
@@ -106,8 +94,8 @@
         }
 
         $(function () {
-            var values = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateValuesAsJson))' || '{}');
-            var errors = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateErrorsAsJson))' || '[]');
+            var values = JSON.parse(JSON.stringify(@Html.ToJson(Model.TemplateValuesAsJson))) || {};
+            var errors = JSON.parse(JSON.stringify(@Html.ToJson(Model.TemplateErrorsAsJson))) || [];
 
             $('#template').load(
                 '/Templates/Builder/@Model.TemplateId',

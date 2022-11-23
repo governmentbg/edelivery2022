@@ -6,13 +6,11 @@ namespace ED.Domain
 {
     public partial interface IAdminReportsListQueryRepository
     {
-        Task<TableResultVO<GetEFormsVO>> GetEFormsAsync(
+        Task<GetEFormsVO[]> GetEFormsAsync(
             int adminUserId,
             DateTime fromDate,
             DateTime toDate,
             string eFormServiceNumber,
-            int offset,
-            int limit,
             CancellationToken ct);
     }
 }

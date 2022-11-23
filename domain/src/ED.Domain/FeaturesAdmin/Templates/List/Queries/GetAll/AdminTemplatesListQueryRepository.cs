@@ -27,14 +27,12 @@ namespace ED.Domain
                     t.TemplateId,
                     t.Name,
                     t.IdentityNumber,
-                    t.Content,
+                    t.Category,
                     t.CreateDate,
                     t.PublishDate,
                     t.ArchiveDate,
                     t.IsSystemTemplate,
-                    t.ReadLoginSecurityLevelId,
                     rlsl.Name,
-                    t.WriteLoginSecurityLevelId,
                     wlsl.Name);
 
             TableResultVO<GetAllVO> table =

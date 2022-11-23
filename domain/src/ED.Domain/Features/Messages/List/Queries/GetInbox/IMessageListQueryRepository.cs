@@ -10,12 +10,11 @@ namespace ED.Domain
             int profileId,
             int offset,
             int limit,
-            string titleQuery,
-            string profileNameQuery,
+            string? subject,
+            string? profile,
             DateTime? fromDate,
             DateTime? toDate,
-            string? orn,
-            string? referencedOrn,
+            string? urn,
             CancellationToken ct);
     }
 }

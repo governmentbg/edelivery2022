@@ -40,8 +40,6 @@ message SendRequest {
   string body = 11;
   string meta_fields = 12;
   repeated int32 blob_ids = 13;
-  google.protobuf.StringValue referenced_orn = 14;
-  google.protobuf.StringValue additional_identifier = 15;
 }
 
 message OpenRequest {
@@ -73,6 +71,7 @@ message ReadResponse {
     enums.MalwareScanResultStatus status = 5;
     google.protobuf.BoolValue is_malicious = 6;
     repeated MessageBlobSignature signatures = 7;
+    string hash = 8;
   }
 
   message MessageBlobSignature {
@@ -98,9 +97,7 @@ message ReadResponse {
     string template_name = 9;
     repeated MessageBlob blobs = 10;
     string access_code = 11;
-    google.protobuf.StringValue orn = 12;
-    google.protobuf.StringValue referenced_orn = 13;
-    google.protobuf.StringValue additional_identifier = 14;
+    google.protobuf.StringValue rnu = 12;
   }
 
   Message message = 1;

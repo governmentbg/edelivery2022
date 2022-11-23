@@ -20,7 +20,7 @@ namespace ED.Domain
             // TODO: should we have a better way to log audit actions?
             this.logger.LogInformation($"{nameof(GetTimestampsAsync)} ({adminUserId}, \"{fromDate}\", \"{toDate}\") called");
 
-            int countSucess = await (
+            int countSuccess = await (
                from tra in this.DbContext.Set<TimestampRequestAudit>()
 
                where tra.DateSent >= fromDate
@@ -40,7 +40,7 @@ namespace ED.Domain
                select tra)
                .CountAsync(ct);
 
-            return new(countSucess, countError);
+            return new(countSuccess, countError);
         }
     }
 }

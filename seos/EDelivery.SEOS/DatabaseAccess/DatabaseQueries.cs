@@ -416,26 +416,6 @@ namespace EDelivery.SEOS.DatabaseAccess
             }
         }
 
-        public static SEOSMessage GetMessageByDocId(Guid docGuid)
-        {
-            var connectionString = WebConfigurationManager.ConnectionStrings["EDeliverySEOSDB"].ConnectionString;
-
-            using (var dbContext = new SEOSDbContext(connectionString))
-            {
-                var msg = dbContext.SEOSMessages
-                    .SingleOrDefault(x => x.DocGuid == docGuid);
-
-                if (msg != null)
-                {
-                    dbContext.Entry(msg).Reference(x => x.Sender).Load();
-                    dbContext.Entry(msg).Reference(x => x.Receiver).Load();
-                    dbContext.Entry(msg).Collection(x => x.Corespondents).Load();
-                }
-
-                return msg;
-            }
-        }
-
         /// <summary>
         /// Get document attachment
         /// </summary>

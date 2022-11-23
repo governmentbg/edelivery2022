@@ -10,9 +10,7 @@ namespace ED.Domain
             GetForwardedMessageAsRecipientVOProfile Sender,
             int TemplateId,
             string Subject,
-            string? Orn,
-            string? ReferencedOrn,
-            string? AdditionalIdentifier,
+            string? Rnu,
             string Body,
             string TemplateName,
             GetForwardedMessageAsRecipientVOBlob[] Blobs);
@@ -27,6 +25,7 @@ namespace ED.Domain
         public record GetForwardedMessageAsRecipientVOBlob(
             int BlobId,
             string FileName,
+            string Hash,
             long? Size,
             string? DocumentRegistrationNumber,
             MalwareScanResultStatus Status,

@@ -606,7 +606,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error("Error submiting a new document", ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Error submiting a new document");
 
                 // TODO: there is no validation summary
                 ModelState.AddModelError(

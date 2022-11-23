@@ -38,8 +38,6 @@ namespace ED.DomainServices
                         request.SenderLoginId,
                         request.TemplateId,
                         request.Subject,
-                        request.ReferencedOrn,
-                        request.AdditionalIdentifier,
                         request.Body,
                         request.MetaFields,
                         request.SenderLoginId,

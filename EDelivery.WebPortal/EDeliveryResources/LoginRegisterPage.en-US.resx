@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DescriptionRegisterLegal" xml:space="preserve">
-    <value>Профилът на Юридическо лице може да се достъпва от едно или повече физически лица, на които е даден достъп. За регистрацията на Юридическо лице е нужно да имате вече създаден профил като физическо лице. След това трябва да попълните и подишете с персонален ектронен подпис формуляра за регистрация. След създаване на регистрацията, моля изчакайте да бъдете информирани за нейната активация!</value>
+    <value>The Legal Entity profile can be accessed by one or more natural persons, to whom access is granted. To register a Legal Entity, you need to have an already created profile as a Natural person. You must then fill in and sign the registration form with a personal electronic signature. After creating the registration, please wait to be informed about its activation!</value>
   </data>
   <data name="DescriptionRegisterPerson" xml:space="preserve">
-    <value>Като Физическо лице ще имате достъп до личните си получени и изпратени съобщения, както и да управлявате своя профил.</value>
+    <value>As a Natural person, you will have access to your personal messages received and sent, as well as manage your profile.</value>
   </data>
   <data name="DownloadRegistrationForm" xml:space="preserve">
-    <value>Application for registration in the eDelivery System</value>
+    <value>Application for a legal entity to join the System for Secure Electronic Delivery</value>
   </data>
   <data name="HeadingRegistrationSuccess" xml:space="preserve">
     <value>Successful registration in the  eDelivery System!</value>
@@ -205,7 +205,7 @@
     <value>NOI Personal Identifier (PIK)</value>
   </data>
   <data name="TextChooseRegisterType" xml:space="preserve">
-    <value>Please, choose a manner to authenticate your identity upon registration in the eDelivery System.</value>
+    <value>Please select a way to authenticate your identity when registering in the Secure Electronic Delivery System.</value>
   </data>
   <data name="TextInformationEID" xml:space="preserve">
     <value>You have to validate your identity by еID. Please,  connect the card reader, insert your card in it and click the button "Registration". If you need any further information on the use of electronic identity card, check out the link below.</value>
@@ -278,9 +278,6 @@ Complete your registration by uploading the completed and signed form in the for
   <data name="TitleSectionRegistrationInstructions" xml:space="preserve">
     <value>Registration instructions</value>
   </data>
-  <data name="LoginKepNotice" xml:space="preserve">
-    <value />
-  </data>
   <data name="LabelPersonalIdentifier" xml:space="preserve">
     <value>UCN/PNF</value>
   </data>
@@ -288,10 +285,10 @@ Complete your registration by uploading the completed and signed form in the for
     <value>Names in Latin alphabet</value>
   </data>
   <data name="AreYouAUser" xml:space="preserve">
-    <value>Вече сте потребител на системата?</value>
+    <value>Are you a user of the system?</value>
   </data>
   <data name="YouCanUseIt" xml:space="preserve">
-    <value>Можете да започнете да я използвате.</value>
+    <value>You can start using the system now.</value>
   </data>
   <data name="LabelViberNotifications" xml:space="preserve">
     <value>Send me notifications via Viber</value>
@@ -301,5 +298,35 @@ Complete your registration by uploading the completed and signed form in the for
   </data>
   <data name="LabelViberNotificationsOnReceiving" xml:space="preserve">
     <value>Send me notifications via Viber on message receiving</value>
+  </data>
+  <data name="LoginKepNotice" xml:space="preserve">
+    <value>For electronic authentication with a qualified electronic signature, the latter must contain information about the PIN of the author of the signature in the field Serial number = PIN. In accordance with § 1, item 22 of the additional provisions of the Electronic Management Act under the conditions of § 5 of the Ordinance on the general requirements for information systems, registers and electronic admin. services.</value>
+  </data>
+  <data name="RadioChooseRegisterTypeEauth" xml:space="preserve">
+    <value>Login with QES/PIC of NRA</value>
+  </data>
+  <data name="DescriptionRegisterLegalAddOn" xml:space="preserve">
+    <value>We would like to inform you that currently, in connection with upgrading the functionalities of the Secure Electronic Delivery System, applications for joining the Secure Electronic Delivery System of legal entities can only be submitted by a person representing the company (manager, procurator, representative, etc.). In order to ensure the security of the profile and the overall process of applying for and receiving electronic administrative services, and the delivery of administrative acts, it is currently not possible to submit an application via proxy for a Legal Entity to join.</value>
+  </data>
+  <data name="MessageLoginToRegisterLegalPerson" xml:space="preserve">
+    <value>For registration of a legal entity, it is necessary for the natural person-applicant to be registered in the Secure Electronic Delivery System and to log in!</value>
+  </data>
+  <data name="TitleRegisterPublicAdministration" xml:space="preserve">
+    <value>Administration registration</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TitleRegisterPublicAdministrationApplication1" xml:space="preserve">
+    <value>Application for persons under Art. 1, Para. 1 and Para. 2 of the Electronic Government Act to join the Secure Electronic Delivery System</value>
+  </data>
+  <data name="TitleRegisterPublicAdministrationApplication2" xml:space="preserve">
+    <value>Application for a structure(s) of an administrative body under Art. 1, Para. 1 of the Electronic Government Act to join the System for Secure Electronic Delivery</value>
+  </data>
+  <data name="ForMoreInformation" xml:space="preserve">
+    <value>For more information, check out the {0}website of the EА еGovernment Infrastructure{1}</value>
+  </data>
+  <data name="TitleUnregisterPublicAdministrationApplication" xml:space="preserve">
+    <value>Application to no longer join the System for Secure Electronic Delivery</value>
   </data>
 </root>

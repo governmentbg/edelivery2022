@@ -14,6 +14,7 @@ namespace EDelivery.WebPortal
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapMvcAttributeRoutes();
 
+            // TODO: remove
             routes.MapRoute(
                name: "EID",
                url: "AuthenticateEID",

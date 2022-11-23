@@ -124,7 +124,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;copy; 2018  Държавна агенция „Електронно управление”.
+        ///   Looks up a localized string similar to &amp;copy; 2018  Министерство на електронното управление.
         /// </summary>
         public static string CopyRight {
             get {

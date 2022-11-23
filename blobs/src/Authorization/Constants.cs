@@ -5,6 +5,9 @@
         public const string WriteProfileBlob = "WriteProfileBlob";
         public const string WriteSystemRegistrationBlob = "WriteSystemRegistrationBlob";
         public const string WriteSystemTemplateBlob = "WriteSystemTemplateBlob";
+
+        public const string EsbWriteProfileBlob = "EsbWriteProfileBlob";
+        public const string EsbWriteProfileBlobOnBehalfOf = "EsbWriteProfileBlobOnBehalfOf";
     }
 
     public static class RequirementContextItems

@@ -13,26 +13,24 @@ namespace ED.Domain
     {
         private const string eFormsIdentifier = "1770988090002";
 
-        public async Task<TableResultVO<GetEFormsVO>> GetEFormsAsync(
+        public async Task<GetEFormsVO[]> GetEFormsAsync(
             int adminUserId,
             DateTime fromDate,
             DateTime toDate,
-            string eFormServiceNumber,
-            int offset,
-            int limit,
+            string? subject,
             CancellationToken ct)
         {
             // carried over from old project
             // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetEFormsAsync)}({adminUserId}, \"{fromDate}\", \"{toDate}\", {offset}, {limit}) called");
+            this.logger.LogInformation($"{nameof(GetEFormsAsync)}({adminUserId}, \"{fromDate}\", \"{toDate}\") called");
 
             Expression<Func<Message, bool>> predicate =
                 BuildMessagePredicate(
-                    eFormServiceNumber,
+                    subject,
                     fromDate,
                     toDate);
 
-            TableResultVO<GetEFormsVO> vos = await (
+            GetEFormsVO[] vos = await (
                 from m in this.DbContext.Set<Message>().Where(predicate)
 
                 join l in this.DbContext.Set<Login>()
@@ -43,17 +41,21 @@ namespace ED.Domain
 
                 where p.Identifier == eFormsIdentifier
 
-                group m by m.Subject into g
+                group m by new { m.Subject, m.RecipientsAsText }
+                into g
 
-                orderby g.Key
+                orderby g.Key.Subject
 
-                select new GetEFormsVO(g.Key, g.Count()))
-                .ToTableResultAsync(offset, limit, ct);
+                select new GetEFormsVO(
+                    g.Key.Subject,
+                    g.Key.RecipientsAsText,
+                    g.Count()))
+                .ToArrayAsync(ct);
 
             return vos;
 
             Expression<Func<Message, bool>> BuildMessagePredicate(
-               string eFormServiceNumber,
+               string? subject,
                DateTime fromDate,
                DateTime toDate)
             {
@@ -63,10 +65,10 @@ namespace ED.Domain
                     .And(e => e.DateCreated >= fromDate)
                     .And(e => e.DateCreated < toDate.AddDays(1));
 
-                if (!string.IsNullOrEmpty(eFormServiceNumber))
+                if (!string.IsNullOrEmpty(subject))
                 {
                     predicate = predicate
-                        .And(e => EF.Functions.Like(e.Subject, $"{eFormServiceNumber} %"));
+                        .And(e => EF.Functions.Like(e.Subject, $"{subject}%"));
                 }
 
                 return predicate;

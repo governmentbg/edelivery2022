@@ -1,6 +1,4 @@
-﻿using EDelivery.WebPortal.Errors;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace EDelivery.WebPortal
 {
@@ -8,8 +6,6 @@ namespace EDelivery.WebPortal
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
-            filters.Add(new LogErrorsAttribute());
             filters.Add(new RequireHttpsAttribute());
         }
     }

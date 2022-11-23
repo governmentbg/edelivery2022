@@ -61,7 +61,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Надграждане на съществуващите и изграждане на нови централни системи на електронното правителство с оглед на усъвършенстване на информационно-комуникационната среда за по-добро административно обслужване на гражданите и бизнеса”, осъществяван с финансовата подкрепа на Оперативна програма „Административен капацитет”. С бенефициент „Министерство на транспорта, информационните технологии и съобщения”..
+        ///   Looks up a localized string similar to Надграждане на съществуващите и изграждане на нови централни системи на електронното правителство с оглед на усъвършенстване на информационно-комуникационната среда за по-добро административно обслужване на гражданите и бизнеса”, осъществяван с финансовата подкрепа на Оперативна програма „Административен капацитет”..
         /// </summary>
         public static string OldProjectDescription {
             get {
@@ -70,7 +70,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Проектът се финансира от Оперативна програма „Добро управление”, съфинансирана от Европейския съюз чрез Европейския социален фонд. В изпълнение на проект BG05SFOP001-1.004-0001 &quot;Надграждане на хоризонталните и централни системи на електронното управление във връзка с Единния модел за заявяване, заплащане и предоставяне на електронни административни услуги&quot;. С бенефициент Държавна агенция „Електронно управление”..
+        ///   Looks up a localized string similar to Проектът се финансира от Оперативна програма „Добро управление”, съфинансирана от Европейския съюз чрез Европейския социален фонд. В изпълнение на проект BG05SFOP001-1.004-0001 &quot;Надграждане на хоризонталните и централни системи на електронното управление във връзка с Единния модел за заявяване, заплащане и предоставяне на електронни административни услуги&quot;..
         /// </summary>
         public static string ProjectDescription {
             get {
@@ -79,7 +79,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Държавна агенция „Електронно управление”.
+        ///   Looks up a localized string similar to Министерство на електронното управление.
         /// </summary>
         public static string Subtitle {
             get {
@@ -93,6 +93,15 @@ namespace EDeliveryResources {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ВНИМАНИЕ - Тестова среда.
+        /// </summary>
+        public static string Title_TestEnv {
+            get {
+                return ResourceManager.GetString("Title_TestEnv", resourceCulture);
             }
         }
     }

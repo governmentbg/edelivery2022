@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-
+using System.Runtime.Caching;
 using System.Security.Claims;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-
+using System.Web.Services.Protocols;
+using ED.Blobs;
+using ED.DomainServices.IntegrationService;
 using EDelivery.Common.DataContracts;
 using EDelivery.Common.DataContracts.ESubject;
 using EDelivery.Common.Enums;
-using Google.Protobuf;
 using log4net;
+using static ED.DomainServices.IntegrationService.IntegrationService;
 
 namespace ED.IntegrationService
 {
@@ -22,37 +26,37 @@ namespace ED.IntegrationService
     {
         private static readonly ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
+        private TimeSpan CacheExpiration { get; set; }
+
         public EDeliveryIntegrationService()
         {
+            if (TimeSpan.TryParse(
+               ConfigurationManager.AppSettings["CertificateValidatorCacheExpiration"],
+               out TimeSpan cacheSlidingExpiration))
+            {
+                this.CacheExpiration = cacheSlidingExpiration;
+            }
         }
 
         /// <summary>
         /// Get a list of all registered institutions
         /// </summary>
-        /// <param name="operatorEGN">operatorId - if provided, check for existence and rights! if not provided - pass the default integration login</param>
         /// <returns>list of all registered institutions</returns>
         public async Task<List<DcInstitutionInfo>> GetRegisteredInstitutions()
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-            //logger.Info($"GetRegisteredInstitutions with params - certificate {certificateThumbprint}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = string.Empty,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        string.Empty);
 
                 ED.DomainServices.IntegrationService.GetRegisteredInstitutionsResponse resp2 =
                     await client.GetRegisteredInstitutionsAsync(
@@ -98,54 +102,61 @@ namespace ED.IntegrationService
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"SendElectronicDocument with params -
-//    certificate: {certificateThumbprint},
-//    subject: {subject},
-//    docBytes: {docBytes?.Length},
-//    docNameWithExtension: {docNameWithExtension},
-//    docRegNumber: {docRegNumber},
-//    receiverType: {receiverType},
-//    receiverUniqueIdentifier: {receiverUniqueIdentifier},
-//    receiverPhone: {receiverPhone},
-//    receiverEmail: {receiverEmail},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
-
-            if (docBytes == null || docBytes.Length == 0)
-            {
-                throw new ArgumentException("Document bytes must be provided");
-            }
-
-            if (string.IsNullOrEmpty(docNameWithExtension)
-                || string.IsNullOrEmpty(System.IO.Path.GetExtension(docNameWithExtension)))
-            {
-                throw new ArgumentException("Document name with extension is missing or in invalid format");
-            }
-
-            if (string.IsNullOrEmpty(receiverUniqueIdentifier))
-            {
-                throw new ArgumentException("Receiver is missing");
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (docBytes == null || docBytes.Length == 0)
+                {
+                    throw new ArgumentException("Document bytes must be provided");
+                }
+
+                if (string.IsNullOrEmpty(docNameWithExtension)
+                    || string.IsNullOrEmpty(System.IO.Path.GetExtension(docNameWithExtension)))
+                {
+                    throw new ArgumentException("Document name with extension is missing or in invalid format");
+                }
+
+                if (string.IsNullOrEmpty(receiverUniqueIdentifier))
+                {
+                    throw new ArgumentException("Receiver is missing");
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
-                if (resp.AuthenticatedProfile == null)
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                BlobsServiceClient.UploadBlobVO uploadedBlob =
+                    await blobsServiceClient.UploadProfileBlobAsync(
+                        docNameWithExtension,
+                        docBytes.AsMemory(0, docBytes.Length),
+                        authenticationInfo.ProfileId,
+                        authenticationInfo.OperatorLoginId
+                            ?? authenticationInfo.LoginId,
+                        ProfileBlobAccessKeyType.Temporary,
+                        docRegNumber,
+                        CancellationToken.None);
+
+                this.ValidateUploadedBlob(docNameWithExtension, uploadedBlob);
+
+                UploadedBlobDO[] blobs = new UploadedBlobDO[]
                 {
-                    throw new UnauthorizedAccessException();
-                }
+                    new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        docNameWithExtension,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(docBytes.Length))
+                };
 
                 ED.DomainServices.IntegrationService.SendMessage1Response resp2 =
                     await client.SendMessage1Async(
@@ -157,21 +168,22 @@ namespace ED.IntegrationService
                             RecipientTargetGroupId = DataContractMapper.ToTargetGroupId(receiverType),
                             MessageSubject = subject,
                             MessageBody = string.Empty,
-                            Documents =
+                            Blobs =
                             {
-                                new ED.DomainServices.IntegrationService.SendMessage1Request.Types.Document[] {
-                                    new ED.DomainServices.IntegrationService.SendMessage1Request.Types.Document
+                                blobs.Select(x =>
+                                    new SendMessage1Request.Types.Blob
                                     {
-                                        FileName = docNameWithExtension,
-                                        DocumentRegistrationNumber = docRegNumber,
-                                        FileContent = ByteString.CopyFrom(docBytes),
-                                    }
-                                }
+                                        FileName = x.FileName,
+                                        HashAlgorithm = x.HashAlgorithm,
+                                        Hash = x.Hash,
+                                        Size = x.Size,
+                                        BlobId = x.BlobId,
+                                    })
                             },
-                            SenderProfileId = resp.AuthenticatedProfile.ProfileId,
+                            SenderProfileId = authenticationInfo.ProfileId,
                             SenderLoginId =
-                                resp.AuthenticatedProfile.OperatorLoginId
-                                    ?? resp.AuthenticatedProfile.LoginId,
+                                authenticationInfo.OperatorLoginId
+                                    ?? authenticationInfo.LoginId,
                             ServiceOid = serviceOID,
                             SendEvent = "SendElectronicDocument",
                         });
@@ -194,7 +206,7 @@ $@"Error occured in SendElectronicDocument with params -
     docBytes: {docBytes?.Length},
     docNameWithExtension: {docNameWithExtension},
     docRegNumber: {docRegNumber},
-    receiverType: { receiverType},
+    receiverType: {receiverType},
     receiverUniqueIdentifier: {receiverUniqueIdentifier},
     receiverPhone: {receiverPhone},
     receiverEmail: {receiverEmail},
@@ -226,62 +238,49 @@ $@"Error occured in SendElectronicDocument with params -
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"SendElectronicDocumentWithAccessCode with params -
-//    certificate: {certificateThumbprint},
-//    subject: {subject},
-//    docBytes: {docBytes?.Length},
-//    docNameWithExtension: {docNameWithExtension},
-//    docRegNumber: {docRegNumber},
-//    receivedIdentifier: {receiver?.EGNorLNCH},
-//    receiverFirstName: {receiver?.FirstName},
-//    receiverMiddleName: {receiver?.MiddleName},
-//    receiverLastName: {receiver?.LastName},
-//    receiverPhone: {receiver?.Phone},
-//    receiverEmail: {receiver?.Email},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
-
-            if (docBytes == null || docBytes.Length == 0)
-            {
-                throw new ArgumentException("Document bytes must be provided");
-            }
-
-            if (string.IsNullOrEmpty(docNameWithExtension)
-                || string.IsNullOrEmpty(System.IO.Path.GetExtension(docNameWithExtension)))
-            {
-                throw new ArgumentException(
-                    "Document name with extension is missing or in invalid format");
-            }
-
-            if (receiver == null || string.IsNullOrEmpty(receiver?.EGNorLNCH))
-            {
-                throw new ArgumentException("Receiver is missing");
-            }
-
-            if (string.IsNullOrEmpty(receiver.FirstName)
-                || string.IsNullOrEmpty(receiver.LastName))
-            {
-                throw new ArgumentException(
-                    "Receiver's FirstName and LastName are required!");
-            }
-
-            if (string.IsNullOrEmpty(receiver.Email))
-            {
-                throw new ArgumentException("Receiver's Email is required!");
-            }
-
-            if (string.IsNullOrEmpty(receiver.Phone))
-            {
-                throw new ArgumentException("Receiver's Phone is required!");
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (docBytes == null || docBytes.Length == 0)
+                {
+                    throw new ArgumentException("Document bytes must be provided");
+                }
+
+                if (string.IsNullOrEmpty(docNameWithExtension)
+                    || string.IsNullOrEmpty(System.IO.Path.GetExtension(docNameWithExtension)))
+                {
+                    throw new ArgumentException(
+                        "Document name with extension is missing or in invalid format");
+                }
+
+                if (receiver == null || string.IsNullOrEmpty(receiver?.EGNorLNCH))
+                {
+                    throw new ArgumentException("Receiver is missing");
+                }
+
+                if (string.IsNullOrEmpty(receiver.FirstName)
+                    || string.IsNullOrEmpty(receiver.LastName))
+                {
+                    throw new ArgumentException(
+                        "Receiver's FirstName and LastName are required!");
+                }
+
+                if (string.IsNullOrEmpty(receiver.Email))
+                {
+                    throw new ArgumentException("Receiver's Email is required!");
+                }
+
+                if (string.IsNullOrEmpty(receiver.Phone))
+                {
+                    throw new ArgumentException("Receiver's Phone is required!");
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
+                // TODO: cache?
                 ED.DomainServices.IntegrationService.GetCodeSenderResponse resp =
                     await client.GetCodeSenderAsync(
                         new ED.DomainServices.IntegrationService.GetCodeSenderRequest
@@ -296,34 +295,60 @@ $@"Error occured in SendElectronicDocument with params -
                         "Sender is not authorized to send messages with access code!");
                 }
 
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                BlobsServiceClient.UploadBlobVO uploadedBlob =
+                    await blobsServiceClient.UploadProfileBlobAsync(
+                        docNameWithExtension,
+                        docBytes.AsMemory(0, docBytes.Length),
+                        resp.Sender.ProfileId,
+                        resp.Sender.LoginId,
+                        ProfileBlobAccessKeyType.Temporary,
+                        docRegNumber,
+                        CancellationToken.None);
+
+                this.ValidateUploadedBlob(docNameWithExtension, uploadedBlob);
+
+                UploadedBlobDO[] blobs = new UploadedBlobDO[]
+                {
+                    new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        docNameWithExtension,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(docBytes.Length))
+                };
+
                 ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeResponse resp2 =
-                    await client.SendMessage1WithAccessCodeAsync(
-                        new ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeRequest
+                await client.SendMessage1WithAccessCodeAsync(
+                    new ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeRequest
+                    {
+                        RecipientFirstName = receiver.FirstName,
+                        RecipientMiddleName = receiver.MiddleName,
+                        RecipientLastName = receiver.LastName,
+                        RecipientIdentifier = receiver.EGNorLNCH,
+                        RecipientPhone = receiver.Phone,
+                        RecipientEmail = receiver.Email,
+                        MessageSubject = subject,
+                        MessageBody = string.Empty,
+                        Blobs =
                         {
-                            RecipientFirstName = receiver.FirstName,
-                            RecipientMiddleName = receiver.MiddleName,
-                            RecipientLastName = receiver.LastName,
-                            RecipientIdentifier = receiver.EGNorLNCH,
-                            RecipientPhone = receiver.Phone,
-                            RecipientEmail = receiver.Email,
-                            MessageSubject = subject,
-                            MessageBody = string.Empty,
-                            Documents =
-                            {
-                                new ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeRequest.Types.Document[] {
-                                    new ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeRequest.Types.Document
-                                    {
-                                        FileName = docNameWithExtension,
-                                        DocumentRegistrationNumber = docRegNumber,
-                                        FileContent = ByteString.CopyFrom(docBytes),
-                                    }
-                                }
-                            },
-                            ServiceOid = serviceOID,
-                            SenderProfileId = resp.Sender.ProfileId,
-                            SenderLoginId = resp.Sender.LoginId,
-                            SendEvent = "SendElectronicDocumentWithAccessCode",
-                        });
+                            blobs.Select(x =>
+                                new SendMessage1WithAccessCodeRequest.Types.Blob
+                                {
+                                    FileName = x.FileName,
+                                    HashAlgorithm = x.HashAlgorithm,
+                                    Hash = x.Hash,
+                                    Size = x.Size,
+                                    BlobId = x.BlobId,
+                                })
+                        },
+                        ServiceOid = serviceOID,
+                        SenderProfileId = resp.Sender.ProfileId,
+                        SenderLoginId = resp.Sender.LoginId,
+                        SendEvent = "SendElectronicDocumentWithAccessCode",
+                    });
 
                 if (resp2.IsSuccessful)
                 {
@@ -377,70 +402,99 @@ $@"Error occured in SendElectronicDocumentWithAccessCode with params -
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"SendElectronicDocumentOnBehalfOf with params -
-//    certificate: {certificateThumbprint},
-//    subject: {subject},
-//    docBytes: {docBytes?.Length},
-//    docNameWithExtension: {docNameWithExtension},
-//    docRegNumber: {docRegNumber},
-//    senderType: {senderType},
-//    senderUniqueIdentifier: {senderUniqueIdentifier},
-//    senderPhone: {senderPhone},
-//    senderEmail: {senderEmail},
-//    senderFirstName: {senderFirstName},
-//    senderLastName: {senderLastName},
-//    receiverType: {receiverType},
-//    receiverUniqueIdentifier: {receiverUniqueIdentifier},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
-
-            if (docBytes == null || docBytes.Length == 0)
-            {
-                throw new ArgumentException("Document bytes must be provided");
-            }
-
-            if (string.IsNullOrEmpty(docNameWithExtension)
-                || string.IsNullOrEmpty(System.IO.Path.GetExtension(docNameWithExtension)))
-            {
-                throw new ArgumentException(
-                    "Document name with extension is missing or has invalid format");
-            }
-
-            if (string.IsNullOrEmpty(senderUniqueIdentifier))
-            {
-                throw new ArgumentException("Sender is missing");
-            }
-
-            if (string.IsNullOrEmpty(receiverUniqueIdentifier))
-            {
-                throw new ArgumentException("Receiver is missing");
-            }
-
-            if (receiverType != eProfileType.Institution)
-            {
-                throw new ArgumentException(
-                    "Receiver must be of type Institution. The method does not support sending to subject of another type!");
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (docBytes == null || docBytes.Length == 0)
+                {
+                    throw new ArgumentException("Document bytes must be provided");
+                }
+
+                if (string.IsNullOrEmpty(docNameWithExtension)
+                    || string.IsNullOrEmpty(System.IO.Path.GetExtension(docNameWithExtension)))
+                {
+                    throw new ArgumentException(
+                        "Document name with extension is missing or has invalid format");
+                }
+
+                if (string.IsNullOrEmpty(senderUniqueIdentifier))
+                {
+                    throw new ArgumentException("Sender is missing");
+                }
+
+                if (string.IsNullOrEmpty(receiverUniqueIdentifier))
+                {
+                    throw new ArgumentException("Receiver is missing");
+                }
+
+                if (receiverType != eProfileType.Institution)
+                {
+                    throw new ArgumentException(
+                        "Receiver must be of type Institution. The method does not support sending to subject of another type!");
+                }
+
+                if (senderType != eProfileType.Person
+                    && string.IsNullOrWhiteSpace(operatorEGN))
+                {
+                    throw new ArgumentException(
+                        "Parameter operatorEGN is required in case when senderType is LegalPerson OR Institution! The operatorEGN should be the personalIdentifier of a person with active registration in the Edelivery System and with access to the sender's profile!");
+                }
+
+                string finalOperatorEGN = null;
+
+                if (senderType != eProfileType.Person)
+                {
+                    finalOperatorEGN = operatorEGN;
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        null);
 
-                if (resp.AuthenticatedProfile == null)
+                CheckOperatorAccess checkOperatorAccess =
+                    await this.CheckOperatorAccessAsync(
+                        client,
+                        certificateThumbprint,
+                        senderUniqueIdentifier,
+                        finalOperatorEGN);
+
+                if (!checkOperatorAccess.HasAccess)
                 {
-                    throw new UnauthorizedAccessException();
+                    throw new UnauthorizedAccessException("Unauthorized operator");
                 }
+
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                BlobsServiceClient.UploadBlobVO uploadedBlob =
+                    await blobsServiceClient.UploadProfileBlobAsync(
+                        docNameWithExtension,
+                        docBytes.AsMemory(0, docBytes.Length),
+                        BlobsServiceClient.SystemProfileId,
+                        checkOperatorAccess.OperatorLoginId
+                            ?? authenticationInfo.LoginId,
+                        ProfileBlobAccessKeyType.Temporary,
+                        docRegNumber,
+                        CancellationToken.None);
+
+                this.ValidateUploadedBlob(docNameWithExtension, uploadedBlob);
+
+                UploadedBlobDO[] blobs = new UploadedBlobDO[]
+                {
+                    new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        docNameWithExtension,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(docBytes.Length))
+                };
 
                 ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfResponse resp2 =
                     await client.SendMessage1OnBehalfOfAsync(
@@ -456,22 +510,21 @@ $@"Error occured in SendElectronicDocumentWithAccessCode with params -
                             RecipientTargetGroupId = DataContractMapper.ToTargetGroupId(receiverType),
                             MessageSubject = subject,
                             MessageBody = string.Empty,
-                            Documents =
+                            Blobs =
                             {
-                                new ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfRequest.Types.Document[]
-                                {
-                                    new ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfRequest.Types.Document
+                                blobs.Select(x =>
+                                    new SendMessage1OnBehalfOfRequest.Types.Blob
                                     {
-                                        FileName = docNameWithExtension,
-                                        DocumentRegistrationNumber = docRegNumber,
-                                        FileContent = ByteString.CopyFrom(docBytes),
-                                    }
-                                }
+                                        FileName = x.FileName,
+                                        HashAlgorithm = x.HashAlgorithm,
+                                        Hash = x.Hash,
+                                        Size = x.Size,
+                                        BlobId = x.BlobId,
+                                    })
                             },
                             ServiceOid = serviceOID,
-                            OnBehalfOfProfileId = resp.AuthenticatedProfile.ProfileId,
-                            OnBehalfOfLoginId = resp.AuthenticatedProfile.LoginId,
-                            OnBehalfOfOperatorLoginId = resp.AuthenticatedProfile.OperatorLoginId,
+                            SentViaLoginId = authenticationInfo.LoginId,
+                            SentViaOperatorLoginId = checkOperatorAccess.OperatorLoginId,
                             SendEvent = "SendMessageOnBehalfOf",
                         });
 
@@ -523,49 +576,66 @@ $@"Error occured in SendElectronicDocumentOnBehalfOf with params -
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"SendMessage wit params -
-//    certificate: {certificateThumbprint},
-//    messageTitle: {message?.Title}
-//    receiverType: {receiverType},
-//    receiverUniqueIdentifier: {receiverUniqueIdentifier},
-//    receiverPhone: {receiverPhone},
-//    receiverEmail: {receiverEmail},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
-
-            if (message == null
-                || string.IsNullOrEmpty(message.Title)
-                || (string.IsNullOrEmpty(message.MessageText)
-                    && (message.AttachedDocuments == null
-                        || message.AttachedDocuments.Count == 0)))
-            {
-                throw new ArgumentException
-                    ("Message does not have all required fields: Title, Text or at least one Attached Document");
-            }
-
-            if (string.IsNullOrEmpty(receiverUniqueIdentifier))
-            {
-                throw new ArgumentException("Receiver is missing");
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (message == null
+                    || string.IsNullOrEmpty(message.Title)
+                    || (string.IsNullOrEmpty(message.MessageText)
+                        && (message.AttachedDocuments == null
+                            || message.AttachedDocuments.Count == 0)))
+                {
+                    throw new ArgumentException
+                        ("Message does not have all required fields: Title, Text or at least one Attached Document");
+                }
+
+                if (string.IsNullOrEmpty(receiverUniqueIdentifier))
+                {
+                    throw new ArgumentException("Receiver is missing");
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
-                if (resp.AuthenticatedProfile == null)
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                int attachmentsCount = message.AttachedDocuments?.Count ?? 0;
+
+                UploadedBlobDO[] blobs =
+                    new UploadedBlobDO[attachmentsCount];
+
+                for (int i = 0; i < attachmentsCount; i++)
                 {
-                    throw new UnauthorizedAccessException();
+                    BlobsServiceClient.UploadBlobVO uploadedBlob =
+                        await blobsServiceClient.UploadProfileBlobAsync(
+                            message.AttachedDocuments[i].DocumentName,
+                            message.AttachedDocuments[i].Content.AsMemory(0, message.AttachedDocuments[i].Content.Length),
+                            authenticationInfo.ProfileId,
+                            authenticationInfo.OperatorLoginId
+                                ?? authenticationInfo.LoginId,
+                            ProfileBlobAccessKeyType.Temporary,
+                            message.AttachedDocuments[i].DocumentRegistrationNumber,
+                            CancellationToken.None);
+
+                    this.ValidateUploadedBlob(
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob);
+
+                    blobs[i] = new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(message.AttachedDocuments[i].Content.Length));
                 }
 
                 ED.DomainServices.IntegrationService.SendMessage1Response resp2 =
@@ -578,24 +648,23 @@ $@"Error occured in SendElectronicDocumentOnBehalfOf with params -
                             RecipientTargetGroupId = DataContractMapper.ToTargetGroupId(receiverType),
                             MessageSubject = message.Title,
                             MessageBody = message.MessageText ?? string.Empty,
-                            Documents =
+                            Blobs =
                             {
-                                message.AttachedDocuments != null
-                                    ? message.AttachedDocuments
-                                        .Select(e => new ED.DomainServices.IntegrationService.SendMessage1Request.Types.Document
-                                        {
-                                            FileName = e.DocumentName,
-                                            DocumentRegistrationNumber = e.DocumentRegistrationNumber,
-                                            FileContent = ByteString.CopyFrom(e.Content),
-                                        })
-                                        .ToArray()
-                                    : Array.Empty<ED.DomainServices.IntegrationService.SendMessage1Request.Types.Document>()
+                                blobs.Select(x =>
+                                    new SendMessage1Request.Types.Blob
+                                    {
+                                        FileName = x.FileName,
+                                        HashAlgorithm = x.HashAlgorithm,
+                                        Hash = x.Hash,
+                                        Size = x.Size,
+                                        BlobId = x.BlobId,
+                                    })
                             },
                             ServiceOid = serviceOID,
-                            SenderProfileId = resp.AuthenticatedProfile.ProfileId,
+                            SenderProfileId = authenticationInfo.ProfileId,
                             SenderLoginId =
-                                resp.AuthenticatedProfile.OperatorLoginId
-                                    ?? resp.AuthenticatedProfile.LoginId,
+                                authenticationInfo.OperatorLoginId
+                                    ?? authenticationInfo.LoginId,
                             SendEvent = "SendMessage",
                         });
 
@@ -632,58 +701,48 @@ $@"Error occured in SendMessage with params -
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"SendMessageWithAccessCode with params-
-//    certificate: {certificateThumbprint},
-//    messageTitle: {message?.Title},
-//    receivedIdentifier: {receiver?.EGNorLNCH},
-//    receiverFirstName: {receiver?.FirstName},
-//    receiverMiddleName: {receiver?.MiddleName},
-//    receiverLastName: {receiver?.LastName},
-//    receiverPhone: {receiver?.Phone},
-//    receiverEmail: {receiver?.Email},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
-
-            if (message == null
-                || string.IsNullOrEmpty(message.Title)
-                || (string.IsNullOrEmpty(message.MessageText)
-                    && (message.AttachedDocuments == null
-                        || message.AttachedDocuments.Count == 0)))
-            {
-                throw new ArgumentException(
-                    "Message does not have all required fields: Title, Text or at least one Attached Document");
-            }
-
-            if (receiver == null
-                || string.IsNullOrEmpty(receiver?.EGNorLNCH))
-            {
-                throw new ArgumentException("Receiver is missing");
-            }
-
-            if (string.IsNullOrEmpty(receiver.FirstName)
-                || string.IsNullOrEmpty(receiver.LastName))
-            {
-                throw new ArgumentException(
-                    "Receiver's FirstName and LastName are required!");
-            }
-
-            if (string.IsNullOrEmpty(receiver.Email))
-            {
-                throw new ArgumentException("Receiver's Email is required!");
-            }
-
-            if (string.IsNullOrEmpty(receiver.Phone))
-            {
-                throw new ArgumentException("Receiver's Phone is required!");
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (message == null
+                    || string.IsNullOrEmpty(message.Title)
+                    || (string.IsNullOrEmpty(message.MessageText)
+                        && (message.AttachedDocuments == null
+                            || message.AttachedDocuments.Count == 0)))
+                {
+                    throw new ArgumentException(
+                        "Message does not have all required fields: Title, Text or at least one Attached Document");
+                }
+
+                if (receiver == null
+                    || string.IsNullOrEmpty(receiver?.EGNorLNCH))
+                {
+                    throw new ArgumentException("Receiver is missing");
+                }
+
+                if (string.IsNullOrEmpty(receiver.FirstName)
+                    || string.IsNullOrEmpty(receiver.LastName))
+                {
+                    throw new ArgumentException(
+                        "Receiver's FirstName and LastName are required!");
+                }
+
+                if (string.IsNullOrEmpty(receiver.Email))
+                {
+                    throw new ArgumentException("Receiver's Email is required!");
+                }
+
+                if (string.IsNullOrEmpty(receiver.Phone))
+                {
+                    throw new ArgumentException("Receiver's Phone is required!");
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
+                // TODO: cache?
                 ED.DomainServices.IntegrationService.GetCodeSenderResponse resp =
                     await client.GetCodeSenderAsync(
                         new ED.DomainServices.IntegrationService.GetCodeSenderRequest
@@ -698,6 +757,38 @@ $@"Error occured in SendMessage with params -
                         "Sender is not authorized to send messages with access code!");
                 }
 
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                int attachmentsCount = message.AttachedDocuments?.Count ?? 0;
+
+                UploadedBlobDO[] blobs =
+                    new UploadedBlobDO[attachmentsCount];
+
+                for (int i = 0; i < attachmentsCount; i++)
+                {
+                    BlobsServiceClient.UploadBlobVO uploadedBlob =
+                        await blobsServiceClient.UploadProfileBlobAsync(
+                            message.AttachedDocuments[i].DocumentName,
+                            message.AttachedDocuments[i].Content.AsMemory(0, message.AttachedDocuments[i].Content.Length),
+                            resp.Sender.ProfileId,
+                            resp.Sender.LoginId,
+                            ProfileBlobAccessKeyType.Temporary,
+                            message.AttachedDocuments[i].DocumentRegistrationNumber,
+                            CancellationToken.None);
+
+                    this.ValidateUploadedBlob(
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob);
+
+                    blobs[i] = new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(message.AttachedDocuments[i].Content.Length));
+                }
+
                 ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeResponse resp2 =
                     await client.SendMessage1WithAccessCodeAsync(
                         new ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeRequest
@@ -710,18 +801,17 @@ $@"Error occured in SendMessage with params -
                             RecipientEmail = receiver.Email,
                             MessageSubject = message.Title,
                             MessageBody = message.MessageText ?? string.Empty,
-                            Documents =
+                            Blobs =
                             {
-                                message.AttachedDocuments != null
-                                    ? message.AttachedDocuments
-                                        .Select(e => new ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeRequest.Types.Document
-                                        {
-                                            FileName = e.DocumentName,
-                                            DocumentRegistrationNumber = e.DocumentRegistrationNumber,
-                                            FileContent = ByteString.CopyFrom(e.Content),
-                                        })
-                                        .ToArray()
-                                    : Array.Empty<ED.DomainServices.IntegrationService.SendMessage1WithAccessCodeRequest.Types.Document>()
+                                blobs.Select(x =>
+                                    new SendMessage1WithAccessCodeRequest.Types.Blob
+                                    {
+                                        FileName = x.FileName,
+                                        HashAlgorithm = x.HashAlgorithm,
+                                        Hash = x.Hash,
+                                        Size = x.Size,
+                                        BlobId = x.BlobId,
+                                    })
                             },
                             ServiceOid = serviceOID,
                             SenderProfileId = resp.Sender.ProfileId,
@@ -771,47 +861,67 @@ $@"Error occured in SendMessageWithAccessCode with params -
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"SendMessageInReplyTo with params -
-//    certificate: {certificateThumbprint},
-//    messageTitle: {message?.Title},
-//    replyToMessageId: {replyToMessageId},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
-
-            if (message == null
-                || string.IsNullOrEmpty(message.Title)
-                || (string.IsNullOrEmpty(message.MessageText)
-                    && (message.AttachedDocuments == null
-                    || message.AttachedDocuments.Count == 0)))
-            {
-                logger.Error("Error in SendMessageInReplyTo - Message does not have all required fields: Title, Text or at least one Attached Document");
-                throw new ArgumentException("Message does not have all required fields: Title, Text or at least one Attached Document");
-            }
-
-            if (replyToMessageId == 0)
-            {
-                logger.Error("Error in SendMessageInReplyTo - Mandatory parameter replyToMessageId is missing or is equal to zero!");
-                throw new ArgumentException("Mandatory parameter replyToMessageId is missing or is equal to zero!");
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (message == null
+                    || string.IsNullOrEmpty(message.Title)
+                    || (string.IsNullOrEmpty(message.MessageText)
+                        && (message.AttachedDocuments == null
+                            || message.AttachedDocuments.Count == 0)))
+                {
+                    logger.Error("Error in SendMessageInReplyTo - Message does not have all required fields: Title, Text or at least one Attached Document");
+                    throw new ArgumentException("Message does not have all required fields: Title, Text or at least one Attached Document");
+                }
+
+                if (replyToMessageId == 0)
+                {
+                    logger.Error("Error in SendMessageInReplyTo - Mandatory parameter replyToMessageId is missing or is equal to zero!");
+                    throw new ArgumentException("Mandatory parameter replyToMessageId is missing or is equal to zero!");
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
-                if (resp.AuthenticatedProfile == null)
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                int attachmentsCount = message.AttachedDocuments?.Count ?? 0;
+
+                UploadedBlobDO[] blobs =
+                    new UploadedBlobDO[attachmentsCount];
+
+                for (int i = 0; i < attachmentsCount; i++)
                 {
-                    throw new UnauthorizedAccessException();
+                    BlobsServiceClient.UploadBlobVO uploadedBlob =
+                        await blobsServiceClient.UploadProfileBlobAsync(
+                            message.AttachedDocuments[i].DocumentName,
+                            message.AttachedDocuments[i].Content.AsMemory(0, message.AttachedDocuments[i].Content.Length),
+                            authenticationInfo.ProfileId,
+                            authenticationInfo.OperatorLoginId
+                                ?? authenticationInfo.LoginId,
+                            ProfileBlobAccessKeyType.Temporary,
+                            message.AttachedDocuments[i].DocumentRegistrationNumber,
+                            CancellationToken.None);
+
+                    this.ValidateUploadedBlob(
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob);
+
+                    blobs[i] = new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(message.AttachedDocuments[i].Content.Length));
                 }
 
                 ED.DomainServices.IntegrationService.SendMessageInReplyToResponse resp2 =
@@ -820,25 +930,24 @@ $@"Error occured in SendMessageWithAccessCode with params -
                         {
                             MessageSubject = message.Title,
                             MessageBody = message.MessageText ?? string.Empty,
-                            Documents =
+                            Blobs =
                             {
-                                message.AttachedDocuments != null
-                                    ? message.AttachedDocuments
-                                        .Select(e => new ED.DomainServices.IntegrationService.SendMessageInReplyToRequest.Types.Document
-                                        {
-                                            FileName = e.DocumentName,
-                                            DocumentRegistrationNumber = e.DocumentRegistrationNumber,
-                                            FileContent = ByteString.CopyFrom(e.Content),
-                                        })
-                                        .ToArray()
-                                    : Array.Empty<ED.DomainServices.IntegrationService.SendMessageInReplyToRequest.Types.Document>()
+                                blobs.Select(x =>
+                                    new SendMessageInReplyToRequest.Types.Blob
+                                    {
+                                        FileName = x.FileName,
+                                        HashAlgorithm = x.HashAlgorithm,
+                                        Hash = x.Hash,
+                                        Size = x.Size,
+                                        BlobId = x.BlobId,
+                                    })
                             },
                             ReplyToMessageId = replyToMessageId,
                             ServiceOid = serviceOID,
-                            SenderProfileId = resp.AuthenticatedProfile.ProfileId,
+                            SenderProfileId = authenticationInfo.ProfileId,
                             SenderLoginId =
-                                resp.AuthenticatedProfile.OperatorLoginId
-                                    ?? resp.AuthenticatedProfile.LoginId,
+                                authenticationInfo.OperatorLoginId
+                                    ?? authenticationInfo.LoginId,
                             SendEvent = "SendMessageInReplyTo",
                         });
 
@@ -884,64 +993,103 @@ $@"Error occured in SendMessageInReplyTo with params -
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"SendMessageOnBehalfOf with params -
-//    certificate: {certificateThumbprint},
-//    messageTitle: {message?.Title},
-//    senderType: {senderType},
-//    senderUniqueIdentifier: {senderUniqueIdentifier}, 
-//    senderPhone: {senderPhone},
-//    senderEmail: {senderEmail},
-//    senderFirstName: {senderFirstName},
-//    senderLastName: {senderLastName},
-//    receiverType: {receiverType}, 
-//    receiverUniqueIdentifier: {receiverUniqueIdentifier},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
-
-            if (message == null
-                || string.IsNullOrEmpty(message.Title)
-                || (string.IsNullOrEmpty(message.MessageText)
-                    && (message.AttachedDocuments == null
-                        || message.AttachedDocuments.Count == 0)))
-            {
-                throw new ArgumentException(
-                    "Message does not have all required fields: Title, Text or at least one Attached Document");
-            }
-
-            if (string.IsNullOrEmpty(senderUniqueIdentifier))
-            {
-                throw new ArgumentException("Sender is missing");
-            }
-
-            if (string.IsNullOrEmpty(receiverUniqueIdentifier))
-            {
-                throw new ArgumentException("Receiver is missing");
-            }
-
-            if (receiverType != eProfileType.Institution)
-            {
-                throw new ArgumentException(
-                    "Receiver must be of type Institution. The method does not support sending to subject of another type!");
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (message == null
+                    || string.IsNullOrEmpty(message.Title)
+                    || (string.IsNullOrEmpty(message.MessageText)
+                        && (message.AttachedDocuments == null
+                            || message.AttachedDocuments.Count == 0)))
+                {
+                    throw new ArgumentException(
+                        "Message does not have all required fields: Title, Text or at least one Attached Document");
+                }
+
+                if (string.IsNullOrEmpty(senderUniqueIdentifier))
+                {
+                    throw new ArgumentException("Sender is missing");
+                }
+
+                if (string.IsNullOrEmpty(receiverUniqueIdentifier))
+                {
+                    throw new ArgumentException("Receiver is missing");
+                }
+
+                if (receiverType != eProfileType.Institution)
+                {
+                    throw new ArgumentException(
+                        "Receiver must be of type Institution. The method does not support sending to subject of another type!");
+                }
+
+                if (senderType != eProfileType.Person
+                    && string.IsNullOrWhiteSpace(operatorEGN))
+                {
+                    throw new ArgumentException(
+                        "Parameter operatorEGN is required in case when senderType is LegalPerson OR Institution! The operatorEGN should be the personalIdentifier of a person with active registration in the Edelivery System and with access to the sender's profile!");
+                }
+
+                string finalOperatorEGN = null;
+
+                if (senderType != eProfileType.Person)
+                {
+                    finalOperatorEGN = operatorEGN;
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = string.Empty, // skip this parameter as eForms are not using it correctly
-                        });
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        null);
 
-                if (resp.AuthenticatedProfile == null)
+                CheckOperatorAccess checkOperatorAccess =
+                   await this.CheckOperatorAccessAsync(
+                       client,
+                       certificateThumbprint,
+                       senderUniqueIdentifier,
+                       finalOperatorEGN);
+
+                if (!checkOperatorAccess.HasAccess)
                 {
-                    throw new UnauthorizedAccessException();
+                    throw new UnauthorizedAccessException("Unauthorized operator");
+                }
+
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                int attachmentsCount = message.AttachedDocuments?.Count ?? 0;
+
+                UploadedBlobDO[] blobs =
+                    new UploadedBlobDO[attachmentsCount];
+
+                for (int i = 0; i < attachmentsCount; i++)
+                {
+                    BlobsServiceClient.UploadBlobVO uploadedBlob =
+                        await blobsServiceClient.UploadProfileBlobAsync(
+                            message.AttachedDocuments[i].DocumentName,
+                            message.AttachedDocuments[i].Content.AsMemory(0, message.AttachedDocuments[i].Content.Length),
+                            BlobsServiceClient.SystemProfileId,
+                            checkOperatorAccess.OperatorLoginId
+                                ?? authenticationInfo.LoginId,
+                            ProfileBlobAccessKeyType.Temporary,
+                            message.AttachedDocuments[i].DocumentRegistrationNumber,
+                            CancellationToken.None);
+
+                    this.ValidateUploadedBlob(
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob);
+
+                    blobs[i] = new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(message.AttachedDocuments[i].Content.Length));
                 }
 
                 ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfResponse resp2 =
@@ -958,23 +1106,21 @@ $@"Error occured in SendMessageInReplyTo with params -
                             RecipientTargetGroupId = DataContractMapper.ToTargetGroupId(receiverType),
                             MessageSubject = message.Title,
                             MessageBody = message.MessageText ?? string.Empty,
-                            Documents =
+                            Blobs =
                             {
-                                message.AttachedDocuments != null
-                                    ? message.AttachedDocuments
-                                        .Select(e => new ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfRequest.Types.Document
-                                        {
-                                            FileName = e.DocumentName,
-                                            DocumentRegistrationNumber = e.DocumentRegistrationNumber,
-                                            FileContent = ByteString.CopyFrom(e.Content),
-                                        })
-                                        .ToArray()
-                                    : Array.Empty<ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfRequest.Types.Document>()
+                                blobs.Select(x =>
+                                    new SendMessage1OnBehalfOfRequest.Types.Blob
+                                    {
+                                        FileName = x.FileName,
+                                        HashAlgorithm = x.HashAlgorithm,
+                                        Hash = x.Hash,
+                                        Size = x.Size,
+                                        BlobId = x.BlobId,
+                                    })
                             },
                             ServiceOid = serviceOID,
-                            OnBehalfOfProfileId = resp.AuthenticatedProfile.ProfileId,
-                            OnBehalfOfLoginId = resp.AuthenticatedProfile.LoginId,
-                            OnBehalfOfOperatorLoginId = resp.AuthenticatedProfile.OperatorLoginId,
+                            SentViaLoginId = authenticationInfo.LoginId,
+                            SentViaOperatorLoginId = checkOperatorAccess.OperatorLoginId,
                             SendEvent = "SendMessageOnBehalfOf",
                         });
 
@@ -1019,40 +1165,29 @@ $@"Error occured in SendMessageOnBehalfOf with params -
             string documentRegistrationNumber,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetSentDocumentStatusByRegNum with params -
-//    certificate: {certificateThumbprint},
-//    documentRegistrationNumber: {documentRegistrationNumber},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.GetSentDocumentStatusByRegNumResponse resp2 =
                     await client.GetSentDocumentStatusByRegNumAsync(
                         new ED.DomainServices.IntegrationService.GetSentDocumentStatusByRegNumRequest
                         {
                             DocumentRegistrationNumber = documentRegistrationNumber,
-                            ProfileId = resp.AuthenticatedProfile.ProfileId,
+                            ProfileId = authenticationInfo.ProfileId,
                             LoginId =
-                                resp.AuthenticatedProfile.OperatorLoginId
-                                    ?? resp.AuthenticatedProfile.LoginId,
+                                authenticationInfo.OperatorLoginId
+                                    ?? authenticationInfo.LoginId,
                             OpenEvent = "GetSentDocumentStatusByRegNum",
                         });
 
@@ -1081,40 +1216,29 @@ $@"Error occured in GetSentDocumentStatusByRegNum with params -
             int messageId,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetSentMessageStatus with params -
-//    certificate: {certificateThumbprint},
-//    messageId: {messageId},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.GetSentMessageStatusResponse resp2 =
                     await client.GetSentMessageStatusAsync(
                         new ED.DomainServices.IntegrationService.GetSentMessageStatusRequest
                         {
                             MessageId = messageId,
-                            ProfileId = resp.AuthenticatedProfile.ProfileId,
+                            ProfileId = authenticationInfo.ProfileId,
                             LoginId =
-                                resp.AuthenticatedProfile.OperatorLoginId
-                                    ?? resp.AuthenticatedProfile.LoginId,
+                                authenticationInfo.OperatorLoginId
+                                    ?? authenticationInfo.LoginId,
                             OpenEvent = "GetSentMessageStatus",
                         });
 
@@ -1142,31 +1266,19 @@ $@"Error occured in GetSentMessageStatus with params -
             Guid electronicSubjectId,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetSubjectInfo with params -
-//    certificate: {certificateThumbprint},
-//    electronicSubjectId: {electronicSubjectId},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
-
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.GetProfileInfoResponse resp2 =
                     await client.GetProfileInfoAsync(
@@ -1200,41 +1312,44 @@ $@"Error occured in GetSubjectInfo with params -
             string documentRegistrationNumber,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
             // TODO: test if recipient can use this method
-//            logger.Info(
-//$@"GetSentDocumentContentByRegNum with params -
-//    certificate: {certificateThumbprint},
-//    documentRegistrationNumber: {documentRegistrationNumber},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.GetSentDocumentContentByRegNumResponse resp2 =
                     await client.GetSentDocumentContentByRegNumAsync(
                         new ED.DomainServices.IntegrationService.GetSentDocumentContentByRegNumRequest
                         {
-                            ProfileId = resp.AuthenticatedProfile.ProfileId,
+                            ProfileId = authenticationInfo.ProfileId,
                             DocumentRegistrationNumber = documentRegistrationNumber,
                         });
 
-                return DataContractMapper.ToDcDocument(resp2);
+                var result = DataContractMapper.ToDcDocument(resp2);
+
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                BlobsServiceClient.DownloadBlobToArrayVO blob =
+                    await blobsServiceClient.DownloadMessageBlobToArrayAsync(
+                        authenticationInfo.ProfileId,
+                        result.Id,
+                        resp2.Blob.MessageId,
+                        default);
+
+                result.Content = blob.Content;
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -1259,41 +1374,47 @@ $@"Error occured in GetSentDocumentContentByRegNum with params -
             int messageId,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
             // TODO: test if recipient can use this method
-//            logger.Info(
-//$@"GetSentDocumentsContent with params -
-//    certificate: {certificateThumbprint},
-//    messageId: {messageId},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                     await client.GetAuthenticationInfoAsync(
-                         new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                         {
-                             CertificateThumbprint = certificateThumbprint,
-                             OperatorIdentifier = operatorEGN,
-                         });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.GetSentDocumentsContentResponse resp2 =
                     await client.GetSentDocumentsContentAsync(
                         new ED.DomainServices.IntegrationService.GetSentDocumentsContentRequest
                         {
-                            ProfileId = resp.AuthenticatedProfile.ProfileId,
+                            ProfileId = authenticationInfo.ProfileId,
                             MessageId = messageId,
                         });
 
-                return DataContractMapper.ToListOfDcDocument(resp2);
+                var result = DataContractMapper.ToListOfDcDocument(resp2);
+
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                foreach (var document in result)
+                {
+                    BlobsServiceClient.DownloadBlobToArrayVO blob =
+                        await blobsServiceClient.DownloadMessageBlobToArrayAsync(
+                            authenticationInfo.ProfileId,
+                            document.Id,
+                            messageId,
+                            default);
+
+                    document.Content = blob.Content;
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -1318,40 +1439,43 @@ $@"Error occured in GetSentDocumentsContent with params -
             int documentId,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetSentDocumentContent with params -
-//    certificate: {certificateThumbprint},
-//    documentId: {documentId},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.GetSentDocumentContentResponse resp2 =
                    await client.GetSentDocumentContentAsync(
                        new ED.DomainServices.IntegrationService.GetSentDocumentContentRequest
                        {
-                           ProfileId = resp.AuthenticatedProfile.ProfileId,
+                           ProfileId = authenticationInfo.ProfileId,
                            BlobId = documentId,
                        });
 
-                return DataContractMapper.ToDcDocument(resp2);
+                var result = DataContractMapper.ToDcDocument(resp2);
+
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                BlobsServiceClient.DownloadBlobToArrayVO blob =
+                    await blobsServiceClient.DownloadMessageBlobToArrayAsync(
+                        authenticationInfo.ProfileId,
+                        result.Id,
+                        resp2.Blob.MessageId,
+                        default);
+
+                result.Content = blob.Content;
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -1373,22 +1497,25 @@ $@"Error occured in GetSentDocumentContent with params -
         /// <returns>list of messages</returns>
         public async Task<List<DcMessage>> GetSentMessagesList(string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetSentMessagesList with params -
-//    certificate: {certificateThumbprint},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
+
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.OutboxResponse resp =
                     await client.OutboxAsync(
                         new ED.DomainServices.IntegrationService.OutboxRequest
                         {
-                            CertificateThumbprint = certificateThumbprint,
+                            ProfileId = authenticationInfo.ProfileId,
                             Offset = 0,
                             Limit = 100,
                         });
@@ -1417,18 +1544,19 @@ $@"Error occured in GetSentMessagesList with params -
             int pageSize,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetSentMessagesListPaged with params -
-//    certificate: {certificateThumbprint},
-//    pageNumber: {pageNumber},
-//    pageSize: {pageSize},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
+
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 int limit = Math.Max(1, pageSize);
                 int offset = (Math.Max(1, pageNumber) - 1) * limit;
@@ -1437,7 +1565,7 @@ $@"Error occured in GetSentMessagesList with params -
                     await client.OutboxAsync(
                         new ED.DomainServices.IntegrationService.OutboxRequest
                         {
-                            CertificateThumbprint = certificateThumbprint,
+                            ProfileId = authenticationInfo.ProfileId,
                             Offset = offset,
                             Limit = limit,
                         });
@@ -1470,23 +1598,25 @@ $@"Error occured in GetSentMessagesListPaged with params -
             bool onlyNew,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetReceivedMessagesList with params -
-//    certificate: {certificateThumbprint},
-//    onlyNew: {onlyNew},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
+
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.InboxResponse resp =
                     await client.InboxAsync(
                         new ED.DomainServices.IntegrationService.InboxRequest
                         {
-                            CertificateThumbprint = certificateThumbprint,
+                            ProfileId = authenticationInfo.ProfileId,
                             ShowOnlyNew = onlyNew,
                             Offset = 0,
                             Limit = 100,
@@ -1521,19 +1651,19 @@ $@"Error occured in GetReceivedMessagesList with params -
             int pageSize,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetReceivedMessagesListPaged with params -
-//    certificate: {certificateThumbprint},
-//    onlyNew: {onlyNew},
-//    pageNumber: {pageNumber},
-//    pageSize: {pageSize},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
+
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 int limit = Math.Max(1, pageSize);
                 int offset = (Math.Max(1, pageNumber) - 1) * limit;
@@ -1542,7 +1672,7 @@ $@"Error occured in GetReceivedMessagesList with params -
                     await client.InboxAsync(
                         new ED.DomainServices.IntegrationService.InboxRequest
                         {
-                            CertificateThumbprint = certificateThumbprint,
+                            ProfileId = authenticationInfo.ProfileId,
                             ShowOnlyNew = onlyNew,
                             Offset = offset,
                             Limit = limit,
@@ -1577,40 +1707,29 @@ $@"Error occured in GetReceivedMessagesListPaged with params -
             int messageId,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetReceivedMessageContent with params -
-//    certificate: {certificateThumbprint},
-//    messageId: {messageId},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.GetReceivedMessageContentResponse resp2 =
                     await client.GetReceivedMessageContentAsync(
                         new ED.DomainServices.IntegrationService.GetReceivedMessageContentRequest
                         {
                             MessageId = messageId,
-                            ProfileId = resp.AuthenticatedProfile.ProfileId,
+                            ProfileId = authenticationInfo.ProfileId,
                             LoginId =
-                                resp.AuthenticatedProfile.OperatorLoginId
-                                    ?? resp.AuthenticatedProfile.LoginId,
+                                authenticationInfo.OperatorLoginId
+                                    ?? authenticationInfo.LoginId,
                             OpenEvent = "GetReceivedMessageContent",
                         });
 
@@ -1625,9 +1744,9 @@ $@"Error occured in GetReceivedMessagesListPaged with params -
 
                 foreach (var attachment in result.AttachedDocuments)
                 {
-                    BlobsServiceClient.DownloadBlobToArrayVO blob = 
+                    BlobsServiceClient.DownloadBlobToArrayVO blob =
                         await blobsServiceClient.DownloadMessageBlobToArrayAsync(
-                            resp.AuthenticatedProfile.ProfileId,
+                            authenticationInfo.ProfileId,
                             attachment.Id,
                             messageBlobId,
                             default);
@@ -1660,40 +1779,50 @@ $@"Error occured in GetReceivedMessageContent with params -
             int messageId,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"GetSentMessageContent with params -
-//    certificate: {certificateThumbprint},
-//    messageId: {messageId},
-//    operatorEGN: {operatorEGN}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        operatorEGN);
 
                 ED.DomainServices.IntegrationService.GetSentMessageContentResponse resp2 =
                     await client.GetSentMessageContentAsync(
                         new ED.DomainServices.IntegrationService.GetSentMessageContentRequest
                         {
                             MessageId = messageId,
-                            ProfileId = resp.AuthenticatedProfile.ProfileId,
+                            ProfileId = authenticationInfo.ProfileId,
                         });
 
-                return DataContractMapper.ToDcMessageDetails(resp2);
+                var result = DataContractMapper.ToDcMessageDetails(resp2);
+
+                int messageBlobId = resp2.Message.ForwardedMessage != null
+                    ? resp2.Message.ForwardedMessage.MessageId
+                    : resp2.Message.MessageId;
+
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                foreach (var attachment in result.AttachedDocuments)
+                {
+                    BlobsServiceClient.DownloadBlobToArrayVO blob =
+                        await blobsServiceClient.DownloadMessageBlobToArrayAsync(
+                            authenticationInfo.ProfileId,
+                            attachment.Id,
+                            messageBlobId,
+                            default);
+
+                    attachment.Content = blob.Content;
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -1716,34 +1845,24 @@ $@"Error occured in GetSentMessageContent with params -
         public async Task<DcPersonRegistrationInfo> CheckPersonHasRegistration(
             string personIdentificator)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"CheckPersonHasRegistration with params -
-//    certificate: {certificateThumbprint},
-//    personIdentificator: {personIdentificator}");
-
-            if (string.IsNullOrEmpty(personIdentificator))
-            {
-                return new DcPersonRegistrationInfo(personIdentificator);
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (string.IsNullOrEmpty(personIdentificator))
+                {
+                    return new DcPersonRegistrationInfo(personIdentificator);
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = string.Empty,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        string.Empty);
 
                 ED.DomainServices.IntegrationService.CheckIndividualRegistrationResponse resp2 =
                     await client.CheckIndividualRegistrationAsync(
@@ -1774,34 +1893,24 @@ $@"Error occured in CheckPersonHasRegistration  with params -
         public async Task<DcLegalPersonRegistrationInfo> CheckLegalPersonHasRegistration(
             string eik)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"CheckLegalPersonHasRegistration with params -
-//    certificate: {certificateThumbprint},
-//    eik: {eik}");
-
-            if (string.IsNullOrEmpty(eik))
-            {
-                return new DcLegalPersonRegistrationInfo(eik);
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (string.IsNullOrEmpty(eik))
+                {
+                    return new DcLegalPersonRegistrationInfo(eik);
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = string.Empty,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        string.Empty);
 
                 ED.DomainServices.IntegrationService.CheckLegalEntityRegistrationResponse resp2 =
                     await client.CheckLegalEntityRegistrationAsync(
@@ -1824,7 +1933,6 @@ $@"Error occured in CheckLegalPersonHasRegistration  with params -
             }
         }
 
-
         /// <summary>
         /// Check if subject has registration by his identificator
         ///  </summary>
@@ -1833,34 +1941,24 @@ $@"Error occured in CheckLegalPersonHasRegistration  with params -
         public async Task<DcSubjectRegistrationInfo> CheckSubjectHasRegistration(
             string identificator)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-//            logger.Info(
-//$@"CheckSubjectHasRegistration with params -
-//    certificate: {certificateThumbprint},
-//    identificator: {identificator}");
-
-            if (string.IsNullOrEmpty(identificator))
-            {
-                return new DcSubjectRegistrationInfo(identificator);
-            }
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
+                if (string.IsNullOrEmpty(identificator))
+                {
+                    return new DcSubjectRegistrationInfo(identificator);
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = string.Empty,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        string.Empty);
 
                 ED.DomainServices.IntegrationService.CheckProfileRegistrationResponse resp2 =
                    await client.CheckProfileRegistrationAsync(
@@ -1890,26 +1988,19 @@ $@"Error occured in CheckSubjectHasRegistration  with params -
         /// <returns></returns>
         public async Task<DcStatisticsGeneral> GetEDeliveryGeneralStatistics()
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
-
-            //logger.Info($"GetEDeliveryGeneralStatistics with params - certificate: {certificateThumbprint}");
+            string certificateThumbprint = string.Empty;
 
             try
             {
+                certificateThumbprint = this.GetCertificateThumbprint();
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = string.Empty,
-                        });
-
-                if (resp.AuthenticatedProfile == null)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        string.Empty);
 
                 ED.DomainServices.IntegrationService.GetStatisticsResponse resp2 =
                     await client.GetStatisticsAsync(
@@ -1938,55 +2029,89 @@ $@"Error occured in CheckSubjectHasRegistration  with params -
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
+            string certificateThumbprint = string.Empty;
 
-//            logger.Info(
-//$@"SendMessageOnBehalfToPerson with params -
-//    certificate: {certificateThumbprint},
-//    senderUniqueIdentifier: {senderUniqueIdentifier},
-//    receiverUniqueIdentifier: {receiverUniqueIdentifier},
-//    receiverPhone: {receiverPhone},
-//    receiverEmail: {receiverEmail},
-//    receiverFirstName: {receiverFirstName},
-//    receiverLastName: {receiverLastName},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
+            try
+            {
+                certificateThumbprint = this.GetCertificateThumbprint();
 
-            if (message == null
+                if (message == null
                     || string.IsNullOrEmpty(message.Title)
                     || (string.IsNullOrEmpty(message.MessageText)
                         && (message.AttachedDocuments == null
                             || message.AttachedDocuments.Count == 0)))
-            {
-                throw new ArgumentException(
-                    "Message does not have all required fields: Title, Text or at least one Attached Document");
-            }
+                {
+                    throw new ArgumentException(
+                        "Message does not have all required fields: Title, Text or at least one Attached Document");
+                }
 
-            if (string.IsNullOrEmpty(senderUniqueIdentifier))
-            {
-                throw new ArgumentException("Sender is missing");
-            }
+                if (string.IsNullOrEmpty(senderUniqueIdentifier))
+                {
+                    throw new ArgumentException("Sender is missing");
+                }
 
-            if (string.IsNullOrEmpty(receiverUniqueIdentifier))
-            {
-                throw new ArgumentException("Receiver is missing");
-            }
+                if (string.IsNullOrEmpty(receiverUniqueIdentifier))
+                {
+                    throw new ArgumentException("Receiver is missing");
+                }
 
-            try
-            {
+                if (string.IsNullOrWhiteSpace(operatorEGN))
+                {
+                    throw new ArgumentException(
+                        "Parameter operatorEGN is required! The operatorEGN should be the personalIdentifier of a person with active registration in the Edelivery System and with access to the sender's profile!");
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        null);
 
-                if (resp.AuthenticatedProfile == null)
+                CheckOperatorAccess checkOperatorAccess =
+                   await this.CheckOperatorAccessAsync(
+                       client,
+                       certificateThumbprint,
+                       senderUniqueIdentifier,
+                       operatorEGN);
+
+                if (!checkOperatorAccess.HasAccess)
                 {
-                    throw new UnauthorizedAccessException();
+                    throw new UnauthorizedAccessException("Unauthorized operator");
+                }
+
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                int attachmentsCount = message.AttachedDocuments?.Count ?? 0;
+
+                UploadedBlobDO[] blobs =
+                    new UploadedBlobDO[attachmentsCount];
+
+                for (int i = 0; i < attachmentsCount; i++)
+                {
+                    BlobsServiceClient.UploadBlobVO uploadedBlob =
+                        await blobsServiceClient.UploadProfileBlobAsync(
+                            message.AttachedDocuments[i].DocumentName,
+                            message.AttachedDocuments[i].Content.AsMemory(0, message.AttachedDocuments[i].Content.Length),
+                            BlobsServiceClient.SystemProfileId,
+                            checkOperatorAccess.OperatorLoginId
+                                ?? authenticationInfo.LoginId,
+                            ProfileBlobAccessKeyType.Temporary,
+                            message.AttachedDocuments[i].DocumentRegistrationNumber,
+                            CancellationToken.None);
+
+                    this.ValidateUploadedBlob(
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob);
+
+                    blobs[i] = new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(message.AttachedDocuments[i].Content.Length));
                 }
 
                 ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfToIndividualResponse resp2 =
@@ -2001,23 +2126,21 @@ $@"Error occured in CheckSubjectHasRegistration  with params -
                             RecipientLastName = receiverLastName,
                             MessageSubject = message.Title,
                             MessageBody = message.MessageText ?? string.Empty,
-                            Documents =
+                            Blobs =
                             {
-                                message.AttachedDocuments != null
-                                    ? message.AttachedDocuments
-                                        .Select(e => new ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfToIndividualRequest.Types.Document
-                                        {
-                                            FileName = e.DocumentName,
-                                            DocumentRegistrationNumber = e.DocumentRegistrationNumber,
-                                            FileContent = ByteString.CopyFrom(e.Content),
-                                        })
-                                        .ToArray()
-                                    : Array.Empty<ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfToIndividualRequest.Types.Document>()
+                                blobs.Select(x =>
+                                    new SendMessage1OnBehalfOfToIndividualRequest.Types.Blob
+                                    {
+                                        FileName = x.FileName,
+                                        HashAlgorithm = x.HashAlgorithm,
+                                        Hash = x.Hash,
+                                        Size = x.Size,
+                                        BlobId = x.BlobId,
+                                    })
                             },
                             ServiceOid = serviceOID,
-                            OnBehalfOfProfileId = resp.AuthenticatedProfile.ProfileId,
-                            OnBehalfOfLoginId = resp.AuthenticatedProfile.LoginId,
-                            OnBehalfOfOperatorLoginId = resp.AuthenticatedProfile.OperatorLoginId,
+                            SentViaLoginId = authenticationInfo.LoginId,
+                            SentViaOperatorLoginId = checkOperatorAccess.OperatorLoginId,
                             SendEvent = "SendMessageOnBehalfToPerson",
                         });
 
@@ -2056,51 +2179,89 @@ $@"Error occured in SendMessageOnBehalfToPerson with params -
             string serviceOID,
             string operatorEGN)
         {
-            string certificateThumbprint = this.GetCertificateThumbprint();
+            string certificateThumbprint = string.Empty;
 
-//            logger.Info(
-//$@"SendMessageOnBehalfToLegalEntity with params -
-//    certificate: {certificateThumbprint},
-//    senderUniqueIdentifier: {senderUniqueIdentifier},
-//    receiverUniqueIdentifier: {receiverUniqueIdentifier},
-//    serviceOID: {serviceOID},
-//    operatorEGN: {operatorEGN}");
+            try
+            {
+                certificateThumbprint = this.GetCertificateThumbprint();
 
-            if (message == null
+                if (message == null
                     || string.IsNullOrEmpty(message.Title)
                     || (string.IsNullOrEmpty(message.MessageText)
                         && (message.AttachedDocuments == null
                             || message.AttachedDocuments.Count == 0)))
-            {
-                throw new ArgumentException(
-                    "Message does not have all required fields: Title, Text or at least one Attached Document");
-            }
+                {
+                    throw new ArgumentException(
+                        "Message does not have all required fields: Title, Text or at least one Attached Document");
+                }
 
-            if (string.IsNullOrEmpty(senderUniqueIdentifier))
-            {
-                throw new ArgumentException("Sender is missing");
-            }
+                if (string.IsNullOrEmpty(senderUniqueIdentifier))
+                {
+                    throw new ArgumentException("Sender is missing");
+                }
 
-            if (string.IsNullOrEmpty(receiverUniqueIdentifier))
-            {
-                throw new ArgumentException("Receiver is missing");
-            }
+                if (string.IsNullOrEmpty(receiverUniqueIdentifier))
+                {
+                    throw new ArgumentException("Receiver is missing");
+                }
 
-            try
-            {
+                if (string.IsNullOrWhiteSpace(operatorEGN))
+                {
+                    throw new ArgumentException(
+                        "Parameter operatorEGN is required! The operatorEGN should be the personalIdentifier of a person with active registration in the Edelivery System and with access to the sender's profile!");
+                }
+
                 var client = GrpcClientFactory.CreateIntegrationServiceClient();
 
-                ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse resp =
-                    await client.GetAuthenticationInfoAsync(
-                        new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
-                        {
-                            CertificateThumbprint = certificateThumbprint,
-                            OperatorIdentifier = operatorEGN,
-                        });
+                AuthenticationInfo authenticationInfo =
+                    await this.GetAuthenticationInfoAsync(
+                        client,
+                        certificateThumbprint,
+                        null);
 
-                if (resp.AuthenticatedProfile == null)
+                CheckOperatorAccess checkOperatorAccess =
+                   await this.CheckOperatorAccessAsync(
+                       client,
+                       certificateThumbprint,
+                       senderUniqueIdentifier,
+                       operatorEGN);
+
+                if (!checkOperatorAccess.HasAccess)
                 {
-                    throw new UnauthorizedAccessException();
+                    throw new UnauthorizedAccessException("Unauthorized operator");
+                }
+
+                BlobsServiceClient blobsServiceClient = new BlobsServiceClient(
+                    GrpcClientFactory.CreateBlobsClient());
+
+                int attachmentsCount = message.AttachedDocuments?.Count ?? 0;
+
+                UploadedBlobDO[] blobs =
+                    new UploadedBlobDO[attachmentsCount];
+
+                for (int i = 0; i < attachmentsCount; i++)
+                {
+                    BlobsServiceClient.UploadBlobVO uploadedBlob =
+                        await blobsServiceClient.UploadProfileBlobAsync(
+                            message.AttachedDocuments[i].DocumentName,
+                            message.AttachedDocuments[i].Content.AsMemory(0, message.AttachedDocuments[i].Content.Length),
+                            BlobsServiceClient.SystemProfileId,
+                            checkOperatorAccess.OperatorLoginId
+                                ?? authenticationInfo.LoginId,
+                            ProfileBlobAccessKeyType.Temporary,
+                            message.AttachedDocuments[i].DocumentRegistrationNumber,
+                            CancellationToken.None);
+
+                    this.ValidateUploadedBlob(
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob);
+
+                    blobs[i] = new UploadedBlobDO(
+                        uploadedBlob.BlobId.Value,
+                        message.AttachedDocuments[i].DocumentName,
+                        uploadedBlob.HashAlgorithm,
+                        uploadedBlob.Hash,
+                        Convert.ToUInt64(message.AttachedDocuments[i].Content.Length));
                 }
 
                 ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfToLegalEntityResponse resp2 =
@@ -2111,23 +2272,21 @@ $@"Error occured in SendMessageOnBehalfToPerson with params -
                             RecipientIdentifier = receiverUniqueIdentifier,
                             MessageSubject = message.Title,
                             MessageBody = message.MessageText ?? string.Empty,
-                            Documents =
+                            Blobs =
                             {
-                                message.AttachedDocuments != null
-                                    ? message.AttachedDocuments
-                                        .Select(e => new ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfToLegalEntityRequest.Types.Document
-                                        {
-                                            FileName = e.DocumentName,
-                                            DocumentRegistrationNumber = e.DocumentRegistrationNumber,
-                                            FileContent = ByteString.CopyFrom(e.Content),
-                                        })
-                                        .ToArray()
-                                    : Array.Empty<ED.DomainServices.IntegrationService.SendMessage1OnBehalfOfToLegalEntityRequest.Types.Document>()
+                                blobs.Select(x =>
+                                    new SendMessage1OnBehalfOfToLegalEntityRequest.Types.Blob
+                                    {
+                                        FileName = x.FileName,
+                                        HashAlgorithm = x.HashAlgorithm,
+                                        Hash = x.Hash,
+                                        Size = x.Size,
+                                        BlobId = x.BlobId,
+                                    })
                             },
                             ServiceOid = serviceOID,
-                            OnBehalfOfProfileId = resp.AuthenticatedProfile.ProfileId,
-                            OnBehalfOfLoginId = resp.AuthenticatedProfile.LoginId,
-                            OnBehalfOfOperatorLoginId = resp.AuthenticatedProfile.OperatorLoginId,
+                            SentViaLoginId = authenticationInfo.LoginId,
+                            SentViaOperatorLoginId = checkOperatorAccess.OperatorLoginId,
                             SendEvent = "SendMessageOnBehalfToLegalEntity",
                         });
 
@@ -2153,6 +2312,83 @@ $@"Error occured in SendMessageOnBehalfToLegalEntity with params -
 
                 throw new FaultException(ex.Message);
             }
+        }
+
+        private string[] GetSpecialCertificateThumbprints()
+        {
+            string[] certs = ConfigurationManager.AppSettings["SpecialCertificateThumbprints"]
+                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            return certs;
+        }
+
+        private async Task<AuthenticationInfo> GetAuthenticationInfoAsync(
+            IntegrationServiceClient client,
+            string certificateThumbprint,
+            string operatorEGN)
+        {
+            AuthenticationInfo authenticationInfo =
+                await MemoryCacheExtensions.CertificateDataCache.AddOrGetExistingAsync(
+                    $"{certificateThumbprint}-{operatorEGN}",
+                    async () =>
+                    {
+                        string[] specialCertificateThumbprints =
+                            this.GetSpecialCertificateThumbprints();
+
+                        bool isCurrentCertificateThumbprintSpecial =
+                            specialCertificateThumbprints
+                                .Contains(certificateThumbprint);
+
+                        ED.DomainServices.IntegrationService.GetAuthenticationInfoResponse authResp =
+                            await client.GetAuthenticationInfoAsync(
+                                new ED.DomainServices.IntegrationService.GetAuthenticationInfoRequest
+                                {
+                                    CertificateThumbprint = certificateThumbprint,
+                                    OperatorIdentifier = isCurrentCertificateThumbprintSpecial ? null : operatorEGN,
+                                });
+
+                        return authResp.AuthenticatedProfile != null
+                            ? new AuthenticationInfo(
+                                authResp.AuthenticatedProfile.ProfileId,
+                                authResp.AuthenticatedProfile.LoginId,
+                                authResp.AuthenticatedProfile.OperatorLoginId)
+                            : null;
+                    },
+                    new CacheItemPolicy
+                    {
+                        AbsoluteExpiration = DateTimeOffset.Now.Add(this.CacheExpiration)
+                    });
+
+            if (authenticationInfo == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            return authenticationInfo;
+        }
+
+        private async Task<CheckOperatorAccess> CheckOperatorAccessAsync(
+            IntegrationServiceClient client,
+            string certificateThumbprint,
+            string profileIdentifier,
+            string operatorIdentifier)
+        {
+            string[] specialCertificateThumbprints =
+                           this.GetSpecialCertificateThumbprints();
+
+            bool isCurrentCertificateThumbprintSpecial =
+                specialCertificateThumbprints
+                    .Contains(certificateThumbprint);
+
+            CheckProfileOperatorAccessResponse resp =
+                await client.CheckProfileOperatorAccessAsync(
+                    new CheckProfileOperatorAccessRequest
+                    {
+                        ProfileIdentifier = profileIdentifier,
+                        OperatorIdentifier = isCurrentCertificateThumbprintSpecial ? null : operatorIdentifier,
+                    });
+
+            return new CheckOperatorAccess(resp);
         }
 
         private string GetCertificateThumbprint()
@@ -2199,6 +2435,23 @@ $@"Error occured in SendMessageOnBehalfToLegalEntity with params -
             }
 
             return sb.ToString();
+        }
+
+        private void ValidateUploadedBlob(
+            string fileName,
+            BlobsServiceClient.UploadBlobVO blob)
+        {
+            if (blob.IsMalicious)
+            {
+                throw new Exception($"File {fileName} is malicious");
+            }
+
+            if (!blob.BlobId.HasValue
+                || string.IsNullOrEmpty(blob.Hash)
+                || string.IsNullOrEmpty(blob.HashAlgorithm))
+            {
+                throw new Exception($"File {fileName} could not be uploaded");
+            }
         }
     }
 }

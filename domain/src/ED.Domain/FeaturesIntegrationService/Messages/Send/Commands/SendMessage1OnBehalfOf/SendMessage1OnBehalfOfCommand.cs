@@ -13,18 +13,19 @@ namespace ED.Domain
         int RecipientTargetGroupId,
         string MessageSubject,
         string MessageBody,
-        SendMessage1OnBehalfOfCommandDocument[] Documents,
+        SendMessage1OnBehalfOfCommandBlob[] Blobs,
         string? ServiceOid,
-        int OnBehalfOfProfileId,
-        int OnBehalfOfLoginId,
-        int? OnBehalfOfOperatorLoginId,
+        int SentViaLoginId,
+        int? SentViaOperatorLoginId,
         string SendEvent)
         : IRequest<SendMessage1OnBehalfOfCommandResult>;
 
-    public record SendMessage1OnBehalfOfCommandDocument(
+    public record SendMessage1OnBehalfOfCommandBlob(
         string FileName,
-        string? DocumentRegistrationNumber,
-        byte[] FileContent);
+        string HashAlgorithm,
+        string Hash,
+        ulong Size,
+        int BlobId);
 
     public record SendMessage1OnBehalfOfCommandResult(
         bool IsSuccessful,

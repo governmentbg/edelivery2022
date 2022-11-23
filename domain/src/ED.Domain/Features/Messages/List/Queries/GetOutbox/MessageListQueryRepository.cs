@@ -15,23 +15,21 @@ namespace ED.Domain
             int profileId,
             int offset,
             int limit,
-            string titleQuery,
-            string profileNameQuery,
+            string? subject,
+            string? profile,
             DateTime? fromDate,
             DateTime? toDate,
-            string? orn,
-            string? referencedOrn,
+            string? rnu,
             CancellationToken ct)
         {
             Expression<Func<Message, bool>> messagePredicate =
                 BuildMessagePredicate(
                     profileId,
-                    titleQuery,
-                    profileNameQuery,
+                    subject,
+                    profile,
                     fromDate,
                     toDate,
-                    orn,
-                    referencedOrn);
+                    rnu);
 
             int count = await this.DbContext.Set<Message>()
                 .Where(messagePredicate)
@@ -64,11 +62,10 @@ namespace ED.Domain
                     ProfileName = p1.ElectronicSubjectName,
                     LoginName = l1.ElectronicSubjectName,
                     m.RecipientsAsText,
-                    m.Subject,
+                    m.SubjectExtended,
                     m.ForwardStatusId,
                     t.Name,
-                    m.Orn,
-                    m.ReferencedOrn
+                    m.Rnu,
                 } into g
 
                 orderby g.Key.DateSent descending
@@ -79,13 +76,12 @@ namespace ED.Domain
                     g.Key.ProfileName,
                     g.Key.LoginName,
                     g.Key.RecipientsAsText,
-                    g.Key.Subject,
+                    g.Key.SubjectExtended!,
                     g.Key.ForwardStatusId,
                     g.Key.Name,
                     g.Count(gr => gr.DateReceived.HasValue),
                     g.Count(),
-                    g.Key.Orn,
-                    g.Key.ReferencedOrn))
+                    g.Key.Rnu))
                 .WithOffsetAndLimit(offset, limit)
                 .ToArrayAsync(ct);
 
@@ -93,28 +89,27 @@ namespace ED.Domain
 
             static Expression<Func<Message, bool>> BuildMessagePredicate(
                 int profileId,
-                string titleQuery,
-                string profileNameQuery,
+                string? subject,
+                string? profile,
                 DateTime? fromDate,
                 DateTime? toDate,
-                string? orn,
-                string? referencedOrn)
+                string? rnu)
             {
                 Expression<Func<Message, bool>> predicate =
                     PredicateBuilder.True<Message>();
 
                 predicate = predicate.And(e => e.SenderProfileId == profileId);
 
-                if (!string.IsNullOrEmpty(titleQuery))
+                if (!string.IsNullOrEmpty(subject))
                 {
                     predicate = predicate
-                        .And(e => e.Subject.Contains(titleQuery));
+                        .And(e => e.Subject.Contains(subject));
                 }
 
-                if (!string.IsNullOrEmpty(profileNameQuery))
+                if (!string.IsNullOrEmpty(profile))
                 {
                     predicate = predicate
-                        .And(e => e.RecipientsAsText.Contains(profileNameQuery));
+                        .And(e => e.RecipientsAsText.Contains(profile));
                 }
 
                 if (fromDate.HasValue)
@@ -126,19 +121,13 @@ namespace ED.Domain
                 if (toDate.HasValue)
                 {
                     predicate = predicate
-                        .And(e => e.DateSent.HasValue && e.DateSent.Value < toDate.Value);
+                        .And(e => e.DateSent.HasValue && e.DateSent.Value < toDate.Value.AddDays(1));
                 }
 
-                if (!string.IsNullOrEmpty(orn))
+                if (!string.IsNullOrEmpty(rnu))
                 {
                     predicate = predicate
-                        .And(e => e.Orn == orn);
-                }
-
-                if (!string.IsNullOrEmpty(referencedOrn))
-                {
-                    predicate = predicate
-                        .And(e => e.ReferencedOrn == referencedOrn);
+                        .And(e => e.Rnu == rnu);
                 }
 
                 return predicate;

@@ -136,7 +136,7 @@
     <value>Reply</value>
   </data>
   <data name="CopyRight" xml:space="preserve">
-    <value>&amp;copy; 2018  State e-Government Agency</value>
+    <value>&amp;copy; 2018  Ministry of e-Government</value>
   </data>
   <data name="CY" xml:space="preserve">
     <value>Cyprus</value>
@@ -350,5 +350,14 @@
   </data>
   <data name="TitleStorageHome" xml:space="preserve">
     <value>Storage</value>
+  </data>
+  <data name="InfoDisallowedPeople" xml:space="preserve">
+    <value>Profile of a person with disabilities</value>
+  </data>
+  <data name="PayLink" xml:space="preserve">
+    <value>Pay obligations</value>
+  </data>
+  <data name="PayLinkAdmin" xml:space="preserve">
+    <value>Claim an obligation</value>
   </data>
 </root>

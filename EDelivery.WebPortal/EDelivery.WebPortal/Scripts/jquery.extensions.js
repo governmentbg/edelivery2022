@@ -137,4 +137,30 @@
         });
         return o;
     };
+
+    $.GetUrlParams = function() {
+        var url = window.location.search;
+        if (url !== '') {
+            var qs = url.substring(url.indexOf('?') + 1).split('&');
+            for (var i = 0, result = {}; i < qs.length; i++) {
+                qs[i] = qs[i].split('=');
+                result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+            }
+            return result;
+        }
+        return '';
+    };
+
+    $.SetUrlParameters = function(data, url) {
+        var newUrl = url;
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                if (data[key] != '') {
+                    var loweredKey = key.charAt(0).toLowerCase() + key.substr(1);
+                    newUrl.searchParams.set(loweredKey, data[key]);
+                }
+            }
+        }
+        return newUrl;
+    };
 })(jQuery);

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ED.Domain;
 using ED.DomainServices.Esb;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Mapster;
 using MediatR;
@@ -216,38 +217,22 @@ namespace ED.DomainServices
             };
         }
 
-        public override async Task<GetTargetGroupProfileByIdentifierResponse> GetTargetGroupProfileByIdentifier(
-            GetTargetGroupProfileByIdentifierRequest request,
+        public override async Task<SearchTargetGroupProfilesResponse> SearchTargetGroupProfiles(
+            SearchTargetGroupProfilesRequest request,
             ServerCallContext context)
         {
-            IEsbProfilesListQueryRepository.GetTargetGroupProfileByIdentifierVO? profile =
+            IEsbProfilesListQueryRepository.SearchGetTargetGroupProfilesVO? profile =
                 await this.serviceProvider
                     .GetRequiredService<IEsbProfilesListQueryRepository>()
-                    .GetTargetGroupProfileByIdentifierAsync(
+                    .SearchGetTargetGroupProfilesAsync(
+                        request.Identifier,
+                        request.TemplateId,
                         request.TargetGroupId,
-                        request.Identifier,
                         context.CancellationToken);
 
-            return new GetTargetGroupProfileByIdentifierResponse
+            return new SearchTargetGroupProfilesResponse
             {
-                Result = profile?.Adapt<GetTargetGroupProfileByIdentifierResponse.Types.Profile>()
-            };
-        }
-
-        public override async Task<GetProfileByIdentifierResponse> GetProfileByIdentifier(
-            GetProfileByIdentifierRequest request,
-            ServerCallContext context)
-        {
-            IEsbProfilesListQueryRepository.GetProfileByIdentifierVO? profile =
-                await this.serviceProvider
-                    .GetRequiredService<IEsbProfilesListQueryRepository>()
-                    .GetProfileByIdentifierAsync(
-                        request.Identifier,
-                        context.CancellationToken);
-
-            return new GetProfileByIdentifierResponse
-            {
-                Result = profile?.Adapt<GetProfileByIdentifierResponse.Types.Profile>()
+                Result = profile?.Adapt<SearchTargetGroupProfilesResponse.Types.Profile>()
             };
         }
 
@@ -410,7 +395,7 @@ namespace ED.DomainServices
             GetEsbUserRequest request,
             ServerCallContext context)
         {
-            IEsbProfilesAuthenticateQueryRepository.GetEsbUserVO esbUser =
+            IEsbProfilesAuthenticateQueryRepository.GetEsbUserVO? esbUser =
                 await this.serviceProvider
                     .GetRequiredService<IEsbProfilesAuthenticateQueryRepository>()
                     .GetEsbUserAsync(
@@ -420,7 +405,10 @@ namespace ED.DomainServices
                         request.RepresentedProfileIdentifier,
                         context.CancellationToken);
 
-            return esbUser.Adapt<GetEsbUserResponse>();
+            return new GetEsbUserResponse
+            {
+                Result = esbUser?.Adapt<GetEsbUserResponse.Types.EsbUser>()
+            };
         }
 
         public override async Task<CheckMessageRecipientsResponse> CheckMessageRecipients(
@@ -455,8 +443,7 @@ namespace ED.DomainServices
                         request.SenderViaLoginId,
                         request.TemplateId,
                         request.Subject,
-                        request.ReferencedOrn,
-                        request.AdditionalIdentifier,
+                        request.Rnu,
                         request.Body,
                         request.MetaFields,
                         request.SenderLoginId,
@@ -488,6 +475,62 @@ namespace ED.DomainServices
                     blobsInfo.ProjectToType<GetBlobsInfoResponse.Types.Blob>()
                 }
             };
+        }
+
+        public override async Task<GetStorageBlobsResponse> GetStorageBlobs(
+            GetStorageBlobsRequest request,
+            ServerCallContext context)
+        {
+            TableResultVO<IEsbBlobsListQueryRepository.GetStorageBlobsVO> blobs =
+              await this.serviceProvider
+                  .GetRequiredService<IEsbBlobsListQueryRepository>()
+                  .GetStorageBlobsAsync(
+                      request.ProfileId,
+                      request.Offset,
+                      request.Limit,
+                      context.CancellationToken);
+
+            return new GetStorageBlobsResponse
+            {
+                Length = blobs.Length,
+                Result =
+                {
+                    blobs.Result.ProjectToType<GetStorageBlobsResponse.Types.Blob>()
+                }
+            };
+        }
+
+        public override async Task<GetStorageBlobInfoResponse> GetStorageBlobInfo(
+            GetStorageBlobInfoRequest request,
+            ServerCallContext context)
+        {
+            IEsbBlobsListQueryRepository.GetStorageBlobInfoVO? blob =
+              await this.serviceProvider
+                  .GetRequiredService<IEsbBlobsListQueryRepository>()
+                  .GetStorageBlobInfoAsync(
+                      request.ProfileId,
+                      request.BlobId,
+                      context.CancellationToken);
+
+            return new GetStorageBlobInfoResponse
+            {
+                Result = blob?.Adapt<GetStorageBlobInfoResponse.Types.Blob>()
+            };
+        }
+
+        public override async Task<Empty> DeteleStorageBlob(
+            DeteleStorageBlobRequest request,
+            ServerCallContext context)
+        {
+            await this.serviceProvider
+                .GetRequiredService<IMediator>()
+                .Send(
+                    new EsbRemoveStorageBlobCommand(
+                        request.ProfileId,
+                        request.BlobId),
+                    context.CancellationToken);
+
+            return new Empty();
         }
     }
 }

@@ -32,14 +32,6 @@
       match="/configuration/location/appSettings/add[@key='PaySecretKey']/@value" />
   </parameter>
 
-  <parameter name="appSettings:RegiX.ServiceURI">
-    <parameterValidation kind="AllowEmpty" />
-    <parameterEntry
-      kind="XmlFile"
-      scope="\\web.config$"
-      match="/configuration/location/appSettings/add[@key='RegiX.ServiceURI']/@value" />
-  </parameter>
-
   <parameter name="appSettings:ReportsSecretKey">
     <parameterValidation kind="AllowEmpty" />
     <parameterEntry

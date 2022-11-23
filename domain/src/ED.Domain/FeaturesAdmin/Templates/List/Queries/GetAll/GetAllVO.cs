@@ -8,14 +8,12 @@ namespace ED.Domain
             int TemplateId,
             string Name,
             string IdentityNumber,
-            string Content,
+            string? Category,
             DateTime CreateDate,
             DateTime? PublishDate,
             DateTime? ArchiveDate,
             bool IsSystemTemplate,
-            int ReadLoginSecurityLevelId,
             string ReadLoginSecurityLevelName,
-            int WriteLoginSecurityLevelId,
             string WriteLoginSecurityLevelName);
     }
 }

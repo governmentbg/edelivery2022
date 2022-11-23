@@ -21,19 +21,12 @@ namespace ED.Domain
             template.Update(
                 command.Name,
                 command.IdentityNumber,
+                command.Category,
                 command.Content,
                 command.ResponseTemplateId,
                 command.IsSystemTemplate,
                 command.ReadLoginSecurityLevelId,
-                command.WriteLoginSecurityLevelId,
-                command.BlobId,
-                command.SenderDocumentField,
-                command.RecipientDocumentField,
-                command.SubjectDocumentField,
-                command.DateSentDocumentField,
-                command.DateReceivedDocumentField,
-                command.SenderSignatureDocumentField,
-                command.RecipientSignatureDocumentField);
+                command.WriteLoginSecurityLevelId);
 
             await this.UnitOfWork.SaveAsync(ct);
 

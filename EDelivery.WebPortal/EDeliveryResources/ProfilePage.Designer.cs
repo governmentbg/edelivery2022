@@ -196,6 +196,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Профилът е активират от предишен пасивен статус.
+        /// </summary>
+        public static string HistoryActionBringProfileInForce {
+            get {
+                return ResourceManager.GetString("HistoryActionBringProfileInForce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Профилът е създаден.
         /// </summary>
         public static string HistoryActionCreateProfile {
@@ -255,6 +264,24 @@ namespace EDeliveryResources {
         public static string HistoryActionGrantAccessToProfile {
             get {
                 return ResourceManager.GetString("HistoryActionGrantAccessToProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Профилът е с премахнат статус &quot;само за четене&quot;.
+        /// </summary>
+        public static string HistoryActionMarkAsNonReadonly {
+            get {
+                return ResourceManager.GetString("HistoryActionMarkAsNonReadonly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Профилът е със статус &quot;само за четене&quot;.
+        /// </summary>
+        public static string HistoryActionMarkAsReadonly {
+            get {
+                return ResourceManager.GetString("HistoryActionMarkAsReadonly", resourceCulture);
             }
         }
         
@@ -366,15 +393,6 @@ namespace EDeliveryResources {
         public static string LabelAccessCode {
             get {
                 return ResourceManager.GetString("LabelAccessCode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Допълнителен идентификатор.
-        /// </summary>
-        public static string LabelAdditionalIdentifier {
-            get {
-                return ResourceManager.GetString("LabelAdditionalIdentifier", resourceCulture);
             }
         }
         
@@ -658,15 +676,6 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Референтен номер на операция  (ORN).
-        /// </summary>
-        public static string LabelOrn {
-            get {
-                return ResourceManager.GetString("LabelOrn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to ЕГН/ЛНЧ.
         /// </summary>
         public static string LabelPersonalIdentifier {
@@ -735,33 +744,6 @@ namespace EDeliveryResources {
         public static string LabelPhone {
             get {
                 return ResourceManager.GetString("LabelPhone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Връчено в периода.
-        /// </summary>
-        public static string LabelReceivedInPeriod {
-            get {
-                return ResourceManager.GetString("LabelReceivedInPeriod", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Към ORN.
-        /// </summary>
-        public static string LabelReferencedOrn {
-            get {
-                return ResourceManager.GetString("LabelReferencedOrn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Изпратено в периода.
-        /// </summary>
-        public static string LabelSentInPeriod {
-            get {
-                return ResourceManager.GetString("LabelSentInPeriod", resourceCulture);
             }
         }
         
@@ -874,6 +856,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Смяна на профила.
+        /// </summary>
+        public static string ProfileChange {
+            get {
+                return ResourceManager.GetString("ProfileChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Няма прикачени документи към профила.
         /// </summary>
         public static string SectionAttachedDocumentsEmpty {
@@ -955,15 +946,6 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ORN.
-        /// </summary>
-        public static string TableHeaderMessageOrn {
-            get {
-                return ResourceManager.GetString("TableHeaderMessageOrn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Получено от.
         /// </summary>
         public static string TableHeaderMessageReceivedBy {
@@ -978,15 +960,6 @@ namespace EDeliveryResources {
         public static string TableHeaderMessageReceiver {
             get {
                 return ResourceManager.GetString("TableHeaderMessageReceiver", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Към ORN.
-        /// </summary>
-        public static string TableHeaderMessageReferencedOrn {
-            get {
-                return ResourceManager.GetString("TableHeaderMessageReferencedOrn", resourceCulture);
             }
         }
         

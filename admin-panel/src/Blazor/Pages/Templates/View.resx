@@ -126,32 +126,20 @@
   <data name="BackBtn" xml:space="preserve">
     <value>Назад</value>
   </data>
-  <data name="Blob" xml:space="preserve">
-    <value>PDF формат</value>
+  <data name="BtnUnpublish" xml:space="preserve">
+    <value>Де-публикувай</value>
   </data>
   <data name="EditBtn" xml:space="preserve">
     <value>Редактирай</value>
   </data>
-  <data name="FieldDateReceivedDocumentField" xml:space="preserve">
-    <value>PDF поле - дата на получаване</value>
+  <data name="FieldCategory" xml:space="preserve">
+    <value>Категория</value>
   </data>
-  <data name="FieldDateSentDocumentField" xml:space="preserve">
-    <value>PDF поле - дата на изпращане</value>
+  <data name="FieldIsSystemTemplate_False" xml:space="preserve">
+    <value>Не</value>
   </data>
-  <data name="FieldRecipientDocumentField" xml:space="preserve">
-    <value>PDF поле - получател</value>
-  </data>
-  <data name="FieldRecipientSignatureDocumentField" xml:space="preserve">
-    <value>PDF поле - подпис при получаване</value>
-  </data>
-  <data name="FieldSenderDocumentField" xml:space="preserve">
-    <value>PDF поле - връчител</value>
-  </data>
-  <data name="FieldSenderSignatureDocumentField" xml:space="preserve">
-    <value>PDF поле - подпис при изпращане</value>
-  </data>
-  <data name="FieldSubjectDocumentField" xml:space="preserve">
-    <value>PDF поле - заглавие на съобщение</value>
+  <data name="FieldIsSystemTemplate_True" xml:space="preserve">
+    <value>Да</value>
   </data>
   <data name="IdentityNumber" xml:space="preserve">
     <value>Идентификационен номер</value>

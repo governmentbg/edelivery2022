@@ -14,9 +14,7 @@ namespace ED.EsbApi;
 /// <param name="RecipientProfileName">Наименование на профила получател</param>
 /// <param name="RecipientLoginName">Наименование на потребител, получил съобщението</param>
 /// <param name="Url">Url за преглед на съобщението в ССЕВ</param>
-/// <param name="Orn">Референтен номер на операция</param>
-/// <param name="ReferencedOrn">Към ORN</param>
-/// <param name="AdditionalIdentifier">Допълнителен идентификатор на съобщение</param>
+/// <param name="Rnu">Референтен номер на услуга (РНУ)</param>
 public record InboxDO(
     int MessageId,
     DateTime DateSent,
@@ -27,6 +25,4 @@ public record InboxDO(
     string RecipientProfileName,
     string RecipientLoginName,
     string Url,
-    string? Orn,
-    string? ReferencedOrn,
-    string? AdditionalIdentifier);
+    string? Rnu);

@@ -10,24 +10,18 @@ namespace ED.EsbApi;
 /// <param name="DateSent">Дата на изпращане</param>
 /// <param name="Recipients">Списък с <see cref="MessageViewDORecipient">получатели</see> на съобщението</param>
 /// <param name="Subject">Заглавие на съобщение</param>
-/// <param name="Orn">Референтен номер на операция</param>
-/// <param name="ReferencedOrn">Към ORN</param>
-/// <param name="AdditionalIdentifier">Допълнителен идентификатор на съобщение</param>
+/// <param name="Rnu">Референтен номер на услуга (РНУ)</param>
 /// <param name="TemplateId">Идентификатор на шаблон на съобщение</param>
-/// <param name="Fields">Списък с полета и техните стойности в шаблона на съобщението, изключвайки прикачените документи, във формат (Идентификатор на поле, Стойност)</param>
-/// <param name="Blobs">Списък с <see cref="MessageViewDOBlob">файлови полета</see> и техните стойности в шаблона на съобщението</param>
+/// <param name="Fields">Списък с полета и техните стойности в шаблона на съобщението във формат (Идентификатор на поле, Стойност)</param>
 /// <param name="ForwardedMessageId">Идентификатор на препратено съобщение</param>
 public record MessageViewDO(
     int MessageId,
     DateTime DateSent,
     MessageViewDORecipient[] Recipients,
     string Subject,
-    string? Orn,
-    string? ReferencedOrn,
-    string? AdditionalIdentifier,
+    string? Rnu,
     int TemplateId,
-    Dictionary<Guid, string?> Fields,
-    MessageViewDOBlob[] Blobs,
+    Dictionary<Guid, object?> Fields,
     int? ForwardedMessageId);
 
 /// <summary>

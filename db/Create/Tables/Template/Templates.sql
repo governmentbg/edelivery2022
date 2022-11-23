@@ -6,6 +6,7 @@ CREATE TABLE [dbo].[Templates](
   [TemplateId] [int] IDENTITY(1,1) NOT NULL,
   [Name] [nvarchar](500) NOT NULL,
   [IdentityNumber] [nvarchar](50) NOT NULL,
+  [Category] [nvarchar](64) NULL,
   [Content] [nvarchar](max) NOT NULL,
   [IsSystemTemplate] [bit] NOT NULL,
   [ReadLoginSecurityLevelId] [int] NOT NULL,
@@ -17,14 +18,6 @@ CREATE TABLE [dbo].[Templates](
   [ArchivedByAdminUserId] [int] NULL,
   [PublishDate] [datetime2](7) NULL,
   [PublishedByAdminUserId] [int] NULL,
-  [BlobId] [int] NULL,
-  [SenderDocumentField] [nvarchar](512) NULL,
-  [RecipientDocumentField] [nvarchar](512) NULL,
-  [SubjectDocumentField] [nvarchar](512) NULL,
-  [DateSentDocumentField] [nvarchar](512) NULL,
-  [DateReceivedDocumentField] [nvarchar](512) NULL,
-  [SenderSignatureDocumentField] [nvarchar](512) NULL,
-  [RecipientSignatureDocumentField] [nvarchar](512) NULL,
   
   CONSTRAINT [PK_Templates] PRIMARY KEY ([TemplateId]),
   CONSTRAINT [FK_Templates_AdminUsers_ArchivedByAdminUserId]
@@ -36,9 +29,6 @@ CREATE TABLE [dbo].[Templates](
   CONSTRAINT [FK_Templates_AdminUsers_PublishedByAdminUserId]
     FOREIGN KEY([PublishedByAdminUserId])
     REFERENCES [dbo].[AdminUsers] ([Id]),
-  CONSTRAINT [FK_Templates_Blobs_BlobId]
-    FOREIGN KEY([BlobId])
-    REFERENCES [dbo].[Blobs] ([BlobId]),
   CONSTRAINT [FK_Templates_LoginSecurityLevels_1]
     FOREIGN KEY([ReadLoginSecurityLevelId])
     REFERENCES [dbo].[LoginSecurityLevels] ([LoginSecurityLevelId]),

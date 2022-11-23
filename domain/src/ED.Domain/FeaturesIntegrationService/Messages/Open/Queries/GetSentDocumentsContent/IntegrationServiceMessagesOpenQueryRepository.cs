@@ -71,17 +71,9 @@ namespace ED.Domain
             {
                 var matchBlob = blobs.First(e => e.BlobId == blobIds[i]);
 
-                BlobsServiceClient.DownloadBlobToArrayVO downloadBlob =
-                    await this.blobsServiceClient.DownloadMessageBlobToArrayAsync(
-                        profileId,
-                        blobIds[i],
-                        messageId,
-                        ct);
-
                 result[i] = new(
                     matchBlob.BlobId,
                     matchBlob.FileName,
-                    downloadBlob.Content,
                     matchBlob.Timestamp,
                     matchBlob.DocumentRegistrationNumber,
                     blobsSignatures

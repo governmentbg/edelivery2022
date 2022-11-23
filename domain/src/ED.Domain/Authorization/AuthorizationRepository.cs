@@ -257,6 +257,21 @@ namespace ED.Domain
                 .AnyAsync(ct);
         }
 
+        public async Task<bool> IsForwardedMessage(
+            int messageId,
+            int forwardingMessageId,
+            CancellationToken ct)
+        {
+            return await (
+                from fm in this.DbContext.Set<ForwardedMessage>()
+
+                where fm.MessageId == forwardingMessageId
+                    && fm.ForwardedMessageId == messageId
+
+                select fm.MessageId)
+               .AnyAsync(ct);
+        }
+
         private static Expression<Func<LoginProfilePermission, bool>> CreateMessageAccessPredicate(
             int loginId,
             int profileId,

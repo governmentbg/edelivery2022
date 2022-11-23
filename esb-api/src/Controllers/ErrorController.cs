@@ -7,8 +7,7 @@ namespace ED.EsbApi;
 
 [ApiExplorerSettings(IgnoreApi = true)]
 [ApiController]
-// https://github.com/dotnet/aspnet-api-versioning/issues/174#issuecomment-321916143
-[ApiVersionNeutral]
+[ApiVersionNeutral] // https://github.com/dotnet/aspnet-api-versioning/issues/174#issuecomment-321916143
 public class ErrorController : ControllerBase
 {
     [HttpGet("/api/error-local-development")]

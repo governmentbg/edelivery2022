@@ -19,6 +19,8 @@ namespace EDelivery.WebPortal.Authorization
 
         public string RecipientGroupIdRouteOrQueryParam { get; set; }
 
+        public string ForwardingMessageIdRouteOrQueryParam { get; set; }
+
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             // do not authorize child actions, the parent action should do that
@@ -70,6 +72,13 @@ namespace EDelivery.WebPortal.Authorization
                 requirementContext.Set(
                     RequirementContextItems.RecipientGroupId,
                     filterContext.GetInt32RouteOrQueryParam(this.RecipientGroupIdRouteOrQueryParam));
+            }
+
+            if (!string.IsNullOrEmpty(this.ForwardingMessageIdRouteOrQueryParam))
+            {
+                requirementContext.Set(
+                    RequirementContextItems.ForwardingMessageId,
+                    filterContext.GetInt32RouteOrQueryParam(this.ForwardingMessageIdRouteOrQueryParam));
             }
 
             base.OnAuthorization(filterContext);

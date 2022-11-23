@@ -126,7 +126,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error($"Unsuccessful creation of profile", ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Unsuccessful creation of profile");
 
                 ModelState.AddModelError(
                     string.Empty,
@@ -461,12 +463,6 @@ namespace EDelivery.WebPortal.Controllers
 
             if (individual.Individual == null)
             {
-                ElmahLogger.Instance.Info(
-                    "Person with EGN: {0}, FirstName: {1} and LastName: {2} is not found in the database!",
-                    model.Identifier,
-                    model.FirstName,
-                    model.LastName);
-
                 ModelState.AddModelError(
                     nameof(model.FirstName),
                     ErrorMessages.ErrorPersonNotFound);
@@ -507,10 +503,6 @@ namespace EDelivery.WebPortal.Controllers
 
             if (legalEntity.LegalEntity == null)
             {
-                ElmahLogger.Instance.Info(
-                    "Legal Person with EIK: {0}",
-                    model.CompanyRegistrationNumber);
-
                 ModelState.AddModelError(
                     nameof(model.CompanyRegistrationNumber),
                     ErrorMessages.ErrorLegalNotFound);
@@ -701,9 +693,7 @@ namespace EDelivery.WebPortal.Controllers
             {
                 ElmahLogger.Instance.Error(
                     ex,
-                    "Error updating notification settings for login {0} and profile id: {1}",
-                    UserData.LoginId,
-                    model.ProfileId);
+                    $"Error updating notification settings for login {UserData.LoginId} and profile id: {model.ProfileId}");
 
                 ModelState.AddModelError("", ErrorMessages.ErrorSystemGeneral);
 
@@ -896,11 +886,9 @@ namespace EDelivery.WebPortal.Controllers
             {
                 ElmahLogger.Instance.Error(
                     ex,
-                    "Can not remove access to profile for login {0}",
-                    loginId);
+                    $"Can not remove access to profile for login {loginId}");
 
-                return new HttpStatusCodeResult(
-                    System.Net.HttpStatusCode.InternalServerError);
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
             }
         }
 
@@ -1174,8 +1162,6 @@ namespace EDelivery.WebPortal.Controllers
             {
                 CachedLoginProfile activeProfile = this.UserData.ActiveProfile;
 
-                logger.Info("ProfileNamesSync for profileId " + activeProfile.ProfileId);
-
                 if (activeProfile.TargetGroupId != (int)TargetGroupId.Individual)
                 {
                     ModelState.AddModelError(
@@ -1185,9 +1171,14 @@ namespace EDelivery.WebPortal.Controllers
                     return PartialView("Partials/_ProfilePersonInfo", model);
                 }
 
-                RegixInfoClient.DataContracts.ValidPersonResponse graoResult =
-                    GetRegixPersonInfo(activeProfile.Identifier);
-                if (graoResult == null)
+                GetRegixPersonInfoResponse regixResp =
+                    await profileClient.Value.GetRegixPersonInfoAsync(
+                        new GetRegixPersonInfoRequest()
+                        {
+                            Identifier = activeProfile.Identifier
+                        });
+
+                if (regixResp == null || regixResp.Result == null)
                 {
                     ModelState.AddModelError(
                         nameof(model.EGN),
@@ -1196,11 +1187,11 @@ namespace EDelivery.WebPortal.Controllers
                     return PartialView("Partials/_ProfilePersonInfo", model);
                 }
 
-                if (!graoResult.Success)
+                if (!regixResp.Result.Success)
                 {
                     ModelState.AddModelError(
                         nameof(model.EGN),
-                        $"{ErrorMessages.ProfileNamesSyncGraoNoData} : {graoResult.ErrorMessage}");
+                        $"{ErrorMessages.ProfileNamesSyncGraoNoData} : {regixResp.Result.ErrorMessage}");
 
                     return PartialView("Partials/_ProfilePersonInfo", model);
                 }
@@ -1209,9 +1200,9 @@ namespace EDelivery.WebPortal.Controllers
                     new UpdateIndividualNamesRequest
                     {
                         ProfileId = this.UserData.ActiveProfileId,
-                        FirstName = graoResult.FirstName,
-                        MiddleName = graoResult.SurName,
-                        LastName = graoResult.FamilyName,
+                        FirstName = regixResp.Result.FirstName,
+                        MiddleName = regixResp.Result.SurName,
+                        LastName = regixResp.Result.FamilyName,
                         ActionLoginId = this.UserData.LoginId,
                         Ip = this.Request.UserHostAddress
                     },
@@ -1219,15 +1210,17 @@ namespace EDelivery.WebPortal.Controllers
 
                 this.HttpContext.ClearCachedUserData();
 
-                model.FirstName = graoResult.FirstName;
-                model.MiddleName = graoResult.SurName;
-                model.LastName = graoResult.FamilyName;
+                model.FirstName = regixResp.Result.FirstName;
+                model.MiddleName = regixResp.Result.SurName;
+                model.LastName = regixResp.Result.FamilyName;
 
                 return PartialView("Partials/_ProfilePersonInfo", model);
             }
             catch (Exception ex)
             {
-                logger.Error("Error in ProfileNamesSync for profileId: " + this.UserData.ActiveProfileId, ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    $"Error in ProfileNamesSync for profileId: {this.UserData.ActiveProfileId}");
 
                 ModelState.AddModelError(
                     nameof(model.EGN),
@@ -1274,6 +1267,30 @@ namespace EDelivery.WebPortal.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> ExportHistory()
+        {
+            GetHistoryResponse response =
+                await profileClient.Value.GetHistoryAsync(
+                    new GetHistoryRequest
+                    {
+                        ProfileId = this.UserData.ActiveProfileId,
+                        Offset = 0,
+                        Limit = SystemConstants.ExportSize,
+                    },
+                    cancellationToken: Response.ClientDisconnectedToken);
+
+            ResourceManager resourceManager =
+                new ResourceManager(typeof(ProfilePage));
+
+            List<ProfileHistoryRecord> parsedHistory = response
+                .History
+                .Select(x => new ProfileHistoryRecord(x, resourceManager))
+                .ToList();
+
+            return ExportService.ExportHistory(parsedHistory);
+        }
+
         #region json token
 
         [Obsolete("Unused code")]
@@ -1314,7 +1331,6 @@ namespace EDelivery.WebPortal.Controllers
 
                 string token = encoderJWT.Encode(tokenObject, pass);
 
-                //log it
                 await CreateJWTAuditLog(
                     now,
                     Utils.DbAuditLogs.JWTTokenType.Test,
@@ -1325,8 +1341,6 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error("Create Json Token for Reports failed", ex);
-
                 return Content(ex.Message);
             }
         }
@@ -1393,11 +1407,10 @@ namespace EDelivery.WebPortal.Controllers
                         Token = jti.ToString(),
                         Data = token,
                         LoginId = this.UserData.LoginId,
-                        ProfileId = profileId
+                        ProfileId = profileId,
+                        DateCreated = DateTime.Now.ToTimestamp()
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
-
-                logger.Info("CreateRegixReportAuditLog created successfully");
 
                 await CreateJWTAuditLog(
                     now,
@@ -1405,9 +1418,11 @@ namespace EDelivery.WebPortal.Controllers
                     jti,
                     token);
             }
-            catch (Exception ex1)
+            catch (Exception ex)
             {
-                logger.Error("Error in eDeliveryService CreateRegixReprotAuditLog!", ex1);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Error in eDeliveryService CreateRegixReprotAuditLog!");
             }
         }
 
@@ -1607,7 +1622,7 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error("Create Json Token failed", ex);
+                ElmahLogger.Instance.Error(ex, "Create Json Token failed");
 
                 return string.Empty;
             }
@@ -1647,16 +1662,16 @@ namespace EDelivery.WebPortal.Controllers
                     loggingdb.JWTTokenAuditLogs.Add(log);
 
                     await loggingdb.SaveChangesAsync();
-
-                    logger.Info("CreateJWTAuditLog created successfully");
                 }
             }
-            catch (Exception ex1)
+            catch (Exception ex)
             {
-                logger.Error("Error in CreateJWTAuditLog", ex1);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Error in CreateJWTAuditLog");
             }
         }
 
-        #endregion json token 
+        #endregion json token
     }
 }

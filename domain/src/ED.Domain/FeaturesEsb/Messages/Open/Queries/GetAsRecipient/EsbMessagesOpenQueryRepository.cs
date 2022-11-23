@@ -51,16 +51,14 @@ namespace ED.Domain
                     RecipientLoginName = sl != null ? (string?)sl.ElectronicSubjectName : null,
                     m.TemplateId,
                     m.Subject,
-                    m.Orn,
-                    m.ReferencedOrn,
-                    m.AdditionalIdentifier,
+                    m.Rnu,
                     m.Body,
                     mak.ProfileKeyId,
                     mak.EncryptedKey,
                     m.IV,
                     ForwardedMessageId = (int?)fm.ForwardedMessageId,
                 })
-                .FirstOrDefaultAsync(ct);
+                .FirstAsync(ct);
 
             var blobsAndSignatures = await (
                 from mb in this.DbContext.Set<MessageBlob>()
@@ -138,9 +136,7 @@ namespace ED.Domain
                         message.RecipientLoginName)
                     : null,
                 message.Subject,
-                message.Orn,
-                message.ReferencedOrn,
-                message.AdditionalIdentifier,
+                message.Rnu,
                 message.TemplateId!.Value,
                 message.Body,
                 message.ProfileKeyId,

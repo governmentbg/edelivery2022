@@ -549,20 +549,13 @@ namespace ED.DomainServices
                     new CreateTemplateCommand(
                         request.Name,
                         request.IdentityNumber,
+                        request.Category,
                         request.Content,
                         request.ResponseTemplateId,
                         request.IsSystemTemplate,
                         request.CreatedByAdminUserId,
                         request.ReadLoginSecurityLevelId,
-                        request.WriteLoginSecurityLevelId,
-                        request.BlobId,
-                        request.SenderDocumentField,
-                        request.RecipientDocumentField,
-                        request.SubjectDocumentField,
-                        request.DateSentDocumentField,
-                        request.DateReceivedDocumentField,
-                        request.SenderSignatureDocumentField,
-                        request.RecipientSignatureDocumentField),
+                        request.WriteLoginSecurityLevelId),
                     context.CancellationToken);
 
             return new CreateTemplateResponse
@@ -582,19 +575,12 @@ namespace ED.DomainServices
                         request.TemplateId,
                         request.Name,
                         request.IdentityNumber,
+                        request.Category,
                         request.Content,
                         request.ResponseTemplateId,
                         request.IsSystemTemplate,
                         request.ReadLoginSecurityLevelId,
-                        request.WriteLoginSecurityLevelId,
-                        request.BlobId,
-                        request.SenderDocumentField,
-                        request.RecipientDocumentField,
-                        request.SubjectDocumentField,
-                        request.DateSentDocumentField,
-                        request.DateReceivedDocumentField,
-                        request.SenderSignatureDocumentField,
-                        request.RecipientSignatureDocumentField),
+                        request.WriteLoginSecurityLevelId),
                     context.CancellationToken);
 
             return new Empty();
@@ -608,6 +594,21 @@ namespace ED.DomainServices
                 .GetRequiredService<IMediator>()
                 .Send(
                     new PublishTemplateCommand(
+                        request.TemplateId,
+                        request.PublishedByAdminUserId),
+                    context.CancellationToken);
+
+            return new Empty();
+        }
+
+        public override async Task<Empty> UnpublishTemplate(
+            UnpublishTemplateRequest request,
+            ServerCallContext context)
+        {
+            await this.serviceProvider
+                .GetRequiredService<IMediator>()
+                .Send(
+                    new UnpublishTemplateCommand(
                         request.TemplateId,
                         request.PublishedByAdminUserId),
                     context.CancellationToken);
@@ -1246,24 +1247,21 @@ namespace ED.DomainServices
             GetEFormReportRequest request,
             ServerCallContext context)
         {
-            TableResultVO<IAdminReportsListQueryRepository.GetEFormsVO> eForms =
+            IAdminReportsListQueryRepository.GetEFormsVO[] eForms =
                 await this.serviceProvider
                     .GetRequiredService<IAdminReportsListQueryRepository>()
                     .GetEFormsAsync(
                         request.AdminUserId,
                         request.FromDate.ToLocalDateTime(),
                         request.ToDate.ToLocalDateTime(),
-                        request.EFormServiceNumber,
-                        request.Offset,
-                        request.Limit,
+                        request.Subject,
                         context.CancellationToken);
 
             return new GetEFormReportResponse
             {
-                Length = eForms.Length,
                 Result =
                 {
-                    eForms.Result.ProjectToType<GetEFormReportResponse.Types.EFormMessage>()
+                    eForms.ProjectToType<GetEFormReportResponse.Types.EFormMessage>()
                 }
             };
         }

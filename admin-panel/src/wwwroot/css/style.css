@@ -3685,3 +3685,27 @@ td.elipsis, td.elipsis a span {
     min-width: 95%;
   }
 }
+
+.template-field {
+  border: 1px solid #014f86;
+  border-radius: 7px;
+  padding: 10px;
+  -webkit-transition: color 0.5s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: color 0.5s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+  .template-field:hover {
+    background-color: #a9d6e5;
+  }
+
+.grabbable:hover {
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.grabbable:active {
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}

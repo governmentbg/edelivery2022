@@ -9,8 +9,9 @@ namespace ED.Domain
             int ProfileId,
             DateTime ActionDate,
             ProfileHistoryAction Action,
-            string ActionLoginName,
+            string? LoginName,
             string? Details,
+            string? AdminName,
             string? Ip);
     }
 }

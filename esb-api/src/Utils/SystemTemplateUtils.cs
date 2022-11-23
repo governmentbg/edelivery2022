@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using Newtonsoft.Json.Linq;
 
 namespace ED.EsbApi;
 
@@ -33,69 +34,63 @@ public sealed class SystemTemplateUtils
                 UnicodeRanges.Cyrillic)
         };
 
-    public record BlobInfo(
-        Guid FieldId,
-        string FileName,
-        string Alg,
-        string Hash,
-        ulong Bytes);
-
-    public static string GetNewMessageBodyJson(
-       string body,
-       BlobInfo[] files)
-       => JsonSerializer.Serialize(
-            new Dictionary<string, object>
-            {
-                {
-                    "179ea4dc-7879-43ad-8073-72b263915656",
-                    body
-                },
-                {
-                    "e2135802-5e34-4c60-b36e-c86d910a571a",
-                    files.Select(f =>
-                        new
-                        {
-                            FileName = $"{f.FileName} ({FormatSize(f.Bytes)})",
-                            FileHash = $"{f.Alg}: {f.Hash}"
-                        })
-                        .ToArray()
-                }
-            },
-            JsonSerializerOptions);
-
     public static (string, string) GetNewMessageBodyJson(
-#pragma warning disable CA1002 // Do not expose generic lists
-        List<BaseComponent> components,
-#pragma warning restore CA1002 // Do not expose generic lists
-        Dictionary<Guid, string?> fields,
-        BlobInfo[] files)
+        IList<BaseComponent> components,
+        Dictionary<Guid, object?> fields,
+        DomainServices.Esb.GetBlobsInfoResponse.Types.Blob[] blobs)
     {
-        Dictionary<string, object> body = new();
-        Dictionary<string, object> metaFields = new();
+        Dictionary<string, object?> body = new();
+        Dictionary<string, object?> metaFields = new();
 
-        foreach (var item in fields)
+        foreach (KeyValuePair<Guid, object?> item in fields)
         {
-            body.Add(item.Key.ToString(), item.Value ?? string.Empty);
+            BaseComponent matchingComponent = components.First(e => e.Id == item.Key);
 
-            if (!components.First(e => e.Id == item.Key).IsEncrypted)
+            object? value = null;
+
+            switch (matchingComponent.Type)
             {
-                metaFields.Add(item.Key.ToString(), item.Value ?? string.Empty);
+                case ComponentType.hidden:
+                case ComponentType.textfield:
+                case ComponentType.textarea:
+                case ComponentType.datetime:
+                case ComponentType.select:
+                    value = item.Value ?? string.Empty;
+                    break;
+                case ComponentType.checkbox:
+                    value = item.Value ?? false;
+                    break;
+                case ComponentType.file:
+                    if (item.Value == null)
+                    {
+                        value = null;
+                    }
+                    else
+                    {
+                        value = ((JArray)item.Value!).ToObject<int[]>()!.Select(e =>
+                        {
+                            var machingBlob = blobs.First(b => b.BlobId == e);
+
+                            return new
+                            {
+                                FileId = machingBlob.BlobId,
+                                FileName = $"{machingBlob.FileName} ({FormatSize((ulong)machingBlob.Size!)})",
+                                FileHash = $"{machingBlob.HashAlgorithm}: {machingBlob.Hash}"
+                            };
+                        });
+                    }
+                    break;
+                case ComponentType.markdown:
+                    break;
+                default:
+                    throw new Exception("Unsupported template field");
             }
-        }
 
-        foreach (var fieldFiles in files.GroupBy(e => e.FieldId))
-        {
-            var value = fieldFiles.Select(e => new
+            body.Add(item.Key.ToString(), value);
+
+            if (!matchingComponent.IsEncrypted)
             {
-                FileName = $"{e.FileName} ({FormatSize(e.Bytes)})",
-                FileHash = $"{e.Alg}: {e.Hash}"
-            });
-
-            body.Add(fieldFiles.Key.ToString(), value);
-
-            if (!components.First(e => e.Id == fieldFiles.Key).IsEncrypted)
-            {
-                metaFields.Add(fieldFiles.Key.ToString(), value);
+                metaFields.Add(item.Key.ToString(), value);
             }
         }
 

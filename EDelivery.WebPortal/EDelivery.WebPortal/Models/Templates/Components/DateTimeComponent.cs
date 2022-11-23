@@ -6,5 +6,7 @@
         {
             this.Type = ComponentType.datetime;
         }
+
+        public bool UseNowAsDefaultValue { get; set; }
     }
 }

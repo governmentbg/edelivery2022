@@ -128,7 +128,6 @@ namespace ED.IntegrationService
                             DocumentRegistrationNumber = e.DocumentRegistrationNumber,
                             DocumentName = e.FileName,
                             TimeStamp = new DcTimeStamp(e.FileName, e.Timestamp.ToByteArray()),
-                            Content = e.Content.ToByteArray(),
                             SignaturesInfo =
                                 ToListOfDcSignatureValidationResult(e.Signatures.ToArray()),
                         })
@@ -142,7 +141,6 @@ namespace ED.IntegrationService
                             DocumentRegistrationNumber = e.DocumentRegistrationNumber,
                             DocumentName = e.FileName,
                             TimeStamp = new DcTimeStamp(e.FileName, e.Timestamp.ToByteArray()),
-                            Content = e.Content.ToByteArray(),
                             SignaturesInfo =
                                 ToListOfDcSignatureValidationResult(e.Signatures.ToArray()),
                         })

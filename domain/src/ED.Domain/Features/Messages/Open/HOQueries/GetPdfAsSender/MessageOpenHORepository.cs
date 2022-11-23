@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -7,8 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Protobuf;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using static ED.Domain.IMessageOpenHORepository;
 using static ED.Domain.IProfilesService;
 
@@ -84,10 +81,6 @@ namespace ED.Domain
                     pdfAsSender.TemplateId!.Value,
                     ct);
 
-            Dictionary<string, string> dict = this.GetFieldDictionaryAsSender(
-                template.Content,
-                decryptedBody);
-
             using MemoryStream newPdf =
                 this.recyclableMemoryStreamManager.GetStream();
 
@@ -145,7 +138,7 @@ namespace ED.Domain
                 })
                 .ToArray();
 
-            MemoryStream pdf = PdfWriterUtils.CreatePdfAsSender(
+            MemoryStream pdf = PdfWriterUtils.CreatePdf(
                 newPdf,
                 this.pdfOptionsAccessor.Value,
                 pdfAsSender.SenderProfileName,
@@ -153,14 +146,9 @@ namespace ED.Domain
                 EncryptionHelper.GetHexString(messageSummarySha256),
                 recipients!,
                 pdfAsSender.Subject,
-                dict,
-                pdfAsSender.Blobs
-                    .Select(e => (
-                        e.FileName,
-                        e.Hash,
-                        e.HashAlgorithm,
-                        SystemTemplateUtils.FormatSize((ulong)e.Size!.Value)))
-                    .ToArray());
+                pdfAsSender.Rnu,
+                template.Content,
+                decryptedBody);
 
             using MemoryStream signedPdf =
                 this.recyclableMemoryStreamManager.GetStream();
@@ -192,78 +180,6 @@ namespace ED.Domain
                 fileName,
                 AsSender_PdfContentType,
                 signedPdf.ToArray()); // creates a copy of the recyclable stream
-        }
-
-        private Dictionary<string, string> GetFieldDictionaryAsSender(
-            string templateContent,
-            string body)
-        {
-            Dictionary<Guid, (bool, string)> templateDictionary =
-                this.ParseTemplateToDictionaryAsSender(templateContent);
-
-            Dictionary<Guid, object> valuesDictionary =
-                JsonConvert.DeserializeObject<Dictionary<Guid, object>>(body)!;
-
-            Dictionary<string, string> result = new();
-
-            foreach (var item in valuesDictionary)
-            {
-                if (templateDictionary.ContainsKey(item.Key))
-                {
-                    (bool isFile, string label) = templateDictionary[item.Key];
-
-                    if (!isFile)
-                    {
-                        result.Add(
-                            label,
-                            item.Value.ToString() ?? string.Empty);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        private const string AsSender_Id = "Id";
-        private const string AsSender_LabelProp = "Label";
-        private const string AsSender_Type = "Type";
-        private const string AsSender_FileType = "file";
-
-        private Dictionary<Guid, (bool, string)> ParseTemplateToDictionaryAsSender(
-            string json)
-        {
-            JArray arr = JArray.Parse(json);
-
-            Dictionary<Guid, (bool, string)> result = new();
-
-            foreach (var item in arr.Children<JObject>())
-            {
-                IEnumerable<JProperty> props = item.Properties();
-
-                Guid id = new(props
-                    .Single(e => e.Name == AsSender_Id)
-                    .Value
-                    .Value<string>()!);
-
-                bool isFile = props
-                    .Single(e => e.Name == AsSender_Type)
-                    .Value
-                    .Value<string>()!
-                    .ToUpperInvariant()
-                        == AsSender_FileType.ToUpperInvariant();
-
-                string? label = props
-                    .SingleOrDefault(e => e.Name == AsSender_LabelProp)?
-                    .Value
-                    .Value<string>();
-
-                if (!string.IsNullOrEmpty(label))
-                {
-                    result.Add(id, (isFile, label));
-                }
-            }
-
-            return result;
         }
     }
 }

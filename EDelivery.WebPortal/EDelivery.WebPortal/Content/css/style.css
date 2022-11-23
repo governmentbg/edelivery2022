@@ -272,81 +272,81 @@ svg.svg-logo {
     height: 24px;
 }
 
-.icon-hint--info:after {
-    content: "i";
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    font-family: "Georgia";
-    width: 24px;
-    height: 24px;
-    color: #ffffff;
-    border-radius: 50%;
-    background-color: #949494;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+    .icon-hint--info:after {
+        content: "i";
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        font-family: "Georgia";
+        width: 24px;
+        height: 24px;
+        color: #ffffff;
+        border-radius: 50%;
+        background-color: #949494;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 
 .icon-hint--warning {
     width: 24px;
     height: 24px;
 }
 
-.icon-hint--warning:after {
-   content: "i";
-   display: -webkit-box;
-   display: -ms-flexbox;
-   display: flex;
-   -webkit-box-pack: center;
-   -ms-flex-pack: center;
-   justify-content: center;
-   -webkit-box-align: center;
-   -ms-flex-align: center;
-   align-items: center;
-   font-family: "Georgia";
-   width: 24px;
-   height: 24px;
-   color: #ffffff;
-   border-radius: 50%;
-   background-color: #ff6666;
-   position: absolute;
-   top: 0;
-   left: 0;
-}
+    .icon-hint--warning:after {
+        content: "i";
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        font-family: "Georgia";
+        width: 24px;
+        height: 24px;
+        color: #ffffff;
+        border-radius: 50%;
+        background-color: #ff6666;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 
 .icon-hint--clear {
     width: 25px;
     height: 25px;
 }
 
-.icon-hint--clear:after {
-    content: "\00D7";
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    font-family: "Georgia";
-    width: 25px;
-    height: 25px;
-    color: #ffffff;
-    border-radius: 50%;
-    background-color: #949494;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+    .icon-hint--clear:after {
+        content: "\00D7";
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        font-family: "Georgia";
+        width: 25px;
+        height: 25px;
+        color: #ffffff;
+        border-radius: 50%;
+        background-color: #949494;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 
 .icon-details {
     display: -webkit-box;
@@ -1567,6 +1567,22 @@ footer {
         margin: 0;
     }
 
+.profile-history-title {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+    .profile-history-title h2 {
+        margin: 0;
+    }
+
 @media (max-width: 700px) {
     .file-storage-title {
         -webkit-box-orient: vertical;
@@ -1579,6 +1595,20 @@ footer {
     }
 
         .file-storage-title h2 {
+            margin-bottom: inherit;
+        }
+
+    .profile-history-title {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+        align-items: flex-start;
+    }
+
+        .profile-history-title h2 {
             margin-bottom: inherit;
         }
 }
@@ -1670,16 +1700,18 @@ footer {
         float: right;
     }
 
-    .upload-status .details-toggle .unfocused-text {
-        display: none;
-    }
-    .upload-status .details-toggle .focused-text {
-        display: inline;
-    }
+        .upload-status .details-toggle .unfocused-text {
+            display: none;
+        }
+
+        .upload-status .details-toggle .focused-text {
+            display: inline;
+        }
 
     .upload-status.unfocus .details-toggle .unfocused-text {
         display: inline;
     }
+
     .upload-status.unfocus .details-toggle .focused-text {
         display: none;
     }
@@ -3017,7 +3049,7 @@ label span.explain {
 }
 
     .search-filter.show {
-        height: 380px;
+        height: 300px;
     }
 
         .search-filter.show.file-storage {
@@ -3030,7 +3062,7 @@ label span.explain {
 
 @media (max-width: 1280px) {
     .search-filter.show {
-        height: 450px;
+        height: 370px;
     }
 
         .search-filter.show.file-storage {
@@ -3053,7 +3085,7 @@ label span.explain {
 
 @media (max-width: 830px) {
     .search-filter.show {
-        height: 740px;
+        height: 600px;
     }
 
         .search-filter.show.file-storage {
@@ -3607,4 +3639,15 @@ td.elipsis, td.elipsis a span {
 
 .mr-0 {
     margin-right: 0;
+}
+
+hr.section-border {
+    background-color: #dddddd;
+    height: 1px;
+    color: #dddddd;
+    border: none;
+}
+
+table.message {
+    width: 100%;
 }

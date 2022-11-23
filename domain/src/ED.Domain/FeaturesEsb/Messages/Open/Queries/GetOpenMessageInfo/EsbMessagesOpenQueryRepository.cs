@@ -26,7 +26,7 @@ namespace ED.Domain
                     mr.DateReceived!.Value,
                     l.Id,
                     l.ElectronicSubjectName))
-                .FirstOrDefaultAsync(ct);
+                .FirstAsync(ct);
 
             return vo;
         }

@@ -124,7 +124,7 @@
     <value>Като Физическо лице ще имате достъп до личните си получени и изпратени съобщения, както и да управлявате своя профил.</value>
   </data>
   <data name="DownloadRegistrationForm" xml:space="preserve">
-    <value>Заявление за регистрация в системата за сигурно електронно връчване</value>
+    <value>Заявление за присъединяване на юридическо лице</value>
   </data>
   <data name="HeadingRegistrationSuccess" xml:space="preserve">
     <value>Успешно се регистрирахте в системата за сигурно електронно връчване!</value>
@@ -323,5 +323,23 @@
   </data>
   <data name="LabelViberNotificationsOnReceiving" xml:space="preserve">
     <value>Желая да получавам нотификация по Viber при получаване на ново съобщение</value>
+  </data>
+  <data name="DescriptionRegisterLegalAddOn" xml:space="preserve">
+    <value>Уведомяваме Ви, че във връзка с надграждане функционалностите на системата за сигурно електронно връчване, към настоящия момент заявления за присъединяване към системата за сигурно електронно връчване на юридически лица, могат да се подават само от лице представляващо дружеството (управител, прокурист, представляващ и др.). С цел осигуряване на сигурност на профила и на цялостния процес по заявяване и получаване на електронни административни услуги и връчване на административни актове, към настоящия момент подаване на заявление за присъединяване на ЮЛ чрез пълномощник не е възможно.</value>
+  </data>
+  <data name="TitleRegisterPublicAdministration" xml:space="preserve">
+    <value>Регистрация на администрация</value>
+  </data>
+  <data name="TitleRegisterPublicAdministrationApplication1" xml:space="preserve">
+    <value>Заявление за присъединяване на лица по чл. 1, ал. 1 и ал. 2 от Закона за електронно управление</value>
+  </data>
+  <data name="TitleRegisterPublicAdministrationApplication2" xml:space="preserve">
+    <value>Заявление за присъединяване към Системата за сигурно електронно връчване на структура/и на административен орган по чл. 1, ал. 1 от Закона за електронното управление </value>
+  </data>
+  <data name="ForMoreInformation" xml:space="preserve">
+    <value>За повече информация {0}виж на страницата на Изпълнителна агенция "Инфраструктура на елетронното управление"{1}</value>
+  </data>
+  <data name="TitleUnregisterPublicAdministrationApplication" xml:space="preserve">
+    <value>Заявление за прекратяване присъединяването към Системата за сигурно електронно връчване</value>
   </data>
 </root>

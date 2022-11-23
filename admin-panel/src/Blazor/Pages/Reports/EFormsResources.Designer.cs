@@ -19,7 +19,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class EFormsResources {
@@ -106,11 +106,11 @@ namespace ED.AdminPanel.Blazor.Pages.Reports {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Услуга №.
+        ///   Looks up a localized string similar to Получател.
         /// </summary>
-        public static string FormEFormServiceNumber {
+        public static string ColumnReceiver {
             get {
-                return ResourceManager.GetString("FormEFormServiceNumber", resourceCulture);
+                return ResourceManager.GetString("ColumnReceiver", resourceCulture);
             }
         }
         
@@ -124,11 +124,29 @@ namespace ED.AdminPanel.Blazor.Pages.Reports {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Наименование.
+        /// </summary>
+        public static string FormSubject {
+            get {
+                return ResourceManager.GetString("FormSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to До дата.
         /// </summary>
         public static string FormToDate {
             get {
                 return ResourceManager.GetString("FormToDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Полето &quot;До дата&quot; трябва да е в диапазон 2 месеца след полето &quot;От дата&quot;.
+        /// </summary>
+        public static string MaxDateDiapasonErrorMessage {
+            get {
+                return ResourceManager.GetString("MaxDateDiapasonErrorMessage", resourceCulture);
             }
         }
         

@@ -429,12 +429,6 @@
   <data name="LabelNoSentMessages" xml:space="preserve">
     <value>Все още няма изпратени съобщения</value>
   </data>
-  <data name="LabelReceivedInPeriod" xml:space="preserve">
-    <value>Връчено в периода</value>
-  </data>
-  <data name="LabelSentInPeriod" xml:space="preserve">
-    <value>Изпратено в периода</value>
-  </data>
   <data name="TitleSearchInSentMessages" xml:space="preserve">
     <value>Търсене в изпратени съобщения</value>
   </data>
@@ -531,19 +525,16 @@
 Ако не желаете да получавате съобщения, не избирате нито един канал.&lt;br/&gt;
 За да получавате съобщения по Viber e необходимо приложението да бъде инсталирано на мобилното Ви устройство и да имате активен Viber профил.</value>
   </data>
-  <data name="LabelAdditionalIdentifier" xml:space="preserve">
-    <value>Допълнителен идентификатор</value>
+  <data name="HistoryActionBringProfileInForce" xml:space="preserve">
+    <value>Профилът е активират от предишен пасивен статус</value>
   </data>
-  <data name="LabelReferencedOrn" xml:space="preserve">
-    <value>Към ORN</value>
+  <data name="HistoryActionMarkAsNonReadonly" xml:space="preserve">
+    <value>Профилът е с премахнат статус "само за четене"</value>
   </data>
-  <data name="LabelOrn" xml:space="preserve">
-    <value>Референтен номер на операция  (ORN)</value>
+  <data name="HistoryActionMarkAsReadonly" xml:space="preserve">
+    <value>Профилът е със статус "само за четене"</value>
   </data>
-  <data name="TableHeaderMessageOrn" xml:space="preserve">
-    <value>ORN</value>
-  </data>
-  <data name="TableHeaderMessageReferencedOrn" xml:space="preserve">
-    <value>Към ORN</value>
+  <data name="ProfileChange" xml:space="preserve">
+    <value>Смяна на профила</value>
   </data>
 </root>

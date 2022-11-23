@@ -26,8 +26,22 @@ namespace EDelivery.SEOS.MessagesTypes
                     throw new ApplicationException(Resources.Resource.MissingIdentityForReceiverEIK);
                 }
 
+                var receiverGuid = Guid.Parse(requestMessage.Header.Recipient.GUID);
+                var recipient = DatabaseQueries.GetRegisteredEntity(receiverGuid);
+                if (recipient == null)
+                {
+                    throw new ApplicationException(Resources.Resource.InvalidReceiver);
+                }
+
                 var docGuid = requestMessage.GetDocumentGuid();
-                var savedMessage = DatabaseQueries.GetMessageByDocId(docGuid);
+                if (docGuid == Guid.Empty)
+                {
+                    throw new ApplicationException(Resources.Resource.ErrorDocumentIsNotFound);
+                }
+
+                var savedMessage = DatabaseQueries.GetReceivedMessageByDocId(
+                    docGuid,
+                    recipient.Id);
                 if (savedMessage != null)
                 {
                     savedMessage.Status = savedMessage.Status == (int)DocumentStatusType.DS_WAIT_REGISTRATION
@@ -37,13 +51,17 @@ namespace EDelivery.SEOS.MessagesTypes
                 else
                 {
                     savedMessage = DatabaseQueries.CreateReceiveMessage(
-                        requestMessage, eSubjectId.Value, parentMessageId);
+                        requestMessage, 
+                        eSubjectId.Value, 
+                        parentMessageId);
                 }
 
                 Task.Run(async () => await AttachDocument.SendDocumentsForMalwareScan(
-                    savedMessage.Attachments.ToList(), logger));
+                    savedMessage.Attachments.ToList(), 
+                    logger));
 
-                var settings = MapperHelper.Mapping.Map<SEOSMessage, MessageCreationSettings>(savedMessage);
+                var settings = MapperHelper.Mapping
+                    .Map<SEOSMessage, MessageCreationSettings>(savedMessage);
                 settings.Sender = requestMessage.Header.Sender;
                 settings.Receiver = requestMessage.Header.Recipient;
                 var message = MsgDocumentStatusResponse.Create(
@@ -58,9 +76,10 @@ namespace EDelivery.SEOS.MessagesTypes
             }
             catch (Exception ex)
             {
-                var settings = MapperHelper.Mapping.Map<Message, MessageCreationSettings>(requestMessage);
+                var settings = MapperHelper.Mapping
+                    .Map<Message, MessageCreationSettings>(requestMessage);
                 var response = MsgError.Create(settings,
-                    ErrorKindType.ERR_INTERNAL,
+                    ErrorKindType.ERR_EXTERNAL,
                     ErrorsHelper.Describe(Resources.Resource.ErrorInReceiver, ex),
                     logger);
 
@@ -80,7 +99,7 @@ namespace EDelivery.SEOS.MessagesTypes
 
         public static string Create(SEOSMessage message, ILog logger)
         {
-            logger.Info($"Create RegistrationRequest for docId {message.DocGuid}, receiver {message.Sender.Name}");
+            logger.Info($"Create RegistrationRequest for docId {message.DocGuid}, receiver {message.Receiver.Name}");
 
             var regRequest = new DocumentRegistrationRequestType()
             {

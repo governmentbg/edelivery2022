@@ -24,17 +24,13 @@ namespace ED.Domain
                     into j1
                 from rt in j1.DefaultIfEmpty()
 
-                join b in this.DbContext.Set<Blob>()
-                    on t.BlobId equals b.BlobId
-                    into j2
-                from b in j2.DefaultIfEmpty()
-
                 where t.TemplateId == templateId
 
                 select new GetVO(
                     t.TemplateId,
                     t.Name,
                     t.IdentityNumber,
+                    t.Category,
                     t.Content,
                     t.ResponseTemplateId,
                     rt.Name,
@@ -48,16 +44,7 @@ namespace ED.Domain
                     t.ReadLoginSecurityLevelId,
                     rlsl.Name,
                     t.WriteLoginSecurityLevelId,
-                    wlsl.Name,
-                    t.BlobId,
-                    b.FileName,
-                    t.SenderDocumentField,
-                    t.RecipientDocumentField,
-                    t.SubjectDocumentField,
-                    t.DateSentDocumentField,
-                    t.DateReceivedDocumentField,
-                    t.SenderSignatureDocumentField,
-                    t.RecipientSignatureDocumentField))
+                    wlsl.Name))
                 .FirstAsync(ct);
 
             return vo;

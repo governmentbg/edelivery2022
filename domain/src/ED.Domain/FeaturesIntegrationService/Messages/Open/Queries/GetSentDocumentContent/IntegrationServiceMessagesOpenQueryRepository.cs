@@ -59,17 +59,10 @@ namespace ED.Domain
                 })
                 .ToArrayAsync(ct);
 
-            BlobsServiceClient.DownloadBlobToArrayVO downloadBlob =
-                await this.blobsServiceClient.DownloadMessageBlobToArrayAsync(
-                    profileId,
-                    blob.BlobId,
-                    blob.MessageId,
-                    ct);
-
             return new GetSentDocumentContentVO(
                 blob.BlobId,
                 blob.FileName,
-                downloadBlob.Content,
+                blob.MessageId,
                 blob.Timestamp,
                 blob.DocumentRegistrationNumber,
                 blobSignatures

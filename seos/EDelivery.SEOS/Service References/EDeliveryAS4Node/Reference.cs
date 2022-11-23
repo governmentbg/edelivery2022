@@ -16,7 +16,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://eu.domibus.wsplugin/")]
     public partial class FaultDetail : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string codeField;
@@ -62,704 +62,12 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class PartInfo : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Property[] partPropertiesField;
-        
-        private string hrefField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Property[] PartProperties {
-            get {
-                return this.partPropertiesField;
-            }
-            set {
-                this.partPropertiesField = value;
-                this.RaisePropertyChanged("PartProperties");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="token")]
-        public string href {
-            get {
-                return this.hrefField;
-            }
-            set {
-                this.hrefField = value;
-                this.RaisePropertyChanged("href");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class Property : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string nameField;
-        
-        private string typeField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-                this.RaisePropertyChanged("name");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string type {
-            get {
-                return this.typeField;
-            }
-            set {
-                this.typeField = value;
-                this.RaisePropertyChanged("type");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class Service : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string typeField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string type {
-            get {
-                return this.typeField;
-            }
-            set {
-                this.typeField = value;
-                this.RaisePropertyChanged("type");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class AgreementRef : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string typeField;
-        
-        private string pmodeField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string type {
-            get {
-                return this.typeField;
-            }
-            set {
-                this.typeField = value;
-                this.RaisePropertyChanged("type");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string pmode {
-            get {
-                return this.pmodeField;
-            }
-            set {
-                this.pmodeField = value;
-                this.RaisePropertyChanged("pmode");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class CollaborationInfo : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private AgreementRef agreementRefField;
-        
-        private Service serviceField;
-        
-        private string actionField;
-        
-        private string conversationIdField;
-        
-        /// <remarks/>
-        public AgreementRef AgreementRef {
-            get {
-                return this.agreementRefField;
-            }
-            set {
-                this.agreementRefField = value;
-                this.RaisePropertyChanged("AgreementRef");
-            }
-        }
-        
-        /// <remarks/>
-        public Service Service {
-            get {
-                return this.serviceField;
-            }
-            set {
-                this.serviceField = value;
-                this.RaisePropertyChanged("Service");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="token")]
-        public string Action {
-            get {
-                return this.actionField;
-            }
-            set {
-                this.actionField = value;
-                this.RaisePropertyChanged("Action");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="token")]
-        public string ConversationId {
-            get {
-                return this.conversationIdField;
-            }
-            set {
-                this.conversationIdField = value;
-                this.RaisePropertyChanged("ConversationId");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class To : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private PartyId partyIdField;
-        
-        private string roleField;
-        
-        /// <remarks/>
-        public PartyId PartyId {
-            get {
-                return this.partyIdField;
-            }
-            set {
-                this.partyIdField = value;
-                this.RaisePropertyChanged("PartyId");
-            }
-        }
-        
-        /// <remarks/>
-        public string Role {
-            get {
-                return this.roleField;
-            }
-            set {
-                this.roleField = value;
-                this.RaisePropertyChanged("Role");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class PartyId : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string typeField;
-        
-        private string valueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string type {
-            get {
-                return this.typeField;
-            }
-            set {
-                this.typeField = value;
-                this.RaisePropertyChanged("type");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("Value");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class From : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private PartyId partyIdField;
-        
-        private string roleField;
-        
-        /// <remarks/>
-        public PartyId PartyId {
-            get {
-                return this.partyIdField;
-            }
-            set {
-                this.partyIdField = value;
-                this.RaisePropertyChanged("PartyId");
-            }
-        }
-        
-        /// <remarks/>
-        public string Role {
-            get {
-                return this.roleField;
-            }
-            set {
-                this.roleField = value;
-                this.RaisePropertyChanged("Role");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class PartyInfo : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private From fromField;
-        
-        private To toField;
-        
-        /// <remarks/>
-        public From From {
-            get {
-                return this.fromField;
-            }
-            set {
-                this.fromField = value;
-                this.RaisePropertyChanged("From");
-            }
-        }
-        
-        /// <remarks/>
-        public To To {
-            get {
-                return this.toField;
-            }
-            set {
-                this.toField = value;
-                this.RaisePropertyChanged("To");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class MessageInfo : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private System.DateTime timestampField;
-        
-        private bool timestampFieldSpecified;
-        
-        private string messageIdField;
-        
-        private string refToMessageIdField;
-        
-        /// <remarks/>
-        public System.DateTime Timestamp {
-            get {
-                return this.timestampField;
-            }
-            set {
-                this.timestampField = value;
-                this.RaisePropertyChanged("Timestamp");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool TimestampSpecified {
-            get {
-                return this.timestampFieldSpecified;
-            }
-            set {
-                this.timestampFieldSpecified = value;
-                this.RaisePropertyChanged("TimestampSpecified");
-            }
-        }
-        
-        /// <remarks/>
-        public string MessageId {
-            get {
-                return this.messageIdField;
-            }
-            set {
-                this.messageIdField = value;
-                this.RaisePropertyChanged("MessageId");
-            }
-        }
-        
-        /// <remarks/>
-        public string RefToMessageId {
-            get {
-                return this.refToMessageIdField;
-            }
-            set {
-                this.refToMessageIdField = value;
-                this.RaisePropertyChanged("RefToMessageId");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class UserMessage : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private MessageInfo messageInfoField;
-        
-        private PartyInfo partyInfoField;
-        
-        private CollaborationInfo collaborationInfoField;
-        
-        private Property[] messagePropertiesField;
-        
-        private PartInfo[] payloadInfoField;
-        
-        private string mpcField;
-        
-        /// <remarks/>
-        public MessageInfo MessageInfo {
-            get {
-                return this.messageInfoField;
-            }
-            set {
-                this.messageInfoField = value;
-                this.RaisePropertyChanged("MessageInfo");
-            }
-        }
-        
-        /// <remarks/>
-        public PartyInfo PartyInfo {
-            get {
-                return this.partyInfoField;
-            }
-            set {
-                this.partyInfoField = value;
-                this.RaisePropertyChanged("PartyInfo");
-            }
-        }
-        
-        /// <remarks/>
-        public CollaborationInfo CollaborationInfo {
-            get {
-                return this.collaborationInfoField;
-            }
-            set {
-                this.collaborationInfoField = value;
-                this.RaisePropertyChanged("CollaborationInfo");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Property[] MessageProperties {
-            get {
-                return this.messagePropertiesField;
-            }
-            set {
-                this.messagePropertiesField = value;
-                this.RaisePropertyChanged("MessageProperties");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public PartInfo[] PayloadInfo {
-            get {
-                return this.payloadInfoField;
-            }
-            set {
-                this.payloadInfoField = value;
-                this.RaisePropertyChanged("PayloadInfo");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="anyURI")]
-        public string mpc {
-            get {
-                return this.mpcField;
-            }
-            set {
-                this.mpcField = value;
-                this.RaisePropertyChanged("mpc");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
-    public partial class Messaging : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private UserMessage userMessageField;
-        
-        private bool mustUnderstandField;
-        
-        private bool mustUnderstandFieldSpecified;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public UserMessage UserMessage {
-            get {
-                return this.userMessageField;
-            }
-            set {
-                this.userMessageField = value;
-                this.RaisePropertyChanged("UserMessage");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool mustUnderstand {
-            get {
-                return this.mustUnderstandField;
-            }
-            set {
-                this.mustUnderstandField = value;
-                this.RaisePropertyChanged("mustUnderstand");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool mustUnderstandSpecified {
-            get {
-                return this.mustUnderstandFieldSpecified;
-            }
-            set {
-                this.mustUnderstandFieldSpecified = value;
-                this.RaisePropertyChanged("mustUnderstandSpecified");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://eu.domibus.wsplugin/")]
     public partial class errorResultImpl : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private errorCode errorCodeField;
+        private domibusErrorCode domibusErrorCodeField;
         
-        private bool errorCodeFieldSpecified;
+        private bool domibusErrorCodeFieldSpecified;
         
         private string errorDetailField;
         
@@ -779,25 +87,25 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public errorCode errorCode {
+        public domibusErrorCode domibusErrorCode {
             get {
-                return this.errorCodeField;
+                return this.domibusErrorCodeField;
             }
             set {
-                this.errorCodeField = value;
-                this.RaisePropertyChanged("errorCode");
+                this.domibusErrorCodeField = value;
+                this.RaisePropertyChanged("domibusErrorCode");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool errorCodeSpecified {
+        public bool domibusErrorCodeSpecified {
             get {
-                return this.errorCodeFieldSpecified;
+                return this.domibusErrorCodeFieldSpecified;
             }
             set {
-                this.errorCodeFieldSpecified = value;
-                this.RaisePropertyChanged("errorCodeSpecified");
+                this.domibusErrorCodeFieldSpecified = value;
+                this.RaisePropertyChanged("domibusErrorCodeSpecified");
             }
         }
         
@@ -910,8 +218,8 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://org.ecodex.backend/1_1/")]
-    public enum errorCode {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://eu.domibus.wsplugin/")]
+    public enum domibusErrorCode {
         
         /// <remarks/>
         EBMS_0001,
@@ -1046,7 +354,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://eu.domibus.wsplugin/")]
     public enum mshRole {
         
         /// <remarks/>
@@ -1056,85 +364,14 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         RECEIVING,
     }
     
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://org.ecodex.backend/1_1/")]
-    public partial class LargePayloadType : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private byte[] valueField;
-        
-        private string payloadIdField;
-        
-        private string contentTypeField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="base64Binary", Order=0)]
-        public byte[] value {
-            get {
-                return this.valueField;
-            }
-            set {
-                this.valueField = value;
-                this.RaisePropertyChanged("value");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="token")]
-        public string payloadId {
-            get {
-                return this.payloadIdField;
-            }
-            set {
-                this.payloadIdField = value;
-                this.RaisePropertyChanged("payloadId");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string contentType {
-            get {
-                return this.contentTypeField;
-            }
-            set {
-                this.contentTypeField = value;
-                this.RaisePropertyChanged("contentType");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://org.ecodex.backend/1_1/", ConfigurationName="EDeliveryAS4Node.BackendInterface")]
-    public interface BackendInterface {
-        
-        // CODEGEN: Generating message contract since the operation listPendingMessages is neither RPC nor document wrapped.
-        [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Messaging))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LargePayloadType))]
-        EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse listPendingMessages(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
-        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse> listPendingMessagesAsync(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages request);
+    [System.ServiceModel.ServiceContractAttribute(Namespace="http://eu.domibus.wsplugin/", ConfigurationName="EDeliveryAS4Node.WebServicePluginInterface")]
+    public interface WebServicePluginInterface {
         
         // CODEGEN: Generating message contract since the operation getMessageErrors is neither RPC nor document wrapped.
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+        [System.ServiceModel.FaultContractAttribute(typeof(EDelivery.SEOS.EDeliveryAS4Node.FaultDetail), Action="", Name="FaultDetail")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Messaging))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LargePayloadType))]
         EDelivery.SEOS.EDeliveryAS4Node.getMessageErrorsResponse getMessageErrors(EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors request);
         
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
@@ -1144,8 +381,6 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
         [System.ServiceModel.FaultContractAttribute(typeof(EDelivery.SEOS.EDeliveryAS4Node.FaultDetail), Action="", Name="FaultDetail")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Messaging))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LargePayloadType))]
         EDelivery.SEOS.EDeliveryAS4Node.getStatusResponse getStatus(EDelivery.SEOS.EDeliveryAS4Node.getStatus request);
         
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
@@ -1155,8 +390,6 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
         [System.ServiceModel.FaultContractAttribute(typeof(EDelivery.SEOS.EDeliveryAS4Node.FaultDetail), Action="", Name="FaultDetail")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Messaging))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LargePayloadType))]
         EDelivery.SEOS.EDeliveryAS4Node.submitMessageResponse submitMessage(EDelivery.SEOS.EDeliveryAS4Node.submitMessage request);
         
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
@@ -1166,47 +399,19 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
         [System.ServiceModel.FaultContractAttribute(typeof(EDelivery.SEOS.EDeliveryAS4Node.FaultDetail), Action="", Name="FaultDetail")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Messaging))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LargePayloadType))]
         EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1 retrieveMessage(EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage request);
         
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
         System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1> retrieveMessageAsync(EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage request);
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class listPendingMessages {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://org.ecodex.backend/1_1/", Order=0)]
-        public object listPendingMessagesRequest;
+        // CODEGEN: Generating message contract since the operation listPendingMessages is neither RPC nor document wrapped.
+        [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+        [System.ServiceModel.FaultContractAttribute(typeof(EDelivery.SEOS.EDeliveryAS4Node.FaultDetail), Action="", Name="FaultDetail")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse listPendingMessages(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages request);
         
-        public listPendingMessages() {
-        }
-        
-        public listPendingMessages(object listPendingMessagesRequest) {
-            this.listPendingMessagesRequest = listPendingMessagesRequest;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class listPendingMessagesResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Name="listPendingMessagesResponse", Namespace="http://org.ecodex.backend/1_1/", Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("messageID", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string[] listPendingMessagesResponse1;
-        
-        public listPendingMessagesResponse() {
-        }
-        
-        public listPendingMessagesResponse(string[] listPendingMessagesResponse1) {
-            this.listPendingMessagesResponse1 = listPendingMessagesResponse1;
-        }
+        [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse> listPendingMessagesAsync(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages request);
     }
     
     /// <remarks/>
@@ -1214,7 +419,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://eu.domibus.wsplugin/")]
     public partial class getErrorsRequest : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string messageIDField;
@@ -1247,7 +452,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
     public partial class getMessageErrors {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://org.ecodex.backend/1_1/", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://eu.domibus.wsplugin/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public EDelivery.SEOS.EDeliveryAS4Node.getErrorsRequest getErrorsRequest;
         
@@ -1265,7 +470,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
     public partial class getMessageErrorsResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Name="getMessageErrorsResponse", Namespace="http://org.ecodex.backend/1_1/", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="getMessageErrorsResponse", Namespace="http://eu.domibus.wsplugin/", Order=0)]
         [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
         [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public EDelivery.SEOS.EDeliveryAS4Node.errorResultImpl[] getMessageErrorsResponse1;
@@ -1283,7 +488,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://eu.domibus.wsplugin/")]
     public partial class statusRequest : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string messageIDField;
@@ -1313,7 +518,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://eu.domibus.wsplugin/")]
     public enum messageStatus {
         
         /// <remarks/>
@@ -1371,7 +576,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
     public partial class getStatus {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://org.ecodex.backend/1_1/", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://eu.domibus.wsplugin/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public EDelivery.SEOS.EDeliveryAS4Node.statusRequest statusRequest;
         
@@ -1389,7 +594,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
     public partial class getStatusResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Name="getStatusResponse", Namespace="http://org.ecodex.backend/1_1/", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="getStatusResponse", Namespace="http://eu.domibus.wsplugin/", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<messageStatus> getStatusResponse1;
         
@@ -1406,7 +611,730 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class Messaging : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private UserMessage userMessageField;
+        
+        private bool mustUnderstandField;
+        
+        private bool mustUnderstandFieldSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public UserMessage UserMessage {
+            get {
+                return this.userMessageField;
+            }
+            set {
+                this.userMessageField = value;
+                this.RaisePropertyChanged("UserMessage");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public bool mustUnderstand {
+            get {
+                return this.mustUnderstandField;
+            }
+            set {
+                this.mustUnderstandField = value;
+                this.RaisePropertyChanged("mustUnderstand");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool mustUnderstandSpecified {
+            get {
+                return this.mustUnderstandFieldSpecified;
+            }
+            set {
+                this.mustUnderstandFieldSpecified = value;
+                this.RaisePropertyChanged("mustUnderstandSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class UserMessage : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private MessageInfo messageInfoField;
+        
+        private PartyInfo partyInfoField;
+        
+        private CollaborationInfo collaborationInfoField;
+        
+        private Property[] messagePropertiesField;
+        
+        private PartInfo[] payloadInfoField;
+        
+        private ProcessingType processingTypeField;
+        
+        private string mpcField;
+        
+        public UserMessage() {
+            this.processingTypeField = ProcessingType.PUSH;
+        }
+        
+        /// <remarks/>
+        public MessageInfo MessageInfo {
+            get {
+                return this.messageInfoField;
+            }
+            set {
+                this.messageInfoField = value;
+                this.RaisePropertyChanged("MessageInfo");
+            }
+        }
+        
+        /// <remarks/>
+        public PartyInfo PartyInfo {
+            get {
+                return this.partyInfoField;
+            }
+            set {
+                this.partyInfoField = value;
+                this.RaisePropertyChanged("PartyInfo");
+            }
+        }
+        
+        /// <remarks/>
+        public CollaborationInfo CollaborationInfo {
+            get {
+                return this.collaborationInfoField;
+            }
+            set {
+                this.collaborationInfoField = value;
+                this.RaisePropertyChanged("CollaborationInfo");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Property[] MessageProperties {
+            get {
+                return this.messagePropertiesField;
+            }
+            set {
+                this.messagePropertiesField = value;
+                this.RaisePropertyChanged("MessageProperties");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public PartInfo[] PayloadInfo {
+            get {
+                return this.payloadInfoField;
+            }
+            set {
+                this.payloadInfoField = value;
+                this.RaisePropertyChanged("PayloadInfo");
+            }
+        }
+        
+        /// <remarks/>
+        [System.ComponentModel.DefaultValueAttribute(ProcessingType.PUSH)]
+        public ProcessingType ProcessingType {
+            get {
+                return this.processingTypeField;
+            }
+            set {
+                this.processingTypeField = value;
+                this.RaisePropertyChanged("ProcessingType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="anyURI")]
+        public string mpc {
+            get {
+                return this.mpcField;
+            }
+            set {
+                this.mpcField = value;
+                this.RaisePropertyChanged("mpc");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class MessageInfo : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private System.DateTime timestampField;
+        
+        private bool timestampFieldSpecified;
+        
+        private string messageIdField;
+        
+        private string refToMessageIdField;
+        
+        /// <remarks/>
+        public System.DateTime Timestamp {
+            get {
+                return this.timestampField;
+            }
+            set {
+                this.timestampField = value;
+                this.RaisePropertyChanged("Timestamp");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool TimestampSpecified {
+            get {
+                return this.timestampFieldSpecified;
+            }
+            set {
+                this.timestampFieldSpecified = value;
+                this.RaisePropertyChanged("TimestampSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        public string MessageId {
+            get {
+                return this.messageIdField;
+            }
+            set {
+                this.messageIdField = value;
+                this.RaisePropertyChanged("MessageId");
+            }
+        }
+        
+        /// <remarks/>
+        public string RefToMessageId {
+            get {
+                return this.refToMessageIdField;
+            }
+            set {
+                this.refToMessageIdField = value;
+                this.RaisePropertyChanged("RefToMessageId");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class PartyInfo : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private From fromField;
+        
+        private To toField;
+        
+        /// <remarks/>
+        public From From {
+            get {
+                return this.fromField;
+            }
+            set {
+                this.fromField = value;
+                this.RaisePropertyChanged("From");
+            }
+        }
+        
+        /// <remarks/>
+        public To To {
+            get {
+                return this.toField;
+            }
+            set {
+                this.toField = value;
+                this.RaisePropertyChanged("To");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class From : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private PartyId partyIdField;
+        
+        private string roleField;
+        
+        /// <remarks/>
+        public PartyId PartyId {
+            get {
+                return this.partyIdField;
+            }
+            set {
+                this.partyIdField = value;
+                this.RaisePropertyChanged("PartyId");
+            }
+        }
+        
+        /// <remarks/>
+        public string Role {
+            get {
+                return this.roleField;
+            }
+            set {
+                this.roleField = value;
+                this.RaisePropertyChanged("Role");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class PartyId : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string typeField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+                this.RaisePropertyChanged("type");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class To : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private PartyId partyIdField;
+        
+        private string roleField;
+        
+        /// <remarks/>
+        public PartyId PartyId {
+            get {
+                return this.partyIdField;
+            }
+            set {
+                this.partyIdField = value;
+                this.RaisePropertyChanged("PartyId");
+            }
+        }
+        
+        /// <remarks/>
+        public string Role {
+            get {
+                return this.roleField;
+            }
+            set {
+                this.roleField = value;
+                this.RaisePropertyChanged("Role");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class CollaborationInfo : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private AgreementRef agreementRefField;
+        
+        private Service serviceField;
+        
+        private string actionField;
+        
+        private string conversationIdField;
+        
+        /// <remarks/>
+        public AgreementRef AgreementRef {
+            get {
+                return this.agreementRefField;
+            }
+            set {
+                this.agreementRefField = value;
+                this.RaisePropertyChanged("AgreementRef");
+            }
+        }
+        
+        /// <remarks/>
+        public Service Service {
+            get {
+                return this.serviceField;
+            }
+            set {
+                this.serviceField = value;
+                this.RaisePropertyChanged("Service");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="token")]
+        public string Action {
+            get {
+                return this.actionField;
+            }
+            set {
+                this.actionField = value;
+                this.RaisePropertyChanged("Action");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="token")]
+        public string ConversationId {
+            get {
+                return this.conversationIdField;
+            }
+            set {
+                this.conversationIdField = value;
+                this.RaisePropertyChanged("ConversationId");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class AgreementRef : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string typeField;
+        
+        private string pmodeField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+                this.RaisePropertyChanged("type");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string pmode {
+            get {
+                return this.pmodeField;
+            }
+            set {
+                this.pmodeField = value;
+                this.RaisePropertyChanged("pmode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class Service : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string typeField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+                this.RaisePropertyChanged("type");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class Property : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string nameField;
+        
+        private string typeField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+                this.RaisePropertyChanged("name");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+                this.RaisePropertyChanged("type");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public partial class PartInfo : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Property[] partPropertiesField;
+        
+        private string hrefField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+        public Property[] PartProperties {
+            get {
+                return this.partPropertiesField;
+            }
+            set {
+                this.partPropertiesField = value;
+                this.RaisePropertyChanged("PartProperties");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="token")]
+        public string href {
+            get {
+                return this.hrefField;
+            }
+            set {
+                this.hrefField = value;
+                this.RaisePropertyChanged("href");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
+    public enum ProcessingType {
+        
+        /// <remarks/>
+        PUSH,
+        
+        /// <remarks/>
+        PULL,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://eu.domibus.wsplugin/")]
     public partial class submitRequest : object, System.ComponentModel.INotifyPropertyChanged {
         
         private LargePayloadType bodyloadField;
@@ -1447,6 +1375,66 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         }
     }
     
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://eu.domibus.wsplugin/")]
+    public partial class LargePayloadType : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private byte[] valueField;
+        
+        private string payloadIdField;
+        
+        private string contentTypeField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="base64Binary", Order=0)]
+        public byte[] value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("value");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="token")]
+        public string payloadId {
+            get {
+                return this.payloadIdField;
+            }
+            set {
+                this.payloadIdField = value;
+                this.RaisePropertyChanged("payloadId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string contentType {
+            get {
+                return this.contentTypeField;
+            }
+            set {
+                this.contentTypeField = value;
+                this.RaisePropertyChanged("contentType");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -1456,7 +1444,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         [System.ServiceModel.MessageHeaderAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
         public EDelivery.SEOS.EDeliveryAS4Node.Messaging Messaging;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://org.ecodex.backend/1_1/", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://eu.domibus.wsplugin/", Order=0)]
         public EDelivery.SEOS.EDeliveryAS4Node.submitRequest submitRequest;
         
         public submitMessage() {
@@ -1474,7 +1462,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
     public partial class submitMessageResponse {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://org.ecodex.backend/1_1/", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://eu.domibus.wsplugin/", Order=0)]
         [System.Xml.Serialization.XmlArrayItemAttribute("messageID", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string[] submitResponse;
         
@@ -1491,7 +1479,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://eu.domibus.wsplugin/")]
     public partial class retrieveMessageRequest : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string messageIDField;
@@ -1523,7 +1511,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://org.ecodex.backend/1_1/")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://eu.domibus.wsplugin/")]
     public partial class retrieveMessageResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private LargePayloadType bodyloadField;
@@ -1570,7 +1558,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
     public partial class retrieveMessage {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://org.ecodex.backend/1_1/", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://eu.domibus.wsplugin/", Order=0)]
         public EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageRequest retrieveMessageRequest;
         
         public retrieveMessage() {
@@ -1590,7 +1578,7 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         [System.ServiceModel.MessageHeaderAttribute(Namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/")]
         public EDelivery.SEOS.EDeliveryAS4Node.Messaging Messaging;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://org.ecodex.backend/1_1/", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://eu.domibus.wsplugin/", Order=0)]
         public EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse retrieveMessageResponse;
         
         public retrieveMessageResponse1() {
@@ -1602,104 +1590,274 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
         }
     }
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface BackendInterfaceChannel : EDelivery.SEOS.EDeliveryAS4Node.BackendInterface, System.ServiceModel.IClientChannel {
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3761.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://eu.domibus.wsplugin/")]
+    public partial class listPendingMessagesRequest : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string messageIdField;
+        
+        private string conversationIdField;
+        
+        private string refToMessageIdField;
+        
+        private string fromPartyIdField;
+        
+        private string finalRecipientField;
+        
+        private string originalSenderField;
+        
+        private System.DateTime receivedFromField;
+        
+        private bool receivedFromFieldSpecified;
+        
+        private System.DateTime receivedToField;
+        
+        private bool receivedToFieldSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string messageId {
+            get {
+                return this.messageIdField;
+            }
+            set {
+                this.messageIdField = value;
+                this.RaisePropertyChanged("messageId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string conversationId {
+            get {
+                return this.conversationIdField;
+            }
+            set {
+                this.conversationIdField = value;
+                this.RaisePropertyChanged("conversationId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string refToMessageId {
+            get {
+                return this.refToMessageIdField;
+            }
+            set {
+                this.refToMessageIdField = value;
+                this.RaisePropertyChanged("refToMessageId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string fromPartyId {
+            get {
+                return this.fromPartyIdField;
+            }
+            set {
+                this.fromPartyIdField = value;
+                this.RaisePropertyChanged("fromPartyId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string finalRecipient {
+            get {
+                return this.finalRecipientField;
+            }
+            set {
+                this.finalRecipientField = value;
+                this.RaisePropertyChanged("finalRecipient");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string originalSender {
+            get {
+                return this.originalSenderField;
+            }
+            set {
+                this.originalSenderField = value;
+                this.RaisePropertyChanged("originalSender");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public System.DateTime receivedFrom {
+            get {
+                return this.receivedFromField;
+            }
+            set {
+                this.receivedFromField = value;
+                this.RaisePropertyChanged("receivedFrom");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool receivedFromSpecified {
+            get {
+                return this.receivedFromFieldSpecified;
+            }
+            set {
+                this.receivedFromFieldSpecified = value;
+                this.RaisePropertyChanged("receivedFromSpecified");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public System.DateTime receivedTo {
+            get {
+                return this.receivedToField;
+            }
+            set {
+                this.receivedToField = value;
+                this.RaisePropertyChanged("receivedTo");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool receivedToSpecified {
+            get {
+                return this.receivedToFieldSpecified;
+            }
+            set {
+                this.receivedToFieldSpecified = value;
+                this.RaisePropertyChanged("receivedToSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class BackendInterfaceClient : System.ServiceModel.ClientBase<EDelivery.SEOS.EDeliveryAS4Node.BackendInterface>, EDelivery.SEOS.EDeliveryAS4Node.BackendInterface {
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class listPendingMessages {
         
-        public BackendInterfaceClient() {
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://eu.domibus.wsplugin/", Order=0)]
+        public EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesRequest listPendingMessagesRequest;
+        
+        public listPendingMessages() {
         }
         
-        public BackendInterfaceClient(string endpointConfigurationName) : 
+        public listPendingMessages(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesRequest listPendingMessagesRequest) {
+            this.listPendingMessagesRequest = listPendingMessagesRequest;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class listPendingMessagesResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="listPendingMessagesResponse", Namespace="http://eu.domibus.wsplugin/", Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("messageID", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string[] listPendingMessagesResponse1;
+        
+        public listPendingMessagesResponse() {
+        }
+        
+        public listPendingMessagesResponse(string[] listPendingMessagesResponse1) {
+            this.listPendingMessagesResponse1 = listPendingMessagesResponse1;
+        }
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public interface WebServicePluginInterfaceChannel : EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface, System.ServiceModel.IClientChannel {
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class WebServicePluginInterfaceClient : System.ServiceModel.ClientBase<EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface>, EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface {
+        
+        public WebServicePluginInterfaceClient() {
+        }
+        
+        public WebServicePluginInterfaceClient(string endpointConfigurationName) : 
                 base(endpointConfigurationName) {
         }
         
-        public BackendInterfaceClient(string endpointConfigurationName, string remoteAddress) : 
+        public WebServicePluginInterfaceClient(string endpointConfigurationName, string remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public BackendInterfaceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public WebServicePluginInterfaceClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public BackendInterfaceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public WebServicePluginInterfaceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessages(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages request) {
-            return base.Channel.listPendingMessages(request);
-        }
-        
-        public string[] listPendingMessages(object listPendingMessagesRequest) {
-            EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages inValue = new EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages();
-            inValue.listPendingMessagesRequest = listPendingMessagesRequest;
-            EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse retVal = ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).listPendingMessages(inValue);
-            return retVal.listPendingMessagesResponse1;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse> EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.listPendingMessagesAsync(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages request) {
-            return base.Channel.listPendingMessagesAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse> listPendingMessagesAsync(object listPendingMessagesRequest) {
-            EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages inValue = new EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages();
-            inValue.listPendingMessagesRequest = listPendingMessagesRequest;
-            return ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).listPendingMessagesAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        EDelivery.SEOS.EDeliveryAS4Node.getMessageErrorsResponse EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.getMessageErrors(EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors request) {
+        EDelivery.SEOS.EDeliveryAS4Node.getMessageErrorsResponse EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.getMessageErrors(EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors request) {
             return base.Channel.getMessageErrors(request);
         }
         
         public EDelivery.SEOS.EDeliveryAS4Node.errorResultImpl[] getMessageErrors(EDelivery.SEOS.EDeliveryAS4Node.getErrorsRequest getErrorsRequest) {
             EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors inValue = new EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors();
             inValue.getErrorsRequest = getErrorsRequest;
-            EDelivery.SEOS.EDeliveryAS4Node.getMessageErrorsResponse retVal = ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).getMessageErrors(inValue);
+            EDelivery.SEOS.EDeliveryAS4Node.getMessageErrorsResponse retVal = ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).getMessageErrors(inValue);
             return retVal.getMessageErrorsResponse1;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.getMessageErrorsResponse> EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.getMessageErrorsAsync(EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors request) {
+        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.getMessageErrorsResponse> EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.getMessageErrorsAsync(EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors request) {
             return base.Channel.getMessageErrorsAsync(request);
         }
         
         public System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.getMessageErrorsResponse> getMessageErrorsAsync(EDelivery.SEOS.EDeliveryAS4Node.getErrorsRequest getErrorsRequest) {
             EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors inValue = new EDelivery.SEOS.EDeliveryAS4Node.getMessageErrors();
             inValue.getErrorsRequest = getErrorsRequest;
-            return ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).getMessageErrorsAsync(inValue);
+            return ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).getMessageErrorsAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        EDelivery.SEOS.EDeliveryAS4Node.getStatusResponse EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.getStatus(EDelivery.SEOS.EDeliveryAS4Node.getStatus request) {
+        EDelivery.SEOS.EDeliveryAS4Node.getStatusResponse EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.getStatus(EDelivery.SEOS.EDeliveryAS4Node.getStatus request) {
             return base.Channel.getStatus(request);
         }
         
         public System.Nullable<messageStatus> getStatus(EDelivery.SEOS.EDeliveryAS4Node.statusRequest statusRequest) {
             EDelivery.SEOS.EDeliveryAS4Node.getStatus inValue = new EDelivery.SEOS.EDeliveryAS4Node.getStatus();
             inValue.statusRequest = statusRequest;
-            EDelivery.SEOS.EDeliveryAS4Node.getStatusResponse retVal = ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).getStatus(inValue);
+            EDelivery.SEOS.EDeliveryAS4Node.getStatusResponse retVal = ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).getStatus(inValue);
             return retVal.getStatusResponse1;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.getStatusResponse> EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.getStatusAsync(EDelivery.SEOS.EDeliveryAS4Node.getStatus request) {
+        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.getStatusResponse> EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.getStatusAsync(EDelivery.SEOS.EDeliveryAS4Node.getStatus request) {
             return base.Channel.getStatusAsync(request);
         }
         
         public System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.getStatusResponse> getStatusAsync(EDelivery.SEOS.EDeliveryAS4Node.statusRequest statusRequest) {
             EDelivery.SEOS.EDeliveryAS4Node.getStatus inValue = new EDelivery.SEOS.EDeliveryAS4Node.getStatus();
             inValue.statusRequest = statusRequest;
-            return ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).getStatusAsync(inValue);
+            return ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).getStatusAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        EDelivery.SEOS.EDeliveryAS4Node.submitMessageResponse EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.submitMessage(EDelivery.SEOS.EDeliveryAS4Node.submitMessage request) {
+        EDelivery.SEOS.EDeliveryAS4Node.submitMessageResponse EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.submitMessage(EDelivery.SEOS.EDeliveryAS4Node.submitMessage request) {
             return base.Channel.submitMessage(request);
         }
         
@@ -1707,12 +1865,12 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
             EDelivery.SEOS.EDeliveryAS4Node.submitMessage inValue = new EDelivery.SEOS.EDeliveryAS4Node.submitMessage();
             inValue.Messaging = Messaging;
             inValue.submitRequest = submitRequest;
-            EDelivery.SEOS.EDeliveryAS4Node.submitMessageResponse retVal = ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).submitMessage(inValue);
+            EDelivery.SEOS.EDeliveryAS4Node.submitMessageResponse retVal = ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).submitMessage(inValue);
             return retVal.submitResponse;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.submitMessageResponse> EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.submitMessageAsync(EDelivery.SEOS.EDeliveryAS4Node.submitMessage request) {
+        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.submitMessageResponse> EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.submitMessageAsync(EDelivery.SEOS.EDeliveryAS4Node.submitMessage request) {
             return base.Channel.submitMessageAsync(request);
         }
         
@@ -1720,31 +1878,54 @@ namespace EDelivery.SEOS.EDeliveryAS4Node {
             EDelivery.SEOS.EDeliveryAS4Node.submitMessage inValue = new EDelivery.SEOS.EDeliveryAS4Node.submitMessage();
             inValue.Messaging = Messaging;
             inValue.submitRequest = submitRequest;
-            return ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).submitMessageAsync(inValue);
+            return ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).submitMessageAsync(inValue);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1 EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.retrieveMessage(EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage request) {
+        EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1 EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.retrieveMessage(EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage request) {
             return base.Channel.retrieveMessage(request);
         }
         
         public EDelivery.SEOS.EDeliveryAS4Node.Messaging retrieveMessage(EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageRequest retrieveMessageRequest, out EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse retrieveMessageResponse) {
             EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage inValue = new EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage();
             inValue.retrieveMessageRequest = retrieveMessageRequest;
-            EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1 retVal = ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).retrieveMessage(inValue);
+            EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1 retVal = ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).retrieveMessage(inValue);
             retrieveMessageResponse = retVal.retrieveMessageResponse;
             return retVal.Messaging;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1> EDelivery.SEOS.EDeliveryAS4Node.BackendInterface.retrieveMessageAsync(EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage request) {
+        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1> EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.retrieveMessageAsync(EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage request) {
             return base.Channel.retrieveMessageAsync(request);
         }
         
         public System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageResponse1> retrieveMessageAsync(EDelivery.SEOS.EDeliveryAS4Node.retrieveMessageRequest retrieveMessageRequest) {
             EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage inValue = new EDelivery.SEOS.EDeliveryAS4Node.retrieveMessage();
             inValue.retrieveMessageRequest = retrieveMessageRequest;
-            return ((EDelivery.SEOS.EDeliveryAS4Node.BackendInterface)(this)).retrieveMessageAsync(inValue);
+            return ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).retrieveMessageAsync(inValue);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.listPendingMessages(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages request) {
+            return base.Channel.listPendingMessages(request);
+        }
+        
+        public string[] listPendingMessages(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesRequest listPendingMessagesRequest) {
+            EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages inValue = new EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages();
+            inValue.listPendingMessagesRequest = listPendingMessagesRequest;
+            EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse retVal = ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).listPendingMessages(inValue);
+            return retVal.listPendingMessagesResponse1;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse> EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface.listPendingMessagesAsync(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages request) {
+            return base.Channel.listPendingMessagesAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesResponse> listPendingMessagesAsync(EDelivery.SEOS.EDeliveryAS4Node.listPendingMessagesRequest listPendingMessagesRequest) {
+            EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages inValue = new EDelivery.SEOS.EDeliveryAS4Node.listPendingMessages();
+            inValue.listPendingMessagesRequest = listPendingMessagesRequest;
+            return ((EDelivery.SEOS.EDeliveryAS4Node.WebServicePluginInterface)(this)).listPendingMessagesAsync(inValue);
         }
     }
 }

@@ -316,5 +316,3 @@ var gf = new GlobalFunctions();
 $(document).ready(function () {
     gf.init('#modalContainer', '#modal-content', '#modalContainer div.loader');
 });
-
-

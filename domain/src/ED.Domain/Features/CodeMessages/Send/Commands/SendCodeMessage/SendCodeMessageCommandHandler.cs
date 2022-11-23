@@ -24,10 +24,10 @@ namespace ED.Domain
         IEncryptorFactory EncryptorFactory,
         ED.Keystore.Keystore.KeystoreClient KeystoreClient,
         TimestampServiceClient TimestampServiceClient,
-        OrnServiceClient OrnServiceClient,
         ICodeMessageSendQueryRepository CodeMessageSendQueryRepository,
         IQueueMessagesService QueueMessagesService,
         IProfilesService ProfilesService,
+        IRnuService RnuService,
         IOptions<DomainOptions> DomainOptionsAccessor)
         : IRequestHandler<SendCodeMessageCommand, Unit>
     {
@@ -127,14 +127,6 @@ namespace ED.Domain
                     decryptedTemporaryBlobs,
                     ct);
 
-            string senderIdentifier =
-                await this.CodeMessageSendQueryRepository.GetProfileIdentifierAsync(
-                    command.SenderProfileId,
-                    ct);
-
-            string orn =
-                await this.OrnServiceClient.SubmitAsync(senderIdentifier, ct);
-
             await using ITransaction messageTransaction =
                     await this.UnitOfWork.BeginTransactionAsync(ct);
 
@@ -150,9 +142,7 @@ namespace ED.Domain
                 command.Email,
                 command.TemplateId,
                 command.Subject,
-                orn,
-                command.ReferencedOrn,
-                command.AdditionalIdentifier,
+                this.RnuService.Get(),
                 this.HandleJson(encryptor, command.Body),
                 command.MetaFields,
                 command.CreatedBy,
@@ -172,9 +162,7 @@ namespace ED.Domain
             (string messageSummaryXml, byte[] messageSummary, byte[] sendTimestamp) =
                 await this.CreateMessageSummary(
                     message.MessageId,
-                    message.Orn,
-                    message.ReferencedOrn,
-                    message.AdditionalIdentifier,
+                    message.Rnu,
                     command.SenderProfileId,
                     new[] { recipientProfileKey, senderProfileKey },
                     profileNames,
@@ -412,9 +400,7 @@ namespace ED.Domain
 
         private async Task<(string, byte[], byte[])> CreateMessageSummary(
             int messageId,
-            string? orn,
-            string? referencedOrn,
-            string? additionalIdentifier,
+            string? rnu,
             int senderProfileId,
             ProfileKeyVO[] allProfiles,
             GetProfileNamesVO[] allProfileNames,
@@ -450,9 +436,7 @@ namespace ED.Domain
 
             Message.MessageSummaryDO messageSummaryDO = new(
                 messageId,
-                orn,
-                referencedOrn,
-                additionalIdentifier,
+                rnu,
                 new Message.MessageSummaryDO.MessageSummaryVOProfile(
                     senderProfileKey.ProfileId,
                     senderProfileName),

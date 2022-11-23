@@ -8,7 +8,20 @@
     @Html.Partial("_LeftMenu")
 
     <div class="content-right">
-        <h2>@Common.TitleProfileAccessHistory</h2>
+        <div class="profile-history-title">
+            <h2>@Common.TitleProfileAccessHistory</h2>
+            @using (Html.BeginForm("ExportHistory", "Profile", FormMethod.Post))
+            {
+                <button class="btn-add-file"
+                        type="submit"
+                        formtarget="_blank"
+                        data-toggle="tooltip"
+                        data-original-title="@($"Експорт на първите {SystemConstants.ExportSize} резултата")">
+                    <img src="~/Content/img/add-file.png">
+                    Експорт
+                </button>
+            }
+        </div>
         <a href="@Url.Action("Administration","Profile")"
            class="btn btn-m btn-clear mtb-spacer">
             < @UIControls.ButtonBack

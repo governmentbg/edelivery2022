@@ -11,17 +11,19 @@ namespace ED.Domain
         string RecipientPhone,
         string MessageSubject,
         string MessageBody,
-        SendMessage1WithAccessCodeCommandDocument[] Documents,
+        SendMessage1WithAccessCodeCommandBlob[] Blobs,
         string? ServiceOid,
         int SenderProfileId,
         int SenderLoginId,
         string SendEvent)
         : IRequest<SendMessage1WithAccessCodeCommandResult>;
 
-    public record SendMessage1WithAccessCodeCommandDocument(
+    public record SendMessage1WithAccessCodeCommandBlob(
         string FileName,
-        string? DocumentRegistrationNumber,
-        byte[] FileContent);
+        string HashAlgorithm,
+        string Hash,
+        ulong Size,
+        int BlobId);
 
     public record SendMessage1WithAccessCodeCommandResult(
         bool IsSuccessful,

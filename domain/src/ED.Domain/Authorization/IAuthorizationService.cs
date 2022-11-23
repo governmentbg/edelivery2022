@@ -68,5 +68,17 @@ namespace ED.Domain
             int profileId,
             int loginId,
             CancellationToken ct);
+
+        Task<bool> HasMessageAccessKeyAsync(
+            int profileId,
+            int messageId,
+            CancellationToken ct);
+
+        Task<bool> HasReadMessageThroughForwardingAsRecipientAccessAsync(
+            int profileId,
+            int loginId,
+            int messageId,
+            int? forwardingMessageId,
+            CancellationToken ct);
     }
 }

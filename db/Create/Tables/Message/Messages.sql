@@ -23,7 +23,8 @@ CREATE TABLE [dbo].[Messages](
   [TemplateId] [int] NULL,
   [RecipientsAsText] [nvarchar](max) NOT NULL,
   [MessagePdfBlobId] [int] NULL,
-  
+  [Rnu] [NVARCHAR](64) NULL,
+
   CONSTRAINT [PK_Messages] PRIMARY KEY ([MessageId]),
   CONSTRAINT [FK_Messages_Blobs_MessagePdfBlobId]
     FOREIGN KEY([MessagePdfBlobId])
@@ -54,4 +55,8 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Messages_MessagePdfBlobId]
 ON [dbo].[Messages] ([MessagePdfBlobId])
 WHERE [MessagePdfBlobId] IS NOT NULL
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Messages_Rnu]
+ON [dbo].[Messages]([Rnu])
 GO

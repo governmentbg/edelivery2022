@@ -16,8 +16,9 @@ namespace ED.Domain
             int limit,
             CancellationToken ct)
         {
-            Expression<Func<TargetGroup, bool>> predicate =
-               PredicateBuilder.True<TargetGroup>();
+            Expression<Func<TargetGroup, bool>> predicate = PredicateBuilder
+                .True<TargetGroup>()
+                .And(e => e.ArchiveDate == null);
 
             if (!string.IsNullOrEmpty(term))
             {
@@ -27,7 +28,7 @@ namespace ED.Domain
 
             return await
                 (from tg in this.DbContext.Set<TargetGroup>().Where(predicate)
-                orderby tg.Name
+                orderby tg.TargetGroupId
                 select new ListTargetGroupsVO(
                     tg.TargetGroupId,
                     tg.Name))

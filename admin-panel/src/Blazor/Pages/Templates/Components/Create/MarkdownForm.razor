@@ -1,0 +1,43 @@
+﻿<EditForm Model="@model" OnValidSubmit="SubmitFormAsync">
+    <DataAnnotationsValidator />
+
+    <h2>@Localizer["TitleMarkdown"]</h2>
+
+    <section class="form-section">
+        <div class="form-col">
+            <label for="Label">@Localizer["Label"]<span class="txt-red">*</span></label>
+            <div class="form-element">
+                <InputText type="text" id="Label" @bind-Value="model.Label" />
+                <ValidationMessage For="@(() => model.Label)" />
+            </div>
+        </div>
+
+        <!-- custom -->
+        <div class="form-col">
+            <label for="Value">@Localizer["Value"]</label>
+            <div class="form-element">
+                <textarea id="Value"
+                          @bind="model.Value"
+                          rows="10">
+                </textarea>
+                <ValidationMessage For="@(() => model.Value)" />
+            </div>
+        </div>
+        <div class="form-col">
+            <label for="PdfValue">@Localizer["PdfValue"]</label>
+            <div class="form-element">
+                <textarea id="PdfValue"
+                          @bind="model.PdfValue"
+                          rows="10">
+                </textarea>
+                <ValidationMessage For="@(() => model.PdfValue)" />
+            </div>
+        </div>
+
+    </section>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-border btn-m" type="button" @onclick="CancelAsync">@Localizer["CancelBtn"]</button>
+        <button class="btn-primary btn-m" type="submit">@Localizer[IsEdit ? "SaveBtn" : "AddBtn"]</button>
+    </section>
+</EditForm>

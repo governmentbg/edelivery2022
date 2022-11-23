@@ -14,7 +14,7 @@
         new AjaxOptions
         {
             InsertionMode = InsertionMode.Replace,
-            UpdateTargetId = "tab_box_1",
+            UpdateTargetId = "storage-tables",
             OnSuccess = "triggerTooltip()"
         },
         new { id = "listFreeBlobsForm" }))
@@ -22,60 +22,75 @@
         <section class="form-section flex-row">
             <div class="col-2">
                 <div class="form-col">
-                    <label for="SearchTitle">Файл:</label>
+                    <label for="FreeBlobsSearchTitle">Файл:</label>
                     <div class="form-element">
-                        @Html.TextBoxFor(x => x.FileName)
+                        @Html.TextBoxFor(x => x.FreeBlobsFileName)
                     </div>
                 </div>
             </div>
             <div class="col-2">
                 <div class="form-col">
-                    <label for="SearchElSubject">Автор:</label>
+                    <label for="FreeBlobsSearchElSubject">Автор:</label>
                     <div class="form-element">
-                        @Html.TextBoxFor(x => x.Author)
+                        @Html.TextBoxFor(x => x.FreeBlobsAuthor)
                     </div>
                 </div>
             </div>
             <div class="col-2 flex-element date-group">
                 <div class="form-col">
-                    <label for="FromDate">@ProfilePage.PlaceholderDateFrom:</label>
+                    <label for="FreeBlobsFromDate">@ProfilePage.PlaceholderDateFrom:</label>
                     <div class="form-element">
-                        @Html.TextBoxFor(x => x.FromDate, new { @placeholder = SystemConstants.DatePickerDateFormat })
+                        @Html.TextBoxFor(x => x.FreeBlobsFromDate, new { @placeholder = SystemConstants.DatePickerDateFormat })
                         <div class="icon-hint icon-hint--clear icon-hint--input-text"></div>
-                        @Html.ValidationMessageFor(x => x.FromDate)
+                        @Html.ValidationMessageFor(x => x.FreeBlobsFromDate)
                     </div>
                 </div>
                 <div class="form-col">
-                    <label for="ToDate">@ProfilePage.PlaceholderDateТо:</label>
+                    <label for="FreeBlobsToDate">@ProfilePage.PlaceholderDateТо:</label>
                     <div class="form-element">
-                        @Html.TextBoxFor(x => x.ToDate, new { @placeholder = SystemConstants.DatePickerDateFormat })
+                        @Html.TextBoxFor(x => x.FreeBlobsToDate, new { @placeholder = SystemConstants.DatePickerDateFormat })
                         <div class="icon-hint icon-hint--clear icon-hint--input-text"></div>
-                        @Html.ValidationMessageFor(x => x.ToDate)
+                        @Html.ValidationMessageFor(x => x.FreeBlobsToDate)
                     </div>
                 </div>
             </div>
             <div class="col-2 btn-group">
                 <div class="form-col">
-                    <a href="#"
-                       id="clearListFreeBlobsForm"
-                       class="btn btn-m btn-clear lnk-clear">@ProfilePage.ButtonClear</a>
-                    <button class="btn-border btn-l f-grow-80">@ProfilePage.ButtonSearch</button>
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; ">
+                        <button style="width: inherit !important; margin-bottom: 5px !important;"
+                                type="button"
+                                id="exportFreeBlobsBtn"
+                                class="btn btn-m btn-clear lnk-clear"
+                                data-toggle="tooltip"
+                                data-original-title="@($"Експорт на първите {SystemConstants.ExportSize} резултата")">
+                            Експорт
+                        </button>
+                        <a href="#"
+                           id="clearListFreeBlobsForm"
+                           class="btn btn-m btn-clear lnk-clear">
+                            @ProfilePage.ButtonClear
+                        </a>
+                    </div>
+                    <button class="btn-border btn-l f-grow-80" type="submit">@ProfilePage.ButtonSearch</button>
                 </div>
             </div>
         </section>
     }
 </div>
+<div id="freeBlobsHidden" style="display:hidden;"></div>
 
 <script type="text/javascript">
     $(function () {
-        $('#tab_box_1 .btn-search-filter').click(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('.btn-search-filter').click(function () {
             $(this).closest('.search-filter').toggleClass('show');
         });
 
         var dateFormat = 'dd-mm-yyyy';
 
-        var $fromDate = $('#tab_box_1 input#FromDate');
-        var $toDate = $('#tab_box_1 input#ToDate');
+        var $fromDate = $('input#FreeBlobsFromDate');
+        var $toDate = $('input#FreeBlobsToDate');
 
         $fromDate
             .datepicker({
@@ -117,11 +132,41 @@
             $toDate.datepicker('clearDates');
         });
 
+        var defaultUrl = new URL(window.location.origin + window.location.pathname + '?tab=free');
+
+        $('form#listFreeBlobsForm').find(':submit').on('click', function (e) {
+            e.preventDefault();
+
+            var data = $('form#listFreeBlobsForm').serializeObject();
+            var url = $.SetUrlParameters(data, defaultUrl);
+
+            $('form#listFreeBlobsForm').submit();
+            window.history.pushState(null, null, url);
+        });
+
         $('a#clearListFreeBlobsForm').on('click', function (e) {
             e.preventDefault();
 
             $('form#listFreeBlobsForm input').val('');
             $('form#listFreeBlobsForm').submit();
+            window.history.pushState(null, null, defaultUrl);
+        });
+
+        $('#exportFreeBlobsBtn').on('click', function (e) {
+            e.preventDefault();
+
+            var clone = $('form#listFreeBlobsForm').clone(true);
+            clone.attr('id', 'temp');
+            clone.attr('action', '/Storage/ExportFreeBlobs');
+            clone.attr('target', '_blank');
+            clone.removeAttr('data-ajax');
+            clone.removeAttr('data-ajax-update')
+            clone.removeAttr('data-ajax-success')
+            clone.removeAttr('data-ajax-mode')
+            clone.appendTo('#freeBlobsHidden');
+            clone.submit();
+
+            $('#freeBlobsHidden').empty();
         });
     });
 </script>

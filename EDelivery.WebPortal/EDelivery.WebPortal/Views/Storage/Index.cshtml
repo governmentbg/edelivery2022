@@ -1,18 +1,22 @@
 ﻿@using EDelivery.WebPortal.Utils
 @using System.Web.Configuration
 
+@{
+    ViewBag.Title = @Common.TitleStorageHome;
+}
 <div class="cols-wrapper">
     @Html.Partial("_LeftMenu")
 
     <div class="content-right" style="position: relative;">
         <div class="file-storage-title">
             <h2>@Common.TitleStorageHome</h2>
-
-            <label for="file-upload" class="btn-add-file">
-                <img src="~/Content/img/add-file.png">
-                Качи файл
-            </label>
-            <input id="file-upload" type="file" multiple="multiple" style="display: none;" />
+            <div class="file-upload">
+                <label for="file-upload" class="btn-add-file">
+                    <img src="~/Content/img/add-file.png">
+                    Качи файл
+                </label>
+                <input id="file-upload" type="file" multiple="multiple" style="display: none;" />
+            </div>
         </div>
         <h2></h2>
 
@@ -37,16 +41,7 @@
             </button>
         </nav>
 
-        <div id="tab_box_1" class="fileStorageTabUploaded show">
-            @Html.Action("ListFreeBlobs")
-        </div>
-
-        <div id="tab_box_2" class="fileStorageTabReceived">
-            @Html.Action("ListInboxBlobs")
-        </div>
-
-        <div id="tab_box_3" class="fileStorageTabSent">
-            @Html.Action("ListOutboxBlobs")
+        <div id="storage-tables">
         </div>
     </div>
 </div>
@@ -73,51 +68,51 @@
     @Scripts.Render("~/bundles/uppy")
 
     <script>
-    @* copied from https://stackoverflow.com/a/14919494/682203 *@
-    function humanFileSize(bytes) {
-        var thresh = 1024;
-        var dp = 1;
+        @* copied from https://stackoverflow.com/a/14919494/682203 *@
+        function humanFileSize(bytes) {
+            var thresh = 1024;
+            var dp = 1;
 
-        if (Math.abs(bytes) < thresh) {
-            return bytes + ' B';
+            if (Math.abs(bytes) < thresh) {
+                return bytes + ' B';
+            }
+
+            var units = ['KB', 'MB', 'GB', 'TB'];
+            var u = -1;
+            var r = 10 ** dp;
+
+            do {
+                bytes /= thresh;
+                ++u;
+            } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+
+            return bytes.toFixed(Math.floor(bytes) === bytes ? 0 : dp) + ' ' + units[u];
         }
-
-        var units = ['KB', 'MB', 'GB', 'TB'];
-        var u = -1;
-        var r = 10 ** dp;
-
-        do {
-            bytes /= thresh;
-            ++u;
-        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
-
-        return bytes.toFixed(Math.floor(bytes) === bytes ? 0 : dp) + ' ' + units[u];
-    }
     </script>
     <script type="text/javascript">
-    var allFiles = 0;
-    var completeFiles = 0;
-    var nextFileElement = 1;
-    var fileElementIds = {};
+        var allFiles = 0;
+        var completeFiles = 0;
+        var nextFileElement = 1;
+        var fileElementIds = {};
 
-    function addFile(uppyFileId, fileName, size) {
-        allFiles++;
-        updateProgressCounter();
+        function addFile(uppyFileId, fileName, size) {
+            allFiles++;
+            updateProgressCounter();
 
-        var id = 'file' + nextFileElement++;
-        fileElementIds[uppyFileId] = id;
+            var id = 'file' + nextFileElement++;
+            fileElementIds[uppyFileId] = id;
 
-        $('#files-upload-list').append('<li id=' + id + '>' + fileName + ' (' + humanFileSize(size) + ')</li>');
-    }
+            $('#files-upload-list').append('<li id=' + id + '>' + fileName + ' (' + humanFileSize(size) + ')</li>');
+        }
 
-    function completeFile(uppyFileId, malwareScanStatus, error) {
-        completeFiles++;
-        updateProgressCounter();
+        function completeFile(uppyFileId, malwareScanStatus, error) {
+            completeFiles++;
+            updateProgressCounter();
 
-        var statusClass;
-        var message;
-        if (!error) {
-            switch (malwareScanStatus) {
+            var statusClass;
+            var message;
+            if (!error) {
+                switch (malwareScanStatus) {
                 case 'NotMalicious':
                     statusClass = 'success';
                     message = '@(EDeliveryResources.SEOS.InfoFileIsNotMalicious)';
@@ -130,188 +125,262 @@
                     statusClass = 'malware';
                     message = '@(EDeliveryResources.SEOS.ErrorReceivedDocumentIsMalicious)';
                     break;
+                }
+            } else {
+                statusClass = 'upload-error';
+                message = error;
+
+                // focus the upload-status control so that the error is visible
+                $('#upload-status').removeClass('unfocus');
             }
-        } else {
-            statusClass = 'upload-error';
-            message = error;
 
-            // focus the upload-status control so that the error is visible
-            $('#upload-status').removeClass('unfocus');
+            var fileElement = $('#' + fileElementIds[uppyFileId]).addClass('upload-done');
+            if (statusClass) {
+                fileElement
+                    .addClass(statusClass)
+                    .attr('data-toggle', 'tooltip')
+                    .attr('title', message)
+                    .tooltip();
+                triggerTooltip();
+            }
         }
 
-        var fileElement = $('#' + fileElementIds[uppyFileId]).addClass('upload-done');
-        if (statusClass) {
-            fileElement
-                .addClass(statusClass)
-                .attr('data-toggle', 'tooltip')
-                .attr('title', message)
-                .tooltip();
-            triggerTooltip();
+        function showUploadStatus() {
+            $('#upload-status').addClass('show');
         }
-    }
 
-    function showUploadStatus() {
-        $('#upload-status').addClass('show');
-    }
+        function updateProgressCounter() {
+            $('#upload-progress-counter').text(completeFiles + '/' + allFiles);
+        }
 
-    function updateProgressCounter() {
-        $('#upload-progress-counter').text(completeFiles + '/' + allFiles);
-    }
-
-    function updateProgressPercent(percent) {
-        $('#upload-progress-percent').width(percent === 0 ? 0 : percent + '%');
-    }
-    function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-    }
-    function getAccessToken() {
-        var match = /(^|;\s?)EDelivery\.Identity=(.+?)($|;)/.exec(document.cookie);
-        return match && match[2];
-    }
+        function updateProgressPercent(percent) {
+            $('#upload-progress-percent').width(percent === 0 ? 0 : percent + '%');
+        }
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+        }
+        function getAccessToken() {
+            var match = /(^|;\s?)EDelivery\.Identity=(.+?)($|;)/.exec(document.cookie);
+            return match && match[2];
+        }
     </script>
     <script type="text/javascript">
-    var maxFileSizeBytes = @(int.Parse(WebConfigurationManager.AppSettings["BlobServiceMaxFileSizeInMb"])) * 1024 * 1024;
+        var maxFileSizeBytes = @(int.Parse(WebConfigurationManager.AppSettings["BlobServiceMaxFileSizeInMb"])) * 1024 * 1024;
 
-    var uppy = new Uppy.Core({
-        debug: true,
-        autoProceed: true,
-        restrictions: {
-            maxFileSize: null
-        },
-        locale: Uppy.locales.bg_BG
-    });
-    uppy.use(Uppy.XHRUpload, {
-        endpoint: '@(WebConfigurationManager.AppSettings["BlobServiceWebUrl"])/profile/@(profileId)',
-        timeout: 120 * 1000, // 2 minutes for the maximum time between progress events,
-        limit: 5,
-        headers: (file) => ({
-            'authorization': 'Bearer ' + getAccessToken()
-        }),
-    });
+        var uppy = new Uppy.Core({
+            debug: true,
+            autoProceed: true,
+            restrictions: {
+                maxFileSize: null
+            },
+            locale: Uppy.locales.bg_BG
+        });
+        uppy.use(Uppy.XHRUpload, {
+            endpoint: '@(WebConfigurationManager.AppSettings["BlobServiceWebUrl"])/profile/@(profileId)',
+            timeout: 120 * 1000, // 2 minutes for the maximum time between progress events,
+            limit: 5,
+            headers: (file) => ({
+                'authorization': 'Bearer ' + getAccessToken()
+            }),
+        });
 
-    var fileInput = document.querySelector('#file-upload');
+        var fileInput = document.querySelector('#file-upload');
 
-    fileInput.addEventListener('change', function (event) {
-        var files = Array.prototype.slice.call(event.target.files);
+        fileInput.addEventListener('change', function (event) {
+            var files = Array.prototype.slice.call(event.target.files);
 
-        files.forEach(function (file) {
-            var id;
-            if (file.size > maxFileSizeBytes) {
-                id = 'errored_file_' + getRandomInt(0, 100000);
-                addFile(id, file.name, file.size);
-                completeFile(id, null, 'Файлът надвишава максималния размер от ' + humanFileSize(maxFileSizeBytes) + '!');
-                return;
-            }
-
-            try {
-                id = uppy.addFile({
-                    source: 'file input',
-                    name: file.name,
-                    type: file.type,
-                    data: file
-                });
-                addFile(id, file.name, file.size);
-            } catch (err) {
-                if (err.isRestriction) {
-                    // handle restrictions
-                    console.log('Restriction error:', err);
-                } else {
-                    // handle other errors
-                    console.error(err);
+            files.forEach(function (file) {
+                var id;
+                if (file.size > maxFileSizeBytes) {
+                    id = 'errored_file_' + getRandomInt(0, 100000);
+                    addFile(id, file.name, file.size);
+                    completeFile(id, null, 'Файлът надвишава максималния размер от ' + humanFileSize(maxFileSizeBytes) + '!');
+                    return;
                 }
-            }
-        })
 
-        showUploadStatus();
-        fileInput.value = null;
-    });
+                try {
+                    id = uppy.addFile({
+                        source: 'file input',
+                        name: file.name,
+                        type: file.type,
+                        data: file
+                    });
+                    addFile(id, file.name, file.size);
+                } catch (err) {
+                    if (err.isRestriction) {
+                        // handle restrictions
+                        console.log('Restriction error:', err);
+                    } else {
+                        // handle other errors
+                        console.error(err);
+                    }
+                }
+            })
 
-    uppy.on('upload-error', function (file, error, response) {
-        completeFile(file.id, null, 'Възникна грешка при качване! Моля опитайте отново.');
-    });
+            showUploadStatus();
+            fileInput.value = null;
+        });
 
-    uppy.on('upload-success', function (file, response) {
-        var malwareScanStatus = response.body.malwareScanStatus;
-        var errorStatus = response.body.errorStatus;
-        var error = undefined;
+        uppy.on('upload-error', function (file, error, response) {
+            completeFile(file.id, null, 'Възникна грешка при качване! Моля опитайте отново.');
+        });
 
-        switch (errorStatus) {
+        uppy.on('upload-success', function (file, response) {
+            var malwareScanStatus = response.body.malwareScanStatus;
+            var errorStatus = response.body.errorStatus;
+            var error = undefined;
+
+            switch (errorStatus) {
             case 'InsufficientStorageSpace':
                 error = '@(EDeliveryResources.StoragePage.ErrorInsufficientSpace)';
                 break;
             default:
                 error = undefined;
                 break;
+            }
+
+            if (malwareScanStatus) {
+                completeFile(file.id, malwareScanStatus, error);
+            }
+        });
+
+        uppy.on('progress', function (progress) {
+            updateProgressPercent(progress);
+        });
+
+        uppy.on('complete', function () {
+            // clear all uppy files so that the next batch
+            // of uploaded files will start from total progress of 0
+            var uppyFiles = uppy.getFiles();
+            var i;
+            for (i = 0; i < uppyFiles.length; i++) {
+                uppy.removeFile(uppyFiles[i].id);
+            }
+
+            // the total progress will go to 0, so we need to set it back to 100
+            updateProgressPercent(100);
+
+            // move to the first page and refresh
+            $('<a></a>')
+                .attr('data-ajax', 'true')
+                .attr('data-ajax-method', 'POST')
+                .attr('data-ajax-mode', 'replace')
+                .attr('data-ajax-update', '#storage-tables')
+                .attr('data-ajax-success', 'triggerTooltip')
+                .attr('href', '@(Url.Action("ListFreeBlobs"))')
+                .appendTo(document.body)
+                .trigger('click')
+                .remove();
+        });
+
+        function deleteFile(id) {
+            if (confirm("Сигурни ли сте, че искате да изтриете файла?")) {
+                $.ajax({ url: '@(Url.Action("Delete"))/' + id, method: 'POST' })
+                    .done(function () {
+                        // move to the first page
+                        $('<a></a>')
+                            .attr('data-ajax', 'true')
+                            .attr('data-ajax-method', 'POST')
+                            .attr('data-ajax-mode', 'replace')
+                            .attr('data-ajax-update', '#storage-tables')
+                            .attr('href', '@(Url.Action("ListFreeBlobs"))')
+                            .appendTo(document.body)
+                            .trigger('click')
+                            .remove();
+                    });
+            }
         }
 
-        if (malwareScanStatus) {
-            completeFile(file.id, malwareScanStatus, error);
+        function triggerTooltip() {
+            $('[data-toggle="tooltip"]').tooltip('dispose').tooltip({ boundary: 'window' });
         }
-    });
-
-    uppy.on('progress', function (progress) {
-        updateProgressPercent(progress);
-    });
-
-    uppy.on('complete', function () {
-        // clear all uppy files so that the next batch
-        // of uploaded files will start from total progress of 0
-        var uppyFiles = uppy.getFiles();
-        var i;
-        for (i = 0; i < uppyFiles.length; i++) {
-            uppy.removeFile(uppyFiles[i].id);
-        }
-
-        // the total progress will go to 0, so we need to set it back to 100
-        updateProgressPercent(100);
-
-        // move to the first page and refresh
-        $('<a></a>')
-            .attr('data-ajax', 'true')
-            .attr('data-ajax-method', 'GET')
-            .attr('data-ajax-mode', 'replace')
-            .attr('data-ajax-update', '#tab_box_1')
-            .attr('data-ajax-success', 'triggerTooltip')
-            .attr('href', '@(Url.Action("ListFreeBlobs"))')
-            .appendTo(document.body)
-            .trigger('click')
-            .remove();
-    });
-
-    function deleteFile(id) {
-        if (confirm("Сигурни ли сте, че искате да изтриете файла?")) {
-            $.ajax({ url: '@(Url.Action("Delete"))/' + id, method: 'POST' })
-                .done(function () {
-                    // move to the first page
-                    $('<a></a>')
-                        .attr('data-ajax', 'true')
-                        .attr('data-ajax-method', 'GET')
-                        .attr('data-ajax-mode', 'replace')
-                        .attr('data-ajax-update', '#tab_box_1')
-                        .attr('href', '@(Url.Action("ListFreeBlobs"))')
-                        .appendTo(document.body)
-                        .trigger('click')
-                        .remove();
-                });
-        }
-    }
-
-    function triggerTooltip() {
-        $('[data-toggle="tooltip"]').tooltip('dispose').tooltip({ boundary: 'window' });
-    }
     </script>
 
     <script type="text/javascript">
         $(function () {
             triggerTooltip();
 
-            $('button[id^="tab_btn_"]').myTabs(
-                'button[id^="tab_btn_"]',
-                'div[id^="tab_box_"]',
-                'data-tab-id',
-                'show');
+            $('#tab_btn_1').on('click', function (e) {
+                loadTabData('free');
+            });
+
+            $('#tab_btn_2').on('click', function (e) {
+                loadTabData('inbox');
+            });
+
+            $('#tab_btn_3').on('click', function (e) {
+                loadTabData('outbox');
+            });
+
+            function loadTabData(action) {
+                if (action != undefined) {
+                    history.pushState(null, null, '/Storage?tab=' + action);
+                }
+
+                var params = $.GetUrlParams();
+                var tab = params['tab'];
+
+                var loader = '<div class="loader"></div>';
+                $('#storage-tables').html(loader);
+
+                removeActiveClasses();
+
+                switch (tab) {
+                    case 'free':
+                        $.post('/Storage/ListFreeBlobs', params, function (content) {
+                            $('#storage-tables').html(content);
+                        });
+
+                        $('#tab_btn_1').addClass('active');
+                        break;
+
+                    case 'inbox':
+                        $.post('/Storage/ListInboxBlobs', params, function (content) {
+                            $('#storage-tables').html(content);
+                        });
+
+                        $('#tab_btn_2').addClass('active');
+                        break;
+
+                    case 'outbox':
+                        $.post('/Storage/ListOutboxBlobs', params, function (content) {
+                            $('#storage-tables').html(content);
+                        });
+
+                        $('#tab_btn_3').addClass('active');
+                        break;
+
+                    default:
+                        $.post('/Storage/ListFreeBlobs', params, function (content) {
+                            $('#storage-tables').html(content);
+                        });
+
+                        $('#tab_btn_1').addClass('active');
+                        break;
+                }
+
+                if (params == '' || params['tab'] == 'free') {
+                    document.querySelector('.file-upload').style.display = 'block';
+                } else {
+                    document.querySelector('.file-upload').style.display = 'none';
+                }
+            }
+
+            window.addEventListener('popstate', function (e) {
+                window.location.reload();
+            });
+
+            function removeActiveClasses() {
+                $('#tab_btn_1').removeClass('active');
+                $('#tab_btn_2').removeClass('active');
+                $('#tab_btn_3').removeClass('active');
+            }
+
+            $(document).ready(function () {
+                loadTabData(null);
+            });
         });
     </script>
 }

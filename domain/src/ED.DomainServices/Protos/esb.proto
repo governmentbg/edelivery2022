@@ -4,6 +4,7 @@ option csharp_namespace = "ED.DomainServices.Esb";
 
 package esb;
 
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -34,8 +35,7 @@ service Esb {
   rpc CheckProfileOnBehalfOfAccess (CheckProfileOnBehalfOfAccessRequest) returns (CheckProfileOnBehalfOfAccessResponse);
   rpc CheckExistingIndividual (CheckExistingIndividualRequest) returns (CheckExistingIndividualResponse);
   rpc GetTargetGroupProfiles (GetTargetGroupProfilesRequest) returns (GetTargetGroupProfilesResponse);
-  rpc GetTargetGroupProfileByIdentifier (GetTargetGroupProfileByIdentifierRequest) returns (GetTargetGroupProfileByIdentifierResponse);
-  rpc GetProfileByIdentifier (GetProfileByIdentifierRequest) returns (GetProfileByIdentifierResponse);
+  rpc SearchTargetGroupProfiles (SearchTargetGroupProfilesRequest) returns (SearchTargetGroupProfilesResponse);
   rpc GetEsbUser (GetEsbUserRequest) returns (GetEsbUserResponse);
 
   // target groups
@@ -45,6 +45,11 @@ service Esb {
   rpc CheckProfileTemplateAccess (CheckProfileTemplateAccessRequest) returns (CheckProfileTemplateAccessResponse);
   rpc GetTemplates (GetTemplatesRequest) returns (GetTemplatesResponse);
   rpc GetTemplate (GetTemplateRequest) returns (GetTemplateResponse);
+
+  // blobs
+  rpc GetStorageBlobs (GetStorageBlobsRequest) returns (GetStorageBlobsResponse);
+  rpc GetStorageBlobInfo (GetStorageBlobInfoRequest) returns (GetStorageBlobInfoResponse);
+  rpc DeteleStorageBlob (DeteleStorageBlobRequest) returns (google.protobuf.Empty);
 }
 
 message BoxRequest {
@@ -64,9 +69,7 @@ message InboxResponse{
     string recipient_profile_name = 7;
     string recipient_login_name = 8;
     string url = 9;
-    google.protobuf.StringValue orn = 10;
-    google.protobuf.StringValue referenced_orn = 11;
-    google.protobuf.StringValue additional_identifier = 12;
+    google.protobuf.StringValue rnu = 10;
   }
 
   repeated Message result = 1;
@@ -83,9 +86,7 @@ message OutboxResponse{
     string sender_login_name = 5;
     string recipients = 6;
     string url = 7;
-    google.protobuf.StringValue orn = 8;
-    google.protobuf.StringValue referenced_orn = 9;
-    google.protobuf.StringValue additional_identifier = 10;
+    google.protobuf.StringValue rnu = 8;
   }
 
   repeated Message result = 1;
@@ -167,28 +168,13 @@ message GetTargetGroupProfilesResponse {
   int32 length = 2;
 }
 
-message GetTargetGroupProfileByIdentifierRequest {
-  int32 target_group_id = 1;
-  string identifier = 2;
-}
-
-message GetTargetGroupProfileByIdentifierResponse {
-  message Profile {
-    int32 profile_id = 1;
-    string identifier = 2;
-    string name = 3;
-    string email = 4;
-    string phone = 5;
-  }
-
-  optional Profile result = 1;
-}
-
-message GetProfileByIdentifierRequest {
+message SearchTargetGroupProfilesRequest {
   string identifier = 1;
+  google.protobuf.Int32Value template_id = 2;
+  int32 target_group_id = 3;
 }
 
-message GetProfileByIdentifierResponse {
+message SearchTargetGroupProfilesResponse {
   message Profile {
     int32 profile_id = 1;
     string identifier = 2;
@@ -316,9 +302,7 @@ message ViewMessageResponse {
     string body = 6;
     repeated Blob blobs = 7;
     google.protobuf.Int32Value forwarded_message_id = 8;
-    google.protobuf.StringValue orn = 9;
-    google.protobuf.StringValue referenced_orn = 10;
-    google.protobuf.StringValue additional_identifier = 11;
+    google.protobuf.StringValue rnu = 9;
   }
 
   Message message = 1;
@@ -373,9 +357,7 @@ message GetMessageResponse {
     string body = 8;
     repeated Blob blobs = 9;
     google.protobuf.Int32Value forwarded_message_id = 10;
-    google.protobuf.StringValue orn = 11;
-    google.protobuf.StringValue referenced_orn = 12;
-    google.protobuf.StringValue additional_identifier = 13;
+    google.protobuf.StringValue rnu = 11;
   }
 
   Message message = 1;
@@ -405,10 +387,14 @@ message GetEsbUserRequest {
 }
 
 message GetEsbUserResponse {
-  int32 profile_id = 1;
-  int32 login_id = 2;
-  google.protobuf.Int32Value operator_login_id = 3;
-  google.protobuf.Int32Value represented_profile_id = 4;
+  message EsbUser {
+    int32 profile_id = 1;
+    int32 login_id = 2;
+    google.protobuf.Int32Value operator_login_id = 3;
+    google.protobuf.Int32Value represented_profile_id = 4;
+  }
+
+  optional EsbUser result = 1;
 }
 
 message CheckMessageRecipientsRequest {
@@ -431,8 +417,7 @@ message SendMessageRequest {
   string meta_fields = 8;
   repeated int32 blob_ids = 9;
   google.protobuf.Int32Value forwarded_message_id = 10;
-  google.protobuf.StringValue referenced_orn = 11;
-  google.protobuf.StringValue additional_identifier = 12;
+  google.protobuf.StringValue rnu = 11;
 }
 
 message SendMessageResponse {
@@ -453,4 +438,73 @@ message GetBlobsInfoResponse {
   }
 
   repeated Blob result = 1;
+}
+
+message GetStorageBlobsRequest {
+  int32 profile_id = 1;
+  google.protobuf.Int32Value offset = 2;
+  google.protobuf.Int32Value limit = 3;
+}
+
+message GetStorageBlobsResponse {
+  message Blob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    google.protobuf.Int64Value size = 3;
+    google.protobuf.StringValue document_registration_number = 4;
+    google.protobuf.BoolValue is_malicious = 6;
+    google.protobuf.StringValue hash = 7;
+    google.protobuf.StringValue hash_algorithm = 8;
+    repeated BlobSignature signatures = 9;
+  }
+
+  message BlobSignature {
+    bool covers_document = 1;
+    google.protobuf.Timestamp sign_date = 2;
+    bool is_timestamp = 3;
+    bool valid_at_time_of_signing = 4;
+    string issuer = 5;
+    string subject = 6;
+    google.protobuf.Timestamp valid_to = 7;
+    google.protobuf.Timestamp valid_from = 8;
+  }
+
+  repeated Blob result = 1;
+  int32 length = 2;
+}
+
+message GetStorageBlobInfoRequest {
+  int32 profile_id = 1;
+  int32 blob_id = 2;
+}
+
+message GetStorageBlobInfoResponse {
+  message Blob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    google.protobuf.Int64Value size = 3;
+    google.protobuf.StringValue document_registration_number = 4;
+    google.protobuf.BoolValue is_malicious = 6;
+    google.protobuf.StringValue hash = 7;
+    google.protobuf.StringValue hash_algorithm = 8;
+    repeated BlobSignature signatures = 9;
+  }
+
+  message BlobSignature {
+    bool covers_document = 1;
+    google.protobuf.Timestamp sign_date = 2;
+    bool is_timestamp = 3;
+    bool valid_at_time_of_signing = 4;
+    string issuer = 5;
+    string subject = 6;
+    google.protobuf.Timestamp valid_to = 7;
+    google.protobuf.Timestamp valid_from = 8;
+  }
+
+  optional Blob result = 1;
+}
+
+message DeteleStorageBlobRequest {
+  int32 profile_id = 1;
+  int32 blob_id = 2;
 }

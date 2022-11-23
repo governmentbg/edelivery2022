@@ -29,49 +29,17 @@ namespace EDelivery.WebPortal
             }
         }
 
-        // TODO: ?
-        public void Info(string message)
-        {
-            this.Error(new InfoMessage(message));
-        }
-
-        // TODO: ?
-        public void Info(string message, params object[] messageParams)
-        {
-            if (!string.IsNullOrEmpty(message) && messageParams != null && messageParams.Length > 0)
-            {
-                message = string.Format(message, messageParams);
-                this.Error(new InfoMessage(message));
-            }
-        }
-
         public void Error(string message)
         {
-            this.Error(new Exception(message));
-        }
-
-        // TODO: ?
-        public void Error(string message, params object[] messageParams)
-        {
-            if (!string.IsNullOrEmpty(message) && messageParams != null && messageParams.Length > 0)
-            {
-                message = string.Format(message, messageParams);
-                this.Error(new Exception(message));
-            }
-        }
-
-        // TODO: investigate
-        public void Error(Exception ex)
-        {
-            Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+            this.Error(new Exception(), message);
         }
 
         public void Error(Exception ex, string message)
         {
-            this.Error(ex, message, null);
+            this.ErrorInternal(ex, message);
         }
 
-        public void Error(Exception ex, string message, params object[] messageParams)
+        private void ErrorInternal(Exception ex, string message)
         {
             var context = HttpContext.Current;
 
@@ -83,15 +51,9 @@ namespace EDelivery.WebPortal
                     return;
                 }
 
-                if (!string.IsNullOrEmpty(message)
-                    && messageParams != null && messageParams.Length > 0)
-                {
-                    message = String.Format(message, messageParams);
-                }
-
                 try
                 {
-                    var elmahEh = new Elmah.Error(ex, context);
+                    Elmah.Error elmahEh = new Elmah.Error(ex, context);
                     elmahEh.ServerVariables.Add("APP_MESSAGE", message);
                     Elmah.ErrorLog.GetDefault(context).Log(elmahEh);
                 }

@@ -9,7 +9,7 @@ public static class AuthorizationExtensions
     public static AuthorizationPolicyBuilder RequireAuthenticatedUserStrict(
         this AuthorizationPolicyBuilder builder)
     {
-        builder.AddRequirements(new FailAnonymousAuthorizationRequirement());
+        builder.AddRequirements(new StrictDenyAnonymousAuthorizationRequirement());
 
         return builder;
     }
@@ -37,6 +37,13 @@ public static class AuthorizationExtensions
                         new TemplateAccessRequirement()));
 
             opts.AddPolicy(
+                Policies.OboTemplateAccess,
+                policyBuilder => policyBuilder
+                    .Combine(opts.DefaultPolicy)
+                    .AddRequirements(
+                        new OboTemplateAccessRequirement()));
+
+            opts.AddPolicy(
                 Policies.ProfilesTargetGroupAccess,
                 policyBuilder => policyBuilder
                     .Combine(opts.DefaultPolicy)
@@ -51,11 +58,11 @@ public static class AuthorizationExtensions
                         new ProfilesTargetGroupAccessRequirement(Constants.IndividualTargetGroupId)));
 
             opts.AddPolicy(
-                Policies.ProfilesOnBehalfOf,
+                Policies.OboProfilesAccess,
                 policyBuilder => policyBuilder
                     .Combine(opts.DefaultPolicy)
                     .AddRequirements(
-                        new ProfilesOnBehalfOfRequirement()));
+                        new OboProfilesAccessRequirement()));
 
             opts.AddPolicy(
                 Policies.ReadMessageAsSender,
@@ -72,18 +79,18 @@ public static class AuthorizationExtensions
                         new ReadMessageAsRecipientRequirement()));
 
             opts.AddPolicy(
-                Policies.ReadInbox,
+                Policies.OboReadInbox,
                 policyBuilder => policyBuilder
                     .Combine(opts.DefaultPolicy)
                     .AddRequirements(
-                        new ReadInboxRequirement()));
+                        new OboProfilesAccessRequirement()));
 
             opts.AddPolicy(
-                Policies.ReadOutbox,
+                Policies.OboReadOutbox,
                 policyBuilder => policyBuilder
                     .Combine(opts.DefaultPolicy)
                     .AddRequirements(
-                        new ReadOutboxRequirement()));
+                        new OboProfilesAccessRequirement()));
 
             opts.AddPolicy(
                 Policies.SendMessage,

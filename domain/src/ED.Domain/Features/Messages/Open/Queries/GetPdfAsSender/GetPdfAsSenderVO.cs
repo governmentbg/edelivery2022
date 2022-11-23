@@ -12,6 +12,7 @@ namespace ED.Domain
             MessageSummaryVersion? MessageSummaryVersion,
             byte[]? MessageSummary,
             string Subject,
+            string? Rnu,
             byte[] Body,
             int? TemplateId,
             byte[] IV,

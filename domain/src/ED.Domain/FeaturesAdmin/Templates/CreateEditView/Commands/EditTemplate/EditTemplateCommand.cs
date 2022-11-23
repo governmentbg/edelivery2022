@@ -6,18 +6,11 @@ namespace ED.Domain
         int TemplateId,
         string Name,
         string IdentityNumber,
+        string? Category,
         string Content,
         int? ResponseTemplateId,
         bool IsSystemTemplate,
         int ReadLoginSecurityLevelId,
-        int WriteLoginSecurityLevelId,
-        int BlobId,
-        string? SenderDocumentField,
-        string? RecipientDocumentField,
-        string? SubjectDocumentField,
-        string? DateSentDocumentField,
-        string? DateReceivedDocumentField,
-        string? SenderSignatureDocumentField,
-        string? RecipientSignatureDocumentField
+        int WriteLoginSecurityLevelId
     ) : IRequest<int>;
 }

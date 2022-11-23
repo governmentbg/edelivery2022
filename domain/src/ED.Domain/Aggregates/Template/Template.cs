@@ -32,37 +32,23 @@ namespace ED.Domain
         public Template(
             string name,
             string identityNumber,
+            string? category,
             string content,
             int? responseTemplateId,
             bool isSystemTemplate,
             int createdByAdminUserId,
             int readLoginSecurityLevelId,
-            int writeLoginSecurityLevelId,
-            int blobId,
-            string? senderDocumentField,
-            string? recipientDocumentField,
-            string? subjectDocumentField,
-            string? dateSentDocumentField,
-            string? dateReceivedDocumentField,
-            string? senderSignatureDocumentField,
-            string? recipientSignatureDocumentField)
+            int writeLoginSecurityLevelId)
         {
             this.Name = name;
             this.IdentityNumber = identityNumber;
+            this.Category = category;
             this.Content = content;
             this.ResponseTemplateId = responseTemplateId;
             this.IsSystemTemplate = isSystemTemplate;
             this.CreatedByAdminUserId = createdByAdminUserId;
             this.ReadLoginSecurityLevelId = readLoginSecurityLevelId;
             this.WriteLoginSecurityLevelId = writeLoginSecurityLevelId;
-            this.BlobId = blobId;
-            this.SenderDocumentField = senderDocumentField;
-            this.RecipientDocumentField = recipientDocumentField;
-            this.SubjectDocumentField = subjectDocumentField;
-            this.DateSentDocumentField = dateSentDocumentField;
-            this.DateReceivedDocumentField = dateReceivedDocumentField;
-            this.SenderSignatureDocumentField = senderSignatureDocumentField;
-            this.RecipientSignatureDocumentField = recipientSignatureDocumentField;
 
             this.CreateDate = DateTime.Now;
             this.ResponseTemplate = null!;
@@ -104,22 +90,6 @@ namespace ED.Domain
 
         public LoginSecurityLevel WriteLoginSecurityLevel { get; set; }
 
-        public int? BlobId { get; set; }
-
-        public string? SenderDocumentField { get; set; }
-
-        public string? RecipientDocumentField { get; set; }
-
-        public string? SubjectDocumentField { get; set; }
-
-        public string? DateSentDocumentField { get; set; }
-
-        public string? DateReceivedDocumentField { get; set; }
-
-        public string? SenderSignatureDocumentField { get; set; }
-
-        public string? RecipientSignatureDocumentField { get; set; }
-
         private List<TemplateProfile> profiles = new();
 
         public IReadOnlyCollection<TemplateProfile> Profiles =>
@@ -130,22 +100,17 @@ namespace ED.Domain
         public IReadOnlyCollection<TemplateTargetGroup> TargetGroups =>
             this.targetGroups.AsReadOnly();
 
+        public string? Category { get; set; }
+
         public void Update(
             string name,
             string identityNumber,
+            string? category,
             string content,
             int? responseTemplateId,
             bool isSystemTemplate,
             int readLoginSecurityLevelId,
-            int writeLoginSecurityLevelId,
-            int blobId,
-            string? senderDocumentField,
-            string? recipientDocumentField,
-            string? subjectDocumentField,
-            string? dateSentDocumentField,
-            string? dateReceivedDocumentField,
-            string? senderSignatureDocumentField,
-            string? recipientSignatureDocumentField)
+            int writeLoginSecurityLevelId)
         {
             if (this.ArchiveDate != null ||
                 this.PublishDate != null)
@@ -155,24 +120,28 @@ namespace ED.Domain
 
             this.Name = name;
             this.IdentityNumber = identityNumber;
+            this.Category = category;
             this.Content = content;
             this.ResponseTemplateId = responseTemplateId;
             this.IsSystemTemplate = isSystemTemplate;
             this.ReadLoginSecurityLevelId = readLoginSecurityLevelId;
             this.WriteLoginSecurityLevelId = writeLoginSecurityLevelId;
-            this.BlobId = blobId;
-            this.SenderDocumentField = senderDocumentField;
-            this.RecipientDocumentField = recipientDocumentField;
-            this.SubjectDocumentField = subjectDocumentField;
-            this.DateSentDocumentField = dateSentDocumentField;
-            this.DateReceivedDocumentField = dateReceivedDocumentField;
-            this.SenderSignatureDocumentField = senderSignatureDocumentField;
-            this.RecipientSignatureDocumentField = recipientSignatureDocumentField;
         }
 
         public void Publish(int adminUserId)
         {
             this.PublishDate = DateTime.Now;
+            this.PublishedByAdminUserId = adminUserId;
+        }
+
+        public void Unpublish(int adminUserId)
+        {
+            if (this.IsSystemTemplate)
+            {
+                throw new DomainException("Can't unpublish a system template");
+            }
+
+            this.PublishDate = null;
             this.PublishedByAdminUserId = adminUserId;
         }
 
@@ -288,11 +257,6 @@ namespace ED.Domain
             builder.HasMany(e => e.TargetGroups)
                 .WithOne()
                 .HasForeignKey(e => e.TemplateId);
-
-            builder.HasOne(typeof(Blob))
-                .WithMany()
-                .HasForeignKey(nameof(Template.BlobId))
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

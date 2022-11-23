@@ -132,14 +132,20 @@
   <data name="ColumnName" xml:space="preserve">
     <value>Наименование</value>
   </data>
-  <data name="FormEFormServiceNumber" xml:space="preserve">
-    <value>Услуга №</value>
+  <data name="ColumnReceiver" xml:space="preserve">
+    <value>Получател</value>
   </data>
   <data name="FormFromDate" xml:space="preserve">
     <value>От дата</value>
   </data>
+  <data name="FormSubject" xml:space="preserve">
+    <value>Наименование</value>
+  </data>
   <data name="FormToDate" xml:space="preserve">
     <value>До дата</value>
+  </data>
+  <data name="MaxDateDiapasonErrorMessage" xml:space="preserve">
+    <value>Полето "До дата" трябва да е в диапазон 2 месеца след полето "От дата"</value>
   </data>
   <data name="NoItems" xml:space="preserve">
     <value>Няма заявени услуги за избрания период</value>

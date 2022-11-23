@@ -13,12 +13,9 @@ public class MessageViewDOMapping : IRegister
             .Map(dest => dest.DateSent, src => src.DateSent.ToLocalDateTime())
             .Map(dest => dest.Recipients, src => src.Recipients)
             .Map(dest => dest.Subject, src => src.Subject)
-            .Map(dest => dest.Orn, src => src.Orn)
-            .Map(dest => dest.ReferencedOrn, src => src.ReferencedOrn)
-            .Map(dest => dest.AdditionalIdentifier, src => src.AdditionalIdentifier)
+            .Map(dest => dest.Rnu, src => src.Rnu)
             .Map(dest => dest.TemplateId, src => src.TemplateId)
-            .Map(dest => dest.Fields, src => new Dictionary<Guid, string>())
-            .Map(dest => dest.Blobs, src => src.Blobs)
+            .Map(dest => dest.Fields, src => new Dictionary<Guid, object?>())
             .Map(dest => dest.ForwardedMessageId, src => src.ForwardedMessageId);
 
         config.NewConfig<DomainServices.Esb.ViewMessageResponse.Types.Blob, MessageViewDOBlob>()

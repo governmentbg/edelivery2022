@@ -175,6 +175,14 @@ namespace ED.Domain
             {
                 return QueueMessageType.Viber;
             }
+            else if (typeof(T) == typeof(SmsDeliveryCheckQueueMessage))
+            {
+                return QueueMessageType.SmsDeliveryCheck;
+            }
+            else if (typeof(T) == typeof(ViberDeliveryCheckQueueMessage))
+            {
+                return QueueMessageType.ViberDeliveryCheck;
+            }
             else
             {
                 throw new Exception("Unknown payload type.");

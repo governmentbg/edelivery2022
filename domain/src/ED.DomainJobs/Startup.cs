@@ -74,6 +74,14 @@ namespace ED.DomainJobs
             {
                 services.AddHostedService<ViberJob>();
             }
+            if (this.Configuration.GetValue<int>("ED:DomainJobs:SmsDeliveryCheckJob:PeriodInSeconds") != 0)
+            {
+                services.AddHostedService<SmsDeliveryCheckJob>();
+            }
+            if (this.Configuration.GetValue<int>("ED:DomainJobs:ViberDeliveryCheckJob:PeriodInSeconds") != 0)
+            {
+                services.AddHostedService<ViberDeliveryCheckJob>();
+            }
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

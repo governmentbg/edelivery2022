@@ -197,8 +197,9 @@ namespace ED.Domain
             where TEntity : class
         {
             return this.DbContext.Model
-                .FindEntityType(typeof(TEntity))
-                .FindPrimaryKey();
+                .FindEntityType(typeof(TEntity))?
+                .FindPrimaryKey()
+                    ?? throw new DomainException("Cannot find entity type primary key.");
         }
 
         private TEntity? FindTrackedEntityOrDefault<TEntity>(

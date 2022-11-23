@@ -122,6 +122,8 @@ AddGrpcClient<AuthorizationClient>(
     esbApiOptions.DomainServicesUrl,
     esbApiOptions.DomainServicesUseGrpcWeb);
 
+builder.Services.AddScoped<ITemplateService, TemplateService>();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -165,7 +167,8 @@ TypeAdapterConfig.GlobalSettings.RequireDestinationMemberSource = true;
 TypeAdapterConfig.GlobalSettings.Apply(
     new TimestampMapping(),
     new MessageViewDOMapping(),
-    new MessageOpenDOMapping());
+    new MessageOpenDOMapping(),
+    new BlobDOMapping());
 TypeAdapterConfig.GlobalSettings.Default
     .EnumMappingStrategy(EnumMappingStrategy.ByName);
 

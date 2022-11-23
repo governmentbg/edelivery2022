@@ -19,11 +19,19 @@ namespace ED.Domain
                      on p.Id equals tgp.ProfileId
                  join ttg in this.DbContext.Set<TemplateTargetGroup>()
                      on tgp.TargetGroupId equals ttg.TargetGroupId
+                 join t in this.DbContext.Set<Template>()
+                    on ttg.TemplateId equals t.TemplateId
                  where p.Id == profileId
+                    && t.Category == null
+                    && ttg.CanSend
                  select ttg.TemplateId
                 ).Union(
                     from tp in this.DbContext.Set<TemplateProfile>()
+                    join t in this.DbContext.Set<Template>()
+                        on tp.TemplateId equals t.TemplateId
                     where tp.ProfileId == profileId
+                        && t.Category == null
+                        && tp.CanSend
                     select tp.TemplateId
                 );
 
@@ -55,16 +63,16 @@ namespace ED.Domain
 
                 allowedTemplateIdsQuery =
                     from tId in allowedTemplateIdsQuery
-                    where this.DbContext.MakeIdsQuery(writeProfileMessageAccessTemplateIds)
-                            .Any(id => id.Id == tId)
+                    where this.DbContext.MakeIdsQuery(writeProfileMessageAccessTemplateIds).Any(id => id.Id == tId)
                     select tId;
             }
 
             TableResultVO<GetAllowedTemplatesVO> table =
                 await (
                     from t in this.DbContext.Set<Template>()
-                    where t.ArchiveDate == null &&
-                        allowedTemplateIdsQuery.Any(atId => t.TemplateId == atId)
+                    where t.ArchiveDate == null
+                        && t.PublishDate != null
+                        && allowedTemplateIdsQuery.Any(atId => t.TemplateId == atId)
                     select new GetAllowedTemplatesVO(
                         t.TemplateId,
                         t.Name)

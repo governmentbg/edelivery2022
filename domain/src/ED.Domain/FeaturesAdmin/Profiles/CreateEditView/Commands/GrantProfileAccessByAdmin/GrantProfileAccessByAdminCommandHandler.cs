@@ -58,7 +58,7 @@ namespace ED.Domain
                     .Select(e => (e.Permission, e.TemplateId))
                     .ToArray());
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
                 profile.Id,
                 ProfileHistoryAction.GrantAccessToProfile,
                 command.AdminUserId,

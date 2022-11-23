@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using EDelivery.WebPortal.Models.Templates.Components;
+
 namespace EDelivery.WebPortal.Models
 {
     public class ReadCodeMessageViewModel
@@ -30,6 +32,7 @@ namespace EDelivery.WebPortal.Models
             {
                 this.BlobId = blob.BlobId;
                 this.FileName = blob.FileName;
+                this.Hash = blob.Hash;
                 this.Size = blob.Size;
                 this.DocumentRegistrationNumber = blob.DocumentRegistrationNumber;
                 this.Status = blob.Status;
@@ -45,6 +48,8 @@ namespace EDelivery.WebPortal.Models
             public int BlobId { get; set; }
 
             public string FileName { get; set; }
+
+            public string Hash { get; set; }
 
             public long? Size { get; set; }
 
@@ -100,9 +105,7 @@ namespace EDelivery.WebPortal.Models
             this.Recipient = new ReadCodeMessageViewModelProfile(message.Recipient);
             this.TemplateId = message.TemplateId;
             this.Subject = message.Subject;
-            this.Orn = message.Orn;
-            this.ReferencedOrn = message.ReferencedOrn;
-            this.AdditionalIdentifier = message.AdditionalIdentifier;
+            this.Rnu = message.Rnu;
             this.Body = message.Body;
             this.TemplateName = message.TemplateName;
             this.Blobs = message.Blobs
@@ -126,11 +129,7 @@ namespace EDelivery.WebPortal.Models
 
         public string Subject { get; set; }
 
-        public string Orn { get; set; }
-
-        public string ReferencedOrn { get; set; }
-
-        public string AdditionalIdentifier { get; set; }
+        public string Rnu { get; set; }
 
         public string Body { get; set; }
 
@@ -138,12 +137,13 @@ namespace EDelivery.WebPortal.Models
 
         public List<ReadCodeMessageViewModelBlob> Blobs { get; set; }
 
-        public Dictionary<string, (bool, object)> Fields { get; set; } =
-            new Dictionary<string, (bool, object)>();
+        // component_guid -> (label, component_type, value)
+        public Dictionary<Guid, FieldObject> Fields { get; set; } =
+            new Dictionary<Guid, FieldObject>();
 
-        public void SetFields(Dictionary<string, (bool, object)> values)
+        public void SetFields(Dictionary<Guid, FieldObject> values)
         {
-            foreach (KeyValuePair<string, (bool, object)> item in values)
+            foreach (KeyValuePair<Guid, FieldObject> item in values)
             {
                 if (this.Fields.ContainsKey(item.Key))
                 {

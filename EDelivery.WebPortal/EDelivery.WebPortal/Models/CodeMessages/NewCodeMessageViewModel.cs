@@ -36,12 +36,6 @@ namespace EDelivery.WebPortal.Models
         [StringLength(255, ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages), ErrorMessageResourceName = "ErrorMessageFieldLength")]
         public string Subject { get; set; }
 
-        [StringLength(32, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
-        public string ReferencedOrn { get; set; }
-
-        [StringLength(32, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
-        public string AdditionalIdentifier { get; set; }
-
         [Required]
         public int TemplateId { get; set; }
 

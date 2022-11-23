@@ -29,28 +29,25 @@
             Целеви групи
         </button>
 
-        @if (Model.RecipientGroups.Any())
-        {
-            <button id="tab_btn_4"
-                    class="btn btn-m"
-                    type="button"
-                    data-tab-id="tab_box_4">
-                Профилни групи
-            </button>
-        }
+        <button id="tab_btn_4"
+                class="btn btn-m"
+                type="button"
+                data-tab-id="tab_box_4">
+            Профилни групи
+        </button>
     </nav>
 
     @if (Model.CanSendToIndividuals)
     {
         <div id="tab_box_1" class="tab-box active">
-            @Html.Partial("Partials/_SearchPerson", new SearchPersonModel())
+            @Html.Partial("Partials/_SearchIndividual", new SearchIndividualModel(Model.TemplateId))
         </div>
     }
 
     @if (Model.CanSendToLegalEntities)
     {
         <div id="tab_box_2" class="tab-box">
-            @Html.Partial("Partials/_SearchLegal", new SearchLegalModel())
+            @Html.Partial("Partials/_SearchLegalEntity", new SearchLegalEntityModel(Model.TemplateId))
         </div>
     }
 
@@ -83,26 +80,23 @@
         </form>
     </div>
 
-    @if (Model.RecipientGroups.Any())
-    {
-        <div id="tab_box_4" class="tab-box">
-            <form>
-                <ul>
-                    <li id="recipient-groups-items">
-                        @Html.DropDownList(
-                            "RecipientGroups",
-                            Model.RecipientGroups,
-                            new
-                            {
-                                @id = "RecipientGroupsSelect2",
-                                @class = "form-select select2 autoaddcontact",
-                                style = "width: 100%"
-                            })
-                    </li>
-                </ul>
-            </form>
-        </div>
-    }
+    <div id="tab_box_4" class="tab-box">
+        <form>
+            <ul>
+                <li id="recipient-groups-items">
+                    @Html.DropDownList(
+                        "RecipientGroups",
+                        Array.Empty<SelectListItem>(),
+                        new
+                        {
+                            @id = "RecipientGroupsSelect2",
+                            @class = "form-select select2 autoaddcontact",
+                            style = "width: 100%"
+                        })
+                </li>
+            </ul>
+        </form>
+    </div>
 
     <section class="form-section form-row dnone" id="sectionmodalrecipient">
         <h3>Избрани получатели:</h3>
@@ -124,7 +118,6 @@
         : "en";
 }
 
-@*TODO : look up recipient groups and follow select2 strategy there*@
 <script type="text/javascript">
     $(function () {
         $('button[id^="tab_btn_"]').myTabs(
@@ -132,6 +125,8 @@
             'div[id^="tab_box_"]',
             'data-tab-id',
             'active');
+
+        var templateId = '@Model.TemplateId';
 
         var $parentTargetGroup = $('#modalcontacts #TargetGroupsSelect2');
         var $childTargetGroup = $('#modalcontacts #RecipientsSelect2');
@@ -157,7 +152,12 @@
                 ajax: {
                     url: '/Search/QueryRecipients',
                     data: function(params) {
-                        return $.extend(params, { targetGroupId: option.val() });
+                        return $.extend(
+                            params,
+                            {
+                                targetGroupId: option.val(),
+                                templateId: templateId
+                            });
                     },
                     dataType: 'json',
                     cache: false,
@@ -200,6 +200,32 @@
                 placeholder: 'Избери група',
                 maximumSelectionLength: 3,
                 dropdownParent: $('#recipient-groups-items'),
+                ajax: {
+                    url: '/Search/QueryRecipientGroups',
+                    data: function (params) {
+                        return $.extend(
+                            params,
+                            {
+                                targetGroupId: option.val(),
+                                templateId: templateId
+                            });
+                    },
+                    dataType: 'json',
+                    cache: false,
+                    delay: 250,
+                    processResults: function (data) {
+                        data.results = $.map(data.results,
+                            function (item) {
+                                return {
+                                    id: item.id,
+                                    text: item.text,
+                                    selected: false,
+                                    disabled: false
+                                }
+                            });
+                        return data;
+                    }
+                },
                 language: '@select2Language'
             })
             .val(null).trigger('change') //remove any selected options on open

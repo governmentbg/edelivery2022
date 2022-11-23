@@ -12,5 +12,9 @@ namespace ED.DomainJobs
         public PushNotificationJobOptions PushNotificationJob { get; set; } = null!;
         [Required]
         public ViberJobOptions ViberJob { get; set; } = null!;
+        [Required]
+        public SmsDeliveryCheckJobOptions SmsDeliveryCheckJob { get; set; } = null!;
+        [Required]
+        public ViberDeliveryCheckJobOptions ViberDeliveryCheckJob { get; set; } = null!;
     }
 }

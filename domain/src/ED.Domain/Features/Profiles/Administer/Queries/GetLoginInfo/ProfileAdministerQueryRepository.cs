@@ -25,7 +25,7 @@ namespace ED.Domain
                     l.Email,
                     l.PhoneNumber,
                     l.ElectronicSubjectId == profileSubjectId))
-                .SingleOrDefaultAsync(ct);
+                .SingleAsync(ct);
 
             return vo;
         }

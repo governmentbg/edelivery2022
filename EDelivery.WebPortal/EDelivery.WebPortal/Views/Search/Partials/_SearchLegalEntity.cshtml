@@ -1,0 +1,41 @@
+﻿@model SearchLegalEntityModel
+
+<div id="searchLegalEntiyForm">
+
+    @Html.HiddenFor(x => x.SelectedLegalEntityProfileId)
+    @Html.HiddenFor(x => x.SelectedLegalEntityProfileName)
+
+    @using (Ajax.BeginForm(
+        "SearchLegalEntity",
+        "Search",
+        null,
+        new AjaxOptions()
+        {
+            AllowCache = false,
+            HttpMethod = "POST",
+            OnSuccess = $"gf.addMessageRecipientModal($('#SelectedLegalEntityProfileId').val(), $('#SelectedLegalEntityProfileName').val(), 'profile')",
+            UpdateTargetId = "searchLegalEntiyForm",
+            InsertionMode = InsertionMode.ReplaceWith
+        },
+        new { }))
+    {
+        @Html.HiddenFor(x => x.TemplateId)
+
+        <section class="form-section">
+            <div class="form-col">
+                <label for="FirstName">@Common.LabelCompanyRegistrationNumber *:</label>
+                <div class="form-element">
+                    @Html.TextBoxFor(x => x.CompanyRegistrationNumber, new { @class = "input-validation-valid" })
+                    @Html.ValidationMessageFor(x => x.CompanyRegistrationNumber, null, new { @class = "validation-message" })
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section form-row button-row-right">
+            <button class="btn-primary btn-m" type="submit">
+                Добави ЮЛ
+            </button>
+        </section>
+    }
+
+</div>

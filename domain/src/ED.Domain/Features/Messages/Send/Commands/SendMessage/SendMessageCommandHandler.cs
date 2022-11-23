@@ -23,9 +23,9 @@ namespace ED.Domain
         EncryptorFactoryV1 EncryptorFactoryV1,
         ED.Keystore.Keystore.KeystoreClient KeystoreClient,
         TimestampServiceClient TimestampServiceClient,
-        OrnServiceClient OrnServiceClient,
         IMessageSendQueryRepository MessageSendQueryRepository,
         IProfilesService ProfilesService,
+        IRnuService RnuService,
         IQueueMessagesService QueueMessagesService,
         IOptions<DomainOptions> DomainOptionsAccessor)
         : IRequestHandler<SendMessageCommand, Unit>
@@ -113,16 +113,12 @@ namespace ED.Domain
                     decryptedTemporaryBlobs,
                     ct);
 
-            string senderIdentifier =
-                await this.MessageSendQueryRepository.GetProfileIdentifierAsync(
-                    command.SenderProfileId,
-                    ct);
-
-            string orn =
-                await this.OrnServiceClient.SubmitAsync(senderIdentifier, ct);
-
             await using ITransaction transaction =
                 await this.UnitOfWork.BeginTransactionAsync(ct);
+
+            string rnu = !string.IsNullOrEmpty(command.Rnu)
+                ? command.Rnu
+                : this.RnuService.Get();
 
             Message message = new(
                 command.SenderLoginId,
@@ -131,9 +127,7 @@ namespace ED.Domain
                 recipientsAsText,
                 command.TemplateId,
                 command.Subject,
-                orn,
-                command.ReferencedOrn,
-                command.AdditionalIdentifier,
+                rnu,
                 this.HandleJson(encryptor, command.Body),
                 command.MetaFields,
                 command.CreatedBy,
@@ -262,9 +256,7 @@ namespace ED.Domain
             (string messageSummaryXml, byte[] messageSummary, byte[] sendTimestamp) =
                 await this.CreateMessageSummary(
                     message.MessageId,
-                    message.Orn,
-                    message.ReferencedOrn,
-                    message.AdditionalIdentifier,
+                    message.Rnu,
                     command.SenderProfileId,
                     profileKeys,
                     profileNames,
@@ -505,9 +497,7 @@ namespace ED.Domain
 
         private async Task<(string, byte[], byte[])> CreateMessageSummary(
             int messageId,
-            string? orn,
-            string? referencedOrn,
-            string? additionalIdentifier,
+            string? rnu,
             int senderProfileId,
             ProfileKeyVO[] allProfiles,
             GetProfileNamesVO[] allProfileNames,
@@ -545,9 +535,7 @@ namespace ED.Domain
 
             Message.MessageSummaryDO messageSummaryDO = new(
                 messageId,
-                orn,
-                referencedOrn,
-                additionalIdentifier,
+                rnu,
                 new Message.MessageSummaryDO.MessageSummaryVOProfile(
                     senderProfileId,
                     senderProfileName),

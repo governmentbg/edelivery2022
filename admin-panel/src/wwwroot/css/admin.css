@@ -12,13 +12,14 @@ table.list th a.change-order.down:after { background-image: url(../img/change-or
 table.list tr:nth-child(odd) td { background-color: #f7f7f7; }
 .butright { float: right; }
 .mt20 { margin-top: 20px; clear: both; }
+.mb5 { margin-bottom: 5px; clear: both; }
 .mb20 { margin-bottom: 20px; clear: both; }
 .ml20 { margin-left: 20px; }
 .mr20 { margin-right: 20px; }
 .mr10 { margin-right: 10px; }
 .line20 { margin-top: 20px; padding-top: 20px; }
 .topbrdr { border-top: 1px solid #999; }
-.col-list label { width: 250px; }
+.col-list label { width: 250px; min-width: 250px; }
 .strong { font-weight: bold; }
 .form-group.aright { text-align: right; display: block; }
 button.btn-primary.warn { background-color: red; }

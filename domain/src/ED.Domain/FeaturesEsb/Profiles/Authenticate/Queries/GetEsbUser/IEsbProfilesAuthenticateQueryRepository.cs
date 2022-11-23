@@ -5,7 +5,7 @@ namespace ED.Domain
 {
     public partial interface IEsbProfilesAuthenticateQueryRepository
     {
-        Task<GetEsbUserVO> GetEsbUserAsync(
+        Task<GetEsbUserVO?> GetEsbUserAsync(
             string oId,
             string clientId,
             string? operatorIdentifier,

@@ -23,7 +23,7 @@ namespace ED.Domain
                 from rr in lj1.DefaultIfEmpty()
 
                 where EF.Functions.Like(p.Identifier, identifier)
-                    && tgp.TargetGroupId == TargetGroup.LegalEntityTargetGroupId
+                    && tgp.TargetGroupId != TargetGroup.IndividualTargetGroupId
                     && (p.IsActivated || rr.Status == RegistrationRequestStatus.New)
 
                 select p.Id)

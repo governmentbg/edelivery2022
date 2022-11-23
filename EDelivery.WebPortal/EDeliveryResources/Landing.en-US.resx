@@ -147,6 +147,18 @@
   <data name="BgGovLink5" xml:space="preserve">
     <value>Electronic validation</value>
   </data>
+  <data name="HelpDesk" xml:space="preserve">
+    <value>Help desk</value>
+  </data>
+  <data name="HelpDeskInfo" xml:space="preserve">
+    <value>For information systems of the Ministry of E-Government:</value>
+  </data>
+  <data name="IdentityChoice" xml:space="preserve">
+    <value>Identity choice</value>
+  </data>
+  <data name="Individual" xml:space="preserve">
+    <value>Natural person</value>
+  </data>
   <data name="LandingForBusiness" xml:space="preserve">
     <value>BUSINESS &amp; CITIZENS</value>
   </data>
@@ -160,13 +172,40 @@
     <value>REPUBLIC OF BULGARIA</value>
   </data>
   <data name="LandingTitleRow2" xml:space="preserve">
-    <value>State e-Government Agency</value>
+    <value>Ministry of e-Government</value>
   </data>
   <data name="LandingTitleRow3" xml:space="preserve">
     <value>Secure electronic delivery system</value>
   </data>
+  <data name="LegalEntity" xml:space="preserve">
+    <value>Legal entity</value>
+  </data>
   <data name="LinkContactCenter" xml:space="preserve">
     <value>Support Center</value>
+  </data>
+  <data name="Message1" xml:space="preserve">
+    <value>As of 17.01.2022, the upgraded Secure Electronic Delivery System is operational. In case of problems and difficulties related to the newly built functionalities, please write to &lt;a href="mailto:Help@e-gov.bg"&gt;Help@e-gov.bg&lt;/a&gt;, and for greater efficiency kindly provide your (mobile) phone number.</value>
+  </data>
+  <data name="Message2" xml:space="preserve">
+    <value>As of 24.03.2022, a maximum total size of 1 GB is introduced for each profile in the "Uploaded files" section of the "Archive" menu of the SEDS. The maximum size of a single file uploaded independently to the Archive and attached to a message is up to 255 MB.</value>
+  </data>
+  <data name="MessageTitle" xml:space="preserve">
+    <value>Message:</value>
+  </data>
+  <data name="PublicAdministration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="RegisteredAdministrations" xml:space="preserve">
+    <value>Number of registered administrations:</value>
+  </data>
+  <data name="RegisteredLegals" xml:space="preserve">
+    <value>Number of registered other Legal entities:</value>
+  </data>
+  <data name="RegisteredSocialOrganisations" xml:space="preserve">
+    <value>Number of registered persons under Art. 1, Para. 2 of the EGA:</value>
+  </data>
+  <data name="RegistrationsFullLink" xml:space="preserve">
+    <value>Full list of registered entities is available {0} here {1}</value>
   </data>
   <data name="Step1" xml:space="preserve">
     <value>If you are not registered, please sign up! In order to register, you need a qualified electronic signature or electronic identity.</value>
@@ -185,5 +224,8 @@
   </data>
   <data name="TitlePartOfBgGov" xml:space="preserve">
     <value>Useful links</value>
+  </data>
+  <data name="TitleRegisteredUsers" xml:space="preserve">
+    <value>Registered participants</value>
   </data>
 </root>

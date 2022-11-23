@@ -81,8 +81,6 @@ namespace EDelivery.WebPortal.Controllers
             bool login = true,
             string returnUrl = null)
         {
-            logger.Info("CertificateAuthV2 call");
-
             CertAuthViewModel model = new CertAuthViewModel();
 
             X509Certificate2 cert = SAML2.Config.Saml2Section
@@ -161,17 +159,6 @@ namespace EDelivery.WebPortal.Controllers
                     break;
             }
 
-            ElmahLogger.Instance.Info(
-                string.Format(
-                    "AuthenticateCertificate responseStatus is: {0}, message {1}",
-                    response.ResponseStatus,
-                    response.ResponseStatusMessage));
-
-            logger.InfoFormat(
-                "AuthenticateCertificate responseStatus is: {0}, message {1}",
-                response.ResponseStatus,
-                response.ResponseStatusMessage);
-
             string relayState = string.Empty;
             string returnUrl = string.Empty;
             if (!string.IsNullOrEmpty(RelayState))
@@ -204,7 +191,9 @@ namespace EDelivery.WebPortal.Controllers
                     }
                     catch (Exception ex)
                     {
-                        logger.Error("AuthenticateCertificate Can not get person by provided EGN " + response.EGN, ex);
+                        ElmahLogger.Instance.Error(
+                            ex,
+                            $"AuthenticateCertificate Can not get person by provided EGN {response.EGN}");
 
                         TempData["ErrorMessage"] = ErrorMessages.ErrorSystemGeneral;
 
@@ -221,14 +210,19 @@ namespace EDelivery.WebPortal.Controllers
                         KEPRegistrationModel regModel =
                             new KEPRegistrationModel(response);
 
-                        RegixInfoClient.DataContracts.ValidPersonResponse regixNames =
-                            GetRegixPersonInfo(regModel.CertInfo.EGN);
-                        if (regixNames != null && regixNames.Success)
+                        GetRegixPersonInfoResponse regixResp =
+                            await this.profileClient.Value.GetRegixPersonInfoAsync(
+                                new GetRegixPersonInfoRequest()
+                                {
+                                    Identifier = regModel.CertInfo.EGN
+                                });
+
+                        if (regixResp.Result != null && regixResp.Result.Success)
                         {
                             regModel.LockNames = true;
-                            regModel.FirstName = regixNames.FirstName;
-                            regModel.MiddleName = regixNames.SurName;
-                            regModel.LastName = regixNames.FamilyName;
+                            regModel.FirstName = regixResp.Result.FirstName;
+                            regModel.MiddleName = regixResp.Result.SurName;
+                            regModel.LastName = regixResp.Result.FamilyName;
                         }
 
                         this.Session[KepIdentifier] = regModel.CertInfo.EGN;
@@ -240,6 +234,9 @@ namespace EDelivery.WebPortal.Controllers
                 case eCertResponseStatus.InvalidSignature:
                 case eCertResponseStatus.InvalidResponseXML:
                 case eCertResponseStatus.MissingEGN:
+                    ElmahLogger.Instance.Error(
+                        $"AuthenticateCertificate responseStatus is: {response.ResponseStatus}, message {response.ResponseStatusMessage}");
+
                     TempData["ErrorMessage"] = string.Format(
                         ErrorMessages.ErrorKepFailedInvalidResponse,
                         response.ResponseStatusMessage);
@@ -250,6 +247,9 @@ namespace EDelivery.WebPortal.Controllers
                     return RedirectToAction("Index", "Home");
                 case eCertResponseStatus.AuthenticationFailed:
                 default:
+                    ElmahLogger.Instance.Error(
+                        $"AuthenticateCertificate responseStatus is: {response.ResponseStatus}, message {response.ResponseStatusMessage}");
+
                     TempData["ErrorMessage"] = string.Format(
                         ErrorMessages.ErrorKepAuthenticationFailed,
                         response.ResponseStatusMessage);
@@ -275,8 +275,6 @@ namespace EDelivery.WebPortal.Controllers
             string jwt,
             string returnUrl = null)
         {
-            logger.Info("AuthenticateNOIPIK json token is:" + jwt);
-
             NoiUserDetails tokenObject = null;
             if (!string.IsNullOrWhiteSpace(jwt))
             {
@@ -331,14 +329,19 @@ namespace EDelivery.WebPortal.Controllers
                 new PIKRegistrationModel(jwt, tokenObject);
 
             //try get person names from regixt
-            RegixInfoClient.DataContracts.ValidPersonResponse regixNames =
-                GetRegixPersonInfo(tokenObject.EGN);
-            if (regixNames != null && regixNames.Success)
+            GetRegixPersonInfoResponse regixResp =
+                await this.profileClient.Value.GetRegixPersonInfoAsync(
+                    new GetRegixPersonInfoRequest()
+                    {
+                        Identifier = tokenObject.EGN
+                    });
+
+            if (regixResp.Result != null && regixResp.Result.Success)
             {
                 regModel.LockNames = true;
-                regModel.FirstName = regixNames.FirstName;
-                regModel.MiddleName = regixNames.SurName;
-                regModel.LastName = regixNames.FamilyName;
+                regModel.FirstName = regixResp.Result.FirstName;
+                regModel.MiddleName = regixResp.Result.SurName;
+                regModel.LastName = regixResp.Result.FamilyName;
             }
 
             this.SetTempModel(regModel, false);
@@ -501,7 +504,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error($"Unsuccessful registration with KEP", ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Unsuccessful registration with KEP");
 
                 ModelState.AddModelError(
                     string.Empty,
@@ -556,8 +561,6 @@ namespace EDelivery.WebPortal.Controllers
 
                 if (string.IsNullOrEmpty(model.Token))
                 {
-                    logger.Error("RegisterPersonWithPIK called with token=null");
-
                     ModelState.AddModelError(
                         string.Empty,
                         ErrorMessages.NotAuthenticatedByThirdParty);
@@ -575,7 +578,8 @@ namespace EDelivery.WebPortal.Controllers
                         WebConfigurationManager.AppSettings["NOIAuthSharedSecret"]);
                 if (userDetails == null || model.EGN != userDetails.EGN)
                 {
-                    logger.Error("RegisterPersonWithPIK called without invalid token -" + model.Token);
+                    ElmahLogger.Instance.Error(
+                        $"RegisterPersonWithPIK called without invalid token {model.Token}");
 
                     ModelState.AddModelError(
                         string.Empty,
@@ -637,7 +641,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error($"Unsuccessful registration with PIK", ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Unsuccessful registration with PIK");
 
                 ModelState.AddModelError(
                     string.Empty,
@@ -731,8 +737,6 @@ namespace EDelivery.WebPortal.Controllers
 
                 if (response.IsSuccessful)
                 {
-                    logger.Info($"RegisterLegal Profile for EIK: {identifier} created!");
-
                     return RedirectToAction(nameof(AccountController.RegistrationSuccess));
                 }
                 else
@@ -748,7 +752,9 @@ namespace EDelivery.WebPortal.Controllers
             {
                 ModelState.AddModelError(re.Key, re.Message);
 
-                logger.Error($"Error registering legal with identifier [{identifier}] with data from pdf", re);
+                ElmahLogger.Instance.Error(
+                    re,
+                    $"Error registering legal with identifier [{identifier}] with data from pdf");
 
                 this.SetTempModel(model, true);
 
@@ -761,7 +767,9 @@ namespace EDelivery.WebPortal.Controllers
                     string.Empty,
                     ErrorMessages.ErrorCanNotCreateUser);
 
-                logger.Error($"Error registering legal with certificate! EIK: {identifier}", ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    $"Error registering legal with certificate! EIK: {identifier}");
 
                 this.SetTempModel(model, true);
 
@@ -822,13 +830,8 @@ namespace EDelivery.WebPortal.Controllers
                         },
                         cancellationToken: Response.ClientDisconnectedToken);
 
+                // TODO: move in form with security
                 this.Session.Remove(KepIdentifier);
-
-                logger.InfoFormat(
-                    "RegisterPersonInternal [{0}]- CreateOrUpdateIndividual with ElectronicSubjectId {1}, ElectronicSubjectName {2} ",
-                    identifier,
-                    createdProfile.ProfileGuid,
-                    createdProfile.ProfileName);
 
                 string error = LoginInternal(
                     Guid.Parse(createdProfile.ProfileGuid));
@@ -847,7 +850,7 @@ namespace EDelivery.WebPortal.Controllers
             {
                 ElmahLogger.Instance.Error(ex, "Error registering person!");
 
-                throw ex;
+                throw;
             }
         }
 
@@ -873,7 +876,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                ElmahLogger.Instance.Error(ex, "Error logging existing user with KEP");
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Error logging existing user with KEP");
 
                 TempData["ErrorMessage"] = ErrorMessages.ErrorLoginKEP;
 
@@ -925,7 +930,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error("Get Json Token failed for token " + jwt, ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    $"Get Json Token failed for token {jwt}");
 
                 return default;
             }

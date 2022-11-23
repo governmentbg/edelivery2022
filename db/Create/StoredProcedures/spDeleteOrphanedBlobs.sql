@@ -38,10 +38,6 @@ BEGIN TRY
     SELECT pbak.[BlobId]
     FROM [dbo].[ProfileBlobAccessKeys] pbak
     WHERE pbak.[Type] <> 0
-  UNION
-    SELECT t.[BlobId]
-    FROM [dbo].[Templates] t
-    WHERE t.[BlobId] IS NOT NULL
 
   INSERT INTO #UnusedBlobs ([BlobId], [Size])
   SELECT [BlobId], [Size]
@@ -117,5 +113,4 @@ BEGIN CATCH
 
     RAISERROR ('An error ocurred in spDeleteOrphanedBlobs: %d: %s', 16, 1, @error, @message);
 END CATCH;
-
 GO

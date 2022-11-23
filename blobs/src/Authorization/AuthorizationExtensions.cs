@@ -20,7 +20,8 @@ namespace ED.Blobs
         {
             services.AddOptions<JwtBearerOptions>(WebPortalAuthScheme)
                 .Configure<IDataProtector>(
-                    (options, dataProtector) => {
+                    (options, dataProtector) =>
+                    {
                         options.SecurityTokenValidators.Add(
                             new LegacyOAuthSecurityTokenHandler(
                                 dataProtector.CreateProtector(WebPortalAuthScheme),
@@ -31,7 +32,8 @@ namespace ED.Blobs
 
             services.AddOptions<JwtBearerOptions>(AdminPanelAuthScheme)
                 .Configure<IDataProtector>(
-                    (options, dataProtector) => {
+                    (options, dataProtector) =>
+                    {
                         options.SecurityTokenValidators.Add(
                             new LegacyOAuthSecurityTokenHandler(
                                 dataProtector.CreateProtector(AdminPanelAuthScheme),
@@ -47,11 +49,12 @@ namespace ED.Blobs
                 {
                     options.QueryStringParameterName = "t";
                     options.QueryStringBehavior = QueryStringBehaviors.None;
-                });
+                })
+                .AddEsb();
 
             return services;
         }
-        
+
         public static IServiceCollection AddEDeliveryAuthorization(this IServiceCollection services)
         {
             services
@@ -87,12 +90,35 @@ namespace ED.Blobs
                             policyBuilder
                                 .AddAuthenticationSchemes(AdminPanelAuthScheme)
                                 .RequireAuthenticatedUser());
+
+                    auth.AddPolicy(Policies.EsbWriteProfileBlob,
+                        policyBuilder =>
+                            policyBuilder
+                                .AddAuthenticationSchemes(EsbAuthSchemeConstants.EsbAuthScheme)
+                                .RequireAuthenticatedUserStrict());
+
+                    auth.AddPolicy(Policies.EsbWriteProfileBlobOnBehalfOf,
+                        policyBuilder =>
+                            policyBuilder
+                                .AddAuthenticationSchemes(EsbAuthSchemeConstants.EsbAuthScheme)
+                                .RequireAuthenticatedUserStrict()
+                                .AddRequirements(new EsbOboProfilesAccessRequirement()));
                 })
                 .AddSingleton<IAuthorizationHandler, ProfileAccessRequirementHandler>()
                 .AddSingleton<IAuthorizationHandler, DenyReadonlyProfileRequirementHandler>()
-                .AddSingleton<IAuthorizationHandler, RolesPerAuthSchemeRequirementHanlder>();
+                .AddSingleton<IAuthorizationHandler, RolesPerAuthSchemeRequirementHanlder>()
+                .AddSingleton<IAuthorizationHandler, EsbOboProfilesAccessRequirementHandler>()
+                .AddSingleton<IAuthorizationHandler, EsbStrictDenyAnonymousAuthorizationRequirementHandler>();
 
             return services;
+        }
+
+        public static AuthorizationPolicyBuilder RequireAuthenticatedUserStrict(
+            this AuthorizationPolicyBuilder builder)
+        {
+            builder.AddRequirements(new EsbStrictDenyAnonymousAuthorizationRequirement());
+
+            return builder;
         }
 
         public static IApplicationBuilder UseEDeliveryAuthentication(this IApplicationBuilder app)

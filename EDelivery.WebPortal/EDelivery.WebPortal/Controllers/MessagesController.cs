@@ -57,6 +57,7 @@ namespace EDelivery.WebPortal.Controllers
             return RedirectToAction("Inbox");
         }
 
+        //TODO: How to handle cancellation exception here?
         [StripAuthCookie]
         [OutputCache(NoStore = true, Duration = 0)]
         [HttpGet]
@@ -112,11 +113,30 @@ namespace EDelivery.WebPortal.Controllers
         [EDeliveryResourceAuthorize(Policy = Policies.ListProfileMessage)]
         [HttpGet]
         [BreadCrumb(2, typeof(EDeliveryResources.Common), "TitleReceivedMessages", eLeftMenu.ReceivedMessages)]
-        public async Task<ActionResult> Inbox(int page = 1)
+        public async Task<ActionResult> Inbox(
+            string subject,
+            string profile,
+            string fromDate,
+            string toDate,
+            int page = 1)
         {
-            SearchMessagesViewModel searchFilter =
-                this.GetTempModel<SearchMessagesViewModel>(false)
-                    ?? this.InitSearchFilter();
+            DateTime? fromDateDT = DateTime.TryParseExact(
+                fromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
+
+            DateTime? toDateDT = DateTime.TryParseExact(
+                toDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
 
             InboxResponse response =
                 await this.messageClient.Value.InboxAsync(
@@ -126,12 +146,11 @@ namespace EDelivery.WebPortal.Controllers
                         LoginId = this.UserData.LoginId,
                         Offset = (page - 1) * SystemConstants.PageSize,
                         Limit = SystemConstants.PageSize,
-                        TitleQuery = searchFilter.Title,
-                        ProfileNameQuery = searchFilter.Subject,
-                        FromDate = searchFilter.FromDate?.ToTimestamp(),
-                        ToDate = searchFilter.ToDate?.ToTimestamp(),
-                        Orn = searchFilter.Orn,
-                        ReferencedOrn = searchFilter.ReferencedOrn,
+                        Subject = subject,
+                        Profile = profile,
+                        FromDate = fromDateDT?.ToTimestamp(),
+                        ToDate = toDateDT?.ToTimestamp(),
+                        Rnu = null,
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
@@ -143,19 +162,19 @@ namespace EDelivery.WebPortal.Controllers
                         SystemConstants.PageSize,
                         page,
                         response.Length),
-                    SearchFilter = searchFilter
+                    SearchFilter = new SearchMessagesViewModel(
+                        subject,
+                        profile,
+                        fromDate,
+                        toDate,
+                        BoxType.Inbox)
                 };
 
             if (model.Messages.Count == 0)
             {
-                ViewBag.NoMessages = searchFilter.HasFilter
+                ViewBag.NoMessages = model.SearchFilter.HasFilter
                     ? ProfilePage.LabelNoMessagesFromSearch
                     : ProfilePage.LabelNoReceivedMessages;
-            }
-
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("Partials/_InboxMessageList", model);
             }
 
             return View(model);
@@ -164,24 +183,88 @@ namespace EDelivery.WebPortal.Controllers
         [OverrideAuthorization]
         [EDeliveryResourceAuthorize(Policy = Policies.ListProfileMessage)]
         [HttpPost]
-        public ActionResult Inbox()
+        public ActionResult Inbox(SearchMessagesViewModel model)
         {
-            SearchMessagesViewModel searchFilter = this.InitSearchFilter();
+            return RedirectToAction("Inbox", new
+            {
+                subject = model.Subject,
+                profile = model.Profile,
+                fromDate = model.FromDate,
+                toDate = model.ToDate,
+                page = 1,
+            });
+        }
 
-            this.SetTempModel(searchFilter, false);
+        [OverrideAuthorization]
+        [EDeliveryResourceAuthorize(Policy = Policies.ListProfileMessage)]
+        [HttpPost]
+        public async Task<ActionResult> ExportInbox(SearchMessagesViewModel model)
+        {
+            DateTime? fromDateDT = DateTime.TryParseExact(
+                model.FromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
 
-            return RedirectToAction("Inbox", new { page = 1 });
+            DateTime? toDateDT = DateTime.TryParseExact(
+                model.ToDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
+
+            InboxResponse response =
+                await this.messageClient.Value.InboxAsync(
+                    new BoxRequest
+                    {
+                        ProfileId = this.UserData.ActiveProfileId,
+                        LoginId = this.UserData.LoginId,
+                        Offset = 0,
+                        Limit = SystemConstants.ExportSize,
+                        Subject = model.Subject,
+                        Profile = model.Profile,
+                        FromDate = fromDateDT?.ToTimestamp(),
+                        ToDate = toDateDT?.ToTimestamp(),
+                        Rnu = null,
+                    },
+                    cancellationToken: Response.ClientDisconnectedToken);
+
+            return ExportService.ExportInbox(response);
         }
 
         [OverrideAuthorization]
         [EDeliveryResourceAuthorize(Policy = Policies.ListProfileMessage)]
         [HttpGet]
         [BreadCrumb(2, typeof(EDeliveryResources.Common), "TitleSentMessages", eLeftMenu.SentMessages)]
-        public async Task<ActionResult> Outbox(int page = 1)
+        public async Task<ActionResult> Outbox(
+            string subject,
+            string profile,
+            string fromDate,
+            string toDate,
+            int page = 1)
         {
-            SearchMessagesViewModel searchFilter =
-                this.GetTempModel<SearchMessagesViewModel>(false)
-                    ?? this.InitSearchFilter();
+            DateTime? fromDateDT = DateTime.TryParseExact(
+                fromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
+
+            DateTime? toDateDT = DateTime.TryParseExact(
+                toDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
 
             OutboxResponse response =
                 await this.messageClient.Value.OutboxAsync(
@@ -191,12 +274,11 @@ namespace EDelivery.WebPortal.Controllers
                         LoginId = this.UserData.LoginId,
                         Offset = (page - 1) * SystemConstants.PageSize,
                         Limit = SystemConstants.PageSize,
-                        TitleQuery = searchFilter.Title,
-                        ProfileNameQuery = searchFilter.Subject,
-                        FromDate = searchFilter.FromDate?.ToTimestamp(),
-                        ToDate = searchFilter.ToDate?.ToTimestamp(),
-                        Orn = searchFilter.Orn,
-                        ReferencedOrn = searchFilter.ReferencedOrn,
+                        Subject = subject,
+                        Profile = profile,
+                        FromDate = fromDateDT?.ToTimestamp(),
+                        ToDate = toDateDT?.ToTimestamp(),
+                        Rnu = null,
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
@@ -208,19 +290,19 @@ namespace EDelivery.WebPortal.Controllers
                         SystemConstants.PageSize,
                         page,
                         response.Length),
-                    SearchFilter = searchFilter
+                    SearchFilter = new SearchMessagesViewModel(
+                        subject,
+                        profile,
+                        fromDate,
+                        toDate,
+                        BoxType.Outbox)
                 };
 
             if (model.Messages.Count == 0)
             {
-                ViewBag.NoMessages = searchFilter.HasFilter
+                ViewBag.NoMessages = model.SearchFilter.HasFilter
                     ? ProfilePage.LabelNoMessagesFromSearch
                     : ProfilePage.LabelNoSentMessages;
-            }
-
-            if (Request.IsAjaxRequest())
-            {
-                return PartialView("Partials/_OutboxMessageList", model);
             }
 
             return View(model);
@@ -229,13 +311,58 @@ namespace EDelivery.WebPortal.Controllers
         [OverrideAuthorization]
         [EDeliveryResourceAuthorize(Policy = Policies.ListProfileMessage)]
         [HttpPost]
-        public ActionResult Outbox()
+        public ActionResult Outbox(SearchMessagesViewModel model)
         {
-            SearchMessagesViewModel searchFilter = this.InitSearchFilter();
+            return RedirectToAction("Outbox", new
+            {
+                subject = model.Subject,
+                profile = model.Profile,
+                fromDate = model.FromDate,
+                toDate = model.ToDate,
+                page = 1,
+            });
+        }
 
-            this.SetTempModel(searchFilter, false);
+        [OverrideAuthorization]
+        [EDeliveryResourceAuthorize(Policy = Policies.ListProfileMessage)]
+        [HttpPost]
+        public async Task<ActionResult> ExportOutbox(SearchMessagesViewModel model)
+        {
+            DateTime? fromDateDT = DateTime.TryParseExact(
+               model.FromDate,
+               SystemConstants.DatePickerDateFormat,
+               CultureInfo.InvariantCulture,
+               DateTimeStyles.None,
+               out DateTime dt1)
+               ? dt1
+               : (DateTime?)null;
 
-            return RedirectToAction("Outbox", new { page = 1 });
+            DateTime? toDateDT = DateTime.TryParseExact(
+                model.ToDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
+
+            OutboxResponse response =
+                await this.messageClient.Value.OutboxAsync(
+                    new BoxRequest
+                    {
+                        ProfileId = this.UserData.ActiveProfileId,
+                        LoginId = this.UserData.LoginId,
+                        Offset = 0,
+                        Limit = SystemConstants.ExportSize,
+                        Subject = model.Subject,
+                        Profile = model.Profile,
+                        FromDate = fromDateDT?.ToTimestamp(),
+                        ToDate = toDateDT?.ToTimestamp(),
+                        Rnu = null,
+                    },
+                    cancellationToken: Response.ClientDisconnectedToken);
+
+            return ExportService.ExportOutbox(response);
         }
 
         [OverrideAuthorization]
@@ -397,7 +524,7 @@ namespace EDelivery.WebPortal.Controllers
 
         [OverrideAuthorization]
         [EDeliveryResourceAuthorize(
-            Policy = Policies.ReadMessageAsRecipient,
+            Policy = Policies.MessageAccess,
             MessageIdRouteOrQueryParam = "messageId")]
         [HttpGet]
         public async Task<ActionResult> MessageProfileInfo(int messageId)
@@ -538,7 +665,8 @@ namespace EDelivery.WebPortal.Controllers
         [HttpGet]
         [BreadCrumb(2, typeof(EDeliveryResources.Common), "TitleCreateNewMessage", eLeftMenu.CreateMessage)]
         public async Task<ActionResult> ChooseReply(
-            [Bind(Prefix = "id")] int messageId)
+            [Bind(Prefix = "id")] int messageId,
+            int? forwardingMessageId)
         {
             GetReplyResponse reply =
                 await this.messageClient.Value.GetReplyAsync(
@@ -553,7 +681,12 @@ namespace EDelivery.WebPortal.Controllers
             {
                 return RedirectToAction(
                     "Reply",
-                    new { id = messageId, templateId = reply.ResponseTemplateId.Value });
+                    new
+                    {
+                        id = messageId,
+                        templateId = reply.ResponseTemplateId.Value,
+                        forwardingMessageId,
+                    });
             }
 
             GetAllowedTemplatesResponse templates =
@@ -589,13 +722,19 @@ namespace EDelivery.WebPortal.Controllers
 
                 return RedirectToAction(
                     "Reply",
-                    new { id = messageId, templateId = replyTemplateId });
+                    new
+                    {
+                        id = messageId,
+                        templateId = replyTemplateId,
+                        forwardingMessageId,
+                    });
             }
 
             ChooseReplyViewModel vm = new ChooseReplyViewModel
             {
                 MessageId = messageId,
-                Templates = templatesVM
+                Templates = templatesVM,
+                ForwardingMessageId = forwardingMessageId,
             };
 
             return View(vm);
@@ -603,13 +742,16 @@ namespace EDelivery.WebPortal.Controllers
 
         [OverrideAuthorization]
         [EDeliveryResourceAuthorize(
-            Policy = Policies.WriteMessage,
-            TemplateIdRouteOrQueryParam = "templateId")]
+            Policy = Policies.ReplyMessage,
+             MessageIdRouteOrQueryParam = "id",
+            TemplateIdRouteOrQueryParam = "templateId",
+            ForwardingMessageIdRouteOrQueryParam = "forwardingMessageId")]
         [HttpGet]
         [BreadCrumb(2, typeof(EDeliveryResources.Common), "TitleCreateNewMessage", eLeftMenu.CreateMessage)]
         public async Task<ActionResult> Reply(
             [Bind(Prefix = "id")] int messageId,
-            int templateId)
+            int templateId,
+            int? forwardingMessageId)
         {
             GetReplyResponse reply =
                 await this.messageClient.Value.GetReplyAsync(
@@ -628,7 +770,7 @@ namespace EDelivery.WebPortal.Controllers
                     RecipientNames = reply.RecipientName,
                     TemplateId = templateId,
                     Subject = $"RE: {reply.Subject}",
-                    ReferencedOrn = reply.Orn,
+                    Rnu = reply.Rnu,
                 };
 
             this.SetTempModel(newMessageVM, false);
@@ -704,7 +846,7 @@ namespace EDelivery.WebPortal.Controllers
             NewMessageViewModel model = new NewMessageViewModel
             {
                 CurrentProfileId = UserData.ActiveProfileId,
-                TemplateId = templateId
+                TemplateId = templateId,
             };
 
             NewMessageViewModel postModel =
@@ -810,8 +952,9 @@ namespace EDelivery.WebPortal.Controllers
                         Subject = model.Subject,
                         TemplateId = model.TemplateId,
                         ForwardedMessageId = null,
-                        ReferencedOrn = model.ReferencedOrn,
-                        AdditionalIdentifier = model.AdditionalIdentifier,
+                        Rnu = !string.IsNullOrEmpty(model.Rnu)
+                            ? model.Rnu
+                            : null,
                     };
 
                 _ = await messageClient.Value.SendAsync(
@@ -834,9 +977,7 @@ namespace EDelivery.WebPortal.Controllers
             {
                 ElmahLogger.Instance.Error(
                     ex,
-                    "Can not send message from login {0} to profile Ids {1}!",
-                    User.Identity.Name,
-                    model.RecipientIds);
+                    $"Can not send message from login {User.Identity.Name} to profile Ids {model.RecipientIds}!");
 
                 ModelState.AddModelError(string.Empty, ErrorMessages.ErrorCantSendDocument);
 
@@ -864,7 +1005,8 @@ namespace EDelivery.WebPortal.Controllers
             ForwardMessageModel model =
                 new ForwardMessageModel(messageId, info)
                 {
-                    ForwardTemplateId = SystemForwardTemplateId
+                    ForwardTemplateId = SystemForwardTemplateId,
+                    Rnu = info.Rnu,
                 };
 
             return PartialView("Partials/_Forward", model);
@@ -942,8 +1084,7 @@ namespace EDelivery.WebPortal.Controllers
                         Subject = model.ForwardSubject,
                         TemplateId = model.ForwardTemplateId,
                         ForwardedMessageId = model.ForwardMessageId,
-                        ReferencedOrn = model.ReferencedOrn,
-                        AdditionalIdentifier = model.AdditionalIdentifier,
+                        Rnu = model.Rnu,
                     };
 
                 _ = await messageClient.Value.SendAsync(
@@ -966,9 +1107,7 @@ namespace EDelivery.WebPortal.Controllers
             {
                 ElmahLogger.Instance.Error(
                     ex,
-                    "Can not forward message from login {0} to profile Id {1}!",
-                    User.Identity.Name,
-                    model.ForwardRecipientProfileId);
+                    $"Can not forward message from login {User.Identity.Name} to profile Id {model.ForwardRecipientProfileId}!");
 
                 ModelState.AddModelError(
                     "ForwardRecipientProfileId",
@@ -1047,6 +1186,44 @@ namespace EDelivery.WebPortal.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
+        // TODO: consider changing the action name
+        [HttpGet]
+        [BreadCrumb(2, typeof(EDeliveryResources.Common), "TitleCreateNewMessage", eLeftMenu.CreateMessageByTemplateCategory)]
+        public async Task<ActionResult> TemplatesByCategory(string category)
+        {
+            throw new NotImplementedException();
+
+            GetTemplatesByCategoryResponse templates =
+                await this.messageClient.Value.GetTemplatesByCategoryAsync(
+                    new GetTemplatesByCategoryRequest
+                    {
+                        ProfileId = this.UserData.ActiveProfileId,
+                        LoginId = this.UserData.LoginId,
+                        Category = category,
+                    },
+                    cancellationToken: Response.ClientDisconnectedToken);
+
+            IEnumerable<MessageTemplateInfoViewModel> vm = templates
+                .Result
+                .Select(e =>
+                    new MessageTemplateInfoViewModel
+                    {
+                        TemplateId = e.TemplateId,
+                        Name = e.Name
+                    })
+                .ToList();
+
+            if (vm.Count() == 0)
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Error",
+                    new { id = "403" });
+            }
+
+            return View(vm);
+        }
+
         #region Old urls
 
         [HttpGet]
@@ -1092,51 +1269,6 @@ namespace EDelivery.WebPortal.Controllers
         #endregion
 
         #region Private methods
-
-        private SearchMessagesViewModel InitSearchFilter()
-        {
-            SearchMessagesViewModel searchFilter = new SearchMessagesViewModel
-            {
-                Title = this.Request[nameof(SearchMessagesViewModel.Title)]
-                    ?? string.Empty,
-                Subject = this.Request[nameof(SearchMessagesViewModel.Subject)]
-                    ?? string.Empty,
-                Orn = this.Request[nameof(SearchMessagesViewModel.Orn)]
-                    ?? string.Empty,
-                ReferencedOrn = this.Request[nameof(SearchMessagesViewModel.ReferencedOrn)]
-                    ?? string.Empty,
-                FromDateAsString = this.Request[nameof(SearchMessagesViewModel.FromDateAsString)]
-                    ?? string.Empty,
-                ToDateAsString = this.Request[nameof(SearchMessagesViewModel.ToDateAsString)]
-                    ?? string.Empty
-            };
-
-            bool parseFromDate = DateTime.TryParseExact(
-                searchFilter.FromDateAsString,
-                SystemConstants.DatePickerDateFormat,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime fromDate);
-
-            bool parseToDate = DateTime.TryParseExact(
-                searchFilter.ToDateAsString,
-                SystemConstants.DatePickerDateFormat,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime toDate);
-
-            if (parseFromDate)
-            {
-                searchFilter.FromDate = fromDate;
-            }
-
-            if (parseToDate)
-            {
-                searchFilter.ToDate = toDate.AddDays(1);
-            }
-
-            return searchFilter;
-        }
 
         private Dictionary<int, int> GetSEOSNewMessagesCount()
         {

@@ -17,7 +17,7 @@ public record FileComponent (
     string Label,
     bool IsEncrypted,
     bool IsRequired,
-    int MaxSize,
-    string AllowedExtensions,
+    int MaxSize, // TODO: missing ExpirationPeriod
+    string? AllowedExtensions,
     int Instances)
     : BaseComponent(Id, Label, ComponentType.file, IsEncrypted, IsRequired);
