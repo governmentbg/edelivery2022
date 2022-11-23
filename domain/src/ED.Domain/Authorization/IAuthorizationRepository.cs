@@ -71,5 +71,10 @@ namespace ED.Domain
             int profileId,
             int loginId,
             CancellationToken ct);
+
+        Task<bool> IsForwardedMessage(
+            int messageId,
+            int forwardingMessageId,
+            CancellationToken ct);
     }
 }

@@ -696,6 +696,23 @@ namespace ED.DomainServices
             };
         }
 
+        public override async Task<GetRegixPersonInfoResponse> GetRegixPersonInfo(
+            GetRegixPersonInfoRequest request,
+            ServerCallContext context)
+        {
+            IProfileListQueryRepository.GetRegixPersonInfoVO? regixPersonInfo =
+                await this.serviceProvider
+                    .GetRequiredService<IProfileListQueryRepository>()
+                    .GetRegixPersonInfoAsync(
+                        request.Identifier,
+                        context.CancellationToken);
+
+            return new GetRegixPersonInfoResponse
+            {
+                Result = regixPersonInfo?.Adapt<GetRegixPersonInfoResponse.Types.RegixData>()
+            };
+        }
+
         public override async Task<CreateOrUpdateIndividualResponse> CreateOrUpdateIndividual(
             CreateOrUpdateIndividualRequest request,
             ServerCallContext context)

@@ -9,7 +9,7 @@ namespace ED.Domain
 {
     partial class EsbProfilesAuthenticateQueryRepository : IEsbProfilesAuthenticateQueryRepository
     {
-        public async Task<GetEsbUserVO> GetEsbUserAsync(
+        public async Task<GetEsbUserVO?> GetEsbUserAsync(
             string oId,
             string clientId,
             string? operatorIdentifier,
@@ -28,13 +28,21 @@ namespace ED.Domain
                 join lp in this.DbContext.Set<LoginProfile>()
                     on new { ProfileId = p.Id, LoginId = l.Id } equals new { lp.ProfileId, lp.LoginId }
 
+                    // TODO https://github.com/dotnet/efcore/issues/26634
+#pragma warning disable CS8604 // Possible null reference argument.
                 where EF.Functions.Like(peu.OId, oId)
                     && EF.Functions.Like(peu.ClientId, clientId)
+#pragma warning restore CS8604 // Possible null reference argument.
                     && p.IsActivated
                     && lp.IsDefault
 
                 select new { ProfileId = p.Id, LoginId = l.Id })
                 .FirstOrDefaultAsync(ct);
+
+            if (profileLogin == null)
+            {
+                return null;
+            }
 
             int? operatorLoginId = null;
             if (!string.IsNullOrEmpty(operatorIdentifier))
@@ -45,8 +53,12 @@ namespace ED.Domain
                     join l in this.DbContext.Set<Login>()
                         on lp.LoginId equals l.Id
 
+                    join p in this.DbContext.Set<Profile>()
+                        on l.ElectronicSubjectId equals p.ElectronicSubjectId
+
                     where lp.ProfileId == profileLogin.ProfileId
                         && l.IsActive
+                        && EF.Functions.Like(p.Identifier, operatorIdentifier)
 
                     select lp.LoginId)
                     .FirstOrDefaultAsync(ct);

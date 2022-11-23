@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ED.Domain
 {
-    public class SqlServerSequenceHiLoValueGenerator<TValue> : ValueGenerator<TValue>
+    public sealed class SqlServerSequenceHiLoValueGenerator<TValue> : ValueGenerator<TValue>, IDisposable
         where TValue : notnull
     {
         private readonly ISequence _sequence;
@@ -43,7 +43,7 @@ namespace ED.Domain
         protected override object NextValue(EntityEntry entry)
             => this.Next(entry);
 
-        protected override async ValueTask<object> NextValueAsync(
+        protected override async ValueTask<object?> NextValueAsync(
             EntityEntry entry,
             CancellationToken cancellationToken)
             => await this.NextAsync(entry, cancellationToken);
@@ -96,5 +96,8 @@ namespace ED.Domain
 
         private long GetRangeFirstValue(object[] parameters)
             => (long)Convert.ChangeType(((SqlParameter)parameters[2]).Value, typeof(long));
+
+        public void Dispose()
+            => this._generatorState.Dispose();
     }
 }

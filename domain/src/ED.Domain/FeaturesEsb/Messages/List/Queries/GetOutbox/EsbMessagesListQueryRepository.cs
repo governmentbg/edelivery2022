@@ -35,9 +35,7 @@ namespace ED.Domain
                     m.RecipientsAsText,
                     m.Subject,
                     $"{this.domainOptions.WebPortalUrl}/Messages/View/{m.MessageId}",
-                    m.Orn,
-                    m.ReferencedOrn,
-                    m.AdditionalIdentifier))
+                    m.Rnu))
                 .ToTableResultAsync(offset, limit, ct);
 
             return vos;

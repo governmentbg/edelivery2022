@@ -16,20 +16,13 @@ namespace ED.Domain
             Template template = new(
                 command.Name,
                 command.IdentityNumber,
+                command.Category,
                 command.Content,
                 command.ResponseTemplateId,
                 command.IsSystemTemplate,
                 command.CreatedBy,
                 command.ReadLoginSecurityLevelId,
-                command.WriteLoginSecurityLevelId,
-                command.BlobId,
-                command.SenderDocumentField,
-                command.RecipientDocumentField,
-                command.SubjectDocumentField,
-                command.DateSentDocumentField,
-                command.DateReceivedDocumentField,
-                command.SenderSignatureDocumentField,
-                command.RecipientSignatureDocumentField);
+                command.WriteLoginSecurityLevelId);
 
             await this.TemplateAggregateRepository.AddAsync(template, ct);
 

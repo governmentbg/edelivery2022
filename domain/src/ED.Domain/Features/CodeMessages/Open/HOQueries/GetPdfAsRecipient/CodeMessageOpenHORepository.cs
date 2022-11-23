@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Protobuf;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using static ED.Domain.ICodeMessageOpenHORepository;
 using static ED.Domain.IProfilesService;
 
@@ -79,14 +75,10 @@ namespace ED.Domain
             string decryptedBody =
                 Encoding.UTF8.GetString(encryptor.Decrypt(pdfAsRecipient.Body));
 
-            ICodeMessageOpenQueryRepository.GetTemplateVO template =
-                await this.codeMessageOpenQueryRepository.GetTemplateAsync(
+            string templateContent =
+                await this.codeMessageOpenQueryRepository.GetTemplateContentAsync(
                     pdfAsRecipient.TemplateId!.Value,
                     ct);
-
-            Dictionary<string, string> dict = this.GetFieldDictionaryAsRecipient(
-                template,
-                decryptedBody);
 
             using MemoryStream newPdf =
                 this.recyclableMemoryStreamManager.GetStream();
@@ -123,26 +115,26 @@ namespace ED.Domain
                 throw new Exception($"Unknown MessageSummaryVersion {pdfAsRecipient.MessageSummaryVersion}");
             }
 
-            MemoryStream pdf = PdfWriterUtils.CreatePdfAsRecipient(
+            (string Name, DateTime? DateReceived, string? MessageSummaryHash)[] recipients =
+            {
+                (
+                    pdfAsRecipient.Recipient.ProfileName,
+                    pdfAsRecipient.Recipient.DateReceived,
+                    EncryptionHelper.GetHexString(recipientMessageSummarySha256)
+                )
+            };
+
+            MemoryStream pdf = PdfWriterUtils.CreatePdf(
                 newPdf,
                 this.pdfOptionsAccessor.Value,
                 pdfAsRecipient.SenderProfileName,
                 pdfAsRecipient.DateSent,
                 EncryptionHelper.GetHexString(messageSummarySha256),
-                (
-                    pdfAsRecipient.Recipient.ProfileName,
-                    pdfAsRecipient.Recipient.DateReceived,
-                    EncryptionHelper.GetHexString(recipientMessageSummarySha256)
-                ),
+                recipients,
                 pdfAsRecipient.Subject,
-                dict,
-                pdfAsRecipient.Blobs
-                    .Select(e => (
-                        e.FileName,
-                        e.Hash,
-                        e.HashAlgorithm,
-                        SystemTemplateUtils.FormatSize((ulong)e.Size!.Value)))
-                    .ToArray());
+                pdfAsRecipient.Rnu,
+                templateContent,
+                decryptedBody);
 
             using MemoryStream signedPdf =
                 this.recyclableMemoryStreamManager.GetStream();
@@ -174,78 +166,6 @@ namespace ED.Domain
                 fileName,
                 AsRecipient_PdfContentType,
                 signedPdf.ToArray()); // creates a copy of the recyclable stream
-        }
-
-        private Dictionary<string, string> GetFieldDictionaryAsRecipient(
-            ICodeMessageOpenQueryRepository.GetTemplateVO template,
-            string body)
-        {
-            Dictionary<Guid, (bool, string)> templateDictionary =
-                this.ParseTemplateToDictionaryAsRecipient(template.Content);
-
-            Dictionary<Guid, object> valuesDictionary =
-                JsonConvert.DeserializeObject<Dictionary<Guid, object>>(body)!;
-
-            Dictionary<string, string> result = new();
-
-            foreach (var item in valuesDictionary)
-            {
-                if (templateDictionary.ContainsKey(item.Key))
-                {
-                    (bool isFile, string label) = templateDictionary[item.Key];
-
-                    if (!isFile)
-                    {
-                        result.Add(
-                            label,
-                            item.Value.ToString() ?? string.Empty);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        private const string AsRecipient_Id = "Id";
-        private const string AsRecipient_LabelProp = "Label";
-        private const string AsRecipient_Type = "Type";
-        private const string AsRecipient_FileType = "file";
-
-        private Dictionary<Guid, (bool, string)> ParseTemplateToDictionaryAsRecipient(
-            string json)
-        {
-            JArray arr = JArray.Parse(json);
-
-            Dictionary<Guid, (bool, string)> result = new();
-
-            foreach (var item in arr.Children<JObject>())
-            {
-                IEnumerable<JProperty> props = item.Properties();
-
-                Guid id = new(props
-                    .Single(e => e.Name == AsRecipient_Id)
-                    .Value
-                    .Value<string>()!);
-
-                bool isFile = props
-                    .Single(e => e.Name == AsRecipient_Type)
-                    .Value
-                    .Value<string>()!
-                    .ToUpperInvariant()
-                        == AsRecipient_FileType.ToUpperInvariant();
-
-                string? label = props
-                    .SingleOrDefault(e => e.Name == AsRecipient_LabelProp)?
-                    .Value
-                    .Value<string>();
-
-                if (!string.IsNullOrEmpty(label))
-                {
-                    result.Add(id, (isFile, label));
-                }
-            }
-
-            return result;
         }
     }
 }

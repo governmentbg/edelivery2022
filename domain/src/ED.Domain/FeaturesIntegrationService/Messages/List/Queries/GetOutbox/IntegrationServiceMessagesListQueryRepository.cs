@@ -9,22 +9,16 @@ namespace ED.Domain
     partial class IntegrationServiceMessagesListQueryRepository : IIntegrationServiceMessagesListQueryRepository
     {
         public async Task<TableResultVO<GetOutboxVO>> GetOutboxAsync(
-            string certificateThumbprint,
+            int profileId,
             int offset,
             int limit,
             CancellationToken ct)
         {
             TableResultVO<GetOutboxVO> vos = await (
-                from l in this.DbContext.Set<Login>()
-
-                join lp in this.DbContext.Set<LoginProfile>()
-                    on l.Id equals lp.LoginId
+                from m in this.DbContext.Set<Message>()
 
                 join sp in this.DbContext.Set<Profile>()
-                    on lp.ProfileId equals sp.Id
-
-                join m in this.DbContext.Set<Message>()
-                    on sp.Id equals m.SenderProfileId
+                    on m.SenderProfileId equals sp.Id
 
                 join sl in this.DbContext.Set<Login>()
                     on m.SenderLoginId equals sl.Id
@@ -40,10 +34,7 @@ namespace ED.Domain
                     into lj1
                 from rl in lj1.DefaultIfEmpty()
 
-                where l.IsActive
-                    && l.CertificateThumbprint == certificateThumbprint
-                    && sp.IsActivated
-                    && lp.IsDefault
+                where sp.Id == profileId
 
                 orderby m.DateSent descending
 

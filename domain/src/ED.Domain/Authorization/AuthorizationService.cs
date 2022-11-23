@@ -244,5 +244,49 @@ namespace ED.Domain
                 loginId,
                 ct);
         }
+
+        public async Task<bool> HasMessageAccessKeyAsync(
+            int profileId,
+            int messageId,
+            CancellationToken ct)
+        {
+            return await this.authorizationRepository.HasMessageAccessKeyAsync(
+                profileId,
+                messageId,
+                ct);
+        }
+
+        public async Task<bool> HasReadMessageThroughForwardingAsRecipientAccessAsync(
+            int profileId,
+            int loginId,
+            int messageId,
+            int? forwardingMessageId,
+            CancellationToken ct)
+        {
+            if (!forwardingMessageId.HasValue)
+            {
+                return false;
+            }
+
+            bool hasAccessToForwardingMessage = await this.HasReadMessageAsRecipientAccessAsync(
+                   profileId,
+                   loginId,
+                   forwardingMessageId.Value,
+                   ct);
+
+            if (!hasAccessToForwardingMessage)
+            {
+                return false;
+            }
+
+
+            bool isForwardedMessage =
+                await this.authorizationRepository.IsForwardedMessage(
+                    messageId,
+                    forwardingMessageId.Value,
+                    ct);
+
+            return isForwardedMessage;
+        }
     }
 }

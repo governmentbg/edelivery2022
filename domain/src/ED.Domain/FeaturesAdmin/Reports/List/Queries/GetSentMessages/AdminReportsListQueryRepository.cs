@@ -57,7 +57,7 @@ namespace ED.Domain
                 join rtg in this.DbContext.Set<TargetGroup>()
                     on rtgp.TargetGroupId equals rtg.TargetGroupId
 
-                orderby m.DateSent descending
+                orderby m.DateSent descending, m.MessageId descending
 
                 select new GetSentMessagesVO(
                     sp.Id,
@@ -68,6 +68,7 @@ namespace ED.Domain
                     rp.ElectronicSubjectName,
                     rp.IsActivated,
                     rtg.Name,
+                    m.MessageId,
                     m.SubjectExtended!,
                     m.DateSent!.Value,
                     mr.DateReceived))
@@ -98,8 +99,7 @@ namespace ED.Domain
                int? recipientProfileId)
             {
                 Expression<Func<MessageRecipient, bool>> predicate =
-                    PredicateBuilder.True<MessageRecipient>()
-                        .And(x => x.DateReceived == null);
+                    PredicateBuilder.True<MessageRecipient>();
 
                 if (recipientProfileId.HasValue)
                 {

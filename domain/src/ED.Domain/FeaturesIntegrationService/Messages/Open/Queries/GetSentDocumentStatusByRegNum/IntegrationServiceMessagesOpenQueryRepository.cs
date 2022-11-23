@@ -40,7 +40,10 @@ namespace ED.Domain
                 join sl in this.DbContext.Set<Login>()
                     on m.SenderLoginId equals sl.Id
 
+                // TODO https://github.com/dotnet/efcore/issues/26634
+#pragma warning disable CS8604 // Possible null reference argument.
                 where EF.Functions.Like(b.DocumentRegistrationNumber, documentRegistrationNumber)
+#pragma warning restore CS8604 // Possible null reference argument.
                     && m.SenderProfileId == profileId
 
                 select new

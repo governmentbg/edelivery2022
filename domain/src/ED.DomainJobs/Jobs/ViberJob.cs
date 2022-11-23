@@ -38,7 +38,19 @@ namespace ED.DomainJobs
 
             try
             {
-                await client.SendViberAsync(payload.Recipient, payload.Body, ct);
+                string? viberId = await client.SendViberAsync(payload.Recipient, payload.Body, ct);
+
+                using var scope = this.scopeFactory.CreateScope();
+
+                var queueMessagesService = scope.ServiceProvider
+                    .GetRequiredService<IQueueMessagesService>();
+
+                await queueMessagesService.TryPostMessageAndSaveAsync(
+                    new ViberDeliveryCheckQueueMessage(viberId!),
+                    DateTime.Now.AddMinutes(2),
+                    null!,
+                    ct);
+
                 return (QueueJobProcessingResult.Success, null);
             }
 #pragma warning disable CA1031 // Do not catch general exception types

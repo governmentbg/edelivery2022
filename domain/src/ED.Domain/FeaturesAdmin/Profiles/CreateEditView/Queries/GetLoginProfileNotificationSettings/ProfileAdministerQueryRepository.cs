@@ -28,7 +28,7 @@ namespace ED.Domain
                     lp.SmsNotificationOnDeliveryActive,
                     lp.ViberNotificationActive,
                     lp.ViberNotificationOnDeliveryActive))
-                .SingleOrDefaultAsync(ct);
+                .SingleAsync(ct);
 
             return vo;
         }

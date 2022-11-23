@@ -13,6 +13,7 @@ namespace ED.Domain
             string RecipientProfileName,
             bool IsRecipientProfileActivated,
             string RecipientProfileTargetGroupName,
+            int MessageId,
             string MessageSubject,
             DateTime DateSent,
             DateTime? DateReceived);

@@ -21,7 +21,10 @@ namespace ED.Domain
                 join b in this.DbContext.Set<Blob>()
                     on mb.BlobId equals b.BlobId
 
+                // TODO https://github.com/dotnet/efcore/issues/26634
+#pragma warning disable CS8604 // Possible null reference argument.
                 where EF.Functions.Like(b.DocumentRegistrationNumber, documentRegistrationNumber)
+#pragma warning restore CS8604 // Possible null reference argument.
                     && m.SenderProfileId == profileId
 
                 select m.MessageId)

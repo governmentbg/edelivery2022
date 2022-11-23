@@ -28,7 +28,7 @@ namespace ED.DomainJobs
             IServiceScopeFactory scopeFactory,
             ILogger logger,
             QueueJobOptions options)
-            : base (TimeSpan.FromSeconds(options.PeriodInSeconds))
+            : base(TimeSpan.FromSeconds(options.PeriodInSeconds))
         {
             this.type = type;
             this.logger = logger;
@@ -176,46 +176,51 @@ namespace ED.DomainJobs
                     (QueueJobProcessingResult result, string? error) =
                         await this.HandleMessageAsync(context, payload, ct);
 
-                    if (result == QueueJobProcessingResult.Success)
+                    switch (result)
                     {
-                        await queueMessagesRepository.SetStatusProcessedAsync(
-                            message.Type,
-                            message.DueDate,
-                            message.QueueMessageId,
-                            // queue messages always use UTC to prevent
-                            // problems with daylight saving time
-                            DateTime.UtcNow,
-                            // not passing cancellationToken as this
-                            // operation must succeed even when cancelled
-                            default(CancellationToken)
-                        );
-                        counter.CountSuccess();
-                    }
-                    else if (result == QueueJobProcessingResult.RetryError)
-                    {
-                        (int failedAttempts, string failedAttemptsErrors) =
-                            this.IncrementFailedAttempts(message, error);
-                        await queueMessagesRepository.SetStatusAndFailedAttemptsAsync(
-                            message.Type,
-                            message.DueDate,
-                            message.QueueMessageId,
-                            failedAttempts < this.maxFailedAttempts
-                                ? QueueMessageStatus.Pending
-                                : QueueMessageStatus.Errored,
-                            // queue messages always use UTC to prevent
-                            // problems with daylight saving time
-                            DateTime.UtcNow,
-                            failedAttempts,
-                            failedAttemptsErrors,
-                            // not passing cancellationToken as this
-                            // operation must succeed even when cancelled
-                            default(CancellationToken)
-                        );
-                        counter.CountFailure();
-                    }
-                    else
-                    {
-                        throw new Exception("Unknown QueueJobProcessingResult");
+                        case QueueJobProcessingResult.Success:
+                            { 
+                                await queueMessagesRepository.SetStatusProcessedAsync(
+                                    message.Type,
+                                    message.DueDate,
+                                    message.QueueMessageId,
+                                    // queue messages always use UTC to prevent
+                                    // problems with daylight saving time
+                                    DateTime.UtcNow,
+                                    // not passing cancellationToken as this
+                                    // operation must succeed even when cancelled
+                                    default(CancellationToken)
+                                );
+                                counter.CountSuccess();
+                            }
+                            break;
+
+                        case QueueJobProcessingResult.RetryError:
+                            {
+                                (int failedAttempts, string failedAttemptsErrors) =
+                                    this.IncrementFailedAttempts(message, error);
+                                await queueMessagesRepository.SetStatusAndFailedAttemptsAsync(
+                                    message.Type,
+                                    message.DueDate,
+                                    message.QueueMessageId,
+                                    failedAttempts < this.maxFailedAttempts
+                                        ? QueueMessageStatus.Pending
+                                        : QueueMessageStatus.Errored,
+                                    // queue messages always use UTC to prevent
+                                    // problems with daylight saving time
+                                    DateTime.UtcNow,
+                                    failedAttempts,
+                                    failedAttemptsErrors,
+                                    // not passing cancellationToken as this
+                                    // operation must succeed even when cancelled
+                                    default(CancellationToken)
+                                );
+                                counter.CountFailure();
+                            }
+                            break;
+
+                        default:
+                            throw new Exception("Unknown QueueJobProcessingResult");
                     }
                 }
 #pragma warning disable CA1031 // Do not catch general exception types

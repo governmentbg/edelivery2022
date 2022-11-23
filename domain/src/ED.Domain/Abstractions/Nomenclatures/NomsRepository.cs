@@ -30,7 +30,7 @@ namespace ED.Domain
             this.orderBySelector = orderBySelector;
         }
 
-        public virtual async Task<TNomVO> GetNomAsync(TKey nomValueId, CancellationToken ct)
+        public virtual async Task<TNomVO?> GetNomAsync(TKey nomValueId, CancellationToken ct)
         {
             if (EqualityComparer<TKey>.Default.Equals(nomValueId, default))
             {

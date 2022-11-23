@@ -52,6 +52,7 @@ service Admin {
   rpc CreateTemplate (CreateTemplateRequest) returns (CreateTemplateResponse);
   rpc EditTemplate (EditTemplateRequest) returns (google.protobuf.Empty);
   rpc PublishTemplate (PublishTemplateRequest) returns (google.protobuf.Empty);
+  rpc UnpublishTemplate (UnpublishTemplateRequest) returns (google.protobuf.Empty);
   rpc ArchiveTemplate (ArchiveTemplateRequest) returns (google.protobuf.Empty);
   rpc CreateOrUpdateTemplatePermissions (CreateOrUpdateTemplatePermissionsRequest) returns (google.protobuf.Empty);
   rpc DeleteTemplateProfilePermission (DeleteTemplateProfilePermissionRequest) returns (google.protobuf.Empty);
@@ -523,15 +524,7 @@ message GetTemplateResponse {
     string write_login_security_level_name = 12;
     google.protobuf.StringValue response_template_name = 13;
     google.protobuf.Timestamp publish_date = 14;
-    google.protobuf.Int32Value blob_id = 15;
-    google.protobuf.StringValue blob_name = 16;
-    google.protobuf.StringValue sender_document_field = 17;
-    google.protobuf.StringValue recipient_document_field = 18;
-    google.protobuf.StringValue subject_document_field = 19;
-    google.protobuf.StringValue date_sent_document_field = 20;
-    google.protobuf.StringValue date_received_document_field = 21;
-    google.protobuf.StringValue sender_signature_document_field = 22;
-    google.protobuf.StringValue recipient_signature_document_field = 23;
+    google.protobuf.StringValue category = 15;
   }
 
   TemplateMessage template = 1;
@@ -547,15 +540,13 @@ message GetTemplateListResponse {
     int32 template_id = 1;
     string identity_number = 2;
     string name = 3;
-    string content = 4;
+    google.protobuf.StringValue category = 4;
     google.protobuf.Timestamp create_date = 5;
     google.protobuf.Timestamp publish_date = 6;
     google.protobuf.Timestamp archive_date = 7;
     bool is_system_template = 8;
-    int32 read_login_security_level_id = 9;
-    string read_login_security_level_name = 10;
-    int32 write_login_security_level_id = 11;
-    string write_login_security_level_name = 12;
+    string read_login_security_level_name = 9;
+    string write_login_security_level_name = 10;
   }
 
   repeated TemplateMessage result = 1;
@@ -596,14 +587,7 @@ message CreateTemplateRequest {
   int32 created_by_admin_user_id = 6;
   int32 read_login_security_level_id = 7;
   int32 write_login_security_level_id = 8;
-  int32 blob_id = 9;
-  google.protobuf.StringValue sender_document_field = 10;
-  google.protobuf.StringValue recipient_document_field = 11;
-  google.protobuf.StringValue subject_document_field = 12;
-  google.protobuf.StringValue date_sent_document_field = 13;
-  google.protobuf.StringValue date_received_document_field = 14;
-  google.protobuf.StringValue sender_signature_document_field = 15;
-  google.protobuf.StringValue recipient_signature_document_field = 16;
+  google.protobuf.StringValue category = 9;
 }
 
 message CreateTemplateResponse {
@@ -619,17 +603,15 @@ message EditTemplateRequest {
   bool is_system_template = 6;
   int32 read_login_security_level_id = 7;
   int32 write_login_security_level_id = 8;
-  int32 blob_id = 9;
-  google.protobuf.StringValue sender_document_field = 10;
-  google.protobuf.StringValue recipient_document_field = 11;
-  google.protobuf.StringValue subject_document_field = 12;
-  google.protobuf.StringValue date_sent_document_field = 13;
-  google.protobuf.StringValue date_received_document_field = 14;
-  google.protobuf.StringValue sender_signature_document_field = 15;
-  google.protobuf.StringValue recipient_signature_document_field = 16;
+  google.protobuf.StringValue category = 9;
 }
 
 message PublishTemplateRequest {
+  int32 template_id = 1;
+  int32 published_by_admin_user_id = 2;
+}
+
+message UnpublishTemplateRequest {
   int32 template_id = 1;
   int32 published_by_admin_user_id = 2;
 }
@@ -1067,19 +1049,17 @@ message GetEFormReportRequest {
   int32 admin_user_id = 1;
   google.protobuf.Timestamp from_date = 2;
   google.protobuf.Timestamp to_date = 3;
-  string e_form_service_number = 4;
-  int32 offset = 5;
-  int32 limit = 6;
+  google.protobuf.StringValue subject = 4;
 }
 
 message GetEFormReportResponse {
   message EFormMessage {
     string message_subject = 1;
-    int32 count = 2;
+    string recipient = 2;
+    int32 count = 3;
   }
 
   repeated EFormMessage result = 1;
-  int32 length = 2;
 }
 
 message GetReceivedMessageReportRequest {
@@ -1131,9 +1111,10 @@ message GetSentMessageReportResponse {
     string recipient_profile_name = 6;
     bool is_recipient_profile_activated = 7;
     string recipient_profile_target_group_name = 8;
-    string message_subject = 9;
-    google.protobuf.Timestamp date_sent = 10;
-    google.protobuf.Timestamp date_received = 11;
+    int32 message_id = 9;
+    string message_subject = 10;
+    google.protobuf.Timestamp date_sent = 11;
+    google.protobuf.Timestamp date_received = 12;
   }
 
   repeated MessageMessage result = 1;

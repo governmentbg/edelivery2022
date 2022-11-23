@@ -35,6 +35,7 @@ namespace ED.Domain
                     m.MessageSummaryVersion,
                     m.MessageSummary,
                     m.Subject,
+                    m.Rnu,
                     m.Body,
                     m.TemplateId,
                     m.IV,
@@ -52,6 +53,7 @@ namespace ED.Domain
                 e.DateSent,
                 e.MessageSummaryVersion,
                 e.Subject,
+                e.Rnu,
                 e.TemplateId
             },
             g => new
@@ -87,6 +89,7 @@ namespace ED.Domain
                 grouping.Key.MessageSummaryVersion,
                 grouping.First().MessageSummary,
                 grouping.Key.Subject,
+                grouping.Key.Rnu,
                 grouping.First().Body,
                 grouping.Key.TemplateId,
                 grouping.First().IV,

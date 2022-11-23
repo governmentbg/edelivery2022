@@ -13,10 +13,10 @@ namespace ED.Domain
             CancellationToken ct)
         {
             GetPassiveProfileDataVO vo = await (
-                from p in this.DbContext.Set<Profile>()
+                from l in this.DbContext.Set<Login>()
 
-                join l in this.DbContext.Set<Login>()
-                    on p.ElectronicSubjectId equals l.ElectronicSubjectId
+                join p in this.DbContext.Set<Profile>()
+                    on l.ElectronicSubjectId equals p.ElectronicSubjectId
 
                 join i in this.DbContext.Set<Individual>()
                     on p.ElectronicSubjectId equals i.IndividualId
@@ -33,7 +33,7 @@ namespace ED.Domain
                     a.Residence,
                     p.EmailAddress,
                     p.Phone))
-                .FirstOrDefaultAsync(ct);
+                .SingleAsync(ct);
 
             return vo;
         }

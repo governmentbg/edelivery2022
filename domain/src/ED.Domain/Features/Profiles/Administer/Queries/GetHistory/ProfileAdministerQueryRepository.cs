@@ -18,6 +18,13 @@ namespace ED.Domain
 
                 join l in this.DbContext.Set<Login>()
                     on ph.ActionLogin equals l.Id
+                    into lj1
+                from l in lj1.DefaultIfEmpty()
+
+                join ap in this.DbContext.Set<AdminsProfile>()
+                    on ph.ActionByAdminUserId equals ap.Id
+                    into lj2
+                from ap in lj2.DefaultIfEmpty()
 
                 where ph.ProfileId == profileId
 
@@ -28,8 +35,13 @@ namespace ED.Domain
                     ph.ProfileId,
                     ph.ActionDate,
                     ph.Action,
-                    l.ElectronicSubjectName,
+                    l != null
+                        ? l.ElectronicSubjectName
+                        : null,
                     ph.ActionDetails,
+                    ap != null
+                        ? $"{ap.FirstName} {ap.LastName}"
+                        : null,
                     ph.IPAddress))
                 .ToTableResultAsync(offset, limit, ct);
 

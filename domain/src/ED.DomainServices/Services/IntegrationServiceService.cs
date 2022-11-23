@@ -7,6 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Mapster;
 using MediatR;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.DomainServices
@@ -84,7 +85,7 @@ namespace ED.DomainServices
                 await this.serviceProvider
                     .GetRequiredService<IIntegrationServiceMessagesListQueryRepository>()
                     .GetOutboxAsync(
-                        request.CertificateThumbprint,
+                        request.ProfileId,
                         request.Offset,
                         request.Limit,
                         context.CancellationToken);
@@ -107,7 +108,7 @@ namespace ED.DomainServices
                 await this.serviceProvider
                     .GetRequiredService<IIntegrationServiceMessagesListQueryRepository>()
                     .GetInboxAsync(
-                        request.CertificateThumbprint,
+                        request.ProfileId,
                         request.ShowOnlyNew,
                         request.Offset,
                         request.Limit,
@@ -209,6 +210,21 @@ namespace ED.DomainServices
             };
         }
 
+        public override async Task<CheckProfileOperatorAccessResponse> CheckProfileOperatorAccess(
+            CheckProfileOperatorAccessRequest request,
+            ServerCallContext context)
+        {
+            IIntegrationServiceProfilesListQueryRepository.CheckProfileOperatorAccessVO checkProfileOperatorAccess =
+               await this.serviceProvider
+                   .GetRequiredService<IIntegrationServiceProfilesListQueryRepository>()
+                   .CheckProfileOperatorAccessAsync(
+                       request.ProfileIdentifier,
+                       request.OperatorIdentifier,
+                       context.CancellationToken);
+
+            return checkProfileOperatorAccess.Adapt<CheckProfileOperatorAccessResponse>();
+        }
+
         public override async Task<GetCodeSenderResponse> GetCodeSender(
             GetCodeSenderRequest request,
             ServerCallContext context)
@@ -242,11 +258,13 @@ namespace ED.DomainServices
                             request.RecipientTargetGroupId,
                             request.MessageSubject,
                             request.MessageBody,
-                            request.Documents
-                                .Select(e => new SendMessage1CommandDocument(
-                                    e.FileName,
-                                    e.DocumentRegistrationNumber,
-                                    e.FileContent.ToByteArray()))
+                            request.Blobs
+                                .Select(x => new SendMessage1CommandBlob(
+                                    x.FileName,
+                                    x.HashAlgorithm,
+                                    x.Hash,
+                                    x.Size,
+                                    x.BlobId))
                                 .ToArray(),
                             request.ServiceOid,
                             request.SenderProfileId,
@@ -274,11 +292,13 @@ namespace ED.DomainServices
                             request.RecipientPhone,
                             request.MessageSubject,
                             request.MessageBody,
-                            request.Documents
-                                .Select(e => new SendMessage1WithAccessCodeCommandDocument(
-                                    e.FileName,
-                                    e.DocumentRegistrationNumber,
-                                    e.FileContent.ToByteArray()))
+                            request.Blobs
+                                .Select(x => new SendMessage1WithAccessCodeCommandBlob(
+                                    x.FileName,
+                                    x.HashAlgorithm,
+                                    x.Hash,
+                                    x.Size,
+                                    x.BlobId))
                                 .ToArray(),
                             request.ServiceOid,
                             request.SenderProfileId,
@@ -300,11 +320,13 @@ namespace ED.DomainServices
                         new SendMessageInReplyToRequestCommand(
                             request.MessageSubject,
                             request.MessageBody,
-                            request.Documents
-                                .Select(e => new SendMessageInReplyToRequestCommandDocument(
-                                    e.FileName,
-                                    e.DocumentRegistrationNumber,
-                                    e.FileContent.ToByteArray()))
+                            request.Blobs
+                                .Select(x => new SendMessageInReplyToRequestCommandBlob(
+                                    x.FileName,
+                                    x.HashAlgorithm,
+                                    x.Hash,
+                                    x.Size,
+                                    x.BlobId))
                                 .ToArray(),
                             request.ReplyToMessageId,
                             request.ServiceOid,
@@ -335,16 +357,17 @@ namespace ED.DomainServices
                             request.RecipientTargetGroupId,
                             request.MessageSubject,
                             request.MessageBody,
-                            request.Documents
-                                .Select(e => new SendMessage1OnBehalfOfCommandDocument(
-                                    e.FileName,
-                                    e.DocumentRegistrationNumber,
-                                    e.FileContent.ToByteArray()))
+                            request.Blobs
+                                .Select(x => new SendMessage1OnBehalfOfCommandBlob(
+                                    x.FileName,
+                                    x.HashAlgorithm,
+                                    x.Hash,
+                                    x.Size,
+                                    x.BlobId))
                                 .ToArray(),
                             request.ServiceOid,
-                            request.OnBehalfOfProfileId,
-                            request.OnBehalfOfLoginId,
-                            request.OnBehalfOfOperatorLoginId,
+                            request.SentViaLoginId,
+                            request.SentViaOperatorLoginId,
                             request.SendEvent),
                         context.CancellationToken);
 
@@ -368,16 +391,17 @@ namespace ED.DomainServices
                             request.RecipientLastName,
                             request.MessageSubject,
                             request.MessageBody,
-                            request.Documents
-                                .Select(e => new SendMessage1OnBehalfOfToIndividualCommandDocument(
-                                    e.FileName,
-                                    e.DocumentRegistrationNumber,
-                                    e.FileContent.ToByteArray()))
+                            request.Blobs
+                                .Select(x => new SendMessage1OnBehalfOfToIndividualCommandBlob(
+                                    x.FileName,
+                                    x.HashAlgorithm,
+                                    x.Hash,
+                                    x.Size,
+                                    x.BlobId))
                                 .ToArray(),
                             request.ServiceOid,
-                            request.OnBehalfOfProfileId,
-                            request.OnBehalfOfLoginId,
-                            request.OnBehalfOfOperatorLoginId,
+                            request.SentViaLoginId,
+                            request.SentViaOperatorLoginId,
                             request.SendEvent),
                         context.CancellationToken);
 
@@ -397,16 +421,17 @@ namespace ED.DomainServices
                             request.RecipientIdentifier,
                             request.MessageSubject,
                             request.MessageBody,
-                            request.Documents
-                                .Select(e => new SendMessage1OnBehalfOfToLegalEntityCommandDocument(
-                                    e.FileName,
-                                    e.DocumentRegistrationNumber,
-                                    e.FileContent.ToByteArray()))
+                            request.Blobs
+                                .Select(x => new SendMessage1OnBehalfOfToLegalEntityCommandBlob(
+                                    x.FileName,
+                                    x.HashAlgorithm,
+                                    x.Hash,
+                                    x.Size,
+                                    x.BlobId))
                                 .ToArray(),
                             request.ServiceOid,
-                            request.OnBehalfOfProfileId,
-                            request.OnBehalfOfLoginId,
-                            request.OnBehalfOfOperatorLoginId,
+                            request.SentViaLoginId,
+                            request.SentViaOperatorLoginId,
                             request.SendEvent),
                         context.CancellationToken);
 

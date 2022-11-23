@@ -125,6 +125,7 @@ namespace ED.DomainServices
                 mapGrpcService<CodeMessageService>();
                 mapGrpcService<EsbService>();
                 mapGrpcService<IntegrationServiceService>();
+                mapGrpcService<JournalService>();
 
                 endpoints.MapGet("/", async context =>
                 {

@@ -13,7 +13,7 @@ namespace ED.Domain
             int messageId,
             CancellationToken ct)
         {
-            GetProfileMessageRoleVO vo = await (
+            GetProfileMessageRoleVO? vo = await (
                 from m in this.DbContext.Set<Message>()
 
                 join mr in this.DbContext.Set<MessageRecipient>()

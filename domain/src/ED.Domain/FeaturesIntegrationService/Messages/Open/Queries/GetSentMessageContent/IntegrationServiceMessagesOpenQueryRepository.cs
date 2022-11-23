@@ -103,7 +103,7 @@ namespace ED.Domain
                     RecipientLoginCertificateThumbprint = rl != null ? rl.CertificateThumbprint : null,
                     RecipientLoginPushNotificationUrl = rl != null ? rl.PushNotificationsUrl : null,
                 })
-                .FirstOrDefaultAsync(ct);
+                .FirstAsync(ct);
 
             var messageBlobs = await (
                 from mb in this.DbContext.Set<MessageBlob>()
@@ -152,13 +152,6 @@ namespace ED.Domain
 
             for (int i = 0; i < blobIds.Length; i++)
             {
-                BlobsServiceClient.DownloadBlobToArrayVO downloadBlob =
-                    await this.blobsServiceClient.DownloadMessageBlobToArrayAsync(
-                        profileId,
-                        blobIds[i],
-                        messageId,
-                        ct);
-
                 var matchBlob = messageBlobs.First(e => e.BlobId == blobIds[i]);
 
                 blobs[i] = new GetSentMessageContentVOBlob(
@@ -166,7 +159,6 @@ namespace ED.Domain
                     matchBlob.DocumentRegistrationNumber,
                     matchBlob.FileName,
                     matchBlob.Timestamp,
-                    downloadBlob.Content,
                     messageBlobsSignatures
                         .Where(s => s.BlobId == blobIds[i])
                         .Select(s => new GetSentMessageContentVOSignature(
@@ -291,13 +283,6 @@ namespace ED.Domain
 
                 for (int i = 0; i < forwardedBlobIds.Length; i++)
                 {
-                    BlobsServiceClient.DownloadBlobToArrayVO downloadBlob =
-                        await this.blobsServiceClient.DownloadMessageBlobToArrayAsync(
-                            profileId,
-                            forwardedBlobIds[i],
-                            forwardedMessage.MessageId,
-                            ct);
-
                     var matchBlob = forwardedMessageBlobs.First(e => e.BlobId == forwardedBlobIds[i]);
 
                     forwardedBlobs[i] = new GetSentMessageContentVOBlob(
@@ -305,7 +290,6 @@ namespace ED.Domain
                         matchBlob.DocumentRegistrationNumber,
                         matchBlob.FileName,
                         matchBlob.Timestamp,
-                        downloadBlob.Content,
                         forwardedMessageBlobsSignatures
                             .Where(s => s.BlobId == forwardedBlobIds[i])
                             .Select(s => new GetSentMessageContentVOSignature(

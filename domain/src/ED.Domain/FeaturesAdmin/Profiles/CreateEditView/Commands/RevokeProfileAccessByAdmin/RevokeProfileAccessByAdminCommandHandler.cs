@@ -27,16 +27,16 @@ namespace ED.Domain
 
             profile.RevokeAccess(command.LoginId);
 
-            ProfilesHistory profilesHistory = new(
-               profile.Id,
-               ProfileHistoryAction.RemoveAccessToProfile,
-               command.AdminUserId,
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
+                profile.Id,
+                ProfileHistoryAction.RemoveAccessToProfile,
+                command.AdminUserId,
                 ProfilesHistory.GenerateAccessDetails(
                     ProfileHistoryAction.RemoveAccessToProfile,
                     loginInfo.ElectronicSubjectId,
                     loginInfo.ElectronicSubjectName,
                     string.Empty),
-               command.IP);
+                command.IP);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

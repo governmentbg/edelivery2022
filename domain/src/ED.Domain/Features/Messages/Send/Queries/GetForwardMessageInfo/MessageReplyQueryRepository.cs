@@ -6,7 +6,7 @@ using static ED.Domain.IMessageSendQueryRepository;
 
 namespace ED.Domain
 {
-    partial class MessageSendQueryRepository
+    partial class MessageSendQueryRepository : IMessageSendQueryRepository
     {
         public async Task<GetForwardMessageInfoVO> GetForwardMessageInfoAsync(
             int messageId,
@@ -19,7 +19,7 @@ namespace ED.Domain
 
                 select new GetForwardMessageInfoVO(
                     m.Subject,
-                    m.Orn)
+                    m.Rnu)
                 ).SingleAsync(ct);
 
             return vo;

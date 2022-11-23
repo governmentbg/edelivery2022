@@ -221,5 +221,41 @@ namespace ED.DomainServices
                 HasAccess = hasAccess,
             };
         }
+
+        public override async Task<HasAccessResponse> HasMessageAccessKey(
+            HasMessageAccessKeyRequest request,
+            ServerCallContext context)
+        {
+            bool hasAccess = await this.serviceProvider
+                .GetRequiredService<IAuthorizationService>()
+                .HasMessageAccessKeyAsync(
+                    request.ProfileId,
+                    request.MessageId,
+                    context.CancellationToken);
+
+            return new HasAccessResponse
+            {
+                HasAccess = hasAccess,
+            };
+        }
+
+        public override async Task<HasAccessResponse> HasReadMessageThroughForwardingAsRecipientAccess(
+            HasReadMessageThroughForwardingAsRecipientAccessRequest request,
+            ServerCallContext context)
+        {
+            bool hasAccess = await this.serviceProvider
+               .GetRequiredService<IAuthorizationService>()
+               .HasReadMessageThroughForwardingAsRecipientAccessAsync(
+                   request.ProfileId,
+                   request.LoginId,
+                   request.MessageId,
+                   request.ForwardingMessageId,
+                   context.CancellationToken);
+
+            return new HasAccessResponse
+            {
+                HasAccess = hasAccess,
+            };
+        }
     }
 }

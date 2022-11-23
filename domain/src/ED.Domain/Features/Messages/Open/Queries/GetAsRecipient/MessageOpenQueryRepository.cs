@@ -14,23 +14,23 @@ namespace ED.Domain
             int profileId,
             CancellationToken ct)
         {
-            var res = await (
+            var message = await (
                 from m in this.DbContext.Set<Message>()
 
-                join p1 in this.DbContext.Set<Profile>()
-                    on m.SenderProfileId equals p1.Id
+                join sp in this.DbContext.Set<Profile>()
+                    on m.SenderProfileId equals sp.Id
 
-                join l1 in this.DbContext.Set<Login>()
-                    on m.SenderLoginId equals l1.Id
+                join sl in this.DbContext.Set<Login>()
+                    on m.SenderLoginId equals sl.Id
 
                 join mr in this.DbContext.Set<MessageRecipient>()
                    on m.MessageId equals mr.MessageId
 
-                join p2 in this.DbContext.Set<Profile>()
-                    on mr.ProfileId equals p2.Id
+                join rp in this.DbContext.Set<Profile>()
+                    on mr.ProfileId equals rp.Id
 
-                join l2 in this.DbContext.Set<Login>()
-                    on mr.LoginId equals l2.Id
+                join rl in this.DbContext.Set<Login>()
+                    on mr.LoginId equals rl.Id
 
                 join mak in this.DbContext.Set<MessageAccessKey>()
                     on m.MessageId equals mak.MessageId
@@ -43,25 +43,10 @@ namespace ED.Domain
                 into lj1
                 from mb in lj1.DefaultIfEmpty()
 
-                join b in this.DbContext.Set<Blob>()
-                    on mb.BlobId equals b.BlobId
-                into lj2
-                from b in lj2.DefaultIfEmpty()
-
-                join msr in this.DbContext.Set<MalwareScanResult>()
-                    on b.MalwareScanResultId equals msr.Id
-                into lj3
-                from msr in lj3.DefaultIfEmpty()
-
                 join fm in this.DbContext.Set<ForwardedMessage>()
                     on m.MessageId equals fm.MessageId
                 into lj4
                 from fm in lj4.DefaultIfEmpty()
-
-                join bs in this.DbContext.Set<BlobSignature>()
-                    on b.BlobId equals bs.BlobId
-                into lj5
-                from bs in lj5.DefaultIfEmpty()
 
                 where m.MessageId == messageId
                     && mr.ProfileId == profileId
@@ -69,35 +54,60 @@ namespace ED.Domain
 
                 select new
                 {
-                    MessageId = m.MessageId,
+                    m.MessageId,
                     DateSent = m.DateSent!.Value,
                     mr.DateReceived,
-                    SenderProfileId = p1.Id,
-                    SenderProfileName = p1.ElectronicSubjectName,
-                    SenderProfileType = p1.ProfileType,
-                    SenderLoginName = l1.ElectronicSubjectName,
-                    RecipientProfileId = p2.Id,
-                    RecipientProfileName = p2.ElectronicSubjectName,
-                    RecipientProfileType = p2.ProfileType,
-                    RecipientLoginName = l2.ElectronicSubjectName,
+                    SenderProfileId = sp.Id,
+                    SenderProfileName = sp.ElectronicSubjectName,
+                    SenderProfileType = sp.ProfileType,
+                    SenderProfileIsReadOnly = sp.IsReadOnly,
+                    SenderLoginName = sl.ElectronicSubjectName,
+                    RecipientProfileId = rp.Id,
+                    RecipientProfileName = rp.ElectronicSubjectName,
+                    RecipientProfileType = rp.ProfileType,
+                    RecipientProfileIsReadOnly = rp.IsReadOnly,
+                    RecipientLoginName = rl.ElectronicSubjectName,
                     t.TemplateId,
                     m.Subject,
-                    m.Orn,
-                    m.ReferencedOrn,
-                    m.AdditionalIdentifier,
+                    m.Rnu,
                     m.Body,
                     m.ForwardStatusId,
                     mak.ProfileKeyId,
                     mak.EncryptedKey,
                     m.IV,
                     TemplateName = t.Name,
-                    BlobId = (int?)b.BlobId,
-                    FileName = (string?)b.FileName,
+                    ForwardedMessageId = (int?)fm.ForwardedMessageId,
+                })
+                .FirstAsync(ct);
+
+            var blobsAndSignatures = await (
+                from mb in this.DbContext.Set<MessageBlob>()
+
+                join b in this.DbContext.Set<Blob>()
+                    on mb.BlobId equals b.BlobId
+
+                join msr in this.DbContext.Set<MalwareScanResult>()
+                    on b.MalwareScanResultId equals msr.Id
+                    into lj3
+                from msr in lj3.DefaultIfEmpty()
+
+                join bs in this.DbContext.Set<BlobSignature>()
+                    on b.BlobId equals bs.BlobId
+                    into lj4
+                from bs in lj4.DefaultIfEmpty()
+
+                where mb.MessageId == messageId
+
+                select new
+                {
+                    b.BlobId,
+                    b.FileName,
                     b.Size,
                     b.DocumentRegistrationNumber,
                     msr.Status,
                     msr.IsMalicious,
-                    ForwardedMessageId = (int?)fm.ForwardedMessageId,
+                    b.Hash,
+                    b.HashAlgorithm,
                     SignatureCoversDocument = (bool?)bs.CoversDocument,
                     SignatureSignDate = (DateTime?)bs.SignDate,
                     SignatureIsTimestamp = (bool?)bs.IsTimestamp,
@@ -109,90 +119,57 @@ namespace ED.Domain
                 })
                 .ToArrayAsync(ct);
 
-            GetAsRecipientVO? vo = res
-                .GroupBy(k => new
-                {
-                    k.MessageId,
-                    k.DateSent,
-                    k.DateReceived,
-                    k.SenderProfileId,
-                    k.SenderProfileName,
-                    k.SenderProfileType,
-                    k.SenderLoginName,
-                    k.RecipientProfileId,
-                    k.RecipientProfileName,
-                    k.RecipientProfileType,
-                    k.RecipientLoginName,
-                    k.TemplateId,
-                    k.Subject,
-                    k.Orn,
-                    k.ReferencedOrn,
-                    k.AdditionalIdentifier,
-                    k.ForwardStatusId,
-                    k.ProfileKeyId,
-                    k.TemplateName,
-                    k.ForwardedMessageId
-                })
-                .Select(e => new GetAsRecipientVO(
-                    e.Key.MessageId,
-                    e.Key.DateSent,
-                    e.Key.DateReceived,
-                    new GetAsRecipientVOProfile(
-                        e.Key.SenderProfileId,
-                        e.Key.SenderProfileName,
-                        e.Key.SenderProfileType,
-                        false,  // TODO:
-                        e.Key.SenderLoginName),
-                    new GetAsRecipientVOProfile(
-                        e.Key.RecipientProfileId,
-                        e.Key.RecipientProfileName,
-                        e.Key.RecipientProfileType,
-                        false, // todo
-                        e.Key.RecipientLoginName),
-                    e.Key.TemplateId,
-                    e.Key.Subject,
-                    e.Key.Orn,
-                    e.Key.ReferencedOrn,
-                    e.Key.AdditionalIdentifier,
-                    e.First().Body,
-                    e.Key.ForwardStatusId,
-                    e.Key.ProfileKeyId,
-                    e.First().EncryptedKey,
-                    e.First().IV,
-                    e.Key.TemplateName,
+            GetAsRecipientVOBlob[] blobs = blobsAndSignatures
+                .GroupBy(e => e.BlobId)
+                .Select(e => new GetAsRecipientVOBlob(
+                    e.Key,
+                    e.First().FileName,
+                    e.First().Hash,
+                    e.First().Size,
+                    e.First().DocumentRegistrationNumber,
+                    e.First().Status ?? MalwareScanResultStatus.Error,
+                    e.First().IsMalicious,
                     e
-                        .Where(b => b.BlobId.HasValue)
-                        .GroupBy(b => new
-                        {
-                            BlobId = b.BlobId!.Value,
-                            b.FileName,
-                            b.Size,
-                            b.DocumentRegistrationNumber,
-                            Status = b.Status ?? MalwareScanResultStatus.Error,
-                            b.IsMalicious
-                        })
-                        .Select(b => new GetAsRecipientVOBlob(
-                            b.Key.BlobId,
-                            b.Key.FileName,
-                            b.Key.Size,
-                            b.Key.DocumentRegistrationNumber,
-                            b.Key.Status,
-                            b.Key.IsMalicious,
-                            b
-                                .Where(s => s.SignatureCoversDocument.HasValue)
-                                .Select(s => new GetAsRecipientVOBlobSignature(
-                                    s.SignatureCoversDocument!.Value,
-                                    s.SignatureSignDate!.Value,
-                                    s.SignatureIsTimestamp!.Value,
-                                    s.SignatureValidAtTimeOfSigning!.Value,
-                                    s.SignatureIssuer!,
-                                    s.SignatureSubject!,
-                                    s.SignatureValidFrom!.Value,
-                                    s.SignatureValidTo!.Value))
-                                .ToArray()))
-                        .ToArray(),
-                    e.Key.ForwardedMessageId))
-                .Single();
+                        .Where(s => s.SignatureCoversDocument.HasValue)
+                        .Select(s => new GetAsRecipientVOBlobSignature(
+                            s.SignatureCoversDocument!.Value,
+                            s.SignatureSignDate!.Value,
+                            s.SignatureIsTimestamp!.Value,
+                            s.SignatureValidAtTimeOfSigning!.Value,
+                            s.SignatureIssuer,
+                            s.SignatureSubject,
+                            s.SignatureValidFrom!.Value,
+                            s.SignatureValidTo!.Value))
+                        .ToArray()))
+                .ToArray();
+
+            GetAsRecipientVO vo = new(
+                message.MessageId,
+                message.DateSent,
+                message.DateReceived,
+                new GetAsRecipientVOProfile(
+                    message.SenderProfileId,
+                    message.SenderProfileName,
+                    message.SenderProfileType,
+                    message.SenderProfileIsReadOnly,
+                    message.SenderLoginName),
+                new GetAsRecipientVOProfile(
+                    message.RecipientProfileId,
+                    message.RecipientProfileName,
+                    message.RecipientProfileType,
+                    message.RecipientProfileIsReadOnly,
+                    message.RecipientLoginName),
+                message.TemplateId,
+                message.Subject,
+                message.Rnu,
+                message.Body,
+                message.ForwardStatusId,
+                message.ProfileKeyId,
+                message.EncryptedKey,
+                message.IV,
+                message.TemplateName,
+                blobs,
+                message.ForwardedMessageId);
 
             return vo;
         }

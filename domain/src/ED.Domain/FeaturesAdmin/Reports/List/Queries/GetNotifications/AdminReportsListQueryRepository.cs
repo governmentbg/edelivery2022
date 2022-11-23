@@ -31,7 +31,9 @@ namespace ED.Domain
                       && q.StatusDate < toDate.AddDays(1)
                       && (q.Type == QueueMessageType.Email
                         || q.Type == QueueMessageType.Sms
-                        || q.Type == QueueMessageType.Viber)
+                        || q.Type == QueueMessageType.SmsDeliveryCheck
+                        || q.Type == QueueMessageType.Viber
+                        || q.Type == QueueMessageType.ViberDeliveryCheck)
                       && (q.Status == QueueMessageStatus.Processed
                         || q.Status == QueueMessageStatus.Errored)
 

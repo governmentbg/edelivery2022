@@ -12,8 +12,6 @@ namespace ED.Domain
             string Recipients,
             string Subject,
             string Url,
-            string? Orn,
-            string? ReferencedOrn,
-            string? AdditionalIdentifier);
+            string? Rnu);
     }
 }

@@ -7,7 +7,6 @@ namespace ED.Domain
         public record GetSentDocumentsContentVO(
             int BlobId,
             string FileName,
-            byte[] Content,
             byte[]? Timestamp,
             string? DocumentRegistrationNumber,
             GetSentDocumentsContentVOSignature[] Signatures);

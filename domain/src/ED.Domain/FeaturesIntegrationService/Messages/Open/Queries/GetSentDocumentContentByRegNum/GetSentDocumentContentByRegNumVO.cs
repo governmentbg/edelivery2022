@@ -7,7 +7,7 @@ namespace ED.Domain
         public record GetSentDocumentContentByRegNumVO(
             int BlobId,
             string FileName,
-            byte[] Content,
+            int MessageId,
             byte[]? Timestamp,
             string? DocumentRegistrationNumber,
             GetSentDocumentContentByRegNumVOSignature[] Signatures);

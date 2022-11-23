@@ -4,6 +4,6 @@ namespace ED.Domain
     {
         public record GetForwardMessageInfoVO(
             string Subject,
-            string? Orn);
+            string? Rnu);
     }
 }

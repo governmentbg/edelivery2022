@@ -56,6 +56,7 @@ namespace ED.Domain
 
             services.Configure<DomainOptions>(configuration.GetSection("ED:Domain"));
             services.Configure<PdfOptions>(configuration.GetSection("ED:Pdf"));
+            services.Configure<RegixOptions>(configuration.GetSection("ED:Regix"));
 
             var domainOptions = new DomainOptions();
             configuration.GetSection("ED:Domain").Bind(domainOptions);
@@ -65,6 +66,8 @@ namespace ED.Domain
             services.AddSingleton<IEncryptorFactory, EncryptorFactoryV2>();
             services.AddSingleton<EncryptorFactoryV1>();
             services.AddSingleton<EncryptorFactoryV2>();
+
+            services.AddTransient<RegixServiceClient>();
 
             this.AddGrpcClient<KeystoreClient>(
                 services,
@@ -81,17 +84,6 @@ namespace ED.Domain
                     httpClient.BaseAddress = new Uri(
                         domainOptions.TimestampServiceUrl
                         ?? throw new Exception($"Missing setting {nameof(DomainOptions)}.{nameof(DomainOptions.TimestampServiceUrl)}")
-                    );
-                })
-                .AddTransientHttpErrorPolicy(
-                    p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(600)));
-
-            services.AddHttpClient<OrnServiceClient>(
-                httpClient =>
-                {
-                    httpClient.BaseAddress = new Uri(
-                        domainOptions.OrnServiceUrl
-                        ?? throw new Exception($"Missing setting {nameof(DomainOptions)}.{nameof(DomainOptions.OrnServiceUrl)}")
                     );
                 })
                 .AddTransientHttpErrorPolicy(

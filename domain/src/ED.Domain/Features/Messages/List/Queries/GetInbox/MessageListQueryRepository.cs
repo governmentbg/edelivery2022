@@ -15,24 +15,22 @@ namespace ED.Domain
             int profileId,
             int offset,
             int limit,
-            string titleQuery,
-            string profileNameQuery,
+            string? subject,
+            string? profile,
             DateTime? fromDate,
             DateTime? toDate,
-            string? orn,
-            string? referencedOrn,
+            string? rnu,
             CancellationToken ct)
         {
             Expression<Func<Message, bool>> messagePredicate =
                 BuildMessagePredicate(
-                    titleQuery,
+                    subject,
                     fromDate,
                     toDate,
-                    orn,
-                    referencedOrn);
+                    rnu);
 
             Expression<Func<Profile, bool>> profilePredicate =
-                BuildProfilePredicate(profileNameQuery);
+                BuildProfilePredicate(profile);
 
             IQueryable<int> countQuery =
                 this.DbContext.Set<MessageRecipient>()
@@ -106,30 +104,28 @@ namespace ED.Domain
                     l1.ElectronicSubjectName,
                     p2.ElectronicSubjectName,
                     l2 != null ? l2.ElectronicSubjectName : string.Empty,
-                    m.Subject,
+                    m.SubjectExtended!,
                     m.ForwardStatusId,
                     t.Name,
-                    m.Orn,
-                    m.ReferencedOrn))
+                    m.Rnu))
                 .WithOffsetAndLimit(offset, limit)
                 .ToArrayAsync(ct);
 
             return new TableResultVO<GetInboxVO>(vos, count);
 
             Expression<Func<Message, bool>> BuildMessagePredicate(
-                string titleQuery,
+                string? subject,
                 DateTime? fromDate,
                 DateTime? toDate,
-                string? orn,
-                string? referencedOrn)
+                string? rnu)
             {
                 Expression<Func<Message, bool>> predicate =
                     PredicateBuilder.True<Message>();
 
-                if (!string.IsNullOrEmpty(titleQuery))
+                if (!string.IsNullOrEmpty(subject))
                 {
                     predicate = predicate
-                        .And(e => e.Subject.Contains(titleQuery));
+                        .And(e => e.Subject.Contains(subject));
                 }
 
                 if (fromDate.HasValue)
@@ -141,35 +137,29 @@ namespace ED.Domain
                 if (toDate.HasValue)
                 {
                     predicate = predicate
-                        .And(e => e.DateSent.HasValue && e.DateSent < toDate.Value);
+                        .And(e => e.DateSent.HasValue && e.DateSent < toDate.Value.AddDays(1));
                 }
 
-                if (!string.IsNullOrEmpty(orn))
+                if (!string.IsNullOrEmpty(rnu))
                 {
                     predicate = predicate
-                        .And(e => e.Orn == orn);
-                }
-
-                if (!string.IsNullOrEmpty(referencedOrn))
-                {
-                    predicate = predicate
-                        .And(e => e.ReferencedOrn == referencedOrn);
+                        .And(e => e.Rnu == rnu);
                 }
 
                 return predicate;
             }
 
             Expression<Func<Profile, bool>> BuildProfilePredicate(
-                string profileNameQuery)
+                string? profile)
             {
                 Expression<Func<Profile, bool>> predicate =
                     PredicateBuilder.True<Profile>();
 
-                if (!string.IsNullOrEmpty(profileNameQuery))
+                if (!string.IsNullOrEmpty(profile))
                 {
                     predicate = predicate
-                        .And(e => e.ElectronicSubjectName.Contains(profileNameQuery)
-                            || e.Identifier.Contains(profileNameQuery));
+                        .And(e => e.ElectronicSubjectName.Contains(profile)
+                            || e.Identifier.Contains(profile));
                 }
 
                 return predicate;

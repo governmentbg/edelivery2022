@@ -8,6 +8,7 @@ namespace ED.Domain
             int TemplateId,
             string Name,
             string IdentityNumber,
+            string? Category,
             string Content,
             int? ResponseTemplateId,
             string? ResponseTemplateName,
@@ -21,15 +22,6 @@ namespace ED.Domain
             int ReadLoginSecurityLevelId,
             string ReadLoginSecurityLevelName,
             int WriteLoginSecurityLevelId,
-            string WriteLoginSecurityLevelName,
-            int? BlobId,
-            string? BlobName,
-            string? SenderDocumentField,
-            string? RecipientDocumentField,
-            string? SubjectDocumentField,
-            string? DateSentDocumentField,
-            string? DateReceivedDocumentField,
-            string? SenderSignatureDocumentField,
-            string? RecipientSignatureDocumentField);
+            string WriteLoginSecurityLevelName);
     }
 }

@@ -12,9 +12,7 @@ namespace ED.Domain
             GetAsRecipientVOProfile Recipient,
             int TemplateId,
             string Subject,
-            string? Orn,
-            string? ReferencedOrn,
-            string? AdditionalIdentifier,
+            string? Rnu,
             string Body,
             ForwardStatus ForwardStatusId,
             string TemplateName,
@@ -31,6 +29,7 @@ namespace ED.Domain
         public record GetAsRecipientVOBlob(
             int BlobId,
             string FileName,
+            string Hash,
             long? Size,
             string? DocumentRegistrationNumber,
             MalwareScanResultStatus Status,

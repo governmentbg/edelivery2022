@@ -13,7 +13,7 @@ namespace ED.Domain
             DateTime month,
             CancellationToken ct)
         {
-            GetMonthStatisticsVO vo = await (
+            GetMonthStatisticsVO? vo = await (
                 from ms in this.DbContext.Set<MessageStatistics>()
 
                 where ms.MonthDate == month

@@ -15,7 +15,6 @@ namespace ED.Domain
             string Subject,
             ForwardStatus ForwardStatusId,
             string TemplateName,
-            string? Orn,
-            string? ReferencedOrn);
+            string? Rnu);
     }
 }

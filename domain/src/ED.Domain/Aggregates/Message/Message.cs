@@ -160,9 +160,7 @@ namespace ED.Domain
 
             public MessageSummaryDO(
                 int messageId,
-                string? orn,
-                string? referencedOrn,
-                string? additionalIdentifier,
+                string? rnu,
                 MessageSummaryVOProfile sender,
                 MessageSummaryVOProfile[] recipients,
                 DateTime? dateSent,
@@ -173,9 +171,7 @@ namespace ED.Domain
                 MessageSummaryDOAttachment[] attachments)
             {
                 this.MessageId = messageId;
-                this.Orn = orn;
-                this.ReferencedOrn = referencedOrn;
-                this.AdditionalIdentifier = additionalIdentifier;
+                this.Rnu = rnu;
                 this.Sender = sender;
                 this.Recipients = recipients;
                 this.DateSent = dateSent;
@@ -188,9 +184,7 @@ namespace ED.Domain
 
             public MessageSummaryDO(
                 int messageId,
-                string? orn,
-                string? referencedOrn,
-                string? additionalIdentifier,
+                string? rnu,
                 MessageSummaryVOProfile sender,
                 MessageSummaryVOProfile[] recipients,
                 DateTime? dateSent,
@@ -202,9 +196,7 @@ namespace ED.Domain
                 MessageSummaryDOForwardedMessage? forwardedMessage)
             {
                 this.MessageId = messageId;
-                this.Orn = orn;
-                this.ReferencedOrn = referencedOrn;
-                this.AdditionalIdentifier = additionalIdentifier;
+                this.Rnu = rnu;
                 this.Sender = sender;
                 this.Recipients = recipients;
                 this.DateSent = dateSent;
@@ -217,19 +209,11 @@ namespace ED.Domain
             }
 
             public int MessageId { get; set; }
-            public string? Orn { get; set; }
-            public string? ReferencedOrn { get; set; }
+            public string? Rnu { get; set; }
 
-            public bool ShouldSerializeReferencedOrn()
+            public bool ShouldSerializeReferencedRnu()
             {
-                return this.ReferencedOrn != null;
-            }
-
-            public string? AdditionalIdentifier { get; set; }
-
-            public bool ShouldSerializeAdditionalIdentifier()
-            {
-                return this.AdditionalIdentifier != null;
+                return this.Rnu != null;
             }
 
             public MessageSummaryVOProfile Sender { get; set; }
@@ -278,9 +262,7 @@ namespace ED.Domain
             string recipientsAsText,
             int templateId,
             string subject,
-            string? orn,
-            string? referencedOrn,
-            string? additionalIdentifier,
+            string? rnu,
             byte[] body,
             string metaFields,
             int createdBy,
@@ -293,9 +275,7 @@ namespace ED.Domain
             this.RecipientsAsText = recipientsAsText;
             this.TemplateId = templateId;
             this.Subject = subject;
-            this.Orn = orn;
-            this.ReferencedOrn = referencedOrn;
-            this.AdditionalIdentifier = additionalIdentifier;
+            this.Rnu = rnu;
             this.Body = body;
             this.MetaFields = metaFields;
             this.CreatedBy = createdBy;
@@ -348,9 +328,7 @@ namespace ED.Domain
             string recipientsAsText,
             int templateId,
             string subject,
-            string? orn,
-            string? referencedOrn,
-            string? additionalIdentifier,
+            string? rnu,
             byte[] body,
             string metaFields,
             int createdBy,
@@ -364,9 +342,7 @@ namespace ED.Domain
             this.RecipientsAsText = recipientsAsText;
             this.TemplateId = templateId;
             this.Subject = subject;
-            this.Orn = orn;
-            this.ReferencedOrn = referencedOrn;
-            this.AdditionalIdentifier = additionalIdentifier;
+            this.Rnu = rnu;
             this.Body = body;
             this.MetaFields = metaFields;
             this.CreatedBy = createdBy;
@@ -425,9 +401,7 @@ namespace ED.Domain
             string recipientEmail,
             int templateId,
             string subject,
-            string? orn,
-            string? referencedOrn,
-            string? additionalIdentifier,
+            string? rnu,
             byte[] body,
             string metaFields,
             int createdBy,
@@ -441,9 +415,7 @@ namespace ED.Domain
                 $"{recipientFirstName} {recipientMiddleName} {recipientLastName}";
             this.TemplateId = templateId;
             this.Subject = subject;
-            this.Orn = orn;
-            this.ReferencedOrn = referencedOrn;
-            this.AdditionalIdentifier = additionalIdentifier;
+            this.Rnu = rnu;
             this.Body = body;
             this.MetaFields = metaFields;
             this.CreatedBy = createdBy;
@@ -535,11 +507,7 @@ namespace ED.Domain
 
         public int? MessagePdfBlobId { get; set; }
 
-        public string? Orn { get; set; }
-
-        public string? ReferencedOrn { get; set; }
-
-        public string? AdditionalIdentifier { get; set; }
+        public string? Rnu { get; set; }
 
         public Template Template { get; set; }
 

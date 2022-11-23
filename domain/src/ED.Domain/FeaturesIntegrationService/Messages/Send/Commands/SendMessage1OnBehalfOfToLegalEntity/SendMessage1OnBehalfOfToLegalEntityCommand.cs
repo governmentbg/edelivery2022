@@ -7,18 +7,19 @@ namespace ED.Domain
         string RecipientIdentifier,
         string MessageSubject,
         string MessageBody,
-        SendMessage1OnBehalfOfToLegalEntityCommandDocument[] Documents,
+        SendMessage1OnBehalfOfToLegalEntityCommandBlob[] Blobs,
         string? ServiceOid,
-        int OnBehalfOfProfileId,
-        int OnBehalfOfLoginId,
-        int? OnBehalfOfOperatorLoginId,
+        int SentViaLoginId,
+        int? SentViaOperatorLoginId,
         string SendEvent)
         : IRequest<SendMessage1OnBehalfOfToLegalEntityCommandResult>;
 
-    public record SendMessage1OnBehalfOfToLegalEntityCommandDocument(
+    public record SendMessage1OnBehalfOfToLegalEntityCommandBlob(
         string FileName,
-        string? DocumentRegistrationNumber,
-        byte[] FileContent);
+        string HashAlgorithm,
+        string Hash,
+        ulong Size,
+        int BlobId);
 
     public record SendMessage1OnBehalfOfToLegalEntityCommandResult(
         bool IsSuccessful,

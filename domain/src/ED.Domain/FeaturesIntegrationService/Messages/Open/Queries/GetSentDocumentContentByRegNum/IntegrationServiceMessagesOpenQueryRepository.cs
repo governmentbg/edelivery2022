@@ -25,7 +25,10 @@ namespace ED.Domain
                     on mb.BlobId equals b.BlobId
 
                 where m.SenderProfileId == profileId
+                    // TODO https://github.com/dotnet/efcore/issues/26634
+#pragma warning disable CS8604 // Possible null reference argument.
                     && EF.Functions.Like(b.DocumentRegistrationNumber, documentRegistrationNumber)
+#pragma warning restore CS8604 // Possible null reference argument.
 
                 select new { m.MessageId, b.BlobId })
                 .FirstOrDefaultAsync(ct);
@@ -71,17 +74,10 @@ namespace ED.Domain
                 })
                 .ToArrayAsync(ct);
 
-            BlobsServiceClient.DownloadBlobToArrayVO downloadBlob =
-                await this.blobsServiceClient.DownloadMessageBlobToArrayAsync(
-                    profileId,
-                    messageBlobIds.BlobId,
-                    messageBlobIds.MessageId,
-                    ct);
-
             return new GetSentDocumentContentByRegNumVO(
                 blob.BlobId,
                 blob.FileName,
-                downloadBlob.Content,
+                messageBlobIds.MessageId,
                 blob.Timestamp,
                 blob.DocumentRegistrationNumber,
                 blobSignatures

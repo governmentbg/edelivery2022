@@ -4,6 +4,7 @@ namespace ED.Domain
     {
         public record GetEFormsVO(
             string MessageSubject,
+            string Recipient,
             int Count);
     }
 }

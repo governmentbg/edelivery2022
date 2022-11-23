@@ -19,7 +19,7 @@ namespace ED.Domain
                 where l.ElectronicSubjectId == profileGuid
 
                 select new GetLoginVO(l.Id))
-                .SingleOrDefaultAsync(ct);
+                .SingleAsync(ct);
 
             return vo;
         }

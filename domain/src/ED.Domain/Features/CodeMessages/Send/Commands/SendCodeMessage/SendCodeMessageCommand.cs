@@ -13,8 +13,6 @@ namespace ED.Domain
         int SenderLoginId,
         int TemplateId,
         string Subject,
-        string? ReferencedOrn,
-        string? AdditionalIdentifier,
         string Body,
         string MetaFields,
         int CreatedBy,

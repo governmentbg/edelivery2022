@@ -2,7 +2,7 @@
 {
     public enum ProfileHistoryAction
     {
-        CreateProfile,
+        CreateProfile, // TODO: not really used, instead of this ProfileActivated is used
         AccessProfile,
         ProfileActivated,
         ProfileDeactivated,

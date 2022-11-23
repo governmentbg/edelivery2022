@@ -6,7 +6,7 @@ namespace ED.Domain
     public partial interface IIntegrationServiceMessagesListQueryRepository
     {
         Task<TableResultVO<GetOutboxVO>> GetOutboxAsync(
-            string certificateThumbprint,
+            int profileId,
             int offset,
             int limit,
             CancellationToken ct);

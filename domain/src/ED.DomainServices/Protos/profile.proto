@@ -50,6 +50,7 @@ service Profile {
   rpc GetLoginProfiles (GetLoginProfilesRequest) returns (GetLoginProfilesResponse);
   rpc GetStatistics (google.protobuf.Empty) returns (GetStatisticsResponse);
   rpc GetTargetGroupProfiles (GetTargetGroupProfilesRequest) returns (GetTargetGroupProfilesResponse);
+  rpc GetRegixPersonInfo (GetRegixPersonInfoRequest) returns (GetRegixPersonInfoResponse);
 
   // register
   rpc CreateOrUpdateIndividual (CreateOrUpdateIndividualRequest) returns (CreateOrUpdateIndividualResponse);
@@ -262,9 +263,10 @@ message GetHistoryResponse {
     int32 profile_id = 2;
     google.protobuf.Timestamp action_date = 3;
     enums.ProfileHistoryAction action = 4;
-    string action_login_name = 5;
+    google.protobuf.StringValue login_name = 5;
     google.protobuf.StringValue details = 6;
-    google.protobuf.StringValue ip = 7;
+    google.protobuf.StringValue admin_name = 7;
+    google.protobuf.StringValue ip = 8;
   }
 
   repeated History history = 1;
@@ -494,6 +496,23 @@ message GetTargetGroupProfilesResponse {
 
   repeated Profile result = 1;
   int32 length = 2;
+}
+
+message GetRegixPersonInfoRequest {
+  string identifier = 1;
+}
+
+message GetRegixPersonInfoResponse {
+  message RegixData {
+    google.protobuf.StringValue error_message = 1;
+    bool success = 2;
+    string first_name = 3;
+    string sur_name = 4;
+    string family_name = 5;
+    google.protobuf.StringValue birth_date = 6;
+  }
+
+  optional RegixData result = 1;
 }
 
 message CreateOrUpdateIndividualRequest {

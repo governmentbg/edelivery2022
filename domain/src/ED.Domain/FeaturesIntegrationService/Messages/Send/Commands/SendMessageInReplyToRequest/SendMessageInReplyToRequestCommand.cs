@@ -5,7 +5,7 @@ namespace ED.Domain
     public record SendMessageInReplyToRequestCommand(
         string MessageSubject,
         string MessageBody,
-        SendMessageInReplyToRequestCommandDocument[] Documents,
+        SendMessageInReplyToRequestCommandBlob[] Blobs,
         int ReplyToMessageId,
         string? ServiceOid,
         int SenderProfileId,
@@ -13,10 +13,12 @@ namespace ED.Domain
         string SendEvent)
         : IRequest<SendMessageInReplyToRequestCommandResult>;
 
-    public record SendMessageInReplyToRequestCommandDocument(
+    public record SendMessageInReplyToRequestCommandBlob(
         string FileName,
-        string? DocumentRegistrationNumber,
-        byte[] FileContent);
+        string HashAlgorithm,
+        string Hash,
+        ulong Size,
+        int BlobId);
 
     public record SendMessageInReplyToRequestCommandResult(
         bool IsSuccessful,
