@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\esb.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\esb.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\enums.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\enums.proto</Link>
+    </Protobuf>
     <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\authorization.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
       <Link>Protos\authorization.proto</Link>
     </Protobuf>

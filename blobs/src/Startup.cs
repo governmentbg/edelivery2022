@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Polly;
 using Serilog;
 using static ED.DomainServices.Authorization;
+using static ED.DomainServices.Esb.Esb;
 using static ED.Keystore.Keystore;
 
 namespace ED.Blobs
@@ -75,6 +76,11 @@ namespace ED.Blobs
             services.AddGrpc();
 
             this.AddGrpcClient<AuthorizationClient>(
+                services,
+                this.BlobsOptions.DomainServicesUrl,
+                this.BlobsOptions.DomainServicesUseGrpcWeb);
+
+            this.AddGrpcClient<EsbClient>(
                 services,
                 this.BlobsOptions.DomainServicesUrl,
                 this.BlobsOptions.DomainServicesUseGrpcWeb);

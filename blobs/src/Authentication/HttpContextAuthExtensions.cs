@@ -15,7 +15,7 @@ namespace ED.Blobs
                 return null;
             }
 
-            string userIdString = 
+            string userIdString =
                 identity.FindFirst(ClaimTypes.NameIdentifier)
                 ?.Value
                 ?? throw new Exception("Missing userId claim.");
