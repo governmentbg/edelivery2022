@@ -1,12 +1,12 @@
-﻿@model SearchLegalModel
+﻿@model SearchLegalEntityModel
 
-<div id="searchLegalForm">
+<div id="searchLegalEntiyForm">
 
     @Html.HiddenFor(x => x.SelectedLegalEntityProfileId)
     @Html.HiddenFor(x => x.SelectedLegalEntityProfileName)
 
     @using (Ajax.BeginForm(
-        "SearchLegal",
+        "SearchLegalEntity",
         "Search",
         null,
         new AjaxOptions()
@@ -14,11 +14,13 @@
             AllowCache = false,
             HttpMethod = "POST",
             OnSuccess = $"gf.addMessageRecipientModal($('#SelectedLegalEntityProfileId').val(), $('#SelectedLegalEntityProfileName').val(), 'profile')",
-            UpdateTargetId = "searchLegalForm",
+            UpdateTargetId = "searchLegalEntiyForm",
             InsertionMode = InsertionMode.ReplaceWith
         },
-        new { id = "searchLegalForm" }))
+        new { }))
     {
+        @Html.HiddenFor(x => x.TemplateId)
+
         <section class="form-section">
             <div class="form-col">
                 <label for="FirstName">@Common.LabelCompanyRegistrationNumber *:</label>

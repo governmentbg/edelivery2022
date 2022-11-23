@@ -19,6 +19,8 @@ namespace EDelivery.WebPortal
             }
         }
 
+        public const int ExportSize = 1000;
+
         public static int PageSize { get; set; }
 
         public const int LargePageSize = 100;
@@ -38,5 +40,9 @@ namespace EDelivery.WebPortal
         public const string ValidMobilePhone = @"^(3598|08)[6-9]\d{7}$";
 
         public const string CyrilicPattern = @"^[а-яА-Я\-\s]+$";
+
+        public const int SystemTemplateId = 1;
+
+        public const string OptionSeparator = "|";
     }
 }

@@ -151,7 +151,7 @@ namespace EDelivery.WebPortal.Controllers
                         },
                         cancellationToken: Response.ClientDisconnectedToken);
 
-                Dictionary<string, (bool, object)> valueDict =
+                Dictionary<Guid, FieldObject> valueDict =
                     TemplatesService.GetFields(
                         vm.Body,
                         template.Content);
@@ -165,7 +165,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (ModelStateException mse)
             {
-                logger.Error($"Message with access code {accessCode} does not exists", mse);
+                ElmahLogger.Instance.Error(
+                    mse,
+                    $"Message with access code {accessCode} does not exists");
 
                 ModelState.AddModelError(mse.Key, mse.Message);
 
@@ -180,7 +182,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error("Exception in open message with code", ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Exception in open message with code");
 
                 ModelState.AddModelError(
                     nameof(OpenCodeMessageViewModel.AccessCode),
@@ -291,8 +295,6 @@ namespace EDelivery.WebPortal.Controllers
                     Body = jsonPayload,
                     MetaFields = jsonMetaFields,
                     BlobIds = { blobIds },
-                    ReferencedOrn = model.ReferencedOrn,
-                    AdditionalIdentifier = model.AdditionalIdentifier,
                 };
 
                 _ = await codeMessageClient.Value.SendAsync(
@@ -315,9 +317,7 @@ namespace EDelivery.WebPortal.Controllers
             {
                 ElmahLogger.Instance.Error(
                     ex,
-                    "Can not send message from login {0} to profile with identifier {1}!",
-                    User.Identity.Name,
-                    model.Identifier);
+                    $"Can not send message from login {User.Identity.Name} to profile with identifier {model.Identifier}!");
 
                 ModelState.AddModelError(string.Empty, ErrorMessages.ErrorCantSendDocument);
 

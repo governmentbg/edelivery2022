@@ -36,6 +36,10 @@
                 @Html.Partial("Partials/Render/_File", item as FileComponent)
                 break;
 
+            case ComponentType.markdown:
+                @Html.Partial("Partials/Render/_Markdown", item as MarkdownComponent)
+                break;
+
             default:
                 throw new NotImplementedException();
         }

@@ -147,6 +147,18 @@
   <data name="BgGovLink5" xml:space="preserve">
     <value>Система за електронно валидиране</value>
   </data>
+  <data name="HelpDesk" xml:space="preserve">
+    <value>Помощен контактен център</value>
+  </data>
+  <data name="HelpDeskInfo" xml:space="preserve">
+    <value>За информационни системи на Министерство на електронното управление:</value>
+  </data>
+  <data name="IdentityChoice" xml:space="preserve">
+    <value>Избор на идентичност</value>
+  </data>
+  <data name="Individual" xml:space="preserve">
+    <value>Физическо лице</value>
+  </data>
   <data name="LandingForBusiness" xml:space="preserve">
     <value>&lt;span&gt;ЗА&lt;/span&gt; БИЗНЕСА</value>
   </data>
@@ -160,13 +172,28 @@
     <value>Република България</value>
   </data>
   <data name="LandingTitleRow2" xml:space="preserve">
-    <value>Държавна агенция „Електронно управление”</value>
+    <value>Министерство на електронното управление</value>
   </data>
   <data name="LandingTitleRow3" xml:space="preserve">
     <value>Система за сигурно електронно връчване</value>
   </data>
+  <data name="LegalEntity" xml:space="preserve">
+    <value>Юридическо лице</value>
+  </data>
   <data name="LinkContactCenter" xml:space="preserve">
     <value>Помощен контактен център</value>
+  </data>
+  <data name="Message1" xml:space="preserve">
+    <value>От 17.01.2022 г. функционира надградената Система за сигурно електронно връчване. При проблеми и затруднения, отнасящи се до новоизградените функционалности, може да сигнализирате на &lt;a href="mailto:Help@e-gov.bg"&gt;Help@e-gov.bg&lt;/a&gt;, като за по-голяма оперативност e необходимо да предоставите Ваш (мобилен) телефон.</value>
+  </data>
+  <data name="Message2" xml:space="preserve">
+    <value>Считано от 24.03.2022 г. се въвежда максимален общ размер от 1 GB за всеки профил в секция "Качени файлове" в меню "Хранилище" на ССЕВ. Максималният размер на единичен файл, качен самостоятелно в Хранилището и прикачен към съобщение, е до 255 MB.</value>
+  </data>
+  <data name="MessageTitle" xml:space="preserve">
+    <value>Съобщение:</value>
+  </data>
+  <data name="PublicAdministration" xml:space="preserve">
+    <value>Администрация</value>
   </data>
   <data name="RegisteredAdministrations" xml:space="preserve">
     <value>Брой регистрирани администрации:</value>

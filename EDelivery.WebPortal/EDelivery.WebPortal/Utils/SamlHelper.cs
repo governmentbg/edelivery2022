@@ -219,7 +219,7 @@ namespace EDelivery.WebPortal.Utils
             }
             if (!File.Exists(pathToCertificate))
             {
-                ElmahLogger.Instance.Error("Certificate for signing AuthNRequest does not existst: Path: {0}!", pathToCertificate);
+                ElmahLogger.Instance.Error($"Certificate for signing AuthNRequest does not existst: Path: {pathToCertificate}!");
                 throw new ArgumentOutOfRangeException("pathToCertificate");
             }
 
@@ -235,7 +235,7 @@ namespace EDelivery.WebPortal.Utils
             }
             catch (FileNotFoundException fnfException)
             {
-                ElmahLogger.Instance.Error(fnfException, "Can not load Certificate from path {0}. FileNotFoundException exception!", pathToCertificate);
+                ElmahLogger.Instance.Error(fnfException, $"Can not load Certificate from path {pathToCertificate}. FileNotFoundException exception!");
                 if (!pathToCertificate.Contains("copy"))
                 {
                     var ext = Path.GetExtension(pathToCertificate);
@@ -247,7 +247,7 @@ namespace EDelivery.WebPortal.Utils
             }
             catch (Exception ex)
             {
-                ElmahLogger.Instance.Error(ex, "Can not load Site Certificate from path {0} or the password {1} is Invalid! Please check!", pathToCertificate, certPassword);
+                ElmahLogger.Instance.Error(ex, $"Can not load Site Certificate from path {pathToCertificate} or the password {certPassword} is Invalid! Please check!");
                 return null;
             }
         }
@@ -268,7 +268,7 @@ namespace EDelivery.WebPortal.Utils
             bool verified = VerifyXmlFile(signedDocumentString, "Signature");
             if (!verified)
             {
-                ElmahLogger.Instance.Info("Can not verify signed AuthNRequest xml");
+                ElmahLogger.Instance.Error("Can not verify signed AuthNRequest xml");
             }
             return signedDocumentString;
         }
@@ -383,7 +383,7 @@ namespace EDelivery.WebPortal.Utils
         internal static CertificateAuthResponse ParseSaml2CertificateResult(string SamlResponse)
         {
             var certAuthResponce = new CertificateAuthResponse();
-            ElmahLogger.Instance.Info("eAuth saml response: " + SamlResponse);
+            ElmahLogger.Instance.Error("eAuth saml response: " + SamlResponse);
             if (string.IsNullOrEmpty(SamlResponse))
             {
                 throw new ArgumentNullException("SamlResponse");

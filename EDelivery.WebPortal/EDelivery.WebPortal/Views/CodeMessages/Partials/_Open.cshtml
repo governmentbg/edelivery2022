@@ -1,6 +1,9 @@
-﻿@model ReadCodeMessageViewModel
+﻿@using EDelivery.WebPortal.Models.Templates.Components
+@using EDelivery.WebPortal.Extensions
 
-<table class="blank-list">
+@model ReadCodeMessageViewModel
+
+<table class="blank-list message">
     <tbody>
         <tr>
             <td>@ProfilePage.LabelAccessCode:</td>
@@ -16,24 +19,6 @@
                 </a>
             </td>
         </tr>
-        <tr>
-            <td>@ProfilePage.LabelOrn:</td>
-            <td>@Model.Orn</td>
-        </tr>
-        @if (!string.IsNullOrEmpty(Model.ReferencedOrn))
-        {
-            <tr>
-                <td>@ProfilePage.LabelReferencedOrn:</td>
-                <td>@Model.ReferencedOrn</td>
-            </tr>
-        }
-        @if (!string.IsNullOrEmpty(Model.AdditionalIdentifier))
-        {
-            <tr>
-                <td>@ProfilePage.LabelAdditionalIdentifier:</td>
-                <td>@Model.AdditionalIdentifier</td>
-            </tr>
-        }
         <tr>
             <td>@ProfilePage.LabelMessageTitle:</td>
             <td>@Model.Subject</td>
@@ -68,107 +53,141 @@
             <td>Шаблон</td>
             <td><strong>@Model.TemplateName</strong></td>
         </tr>
+        <tr>
+            <td colspan="2">
+                <hr class="section-border" />
+            </td>
+        </tr>
 
         @foreach (var item in Model.Fields)
         {
-            if (!item.Value.Item1)
+            switch (item.Value.Type)
             {
-                <tr>
-                    <td>@item.Key</td>
-                    <td>@item.Value.Item2</td>
-                </tr>
-            }
-            else
-            {
-                <tr>
-                    <td>@item.Key</td>
-                    <td>
-                        @foreach (var blob in Model.Blobs.Where(e =>
-                            ((FileObject[])item.Value.Item2)
-                                .Select(f => f.FileName.ToUpperInvariant())
-                                .Any(f => f.StartsWith(e.FileName.ToUpperInvariant()))))
-                        {
-                            bool isMalicious = false;
-                            string errorMessage = string.Empty;
-
-                            if (blob.Status != ED.DomainServices.MalwareScanResultStatus.Complete)
+                case ComponentType.textfield:
+                case ComponentType.select:
+                case ComponentType.textarea:
+                case ComponentType.datetime:
+                case ComponentType.hidden:
+                    <tr>
+                        <td>@item.Value.Label</td>
+                        <td>@item.Value.Value</td>
+                    </tr>
+                    break;
+                case ComponentType.checkbox:
+                    <tr>
+                        <td>@item.Value.Label</td>
+                        <td>
+                            <div class="form-group disabled" style="margin: 0px;">
+                                @Html.CheckBox("cb1", (bool)item.Value.Value, new { disabled = "disabled" })
+                                <label>&nbsp;</label>
+                            </div>
+                        </td>
+                    </tr>
+                    break;
+                case ComponentType.file:
+                    <tr>
+                        <td>@item.Value.Label</td>
+                        <td>
+                            @foreach (var fileObject in (FileObject[])item.Value.Value)
                             {
-                                errorMessage = SEOS.ErrorUnsuccessfulScan;
-                            }
-                            else
-                            {
-                                if (blob.IsMalicious ?? false)
-                                {
-                                    errorMessage = SEOS.ErrorReceivedDocumentIsMalicious;
-                                    isMalicious = true;
-                                }
-                            }
+                                var blob = Model.Blobs.FirstOrDefault(e => e.BlobId == fileObject.FileId)
+                                    ?? Model.Blobs.First(e =>
+                                        fileObject.FileName.ToUpperInvariant().StartsWith(e.FileName.ToUpperInvariant())
+                                        && fileObject.FileHash.ToUpperInvariant().EndsWith(e.Hash.ToUpperInvariant()));
 
-                            string blobTimestamp = Url.Action("GetDocumentTimestamp", "CodeMessages", new { documentId = blob.BlobId });
+                                bool isMalicious = false;
+                                string errorMessage = string.Empty;
 
-                            <div class="td-section">
-                                @if (isMalicious)
+                                if (blob.Status != ED.DomainServices.MalwareScanResultStatus.Complete)
                                 {
-                                    <span>
-                                        @blob.FileName
-                                    </span>
+                                    errorMessage = SEOS.ErrorUnsuccessfulScan;
                                 }
                                 else
                                 {
-                                    string token = BlobUrlCreator.CreateMessageBlobAccessCodeToken(
-                                        Guid.Parse(Model.AccessCode),
-                                        Model.Recipient.ProfileId,
-                                        Model.MessageId,
-                                        blob.BlobId);
-                                    <a href="@Url.Action("Download", new { t = token })" class="file-link" rel="noopener" target="_blank">
-                                        @blob.FileName <span class="note"></span>
-                                    </a>
-                                }
-
-                                <a href="@blobTimestamp" data-toggle="tooltip" data-original-title="@ProfilePage.TooltipDocumentTimestamp">
-                                    <img src="~/Content/img/timestamp.png">
-                                </a>
-
-                                @if (!string.IsNullOrEmpty(errorMessage))
-                                {
-                                    <span class="warning-message">@errorMessage</span>
-                                }
-
-
-                                @if (!string.IsNullOrEmpty(blob.DocumentRegistrationNumber))
-                                {
-                                    <span class="additional-message">@blob.DocumentRegistrationNumber</span>
-                                }
-
-                                @if (blob.Signatures != null && blob.Signatures.Any())
-                                {
-                                    for (int i = 0; i < blob.Signatures.Count; i++)
+                                    if (blob.IsMalicious ?? false)
                                     {
-                                        var signature = blob.Signatures[i];
-                                        var validStatus = signature.CoversDocument && signature.ValidAtTimeOfSigning;
-
-                                        <span class="@(validStatus
-                                            ? (signature.IsTimestamp ? "timestamp-signature" : "signature")
-                                            : "warning-message")">
-                                            @ProfilePage.SignatureInformation: @EDelivery.WebPortal.Utils.TextHelper.GetSignatureSubjectShortName(signature.Subject)
-                                            &nbsp;
-                                            <a href="#" data-modal-tagId="signatureDataPanel_@(blob.BlobId)_@i">
-                                                @EDeliveryResources.ProfilePage.LinkSignatureDataMore
-                                            </a>
-                                        </span>
-
-                                        <div id="signatureDataPanel_@(blob.BlobId)_@i" style="display:none;">
-                                            @Html.Partial("Partials/_DocumentSignatureInfo", signature)
-                                        </div>
+                                        errorMessage = SEOS.ErrorReceivedDocumentIsMalicious;
+                                        isMalicious = true;
                                     }
                                 }
-                            </div>
-                        }
-                    </td>
-                </tr>
-            }
+
+                                string blobTimestamp = Url.Action("GetDocumentTimestamp", "CodeMessages", new { documentId = blob.BlobId });
+
+                                <div class="td-section">
+                                    @if (isMalicious)
+                                    {
+                                        <span>
+                                            @blob.FileName
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        string token = BlobUrlCreator.CreateMessageBlobAccessCodeToken(
+                                            Guid.Parse(Model.AccessCode),
+                                            Model.Recipient.ProfileId,
+                                            Model.MessageId,
+                                            blob.BlobId);
+                                        <a href="@Url.Action("Download", new { t = token })" class="file-link" rel="noopener" target="_blank">
+                                            @blob.FileName <span class="note"></span>
+                                        </a>
+                                    }
+
+                                    <a href="@blobTimestamp" data-toggle="tooltip" data-original-title="@ProfilePage.TooltipDocumentTimestamp">
+                                        <img src="~/Content/img/timestamp.png">
+                                    </a>
+
+                                    @if (!string.IsNullOrEmpty(errorMessage))
+                                    {
+                                        <span class="warning-message">@errorMessage</span>
+                                    }
+
+
+                                    @if (!string.IsNullOrEmpty(blob.DocumentRegistrationNumber))
+                                    {
+                                        <span class="additional-message">@blob.DocumentRegistrationNumber</span>
+                                    }
+
+                                    @if (blob.Signatures != null && blob.Signatures.Any())
+                                    {
+                                        for (int i = 0; i < blob.Signatures.Count; i++)
+                                        {
+                                            var signature = blob.Signatures[i];
+                                            var validStatus = signature.CoversDocument && signature.ValidAtTimeOfSigning;
+
+                                            <span class="@(validStatus
+                                            ? (signature.IsTimestamp ? "timestamp-signature" : "signature")
+                                            : "warning-message")">
+                                                @ProfilePage.SignatureInformation: @EDelivery.WebPortal.Utils.TextHelper.GetSignatureSubjectShortName(signature.Subject)
+                                                &nbsp;
+                                                <a href="#" data-modal-tagId="signatureDataPanel_@(blob.BlobId)_@i">
+                                                    @EDeliveryResources.ProfilePage.LinkSignatureDataMore
+                                                </a>
+                                            </span>
+
+                                            <div id="signatureDataPanel_@(blob.BlobId)_@i" style="display:none;">
+                                                @Html.Partial("Partials/_DocumentSignatureInfo", signature)
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                    break;
+                case ComponentType.markdown:
+                    <tr>
+                        <td></td>
+                        <td>@Html.MarkdownToHtml(item.Value.Value)</td>
+                    </tr>
+                    break;
+            };
         }
 
+        <tr>
+            <td colspan="2">
+                <hr class="section-border" />
+            </td>
+        </tr>
         <tr>
             <td>PDF съобщение:</td>
             <td>

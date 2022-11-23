@@ -19,7 +19,7 @@ namespace EDeliveryResources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Landing {
@@ -151,6 +151,42 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Помощен контактен център.
+        /// </summary>
+        public static string HelpDesk {
+            get {
+                return ResourceManager.GetString("HelpDesk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to За информационни системи на Министерство на електронното управление:.
+        /// </summary>
+        public static string HelpDeskInfo {
+            get {
+                return ResourceManager.GetString("HelpDeskInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Избор на идентичност.
+        /// </summary>
+        public static string IdentityChoice {
+            get {
+                return ResourceManager.GetString("IdentityChoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Физическо лице.
+        /// </summary>
+        public static string Individual {
+            get {
+                return ResourceManager.GetString("Individual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;span&gt;ЗА&lt;/span&gt; БИЗНЕСА.
         /// </summary>
         public static string LandingForBusiness {
@@ -187,7 +223,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Държавна агенция „Електронно управление”.
+        ///   Looks up a localized string similar to Министерство на електронното управление.
         /// </summary>
         public static string LandingTitleRow2 {
             get {
@@ -205,11 +241,56 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Юридическо лице.
+        /// </summary>
+        public static string LegalEntity {
+            get {
+                return ResourceManager.GetString("LegalEntity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Помощен контактен център.
         /// </summary>
         public static string LinkContactCenter {
             get {
                 return ResourceManager.GetString("LinkContactCenter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to От 17.01.2022 г. функционира надградената Система за сигурно електронно връчване. При проблеми и затруднения, отнасящи се до новоизградените функционалности, може да сигнализирате на &lt;a href=&quot;mailto:Help@e-gov.bg&quot;&gt;Help@e-gov.bg&lt;/a&gt;, като за по-голяма оперативност e необходимо да предоставите Ваш (мобилен) телефон..
+        /// </summary>
+        public static string Message1 {
+            get {
+                return ResourceManager.GetString("Message1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Считано от 24.03.2022 г. се въвежда максимален общ размер от 1 GB за всеки профил в секция &quot;Качени файлове&quot; в меню &quot;Хранилище&quot; на ССЕВ. Максималният размер на единичен файл, качен самостоятелно в Хранилището и прикачен към съобщение, е до 255 MB..
+        /// </summary>
+        public static string Message2 {
+            get {
+                return ResourceManager.GetString("Message2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Съобщение:.
+        /// </summary>
+        public static string MessageTitle {
+            get {
+                return ResourceManager.GetString("MessageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Администрация.
+        /// </summary>
+        public static string PublicAdministration {
+            get {
+                return ResourceManager.GetString("PublicAdministration", resourceCulture);
             }
         }
         

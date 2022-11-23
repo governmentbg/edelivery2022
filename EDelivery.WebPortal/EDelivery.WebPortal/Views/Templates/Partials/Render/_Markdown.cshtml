@@ -1,0 +1,11 @@
+﻿@using EDelivery.WebPortal.Models.Templates.Components
+@using EDelivery.WebPortal.Extensions
+
+@model MarkdownComponent
+
+<li class="form-row nowrap">
+    <label></label>
+    <div class="form-element">
+        @Html.MarkdownToHtml(Model.Value)
+    </div>
+</li>

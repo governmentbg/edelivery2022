@@ -4,15 +4,7 @@
 @model ListOutboxBlobsViewModel
 
 @{
-    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
-    new AjaxOptions
-    {
-        HttpMethod = "POST",
-        InsertionMode = System.Web.Mvc.Ajax.InsertionMode.Replace,
-        UpdateTargetId = "tab_box_3",
-        OnComplete = "triggerTooltip"
-    });
-
+    var options = new PagedListRenderOptions();
     options.Display = PagedListDisplayMode.IfNeeded;
     options.MaximumPageNumbersToDisplay = 6;
     options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
@@ -23,17 +15,18 @@
 
 @Html.Partial("Partials/SearchOutboxBlobs", Model.SearchFilter)
 
-<div class="table-responsive">
+<div class="table-responsive" id="listOutboxBlobsTable">
     @Html.CustomPagedListPager(
         Model.Blobs,
         p => Url.Action(
-            "ListOutboxBlobs",
+            "Index",
             new
             {
-                Model.SearchFilter.FileName,
-                Model.SearchFilter.MessageSubject,
-                Model.SearchFilter.FromDate,
-                Model.SearchFilter.ToDate,
+                tab = "outbox",
+                Model.SearchFilter.OutboxBlobsFileName,
+                Model.SearchFilter.OutboxBlobsMessageSubject,
+                Model.SearchFilter.OutboxBlobsFromDate,
+                Model.SearchFilter.OutboxBlobsToDate,
                 page = p
             }),
         options)
@@ -132,13 +125,14 @@
     @Html.CustomPagedListPager(
         Model.Blobs,
         p => Url.Action(
-            "ListOutboxBlobs",
+            "Index",
             new
             {
-                Model.SearchFilter.FileName,
-                Model.SearchFilter.MessageSubject,
-                Model.SearchFilter.FromDate,
-                Model.SearchFilter.ToDate,
+                tab = "outbox",
+                Model.SearchFilter.OutboxBlobsFileName,
+                Model.SearchFilter.OutboxBlobsMessageSubject,
+                Model.SearchFilter.OutboxBlobsFromDate,
+                Model.SearchFilter.OutboxBlobsToDate,
                 page = p
             }),
         options)

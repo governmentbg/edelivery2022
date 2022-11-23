@@ -1,12 +1,12 @@
-﻿@model SearchPersonModel
+﻿@model SearchIndividualModel
 
-<div id="searchPersonForm">
+<div id="searchIndividualForm">
 
     @Html.HiddenFor(x => x.SelectedIndividualProfileId)
     @Html.HiddenFor(x => x.SelectedIndividualProfileName)
 
     @using (Ajax.BeginForm(
-        "SearchPerson",
+        "SearchIndividual",
         "Search",
         null,
         new AjaxOptions()
@@ -14,11 +14,13 @@
             AllowCache = false,
             HttpMethod = "POST",
             OnSuccess = $"gf.addMessageRecipientModal($('#SelectedIndividualProfileId').val(), $('#SelectedIndividualProfileName').val(), 'profile')",
-            UpdateTargetId = "searchPersonForm",
+            UpdateTargetId = "searchIndividualForm",
             InsertionMode = InsertionMode.ReplaceWith
         },
         new { }))
     {
+        @Html.HiddenFor(x => x.TemplateId)
+
         <section class="form-section">
             <div class="form-col">
                 <label for="FirstName">@Common.LabelFirstName *:</label>

@@ -1,4 +1,6 @@
-﻿@model NewCodeMessageViewModel
+﻿@using EDelivery.WebPortal.Extensions
+
+@model NewCodeMessageViewModel
 
 @{
     ViewBag.Title = Common.TitleCreateNewMessageWithCode;
@@ -68,20 +70,6 @@
                         </div>
                     </li>
                     <li class="form-row">
-                        <label for="ReferencedOrn">@ProfilePage.LabelReferencedOrn:</label>
-                        <div class="form-element">
-                            @Html.TextBoxFor(x => x.ReferencedOrn)
-                            @Html.ValidationMessageFor(x => x.ReferencedOrn, null, new { @class = "validation-message" })
-                        </div>
-                    </li>
-                    <li class="form-row">
-                        <label for="AdditionalIdentifier">@ProfilePage.LabelAdditionalIdentifier:</label>
-                        <div class="form-element">
-                            @Html.TextBoxFor(x => x.AdditionalIdentifier)
-                            @Html.ValidationMessageFor(x => x.AdditionalIdentifier, null, new { @class = "validation-message" })
-                        </div>
-                    </li>
-                    <li class="form-row">
                         <label for="Subject">@ProfilePage.LabelMessageTitle <span class="txt-red">*</span>:</label>
                         <div class="form-element">
                             @Html.TextBoxFor(x => x.Subject)
@@ -116,8 +104,8 @@
         }
 
         $(function () {
-            var values = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateValuesAsJson))' || '{}');
-            var errors = JSON.parse('@Html.Raw(HttpUtility.UrlDecode(Model.TemplateErrorsAsJson))' || '[]');
+            var values = JSON.parse(JSON.stringify(@Html.ToJson(Model.TemplateValuesAsJson))) || {};
+            var errors = JSON.parse(JSON.stringify(@Html.ToJson(Model.TemplateErrorsAsJson))) || [];
 
             $('#template').load(
                 '/Templates/Builder/@Model.TemplateId',

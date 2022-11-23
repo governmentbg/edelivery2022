@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
-using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Web;
-using System.Web.Configuration;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using EDelivery.WebPortal.Utils;
+using Elmah;
+using Grpc.Core;
 using log4net;
-
 using Microsoft.Owin;
 
 [assembly: OwinStartupAttribute(typeof(EDelivery.WebPortal.Startup))]
@@ -36,7 +33,6 @@ namespace EDelivery.WebPortal
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             this.InitLogger();
-            RegixInfoClient.RegixConfiguration.Init();
 
             //disable X-AspNetMvc-Version Header
             MvcHandler.DisableMvcResponseHeader = true;
@@ -48,12 +44,16 @@ namespace EDelivery.WebPortal
         {
         }
 
-        protected void Application_Error(object sender, EventArgs e)
+        protected void ErrorLog_Filtering(object sender, ExceptionFilterEventArgs e)
         {
-            // Get the exception object.
-            Exception exc = Server.GetLastError();
-            logger.Warn("Application error", exc);
-            ElmahLogger.Instance.Error(exc, "Application error");
+            if (e.Exception.GetBaseException() is RpcException rpcException
+                && rpcException.StatusCode == StatusCode.Cancelled)
+            {
+                e.Dismiss();
+                return;
+            }
+
+            logger.Warn("Application error", e.Exception);
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
@@ -69,7 +69,8 @@ namespace EDelivery.WebPortal
         private void InitLogger()
         {
             //init elmah logger
-            ElmahLogger.Instance.Info("EDelivery WebPortal is starting...");
+            ElmahLogger.Instance.Error("EDelivery WebPortal is starting...");
+
             //init log4net logger
             var path = ConfigurationManager.AppSettings["LogConfigurationPath"] ?? "log4net.config";
             if (!Path.IsPathRooted(path))

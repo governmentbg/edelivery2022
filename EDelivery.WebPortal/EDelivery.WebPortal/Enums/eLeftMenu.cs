@@ -4,6 +4,7 @@
     {
         None,
         CreateMessage,
+        CreateMessageByTemplateCategory,
         CreateMessageWithCode,
         ReceivedMessages,
         SentMessages,

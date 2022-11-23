@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using EDelivery.WebPortal.Models.Templates.Components;
+
 namespace EDelivery.WebPortal.Models.Messages
 {
     public class ViewMessageViewModel
@@ -27,6 +29,7 @@ namespace EDelivery.WebPortal.Models.Messages
             {
                 this.BlobId = blob.BlobId;
                 this.FileName = blob.FileName;
+                this.Hash = blob.Hash;
                 this.Size = blob.Size;
                 this.DocumentRegistrationNumber = blob.DocumentRegistrationNumber;
                 this.Status = blob.Status;
@@ -42,6 +45,8 @@ namespace EDelivery.WebPortal.Models.Messages
             public int BlobId { get; set; }
 
             public string FileName { get; set; }
+
+            public string Hash { get; set; }
 
             public long? Size { get; set; }
 
@@ -99,9 +104,7 @@ namespace EDelivery.WebPortal.Models.Messages
             this.Recipients = message.Recipients;
             this.TemplateId = message.TemplateId;
             this.Subject = message.Subject;
-            this.Orn = message.Orn;
-            this.ReferencedOrn = message.ReferencedOrn;
-            this.AdditionalIdentifier = message.AdditionalIdentifier;
+            this.Rnu = message.Rnu;
             this.Body = message.Body;
             this.ForwardStatusId = message.ForwardStatusId;
             this.TemplateName = message.TemplateName;
@@ -135,11 +138,7 @@ namespace EDelivery.WebPortal.Models.Messages
 
         public string Subject { get; set; }
 
-        public string Orn { get; set; }
-
-        public string ReferencedOrn { get; set; }
-
-        public string AdditionalIdentifier { get; set; }
+        public string Rnu { get; set; }
 
         public string Body { get; set; }
 
@@ -149,9 +148,9 @@ namespace EDelivery.WebPortal.Models.Messages
 
         public List<ViewMessageViewModelBlob> Blobs { get; set; }
 
-        // template_id -> (is_file, value)
-        public Dictionary<string, (bool, object)> Fields { get; set; } =
-            new Dictionary<string, (bool, object)>();
+        // component_guid -> (label, component_type, value)
+        public Dictionary<Guid, FieldObject> Fields { get; set; } =
+            new Dictionary<Guid, FieldObject>();
 
         public ReadMessageViewModel ForwardedMessage { get; set; }
 

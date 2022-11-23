@@ -117,13 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="OldProjectDescription" xml:space="preserve">
+    <value>Upgrading the existing and building new central systems of the electronic government with a view to improving the information and communication environment for better administrative service to citizens and businesses", carried out with the financial support of the Operational Program "Administrative Capacity".</value>
+  </data>
   <data name="ProjectDescription" xml:space="preserve">
-    <value>Проектът се финансира от Оперативна програма „Добро управление”, съфинансирана от Европейския съюз чрез Европейския социален фонд. В изпълнение на проект BG05SFOP001-1.004-0001 "Надграждане на хоризонталните и централни системи на електронното управление във връзка с Единния модел за заявяване, заплащане и предоставяне на електронни административни услуги".</value>
+    <value>The project is financed by the Operational Program "Good Governance", co-financed by the European Union through the European Social Fund. In execution of a project BG05SFOP001-1.004-0001
+"Upgrading horizontal and central systems of e-government in connection with the Unified model for requesting, paying and providing electronic administrative services".</value>
   </data>
   <data name="Subtitle" xml:space="preserve">
-    <value>State e-Government Agency</value>
+    <value>Ministry of e-Government</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Secure electronic delivery system</value>
+  </data>
+  <data name="Title_TestEnv" xml:space="preserve">
+    <value>WARNING - Test environment</value>
   </data>
 </root>

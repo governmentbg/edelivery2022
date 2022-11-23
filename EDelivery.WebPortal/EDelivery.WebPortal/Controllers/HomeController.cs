@@ -57,7 +57,9 @@ namespace EDelivery.WebPortal.Controllers
             }
             catch (Exception ex)
             {
-                logger.Error("Can not get statistics!", ex);
+                ElmahLogger.Instance.Error(
+                    ex,
+                    "Can not get statistics!");
             }
 
             return PartialView("Partials/_HomeStatistics", vm);
@@ -142,14 +144,14 @@ namespace EDelivery.WebPortal.Controllers
             return PartialView("Partials/_RegisteredSubjectsList", model);
         }
 
-
+        // TODO: remove?
         [Route("~/Validation/EIDResult")]
         public ActionResult RedirectToEValidation(
             string Target,
             string URL,
             string SAMLArtifact)
         {
-            ElmahLogger.Instance.Info("new request for EValidationAuth - artifact is" + SAMLArtifact);
+            ElmahLogger.Instance.Error("new request for EValidationAuth - artifact is" + SAMLArtifact);
 
             string eValidationUrl =
                 ConfigurationManager.AppSettings["EValidationURL"];
@@ -179,6 +181,15 @@ namespace EDelivery.WebPortal.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        [Route("robots.txt", Name = "GetRobotsText"), OutputCache(Duration = 86400)]
+        public ActionResult RobotsText()
+        {
+            // https://weblog.west-wind.com/posts/2015/nov/13/serving-urls-with-file-extensions-in-an-aspnet-mvc-application
+            return Utils.Utils.IsProductionEnvironment
+                ? File(Server.MapPath("~/App_Data/RobotsText/robots.ProdV2.txt"), "text/plain")
+                : File(Server.MapPath("~/App_Data/RobotsText/robots.txt"), "text/plain");
         }
     }
 }

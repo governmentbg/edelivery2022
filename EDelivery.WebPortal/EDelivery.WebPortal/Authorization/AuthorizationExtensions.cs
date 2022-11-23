@@ -68,6 +68,14 @@ namespace EDelivery.WebPortal.Authorization
                                 new DenyReadonlyProfileRequirement(),
                                 new ForwardMessageRequirement()));
 
+                options.AddPolicy(Policies.ReplyMessage,
+                   policyBuilder =>
+                       policyBuilder
+                           .Combine(options.DefaultPolicy)
+                           .AddRequirements(
+                               new DenyReadonlyProfileRequirement(),
+                               new ReplyMessageRequirement()));
+
                 options.AddPolicy(Policies.AdministerProfile,
                     policyBuilder =>
                         policyBuilder
@@ -119,6 +127,13 @@ namespace EDelivery.WebPortal.Authorization
                                 new DenyReadonlyProfileRequirement(),
                                 new WriteCodeMessageRequirement()));
 
+                options.AddPolicy(Policies.MessageAccess,
+                    policyBuilder =>
+                        policyBuilder
+                            .Combine(options.DefaultPolicy)
+                            .AddRequirements(
+                                new MessageAccessKeyRequirement()));
+
                 IAuthorizationHandler[] handlers = new IAuthorizationHandler[]
                 {
                     new AdministerProfileMessageRequirementHandler(),
@@ -133,6 +148,8 @@ namespace EDelivery.WebPortal.Authorization
                     new SearchMessageRecipientIndividualsRequirementHandler(),
                     new SearchMessageRecipientLegalEntitiesRequirementHandler(),
                     new WriteCodeMessageRequirementHandler(),
+                    new MessageAccessKeyRequirementHandler(),
+                    new ReplyMessageRequirementHandler(),
                 };
 
                 var policyProvider = new DefaultAuthorizationPolicyProvider(options);

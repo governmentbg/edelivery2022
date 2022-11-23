@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -95,36 +96,40 @@ namespace EDelivery.WebPortal.Controllers
             return PartialView("Partials/_Browse", model);
         }
 
-        [ChildActionOnlyOrAjax]
-        [HttpGet]
-        public ActionResult ListFreeBlobs()
-        {
-            GetProfileFreeBlobsResponse blobs =
-                this.blobClient.Value.GetProfileFreeBlobs(
-                    new GetProfileFreeBlobsRequest
-                    {
-                        LoginId = UserData.LoginId,
-                        ProfileId = UserData.ActiveProfileId,
-                        Offset = 0,
-                        Limit = SystemConstants.PageSize,
-                        FileName = string.Empty,
-                        Author = string.Empty,
-                        FromDate = null,
-                        ToDate = null,
-                    },
-                    cancellationToken: Response.ClientDisconnectedToken);
-
-            ListFreeBlobsViewModel vm =
-                new ListFreeBlobsViewModel(blobs, SystemConstants.PageSize, 1);
-
-            return PartialView("Partials/ListFreeBlobs", vm);
-        }
-
         [HttpPost]
         public async Task<ActionResult> ListFreeBlobs(
-            SearchFreeBlobsViewModel model,
+            string freeBlobsFileName,
+            string freeBlobsAuthor,
+            string freeBlobsFromDate,
+            string freeBlobsToDate,
             int page = 1)
         {
+            DateTime? fromDateDt = DateTime.TryParseExact(
+                freeBlobsFromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
+
+            DateTime? toDateDt = DateTime.TryParseExact(
+                freeBlobsToDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
+
+            SearchFreeBlobsViewModel model = new SearchFreeBlobsViewModel()
+            {
+                FreeBlobsAuthor = freeBlobsAuthor,
+                FreeBlobsFileName = freeBlobsFileName,
+                FreeBlobsFromDate = freeBlobsFromDate,
+                FreeBlobsToDate = freeBlobsToDate,
+            };
+
             GetProfileFreeBlobsResponse blobs =
                 await this.blobClient.Value.GetProfileFreeBlobsAsync(
                     new GetProfileFreeBlobsRequest
@@ -133,10 +138,10 @@ namespace EDelivery.WebPortal.Controllers
                         ProfileId = UserData.ActiveProfileId,
                         Offset = (page - 1) * SystemConstants.PageSize,
                         Limit = SystemConstants.PageSize,
-                        FileName = model.FileName ?? string.Empty,
-                        Author = model.Author ?? string.Empty,
-                        FromDate = model.ParsedFromDate?.ToTimestamp(),
-                        ToDate = model.ParsedToDate?.ToTimestamp()
+                        FileName = model.FreeBlobsFileName ?? string.Empty,
+                        Author = model.FreeBlobsAuthor ?? string.Empty,
+                        FromDate = fromDateDt?.ToTimestamp(),
+                        ToDate = toDateDt?.ToTimestamp()
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
@@ -146,42 +151,80 @@ namespace EDelivery.WebPortal.Controllers
             return PartialView("Partials/ListFreeBlobs", vm);
         }
 
-        [ChildActionOnlyOrAjax]
-        [HttpGet]
-        public ActionResult ListInboxBlobs()
+        [HttpPost]
+        public async Task<ActionResult> ExportFreeBlobs(
+            SearchFreeBlobsViewModel model)
         {
-            GetProfileInboxBlobsResponse blobs =
-                this.blobClient.Value.GetProfileInboxBlobs(
-                    new GetProfileInboxBlobsRequest
+            DateTime? fromDateDt = DateTime.TryParseExact(
+                model.FreeBlobsFromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
+
+            DateTime? toDateDt = DateTime.TryParseExact(
+                model.FreeBlobsToDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
+
+            GetProfileFreeBlobsResponse blobs =
+                await this.blobClient.Value.GetProfileFreeBlobsAsync(
+                    new GetProfileFreeBlobsRequest
                     {
                         LoginId = UserData.LoginId,
                         ProfileId = UserData.ActiveProfileId,
                         Offset = 0,
-                        Limit = SystemConstants.PageSize,
-                        FileName = string.Empty,
-                        MessageSubject = string.Empty,
-                        FromDate = null,
-                        ToDate = null,
+                        Limit = SystemConstants.ExportSize,
+                        FileName = model.FreeBlobsFileName ?? string.Empty,
+                        Author = model.FreeBlobsAuthor ?? string.Empty,
+                        FromDate = fromDateDt?.ToTimestamp(),
+                        ToDate = toDateDt?.ToTimestamp()
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
-            ListInboxBlobsViewModel vm = new ListInboxBlobsViewModel()
-            {
-                Blobs = new PagedList.PagedListLight<GetProfileInboxBlobsResponse.Types.Blob>(
-                    new List<GetProfileInboxBlobsResponse.Types.Blob>(blobs.Result),
-                    SystemConstants.PageSize,
-                    1,
-                    blobs.Length)
-            };
-
-            return PartialView("Partials/ListInboxBlobs", vm);
+            return ExportService.ExportFreeBlobs(blobs);
         }
 
         [HttpPost]
         public async Task<ActionResult> ListInboxBlobs(
-            SearchInboxBlobsViewModel model,
+            string inboxBlobsFileName,
+            string inboxBlobsSubject,
+            string inboxBlobsFromDate,
+            string inboxBlobsToDate,
             int page = 1)
         {
+            DateTime? fromDateDt = DateTime.TryParseExact(
+                inboxBlobsFromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
+
+            DateTime? toDateDt = DateTime.TryParseExact(
+                inboxBlobsToDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
+
+            SearchInboxBlobsViewModel model = new SearchInboxBlobsViewModel()
+            {
+                InboxBlobsFileName = inboxBlobsFileName,
+                InboxBlobsMessageSubject = inboxBlobsSubject,
+                InboxBlobsFromDate = inboxBlobsFromDate,
+                InboxBlobsToDate = inboxBlobsToDate,
+            };
+
             GetProfileInboxBlobsResponse blobs =
                 await this.blobClient.Value.GetProfileInboxBlobsAsync(
                     new GetProfileInboxBlobsRequest
@@ -190,10 +233,10 @@ namespace EDelivery.WebPortal.Controllers
                         ProfileId = UserData.ActiveProfileId,
                         Offset = (page - 1) * SystemConstants.PageSize,
                         Limit = SystemConstants.PageSize,
-                        FileName = model.FileName ?? string.Empty,
-                        MessageSubject = model.MessageSubject ?? string.Empty,
-                        FromDate = model.ParsedFromDate?.ToTimestamp(),
-                        ToDate = model.ParsedToDate?.ToTimestamp()
+                        FileName = model.InboxBlobsFileName ?? string.Empty,
+                        MessageSubject = model.InboxBlobsMessageSubject ?? string.Empty,
+                        FromDate = fromDateDt?.ToTimestamp(),
+                        ToDate = toDateDt?.ToTimestamp()
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
@@ -210,42 +253,80 @@ namespace EDelivery.WebPortal.Controllers
             return PartialView("Partials/ListInboxBlobs", vm);
         }
 
-        [ChildActionOnlyOrAjax]
-        [HttpGet]
-        public ActionResult ListOutboxBlobs()
+        [HttpPost]
+        public async Task<ActionResult> ExportInboxBlobs(
+            SearchInboxBlobsViewModel model)
         {
-            GetProfileOutboxBlobsResponse blobs =
-                this.blobClient.Value.GetProfileOutboxBlobs(
-                    new GetProfileOutboxBlobsRequest
+            DateTime? fromDateDt = DateTime.TryParseExact(
+                model.InboxBlobsFromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
+
+            DateTime? toDateDt = DateTime.TryParseExact(
+                model.InboxBlobsToDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
+
+            GetProfileInboxBlobsResponse blobs =
+                await this.blobClient.Value.GetProfileInboxBlobsAsync(
+                    new GetProfileInboxBlobsRequest
                     {
                         LoginId = UserData.LoginId,
                         ProfileId = UserData.ActiveProfileId,
                         Offset = 0,
-                        Limit = SystemConstants.PageSize,
-                        FileName = string.Empty,
-                        MessageSubject = string.Empty,
-                        FromDate = null,
-                        ToDate = null,
+                        Limit = SystemConstants.ExportSize,
+                        FileName = model.InboxBlobsFileName ?? string.Empty,
+                        MessageSubject = model.InboxBlobsMessageSubject ?? string.Empty,
+                        FromDate = fromDateDt?.ToTimestamp(),
+                        ToDate = toDateDt?.ToTimestamp()
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
-            ListOutboxBlobsViewModel vm = new ListOutboxBlobsViewModel()
-            {
-                Blobs = new PagedList.PagedListLight<GetProfileOutboxBlobsResponse.Types.Blob>(
-                    new List<GetProfileOutboxBlobsResponse.Types.Blob>(blobs.Result),
-                    SystemConstants.PageSize,
-                    1,
-                    blobs.Length)
-            };
-
-            return PartialView("Partials/ListOutboxBlobs", vm);
+            return ExportService.ExportInboxBlobs(blobs);
         }
 
         [HttpPost]
         public async Task<ActionResult> ListOutboxBlobs(
-            SearchOutboxBlobsViewModel model,
+            string outboxBlobsFileName,
+            string outboxBlobsSubject,
+            string outboxBlobsFromDate,
+            string outboxBlobsToDate,
             int page = 1)
         {
+            DateTime? fromDateDt = DateTime.TryParseExact(
+                outboxBlobsFromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
+
+            DateTime? toDateDt = DateTime.TryParseExact(
+                outboxBlobsToDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
+
+            SearchOutboxBlobsViewModel model = new SearchOutboxBlobsViewModel()
+            {
+                OutboxBlobsFileName = outboxBlobsFileName,
+                OutboxBlobsMessageSubject = outboxBlobsSubject,
+                OutboxBlobsFromDate = outboxBlobsFromDate,
+                OutboxBlobsToDate = outboxBlobsToDate,
+            };
+
             GetProfileOutboxBlobsResponse blobs =
                 await this.blobClient.Value.GetProfileOutboxBlobsAsync(
                     new GetProfileOutboxBlobsRequest
@@ -254,10 +335,10 @@ namespace EDelivery.WebPortal.Controllers
                         ProfileId = UserData.ActiveProfileId,
                         Offset = (page - 1) * SystemConstants.PageSize,
                         Limit = SystemConstants.PageSize,
-                        FileName = model.FileName ?? string.Empty,
-                        MessageSubject = model.MessageSubject ?? string.Empty,
-                        FromDate = model.ParsedFromDate?.ToTimestamp(),
-                        ToDate = model.ParsedToDate?.ToTimestamp()
+                        FileName = model.OutboxBlobsFileName ?? string.Empty,
+                        MessageSubject = model.OutboxBlobsMessageSubject ?? string.Empty,
+                        FromDate = fromDateDt?.ToTimestamp(),
+                        ToDate = toDateDt?.ToTimestamp()
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
@@ -272,6 +353,46 @@ namespace EDelivery.WebPortal.Controllers
             };
 
             return PartialView("Partials/ListOutboxBlobs", vm);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ExportOutboxBlobs(
+            SearchOutboxBlobsViewModel model)
+        {
+            DateTime? fromDateDt = DateTime.TryParseExact(
+                model.OutboxBlobsFromDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt1)
+                ? dt1
+                : (DateTime?)null;
+
+            DateTime? toDateDt = DateTime.TryParseExact(
+                model.OutboxBlobsToDate,
+                SystemConstants.DatePickerDateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime dt2)
+                ? dt2
+                : (DateTime?)null;
+
+            GetProfileOutboxBlobsResponse blobs =
+                await this.blobClient.Value.GetProfileOutboxBlobsAsync(
+                    new GetProfileOutboxBlobsRequest
+                    {
+                        LoginId = UserData.LoginId,
+                        ProfileId = UserData.ActiveProfileId,
+                        Offset = 0,
+                        Limit = SystemConstants.ExportSize,
+                        FileName = model.OutboxBlobsFileName ?? string.Empty,
+                        MessageSubject = model.OutboxBlobsMessageSubject ?? string.Empty,
+                        FromDate = fromDateDt?.ToTimestamp(),
+                        ToDate = toDateDt?.ToTimestamp()
+                    },
+                    cancellationToken: Response.ClientDisconnectedToken);
+
+            return ExportService.ExportOutboxBlobs(blobs);
         }
 
         [HttpGet]

@@ -35,6 +35,16 @@ namespace EDelivery.WebPortal.Utils
             }
         }
 
+        public static bool IsTestEnvironment
+        {
+            get
+            {
+                return "EGovTestV2".Equals(
+                    ConfigurationManager.AppSettings["Environment"],
+                    StringComparison.InvariantCultureIgnoreCase);
+            }
+        }
+
         public static bool IsDevelopmentEnvironment
         {
             get

@@ -17,11 +17,11 @@
             this.FileHashes = new string[this.Instances];
         }
 
-        public int?[] FileIds { get; set; }
+        public int?[] FileIds { get; set; } // TODO: not really part of the component but rather form values
 
-        public string[] FileNames { get; set; }
+        public string[] FileNames { get; set; } // TODO: not really part of the component but rather form values
 
-        public string[] FileHashes { get; set; }
+        public string[] FileHashes { get; set; } // TODO: not really part of the component but rather form values
 
         public int ExpirationPeriod { get; set; }
 

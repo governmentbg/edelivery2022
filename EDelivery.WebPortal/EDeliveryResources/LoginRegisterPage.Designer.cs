@@ -79,6 +79,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Уведомяваме Ви, че във връзка с надграждане функционалностите на системата за сигурно електронно връчване, към настоящия момент заявления за присъединяване към системата за сигурно електронно връчване на юридически лица, могат да се подават само от лице представляващо дружеството (управител, прокурист, представляващ и др.). С цел осигуряване на сигурност на профила и на цялостния процес по заявяване и получаване на електронни административни услуги и връчване на административни актове, към настоящия момент  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string DescriptionRegisterLegalAddOn {
+            get {
+                return ResourceManager.GetString("DescriptionRegisterLegalAddOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Като Физическо лице ще имате достъп до личните си получени и изпратени съобщения, както и да управлявате своя профил..
         /// </summary>
         public static string DescriptionRegisterPerson {
@@ -88,7 +97,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Заявление за регистрация в системата за сигурно електронно връчване.
+        ///   Looks up a localized string similar to Заявление за присъединяване на юридическо лице.
         /// </summary>
         public static string DownloadRegistrationForm {
             get {
@@ -102,6 +111,15 @@ namespace EDeliveryResources {
         public static string ErrorLoginUserPassDisabled {
             get {
                 return ResourceManager.GetString("ErrorLoginUserPassDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to За повече информация {0}виж на страницата на Изпълнителна агенция &quot;Инфраструктура на елетронното управление&quot;{1}.
+        /// </summary>
+        public static string ForMoreInformation {
+            get {
+                return ResourceManager.GetString("ForMoreInformation", resourceCulture);
             }
         }
         
@@ -595,6 +613,33 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Регистрация на администрация.
+        /// </summary>
+        public static string TitleRegisterPublicAdministration {
+            get {
+                return ResourceManager.GetString("TitleRegisterPublicAdministration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заявление за присъединяване на лица по чл. 1, ал. 1 и ал. 2 от Закона за електронно управление.
+        /// </summary>
+        public static string TitleRegisterPublicAdministrationApplication1 {
+            get {
+                return ResourceManager.GetString("TitleRegisterPublicAdministrationApplication1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заявление за присъединяване към Системата за сигурно електронно връчване на структура/и на административен орган по чл. 1, ал. 1 от Закона за електронното управление .
+        /// </summary>
+        public static string TitleRegisterPublicAdministrationApplication2 {
+            get {
+                return ResourceManager.GetString("TitleRegisterPublicAdministrationApplication2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Представител на Юридическото лице.
         /// </summary>
         public static string TitleSectinLegalRepresentative {
@@ -663,6 +708,15 @@ namespace EDeliveryResources {
         public static string TitleSectionRegistrationInstructions {
             get {
                 return ResourceManager.GetString("TitleSectionRegistrationInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заявление за прекратяване присъединяването към Системата за сигурно електронно връчване.
+        /// </summary>
+        public static string TitleUnregisterPublicAdministrationApplication {
+            get {
+                return ResourceManager.GetString("TitleUnregisterPublicAdministrationApplication", resourceCulture);
             }
         }
         

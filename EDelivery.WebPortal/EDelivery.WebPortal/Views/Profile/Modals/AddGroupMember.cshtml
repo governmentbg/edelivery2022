@@ -142,8 +142,8 @@
                 dropdownParent: $('#groupitems'),
                 ajax: {
                     url: '/Search/QueryRecipients',
-                    data: function(params) {
-                        return $.extend(params, { targetGroupId: option.val() });
+                    data: function (params) {
+                        return $.extend(params, { templateId: '@SystemConstants.SystemTemplateId', targetGroupId: option.val() });
                     },
                     dataType: 'json',
                     cache: false,

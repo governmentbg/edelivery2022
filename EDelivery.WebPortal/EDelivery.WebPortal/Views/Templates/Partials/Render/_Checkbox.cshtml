@@ -12,7 +12,13 @@
                 @id = Model.Id,
                 @class = Model.CustomClass
             })
-        <label for="@Model.Id" style="width: 100%;">@Model.Label</label>
+        <label for="@Model.Id" style="width: 100%;">
+            @Model.Label
+            @if (Model.IsRequired)
+            {
+                <span class="txt-red">*</span>
+            }
+        </label>
         @Html.ValidationMessage(Model.Id.ToString(), new { @class = "validation-message" })
     </div>
 </li>

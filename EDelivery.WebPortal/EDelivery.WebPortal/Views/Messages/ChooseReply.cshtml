@@ -16,7 +16,7 @@
             @foreach (var item in Model.Templates)
             {
                 <div class="col-3">
-                    <a href="@Url.Action("Reply", "Messages", new { templateId = item.TemplateId, id = Model.MessageId })" 
+                    <a href="@Url.Action("Reply", "Messages", new { templateId = item.TemplateId, id = Model.MessageId, forwardingMessageId = Model.ForwardingMessageId })"
                        class="content-wrapper icon-menu-item bgr-gray">
                         <div class="icon-box">
                             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">

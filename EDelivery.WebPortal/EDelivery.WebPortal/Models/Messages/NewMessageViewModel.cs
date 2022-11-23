@@ -19,11 +19,8 @@ namespace EDelivery.WebPortal.Models.Messages
         [StringLength(255, ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages), ErrorMessageResourceName = "ErrorMessageFieldLength")]
         public string Subject { get; set; }
 
-        [StringLength(32, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
-        public string ReferencedOrn { get; set; }
-
-        [StringLength(32, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
-        public string AdditionalIdentifier { get; set; }
+        [StringLength(64, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
+        public string Rnu { get; set; }
 
         [Required]
         public int TemplateId { get; set; }

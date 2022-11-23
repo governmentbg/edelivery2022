@@ -48,7 +48,10 @@
 
                 @if (Model.ForwardedMessage != null)
                 {
-                    @Html.Partial("Partials/_OpenForwardedMessage", Model.ForwardedMessage)
+                    var vd = new ViewDataDictionary();
+                    vd.Add("ForwardingMessageId", Model.MessageId);
+
+                    @Html.Partial("Partials/_OpenForwardedMessage", Model.ForwardedMessage, vd)
                 }
             </div>
         </div>

@@ -438,10 +438,22 @@
   <data name="LabelPersonUpdateNames" xml:space="preserve">
     <value>To change the name, middle name, surname by extracting data from the Civil Registration and Administrative Services (CRAS) (for users with UCN), please click the button "Sync names"!</value>
   </data>
-  <data name="TableHeaderMessageOrn" xml:space="preserve">
-    <value>ORN</value>
+  <data name="HistoryActionBringProfileInForce" xml:space="preserve">
+    <value>Account has been activated from passive state</value>
   </data>
-  <data name="TableHeaderMessageReferencedOrn" xml:space="preserve">
-    <value>ref. ORN</value>
+  <data name="HistoryActionMarkAsNonReadonly" xml:space="preserve">
+    <value>Account has been marked  as non read-only</value>
+  </data>
+  <data name="HistoryActionMarkAsReadonly" xml:space="preserve">
+    <value>Account has been marked as read-only</value>
+  </data>
+  <data name="InfoSmsViberNotificationChoice" xml:space="preserve">
+    <value>Dear users,&lt;br/&gt;If you wish to receive e-mail messages, please tick the boxes above.&lt;br/&gt;
+In case you prefer one of the notification methods - Viber or SMS - you choose only one: either Viber or SMS.&lt;br/&gt;
+If you do not wish to receive messages, do not select any option.&lt;br/&gt;
+In order to receive Viber messages, the application must be installed on your mobile device and you must have an active Viber account.</value>
+  </data>
+  <data name="ProfileChange" xml:space="preserve">
+    <value>Change of profile</value>
   </data>
 </root>

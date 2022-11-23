@@ -3,14 +3,7 @@
 @model OutboxViewModel
 
 @{
-    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
-    new AjaxOptions
-    {
-        HttpMethod = "GET",
-        InsertionMode = System.Web.Mvc.Ajax.InsertionMode.ReplaceWith,
-        UpdateTargetId = "messages-list-content"
-    });
-
+    var options = new PagedListRenderOptions();
     options.Display = PagedListDisplayMode.IfNeeded;
     options.MaximumPageNumbersToDisplay = 6;
     options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
@@ -26,11 +19,11 @@
             "Outbox",
             new
             {
-                page = p,
-                Model.SearchFilter.Title,
-                Model.SearchFilter.Subject,
-                Model.SearchFilter.FromDateAsString,
-                Model.SearchFilter.ToDateAsString
+                subject = Model.SearchFilter.Subject,
+                profile = Model.SearchFilter.Profile,
+                fromDate = Model.SearchFilter.FromDate,
+                toDate = Model.SearchFilter.ToDate,
+                page = p
             }),
         options)
 
@@ -40,8 +33,6 @@
                 <th>@ProfilePage.TableHeaderMessageStatus</th>
                 <th>@ProfilePage.TableHeaderMessageReceiver</th>
                 <th>@ProfilePage.TableHeaderMessageTitle</th>
-                <th>@ProfilePage.TableHeaderMessageOrn</th>
-                <th>@ProfilePage.TableHeaderMessageReferencedOrn</th>
                 <th>@ProfilePage.TableHeaderMessageDateSent</th>
                 @if (Model.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
                 {
@@ -89,12 +80,6 @@
                         </a>
                     </td>
                     <td>
-                        @message.Orn
-                    </td>
-                    <td>
-                        @message.ReferencedOrn
-                    </td>
-                    <td>
                         @message.DateSent.ToLocalDateTime().ToString(SystemConstants.DateTimeFormat)
                     </td>
                     @if (Model.TargetGroupId != (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual)
@@ -130,11 +115,11 @@
             "Outbox",
             new
             {
-                page = p,
-                Model.SearchFilter.Title,
-                Model.SearchFilter.Subject,
-                Model.SearchFilter.FromDateAsString,
-                Model.SearchFilter.ToDateAsString
+                subject = Model.SearchFilter.Subject,
+                profile = Model.SearchFilter.Profile,
+                fromDate = Model.SearchFilter.FromDate,
+                toDate = Model.SearchFilter.ToDate,
+                page = p
             }),
         options)
 

@@ -4,15 +4,7 @@
 @model ListInboxBlobsViewModel
 
 @{
-    var options = PagedListHelper.CustomEnableUnobtrusiveAjaxReplacing(
-    new AjaxOptions
-    {
-        HttpMethod = "POST",
-        InsertionMode = System.Web.Mvc.Ajax.InsertionMode.Replace,
-        UpdateTargetId = "tab_box_2",
-        OnComplete = "triggerTooltip"
-    });
-
+    var options = new PagedListRenderOptions();
     options.Display = PagedListDisplayMode.IfNeeded;
     options.MaximumPageNumbersToDisplay = 6;
     options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
@@ -27,18 +19,19 @@
     @Html.CustomPagedListPager(
         Model.Blobs,
         p => Url.Action(
-            "ListInboxBlobs",
+            "Index",
             new
             {
-                Model.SearchFilter.FileName,
-                Model.SearchFilter.MessageSubject,
-                Model.SearchFilter.FromDate,
-                Model.SearchFilter.ToDate,
+                tab = "inbox",
+                Model.SearchFilter.InboxBlobsFileName,
+                Model.SearchFilter.InboxBlobsMessageSubject,
+                Model.SearchFilter.InboxBlobsFromDate,
+                Model.SearchFilter.InboxBlobsToDate,
                 page = p
             }),
         options)
 
-    <table class="statistics">
+    <table class="statistics" id="listInboxBlobsTable">
         <tbody>
             <tr>
                 <th>Име на файла</th>
@@ -132,13 +125,14 @@
     @Html.CustomPagedListPager(
         Model.Blobs,
         p => Url.Action(
-            "ListInboxBlobs",
+            "Index",
             new
             {
-                Model.SearchFilter.FileName,
-                Model.SearchFilter.MessageSubject,
-                Model.SearchFilter.FromDate,
-                Model.SearchFilter.ToDate,
+                tab = "inbox",
+                Model.SearchFilter.InboxBlobsFileName,
+                Model.SearchFilter.InboxBlobsMessageSubject,
+                Model.SearchFilter.InboxBlobsFromDate,
+                Model.SearchFilter.InboxBlobsToDate,
                 page = p
             }),
         options)
