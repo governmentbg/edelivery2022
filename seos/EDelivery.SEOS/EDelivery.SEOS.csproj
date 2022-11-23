@@ -309,7 +309,6 @@
     <EmbeddedResource Include="Resources\Xsd\xmldsig-core-schema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Service References\EDeliveryAS4Node\BackendService_1_1.wsdl" />
     <None Include="Service References\EDeliveryAS4Node\EDelivery.SEOS.EDeliveryAS4Node.errorResultImpl.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -337,6 +336,7 @@
     <None Include="Service References\EDeliveryAS4Node\EDelivery.SEOS.EDeliveryAS4Node.submitMessageResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\EDeliveryAS4Node\WebServicePlugin.wsdl" />
     <None Include="Service References\EGovEndpoint\EgovEndpoint.wsdl" />
     <None Include="Service References\EGovRegstry\EDelivery.SEOS.EGovRegstry.EGovMessageDir.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -379,6 +379,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Service References\EDeliveryAS4Node\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -390,13 +396,6 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

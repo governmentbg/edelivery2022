@@ -160,7 +160,7 @@ namespace EDelivery.SEOS.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Неуспешен – Грешка при подателя. Посочено ЕИК на получател в поле DocAttentionTo е грешно или в липсва такъв профил в Системата за сигурно електронно връчване.
+        ///   Looks up a localized string similar to Неуспешен – Грешка при подателя. Посоченият ЕИК на получател в поле Recipient е грешен или липсва такъв профил в Системата за сигурно електронно връчване.
         /// </summary>
         internal static string MissingIdentityForReceiverEIK {
             get {
@@ -169,7 +169,7 @@ namespace EDelivery.SEOS.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Неуспешен – Грешка при подателя. Не е посочено ЕИК на получател в поле DocAttentionTo.
+        ///   Looks up a localized string similar to Неуспешен – Грешка при подателя. Не е посочен ЕИК на получател в поле Recipient.
         /// </summary>
         internal static string MissingReceiverEIK {
             get {

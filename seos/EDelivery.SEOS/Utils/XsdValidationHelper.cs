@@ -8,6 +8,8 @@ namespace EDelivery.SEOS.Utils
 {
     public class XsdValidationHelper
     {
+        private static XmlSchemaSet schemaSet;
+
         private string Message { get; set; }
 
         private ILog Logger { get; set; }
@@ -15,6 +17,40 @@ namespace EDelivery.SEOS.Utils
         public bool IsValid { get; protected set; }
 
         public string Error { get; protected set; }
+
+        static XsdValidationHelper()
+        {
+            schemaSet = new XmlSchemaSet();
+
+            Add(
+                schemaSet,
+                "http://schemas.egov.bg/messaging/v1",
+                "EGovMessaging.xsd");
+            Add(
+                schemaSet,
+                "http://www.w3.org/2000/09/xmldsig#",
+                "xmldsig-core-schema.xsd");
+            Add(
+                schemaSet,
+                "http://ereg.egov.bg/segment/0009-000001",
+                "0009-000001_DocumentURI.xsd");
+            Add(
+                schemaSet,
+                "http://ereg.egov.bg/value/0008-000002",
+                "0008-000002_RegisterIndex.xsd");
+            Add(
+                schemaSet,
+                "http://ereg.egov.bg/value/0008-000003",
+                "0008-000003_DocumentSequenceNumber.xsd");
+            Add(
+                schemaSet,
+                "http://ereg.egov.bg/value/0008-000004",
+                "0008-000004_DocumentReceiptOrSigningDate.xsd");
+            Add(
+                schemaSet,
+                "http://ereg.egov.bg/value/0008-000001",
+                "0008-000001_BatchNumber.xsd");
+        }
 
         public XsdValidationHelper(
             string message, 
@@ -27,40 +63,10 @@ namespace EDelivery.SEOS.Utils
 
         public (bool IsValid, string Error) Validate()
         {
-            XmlSchemaSet schemaSet = new XmlSchemaSet();
-            Add(
-                schemaSet, 
-                "http://schemas.egov.bg/messaging/v1", 
-                "EGovMessaging.xsd");
-            Add(
-                schemaSet, 
-                "http://www.w3.org/2000/09/xmldsig#", 
-                "xmldsig-core-schema.xsd");
-            Add(
-                schemaSet, 
-                "http://ereg.egov.bg/segment/0009-000001", 
-                "0009-000001_DocumentURI.xsd");
-            Add(
-                schemaSet, 
-                "http://ereg.egov.bg/value/0008-000002", 
-                "0008-000002_RegisterIndex.xsd");
-            Add(
-                schemaSet, 
-                "http://ereg.egov.bg/value/0008-000003", 
-                "0008-000003_DocumentSequenceNumber.xsd");
-            Add(
-                schemaSet, 
-                "http://ereg.egov.bg/value/0008-000004", 
-                "0008-000004_DocumentReceiptOrSigningDate.xsd");
-            Add(
-                schemaSet, 
-                "http://ereg.egov.bg/value/0008-000001", 
-                "0008-000001_BatchNumber.xsd");
-
             var doc = new XmlDocument();
             doc.LoadXml(this.Message);
             doc.Schemas.Add(schemaSet);
-            doc.Validate(Validation);
+            doc.Validate(this.Validation);
 
             return (this.IsValid, this.Error);
         }

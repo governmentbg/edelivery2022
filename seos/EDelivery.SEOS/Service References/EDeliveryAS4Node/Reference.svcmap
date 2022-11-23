@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="da9a484d-5d2f-4618-b0f9-102780b2df9b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f703b65d-2f3e-4325-ad65-87058dc8e67f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://10.10.60.51:8080/domibus/services/backend?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://172.23.151.80/domibus/services/wsplugin?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="BackendService_1_1.wsdl" MetadataType="Wsdl" ID="6a0fe1cd-6551-437f-89c7-5aaa4f0ee13d" SourceId="1" SourceUrl="http://10.10.60.51:8080/domibus/services/backend?wsdl" />
+    <MetadataFile FileName="WebServicePlugin.wsdl" MetadataType="Wsdl" ID="bc725264-2f30-4508-90d5-24ee744a1d49" SourceId="1" SourceUrl="https://172.23.151.80/domibus/services/wsplugin?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

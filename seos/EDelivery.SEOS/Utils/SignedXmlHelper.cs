@@ -81,7 +81,6 @@ namespace EDelivery.SEOS.Utils
         public static bool ValidateXmlSignature(XmlDocument xmlDocument, out string certSerialNumber)
         {
             certSerialNumber = "";
-            var check = false;
 
             var signedXml = new SignedXml(xmlDocument);
 
@@ -96,15 +95,17 @@ namespace EDelivery.SEOS.Utils
 
             signedXml.LoadXml((XmlElement)nodeSignatureList[0]);
 
-            var certificate = new X509Certificate2();
-            var strCertificateBase64 = nodeCertList[0].InnerText;
-            certificate.Import(Convert.FromBase64String(strCertificateBase64));
+            using (var certificate = new X509Certificate2())
+            {
+                var strCertificateBase64 = nodeCertList[0].InnerText;
+                certificate.Import(Convert.FromBase64String(strCertificateBase64));
 
-            var alg = (RSACryptoServiceProvider)certificate.PublicKey.Key;
-            check = signedXml.CheckSignature(alg);
-            certSerialNumber = certificate.SerialNumber;
+                var alg = (RSACryptoServiceProvider)certificate.PublicKey.Key;
+                var check = signedXml.CheckSignature(alg);
+                certSerialNumber = certificate.SerialNumber;
 
-            return check;
+                return check;
+            }
         }
 
         /// <summary>

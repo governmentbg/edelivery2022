@@ -11,14 +11,52 @@ namespace EDelivery.SEOS.MessagesTypes
     {
         public MessageCreationResult Receive(Message requestMessage, ILog logger)
         {
-            var docGuid = requestMessage.GetDocumentGuid();
-            if (docGuid == Guid.Empty)
+            try
             {
-                var settings = MapperHelper.Mapping.Map<Message, MessageCreationSettings>(requestMessage);
+                var senderGuid = Guid.Parse(requestMessage.Header.Sender.GUID);
+                var sender = DatabaseQueries.GetRegisteredEntity(senderGuid);
+                if (sender == null)
+                {
+                    throw new ApplicationException(Resources.Resource.InvalidSender);
+                }
+
+                var docGuid = requestMessage.GetDocumentGuid();
+                if (docGuid == Guid.Empty)
+                {
+                    throw new ApplicationException(Resources.Resource.ErrorDocumentIsNotFound);
+                }
+
+                var seosMessage = DatabaseQueries.GetReceivedMessageByDocId(
+                    docGuid,
+                    sender.Id);
+
+                if (seosMessage == null)
+                {
+                    throw new ApplicationException(
+                        ErrorsHelper.Describe(Resources.Resource.ErrorDocumentIsNotFound, docGuid));
+                }
+
+                var item = requestMessage.Body.Item as DocumentStatusResponseType;
+                var result = new SubmitStatusRequestResult
+                {
+                    Error = String.Empty,
+                    Status = item != null
+                    ? item.DocRegStatus
+                    : DocumentStatusType.DS_NOT_FOUND,
+                    StatusResponse = item
+                };
+                DatabaseQueries.ApplySentDocumentStatus(seosMessage.Id, result);
+
+                return MessageCreationResult.Empty;
+            }
+            catch (Exception ex)
+            {
+                var settings = MapperHelper.Mapping
+                    .Map<Message, MessageCreationSettings>(requestMessage);
                 var response = MsgError.Create(settings,
-                        ErrorKindType.ERR_EXTERNAL,
-                        Resources.Resource.ErrorDocumentIsNotFound,
-                        logger);
+                    ErrorKindType.ERR_EXTERNAL,
+                    ErrorsHelper.Describe(Resources.Resource.ErrorInReceiver, ex),
+                    logger);
 
                 return new MessageCreationResult
                 {
@@ -26,36 +64,6 @@ namespace EDelivery.SEOS.MessagesTypes
                     Type = MessageType.MSG_Error
                 };
             }
-
-            var seosMessage = DatabaseQueries.GetMessageByDocId(docGuid);
-
-            if (seosMessage == null)
-            {
-                var settings = MapperHelper.Mapping.Map<Message, MessageCreationSettings>(requestMessage);
-                var response = MsgError.Create(settings,
-                            ErrorKindType.ERR_EXTERNAL,
-                            ErrorsHelper.Describe(Resources.Resource.ErrorDocumentIsNotFound, docGuid),
-                            logger);
-
-                return new MessageCreationResult
-                {
-                    Result = response,
-                    Type = MessageType.MSG_Error
-                };
-            }
-
-            var item = requestMessage.Body.Item as DocumentStatusResponseType;
-            var result = new SubmitStatusRequestResult
-            {
-                Error = String.Empty,
-                Status = item != null
-                ? item.DocRegStatus
-                : DocumentStatusType.DS_NOT_FOUND,
-                StatusResponse = item
-            };
-            DatabaseQueries.ApplySentDocumentStatus(seosMessage.Id, result);
-
-            return MessageCreationResult.Empty;
         }
 
         public static string Create(

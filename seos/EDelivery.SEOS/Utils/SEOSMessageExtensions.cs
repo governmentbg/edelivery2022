@@ -1,9 +1,10 @@
-﻿using EDelivery.SEOS.DataContracts;
-using log4net;
-using System;
+﻿using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using EDelivery.SEOS.DataContracts;
+using log4net;
+
 
 namespace EDelivery.SEOS.Utils
 {
@@ -32,20 +33,25 @@ namespace EDelivery.SEOS.Utils
         {
             try
             {
-                string str;
-                using (var stw = new Utf8StringWriter())
-                {
-                    using (var xw = XmlWriter.Create(stw, new XmlWriterSettings() { Encoding = System.Text.Encoding.UTF8 }))
-                    {
-                        var serializer = new XmlSerializer(typeof(Message), "http://schemas.egov.bg/messaging/v1");
-                        serializer.Serialize(xw, message);
+                var xmlNamespace = "http://schemas.egov.bg/messaging/v1";
 
-                    }
-                    str = stw.ToString();
+                var settings = new XmlWriterSettings
+                {
+                    Encoding = System.Text.Encoding.UTF8
+                };
+
+                using (var stw = new Utf8StringWriter())
+                using (var xw = XmlWriter.Create(stw, settings))
+                {
+                    var serializer = new XmlSerializer(typeof(Message), xmlNamespace);
+                    serializer.Serialize(xw, message);
+                    xw.Flush();
+                    stw.Flush();
+
+                    var xml = new XmlDocument();
+                    xml.LoadXml(stw.ToString());
+                    return xml;
                 }
-                var xml = new XmlDocument();
-                xml.LoadXml(str);
-                return xml;
             }
             catch (Exception ex)
             {
@@ -59,9 +65,12 @@ namespace EDelivery.SEOS.Utils
         {
             try
             {
-                XmlSerializer des = new XmlSerializer(typeof(Message));
-                var resultObj = (Message)des.Deserialize(new StringReader(message));
-                return resultObj;
+                using (var sr = new StringReader(message))
+                {
+                    XmlSerializer des = new XmlSerializer(typeof(Message));
+                    var resultObj = (Message)des.Deserialize(sr);
+                    return resultObj;
+                }
             }
             catch (Exception ex)
             {
