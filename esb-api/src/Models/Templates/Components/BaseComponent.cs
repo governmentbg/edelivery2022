@@ -17,7 +17,12 @@ namespace ED.EsbApi;
 [JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
 [KnownType(typeof(CheckboxComponent))]
 [KnownType(typeof(FileComponent))]
-[KnownType(typeof(ValueComponent))]
+[KnownType(typeof(DateTimeComponent))]
+[KnownType(typeof(HiddenComponent))]
+[KnownType(typeof(SelectComponent))]
+[KnownType(typeof(TextAreaComponent))]
+[KnownType(typeof(TextFieldComponent))]
+[KnownType(typeof(MarkdownComponent))]// TODO: https://makolyte.com/csharp-deserialize-json-to-a-derived-type/
 public abstract record BaseComponent(
     Guid Id,
     string Label,

@@ -22,6 +22,8 @@ public record CodeMessageSendDO(
     string Identifier,
     string Email,
     string Phone,
-    string Subject, // TODO: orn
+    string Subject,
     string Body,
     Dictionary<Guid, int[]> Blobs);
+
+// TODO: add validator

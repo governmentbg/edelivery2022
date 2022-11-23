@@ -10,7 +10,7 @@ public static class EsbAuthClaimTypes
 {
     public const string OId = "urn:esb:oid";
     public const string ClientId = "urn:esb:client_id";
-    public const string RepresentedPersonId = "urn:esb:represented_person_id";
+    public const string RepresentedProfileIdentifier = "urn:esb:represented_profile_identifier";
     public const string OperatorId = "urn:esb:operator_id";
 
     public const string LoginId = "urn:esb:login_id";

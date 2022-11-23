@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using static ED.DomainServices.Esb.Esb;
 
 namespace ED.EsbApi;
@@ -13,30 +12,26 @@ namespace ED.EsbApi;
 /// </summary>
 /// <param name="RecipientProfileIds">Списък идентификатори на получатели</param>
 /// <param name="Subject">Заглавие на съобщението</param>
-/// <param name="ReferencedOrn">Към ORN</param>
-/// <param name="AdditionalIdentifier">Допълнителен идентификатор на съобщение</param>
+/// <param name="Rnu">Референтен номер на услуга (РНУ)</param>
 /// <param name="TemplateId">Шаблон на съобщението</param>
-/// <param name="Fields">Списък с полетата и техните стойности в шаблона на съобщението, изключвайки прикачените документи, във формат (Идентификатор на поле, Стойност)</param>
-/// <param name="Blobs">Списък с файловите полета в шаблона на съобщението във формат (Идентификатор на файлово поле, Стойност от хранилището)</param>
-/// <param name="ForwardedMessageId">Идентификатор на препратеното съобщение</param>
+/// <param name="Fields">Списък с полетата и техните стойности в шаблона на съобщението във формат (Идентификатор на поле, Стойност)</param>
 public record MessageSendDO(
     int[] RecipientProfileIds,
     string Subject,
-    string? ReferencedOrn,
-    string? AdditionalIdentifier,
+    string? Rnu,
     int TemplateId,
-    Dictionary<Guid, string?> Fields,
-    Dictionary<Guid, int[]> Blobs,
-    int? ForwardedMessageId);
+    Dictionary<Guid, object?> Fields);
 
 public class MessageSendDOValidator : AbstractValidator<MessageSendDO>
 {
     private readonly HttpContext httpContext;
     private readonly EsbClient esbClient;
+    private readonly ITemplateService templateService;
 
     public MessageSendDOValidator(
         IHttpContextAccessor httpContextAccessor,
-        EsbClient esbClient)
+        EsbClient esbClient,
+        ITemplateService templateService)
     {
         if (httpContextAccessor.HttpContext == null)
         {
@@ -45,10 +40,11 @@ public class MessageSendDOValidator : AbstractValidator<MessageSendDO>
 
         this.httpContext = httpContextAccessor.HttpContext;
         this.esbClient = esbClient;
+        this.templateService = templateService;
 
         this.RuleFor(x => x.RecipientProfileIds).NotEmpty();
         this.RuleFor(x => x.RecipientProfileIds)
-            .MustAsync(async (profileIds, ct) =>
+            .MustAsync(async (it, profileIds, context, ct) =>
             {
                 int profileId = this.httpContext.User.GetAuthenticatedUserProfileId();
 
@@ -68,25 +64,18 @@ public class MessageSendDOValidator : AbstractValidator<MessageSendDO>
             })
             .WithMessage("Can not send to recipients");
         this.RuleFor(x => x.Subject).NotEmpty();
-        this.RuleFor(x => new { x.TemplateId, x.Fields, x.Blobs })
+        this.RuleFor(x => new { x.TemplateId, x.Fields })
             .MustAsync(async (compose, ct) =>
             {
-                DomainServices.Esb.GetTemplateResponse resp =
-                   await this.esbClient.GetTemplateAsync(
-                       new DomainServices.Esb.GetTemplateRequest
-                       {
-                           TemplateId = compose.TemplateId,
-                       },
-                       cancellationToken: ct);
-
-                List<BaseComponent> components =
-                    JsonConvert.DeserializeObject<List<BaseComponent>>(
-                        resp.Result.Content,
-                        new TemplateComponentConverter())
-                        ?? new List<BaseComponent>();
+                // TODO: unfinished validation
+                IList<BaseComponent> components =
+                    await templateService.GetTemplateComponentsAsync(
+                        compose.TemplateId,
+                        ct);
 
                 foreach (var field in compose.Fields)
                 {
+                    // TODO: switch for each component type
                     var match = components.FirstOrDefault(e => e.Id == field.Key);
 
                     if (match == null)
@@ -94,13 +83,11 @@ public class MessageSendDOValidator : AbstractValidator<MessageSendDO>
                         return false;
                     }
 
-                    if (match.IsRequired && string.IsNullOrEmpty(field.Value))
+                    if (match.IsRequired && field.Value == null)
                     {
                         return false;
                     }
                 }
-
-                // TODO: files and their owner?
 
                 return true;
             })

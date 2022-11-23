@@ -12,9 +12,7 @@ namespace ED.EsbApi;
 /// <param name="SenderLoginName">Наименование на потребител, изпратил съобщението</param>
 /// <param name="Recipients">Получатели като текст</param>
 /// <param name="Url">Url за преглед на съобщението в ССЕВ</param>
-/// <param name="Orn">Референтен номер на операция</param>
-/// <param name="ReferencedOrn">Към ORN</param>
-/// <param name="AdditionalIdentifier">Допълнителен идентификатор на съобщение</param>
+/// <param name="Rnu">Референтен номер на услуга (РНУ)</param>
 public record OutboxDO(
     int MessageId,
     DateTime DateSent,
@@ -23,6 +21,4 @@ public record OutboxDO(
     string SenderLoginName,
     string Recipients,
     string Url,
-    string? Orn,
-    string? ReferencedOrn,
-    string? AdditionalIdentifier);
+    string? Rnu);

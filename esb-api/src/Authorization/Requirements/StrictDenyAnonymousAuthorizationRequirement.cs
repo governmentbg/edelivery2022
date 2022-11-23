@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ED.EsbApi;
 
-public class FailAnonymousAuthorizationRequirement : IAuthorizationRequirement
+public class StrictDenyAnonymousAuthorizationRequirement : IAuthorizationRequirement
 {
 }
 
-public class FailAnonymousAuthorizationRequirementHandler : AuthorizationHandler<FailAnonymousAuthorizationRequirement>
+public class StrictDenyAnonymousAuthorizationRequirementHander : AuthorizationHandler<StrictDenyAnonymousAuthorizationRequirement>
 {
     protected override Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
-        FailAnonymousAuthorizationRequirement requirement)
+        StrictDenyAnonymousAuthorizationRequirement requirement)
     {
         var user = context.User;
         var userIsAnonymous =

@@ -8,5 +8,6 @@ public enum ComponentType
     datetime,
     checkbox,
     select,
-    file
+    file,
+    markdown
 }

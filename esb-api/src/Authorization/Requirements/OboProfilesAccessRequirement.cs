@@ -6,22 +6,22 @@ using static ED.DomainServices.Esb.Esb;
 
 namespace ED.EsbApi;
 
-public class ProfilesOnBehalfOfRequirement : IAuthorizationRequirement
+public class OboProfilesAccessRequirement : IAuthorizationRequirement
 {
 }
 
-public class ProfilesOnBehalfOfRequirementHandler : AuthorizationHandler<ProfilesOnBehalfOfRequirement>
+public class OboProfilesAccessRequirementHandler : AuthorizationHandler<OboProfilesAccessRequirement>
 {
     private readonly HttpContext httpContext;
     private readonly EsbClient esbClient;
 
-    public ProfilesOnBehalfOfRequirementHandler(
+    public OboProfilesAccessRequirementHandler(
         IHttpContextAccessor httpContextAccessor,
         EsbClient esbClient)
     {
         if (httpContextAccessor.HttpContext == null)
         {
-            throw new Exception($"'{nameof(ProfilesOnBehalfOfRequirementHandler)}' called outside of a request. IHttpContextAccessor.HttpContext is null!");
+            throw new Exception($"'{nameof(OboProfilesAccessRequirementHandler)}' called outside of a request. IHttpContextAccessor.HttpContext is null!");
         }
 
         this.httpContext = httpContextAccessor.HttpContext;
@@ -30,7 +30,7 @@ public class ProfilesOnBehalfOfRequirementHandler : AuthorizationHandler<Profile
 
     protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
-        ProfilesOnBehalfOfRequirement requirement)
+        OboProfilesAccessRequirement requirement)
     {
         int profileId = context.User.GetAuthenticatedUserProfileId();
 

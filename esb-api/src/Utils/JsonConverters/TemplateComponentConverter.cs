@@ -7,6 +7,8 @@ namespace ED.EsbApi;
 
 public class TemplateComponentConverter : JsonConverter
 {
+    private const string OptionSeparator = "|";
+
     public override object? ReadJson(
         JsonReader reader,
         Type objectType,
@@ -77,7 +79,7 @@ public class TemplateComponentConverter : JsonConverter
                         bool.Parse(dict["IsRequired"]!),
                         dict["Value"],
                         dict["Url"],
-                        dict["Options"]?.Split(",", StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>());
+                        dict["Options"]?.Split(OptionSeparator, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>());
                     break;
                 case ComponentType.file:
                     component = new FileComponent(
@@ -88,6 +90,15 @@ public class TemplateComponentConverter : JsonConverter
                         int.Parse(dict["MaxSize"]!),
                         dict["AllowedExtensions"]!,
                         int.Parse(dict["Instances"]!));
+                    break;
+                case ComponentType.markdown:
+                    component = new MarkdownComponent(
+                        Guid.Parse(dict["Id"]!),
+                        dict["Label"]!,
+                        bool.Parse(dict["IsEncrypted"]!),
+                        bool.Parse(dict["IsRequired"]!),
+                        dict["Value"],
+                        dict["PdfValue"]);
                     break;
                 default:
                     throw new Exception("Unsupported template field");

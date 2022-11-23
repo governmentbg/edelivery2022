@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Middlewares\**" />
+    <Content Remove="Middlewares\**" />
+    <EmbeddedResource Remove="Middlewares\**" />
+    <None Remove="Middlewares\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\esb.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
       <Link>Protos\esb.proto</Link>
     </Protobuf>

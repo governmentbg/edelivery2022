@@ -18,7 +18,7 @@ public class TemplatesController : ControllerBase
     /// <summary>
     /// Връща списък с шаблоните на съобщението, до които профила има достъп
     /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize]
     [HttpGet("")]
     [ProducesResponseType(typeof(List<TemplateDO>), StatusCodes.Status200OK)]
@@ -44,9 +44,9 @@ public class TemplatesController : ControllerBase
     }
 
     /// <summary>
-    /// Връща профил по идентификатор (ЕГН/ЛНЧ/ЕИК) в целева група
+    /// Връща данните за шаблон на съобщение
     /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize(Policy = Policies.TemplateAccess)]
     [HttpGet("{templateId:int}")]
     [ProducesResponseType(typeof(TemplateDetailsDO), StatusCodes.Status200OK)]
@@ -77,7 +77,7 @@ public class TemplatesController : ControllerBase
             JsonConvert.DeserializeObject<List<BaseComponent>>(
                 resp.Result.Content,
                 new TemplateComponentConverter())
-                ?? new List<BaseComponent>();
+                    ?? new List<BaseComponent>();
 
         TemplateDetailsDO result = new(
             resp.Result.TemplateId,

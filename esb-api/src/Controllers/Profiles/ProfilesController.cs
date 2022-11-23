@@ -17,7 +17,7 @@ public class ProfilesController : ControllerBase
     /// <summary>
     /// Връща списък с активните профили в целева група
     /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize(Policy = Policies.ProfilesTargetGroupAccess)]
     [HttpGet("")]
     [ProducesResponseType(typeof(TableResultDO<ProfileDO>), StatusCodes.Status200OK)]
@@ -46,29 +46,31 @@ public class ProfilesController : ControllerBase
     }
 
     /// <summary>
-    /// Връща профил по идентификатор (ЕГН/ЛНЧ/ЕИК) в целева група
+    /// Връща профил, който може да получава съобщения, по даден идентификатор и шаблон на съобщението
     /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize(Policy = Policies.ProfilesTargetGroupAccess)]
     [HttpGet("search")]
-    [ProducesResponseType(typeof(ProfileSearchDO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProfileDO), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> SearchByIdentifierAsync(
+    public async Task<IActionResult> SearchAsync(
         [FromServices] EsbClient esbClient,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
-        [FromQuery, BindRequired] string seachProfileIdentifier,
+        [FromQuery, BindRequired] string identifier,
+        [FromQuery] int? templateId,
         [FromQuery, BindRequired] int targetGroupId,
         CancellationToken ct)
     {
-        DomainServices.Esb.GetTargetGroupProfileByIdentifierResponse resp =
-            await esbClient.GetTargetGroupProfileByIdentifierAsync(
-                new DomainServices.Esb.GetTargetGroupProfileByIdentifierRequest
+        DomainServices.Esb.SearchTargetGroupProfilesResponse resp =
+            await esbClient.SearchTargetGroupProfilesAsync(
+                new DomainServices.Esb.SearchTargetGroupProfilesRequest
                 {
+                    Identifier = identifier,
+                    TemplateId = templateId,
                     TargetGroupId = targetGroupId,
-                    Identifier = seachProfileIdentifier,
                 },
                 cancellationToken: ct);
 
@@ -77,50 +79,16 @@ public class ProfilesController : ControllerBase
             return this.NotFound();
         }
 
-        return this.Ok(resp.Result.Adapt<ProfileSearchDO>());
+        return this.Ok(resp.Result.Adapt<ProfileDO>());
     }
 
     /// <summary>
-    /// Връща профил по идентификатор (ЕГН/ЛНЧ/ЕИК) в целева група без ограничения, ако профила може да изпраща от името на чужд профил
-    /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
-    [Authorize(Policy = Policies.ProfilesOnBehalfOf)]
-    [HttpGet("search-on-behalf")]
-    [ProducesResponseType(typeof(ProfileSearchDO), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> SearchOnBehalfByIdentifierAsync(
-        [FromServices] EsbClient esbClient,
-        [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
-        [FromQuery, BindRequired] string seachProfileIdentifier,
-        [FromQuery, BindRequired] int targetGroupId,
-        CancellationToken ct)
-    {
-        DomainServices.Esb.GetProfileByIdentifierResponse resp =
-            await esbClient.GetProfileByIdentifierAsync(
-                new DomainServices.Esb.GetProfileByIdentifierRequest
-                {
-                    Identifier = seachProfileIdentifier,
-                },
-                cancellationToken: ct);
-
-        if (resp.Result == null)
-        {
-            return this.NotFound();
-        }
-
-        return this.Ok(resp.Result.Adapt<ProfileSearchDO>());
-    }
-
-    /// <summary>
-    /// Пасивна регистрация на профил на ЮЛ, с цел получаване на съобщения и нотификации
+    /// Пасивна регистрация на профил на ФЛ, с цел получаване на съобщения и нотификации
     /// </summary>
     /// <param name="profile">Данни за регистрация на профил</param>
     /// <param name="ct"></param>
     /// <returns>Публичен идентификатор на регистрирания профил</returns>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize(Policy = Policies.ProfilesIndividualTargetGroupAccess)]
     [HttpPost("register-individual")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]

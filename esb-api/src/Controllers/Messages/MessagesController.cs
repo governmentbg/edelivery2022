@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using static ED.DomainServices.Esb.Esb;
 
 namespace ED.EsbApi;
@@ -21,8 +22,8 @@ public class MessagesController : ControllerBase
     /// <summary>
     /// Връща списък с получени съобщения
     /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
-    [Authorize(Policy = Policies.ReadInbox)]
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
+    [Authorize]
     [HttpGet("inbox")]
     [ProducesResponseType(typeof(TableResultDO<InboxDO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -52,8 +53,8 @@ public class MessagesController : ControllerBase
     /// <summary>
     /// Връща списък с изпратени съобщения
     /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
-    [Authorize(Policy = Policies.ReadOutbox)]
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
+    [Authorize]
     [HttpGet("outbox")]
     [ProducesResponseType(typeof(TableResultDO<OutboxDO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -84,7 +85,7 @@ public class MessagesController : ControllerBase
     /// Изпращане на съобщение
     /// </summary>
     /// <returns>Публичен идентификатор на изпратеното съобщение</returns>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize(Policy = Policies.SendMessage)]
     [HttpPost("")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
@@ -93,6 +94,7 @@ public class MessagesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> SendAsync(
         [FromServices] EsbClient esbClient,
+        [FromServices] ITemplateService templateService,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
         [FromBody] MessageSendDO message,
         CancellationToken ct)
@@ -100,22 +102,19 @@ public class MessagesController : ControllerBase
         int profileId = this.HttpContext.User.GetAuthenticatedUserProfileId();
         int loginId = this.HttpContext.User.GetAuthenticatedUserLoginId();
 
-        DomainServices.Esb.GetTemplateResponse respTemplate =
-           await esbClient.GetTemplateAsync(
-               new DomainServices.Esb.GetTemplateRequest
-               {
-                   TemplateId = message.TemplateId,
-               },
-               cancellationToken: ct);
+        IList<BaseComponent> components =
+            await templateService.GetTemplateComponentsAsync(
+                message.TemplateId,
+                ct);
 
-        List<BaseComponent> components =
-            JsonConvert.DeserializeObject<List<BaseComponent>>(
-                respTemplate.Result.Content,
-                new TemplateComponentConverter())
-                ?? new List<BaseComponent>();
+        IEnumerable<Guid> fileComponentGuids = components
+            .Where(e => e.Type == ComponentType.file)
+            .Select(e => e.Id);
 
-        int[] blobIds = message.Blobs
-            .SelectMany(e => e.Value)
+        int[] blobIds = message.Fields
+            .Where(e => fileComponentGuids.Contains(e.Key) && e.Value != null)
+            .Select(e => ((JArray)e.Value!).ToObject<int[]>()!)
+            .SelectMany(e => e)
             .Distinct()
             .ToArray();
 
@@ -130,31 +129,11 @@ public class MessagesController : ControllerBase
                 },
                 cancellationToken: ct);
 
-        SystemTemplateUtils.BlobInfo[] blobsInfo =
-            new SystemTemplateUtils.BlobInfo[blobIds.Length];
-
-        for (int i = 0; i < blobsInfo.Length; i++)
-        {
-            int blobId = blobIds[i];
-
-            Guid matchFieldId = message.Blobs
-                .First(e => e.Value.Contains(blobId))
-                .Key;
-
-            var matchBlob = respBlobsInfo.Result.First(e => e.BlobId == blobId);
-
-            blobsInfo[i] = new SystemTemplateUtils.BlobInfo(
-                matchFieldId,
-                matchBlob.FileName,
-                matchBlob.HashAlgorithm,
-                matchBlob.Hash, Convert.ToUInt64(matchBlob.Size));
-        }
-
         (string body, string metaFields) =
             SystemTemplateUtils.GetNewMessageBodyJson(
                 components,
                 message.Fields,
-                blobsInfo);
+                respBlobsInfo.Result.ToArray());
 
         DomainServices.Esb.SendMessageResponse resp =
             await esbClient.SendMessageAsync(
@@ -169,108 +148,7 @@ public class MessagesController : ControllerBase
                     SenderViaLoginId = null,
                     TemplateId = message.TemplateId,
                     Subject = message.Subject,
-                    ReferencedOrn = message.ReferencedOrn,
-                    AdditionalIdentifier = message.AdditionalIdentifier,
-                    Body = body,
-                    MetaFields = metaFields,
-                    BlobIds = { blobIds },
-                    ForwardedMessageId = message.ForwardedMessageId,
-                },
-                cancellationToken: ct);
-
-        return this.Ok(resp.MessageId);
-    }
-
-    /// <summary>
-    /// Изпращане на съобщение от името на чужд профил
-    /// </summary>
-    /// <returns>Публичен идентификатор на изпратеното съобщение</returns>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
-    // TODO: authorization
-    [HttpPost("on-behalf")]
-    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> SendOnBehalfAsync(
-        [FromServices] EsbClient esbClient,
-        [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
-        [FromBody] MessageSendOnBehalfOfDO message,
-        CancellationToken ct)
-    {
-        int loginId = this.HttpContext.User.GetAuthenticatedUserLoginId();
-
-        DomainServices.Esb.GetTemplateResponse respTemplate =
-           await esbClient.GetTemplateAsync(
-               new DomainServices.Esb.GetTemplateRequest
-               {
-                   TemplateId = message.TemplateId,
-               },
-               cancellationToken: ct);
-
-        List<BaseComponent> components =
-            JsonConvert.DeserializeObject<List<BaseComponent>>(
-                respTemplate.Result.Content,
-                new TemplateComponentConverter())
-                ?? new List<BaseComponent>();
-
-        int[] blobIds = message.Blobs
-            .SelectMany(e => e.Value)
-            .Distinct()
-            .ToArray();
-
-        DomainServices.Esb.GetBlobsInfoResponse respBlobsInfo =
-            await esbClient.GetBlobsInfoAsync(
-                new DomainServices.Esb.GetBlobsInfoRequest
-                {
-                    BlobIds =
-                    {
-                        blobIds
-                    }
-                },
-                cancellationToken: ct);
-
-        SystemTemplateUtils.BlobInfo[] blobsInfo =
-            new SystemTemplateUtils.BlobInfo[blobIds.Length];
-
-        for (int i = 0; i < blobsInfo.Length; i++)
-        {
-            int blobId = blobIds[i];
-
-            Guid matchFieldId = message.Blobs
-                .First(e => e.Value.Contains(blobId))
-                .Key;
-
-            var matchBlob = respBlobsInfo.Result.First(e => e.BlobId == blobId);
-
-            blobsInfo[i] = new SystemTemplateUtils.BlobInfo(
-                matchFieldId,
-                matchBlob.FileName,
-                matchBlob.HashAlgorithm,
-                matchBlob.Hash, Convert.ToUInt64(matchBlob.Size));
-        }
-
-        (string body, string metaFields) =
-            SystemTemplateUtils.GetNewMessageBodyJson(
-                components,
-                message.Fields,
-                blobsInfo);
-
-        DomainServices.Esb.SendMessageResponse resp =
-            await esbClient.SendMessageAsync(
-                new DomainServices.Esb.SendMessageRequest
-                {
-                    RecipientProfileIds =
-                    {
-                        message.RecipientProfileIds
-                    },
-                    SenderProfileId = message.SenderProfileId,
-                    SenderLoginId = loginId,
-                    SenderViaLoginId = loginId,
-                    TemplateId = message.TemplateId,
-                    Subject = message.Subject,
-                    ReferencedOrn = message.ReferencedOrn,
-                    AdditionalIdentifier = message.AdditionalIdentifier,
+                    Rnu = message.Rnu,
                     Body = body,
                     MetaFields = metaFields,
                     BlobIds = { blobIds },
@@ -285,7 +163,8 @@ public class MessagesController : ControllerBase
     /// Изпращане на съобщение с код
     /// </summary>
     /// <returns>Публичен идентификатор на изпратеното съобщение</returns>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
+    [ApiExplorerSettings(IgnoreApi = true)]
     [HttpPost("code")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -297,15 +176,13 @@ public class MessagesController : ControllerBase
         [FromBody] CodeMessageSendDO message,
         CancellationToken ct)
     {
-        // TODO: mind login-profile permissions
-
         throw new NotImplementedException();
     }
 
     /// <summary>
     /// Преглед на получено съобщение
     /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize(Policy = Policies.ReadMessageAsRecipient)]
     [HttpGet("{messageId:int}/open")]
     [ProducesResponseType(typeof(MessageOpenDO), StatusCodes.Status200OK)]
@@ -314,6 +191,7 @@ public class MessagesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> OpenAsync(
         [FromServices] EsbClient esbClient,
+        [FromServices] ITemplateService templateService,
         [FromServices] BlobUrlCreator blobUrlCreator,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
         [FromRoute] int messageId,
@@ -332,23 +210,54 @@ public class MessagesController : ControllerBase
 
         MessageOpenDO result = resp.Message.Adapt<MessageOpenDO>();
 
-        Dictionary<Guid, string?> fields =
-            JsonExtensions.ParseMessageBody(resp.Message.Body);
+        IList<BaseComponent> components =
+          await templateService.GetTemplateComponentsAsync(
+              result.TemplateId,
+              ct);
 
-        MessageOpenDOBlob[] newBlobs = new MessageOpenDOBlob[result.Blobs.Length];
-        for (int i = 0; i < result.Blobs.Length; i++)
+        Dictionary<Guid, object?> parsedMessageBody =
+            JsonConvert.DeserializeObject<Dictionary<Guid, object?>>(
+                resp.Message.Body,
+                new MessageBodyConverter(components))
+                    ?? throw new Exception("Invalid message body");
+
+        Dictionary<Guid, object?> fields = new();
+
+        foreach (var item in parsedMessageBody)
         {
-            (string link, DateTime expirationDate) =
-                blobUrlCreator.CreateMessageBlobUrl(
-                    profileId,
-                    messageId,
-                    result.Blobs[i].BlobId);
-
-            newBlobs[i] = result.Blobs[i] with
+            if (item.Value is FileObject[] fos)
             {
-                DownloadLink = link,
-                DownloadLinkExpirationDate = expirationDate,
-            };
+                MessageOpenDOBlob[] blobs = fos
+                    .Select(f =>
+                    {
+                        DomainServices.Esb.GetMessageResponse.Types.Blob blob =
+                            resp.Message.Blobs.FirstOrDefault(e => e.BlobId == f.FileId)
+                            ?? resp.Message.Blobs.First(e =>
+                                f.FileName.ToUpperInvariant().StartsWith(e.FileName.ToUpperInvariant())
+                                    && f.FileHash.ToUpperInvariant().EndsWith(e.Hash.ToUpperInvariant()));
+
+                        (string link, DateTime expirationDate) =
+                            blobUrlCreator.CreateMessageBlobUrl(
+                                profileId,
+                                messageId,
+                                blob.BlobId);
+
+                        MessageOpenDOBlob result = blob.Adapt<MessageOpenDOBlob>() with
+                        {
+                            DownloadLink = link,
+                            DownloadLinkExpirationDate = expirationDate,
+                        };
+
+                        return result;
+                    })
+                    .ToArray();
+
+                fields.Add(item.Key, blobs);
+            }
+            else
+            {
+                fields.Add(item.Key, item.Value);
+            }
         }
 
         if (result.DateReceived.HasValue)
@@ -356,7 +265,6 @@ public class MessagesController : ControllerBase
             return this.Ok(result with
             {
                 Fields = fields,
-                Blobs = newBlobs
             });
         }
 
@@ -384,14 +292,13 @@ public class MessagesController : ControllerBase
             RecipientLogin = new MessageOpenDORecipientLogin(
                 openResp.Result.LoginId,
                 openResp.Result.LoginName),
-            Blobs = newBlobs
         });
     }
 
     /// <summary>
     /// Преглед на изпратено съобщение
     /// </summary>
-    /// <include file='../Documentation.xml' path='Documentation/CommonParams/*'/>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize(Policy = Policies.ReadMessageAsSender)]
     [HttpGet("{messageId:int}/view")]
     [ProducesResponseType(typeof(MessageViewDO), StatusCodes.Status200OK)]
@@ -400,6 +307,7 @@ public class MessagesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> ViewAsync(
         [FromServices] EsbClient esbClient,
+        [FromServices] ITemplateService templateService,
         [FromServices] BlobUrlCreator blobUrlCreator,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
         [FromRoute] int messageId,
@@ -417,29 +325,59 @@ public class MessagesController : ControllerBase
 
         MessageViewDO result = resp.Message.Adapt<MessageViewDO>();
 
-        Dictionary<Guid, string?> fields =
-            JsonExtensions.ParseMessageBody(resp.Message.Body);
+        IList<BaseComponent> components =
+           await templateService.GetTemplateComponentsAsync(
+               result.TemplateId,
+               ct);
 
-        MessageViewDOBlob[] newBlobs = new MessageViewDOBlob[result.Blobs.Length];
-        for (int i = 0; i < result.Blobs.Length; i++)
+        Dictionary<Guid, object?> parsedMessageBody =
+            JsonConvert.DeserializeObject<Dictionary<Guid, object?>>(
+                resp.Message.Body,
+                new MessageBodyConverter(components))
+                    ?? throw new Exception("Invalid message body");
+
+        Dictionary<Guid, object?> fields = new();
+
+        foreach (var item in parsedMessageBody)
         {
-            (string link, DateTime expirationDate) =
-                blobUrlCreator.CreateMessageBlobUrl(
-                    profileId,
-                    messageId,
-                    result.Blobs[i].BlobId);
-
-            newBlobs[i] = result.Blobs[i] with
+            if (item.Value is FileObject[] fos)
             {
-                DownloadLink = link,
-                DownloadLinkExpirationDate = expirationDate,
-            };
+                MessageViewDOBlob[] blobs = fos
+                    .Select(f =>
+                    {
+                        DomainServices.Esb.ViewMessageResponse.Types.Blob blob =
+                            resp.Message.Blobs.FirstOrDefault(e => e.BlobId == f.FileId)
+                            ?? resp.Message.Blobs.First(e =>
+                                f.FileName.ToUpperInvariant().StartsWith(e.FileName.ToUpperInvariant())
+                                    && f.FileHash.ToUpperInvariant().EndsWith(e.Hash.ToUpperInvariant()));
+
+                        (string link, DateTime expirationDate) =
+                            blobUrlCreator.CreateMessageBlobUrl(
+                                profileId,
+                                messageId,
+                                blob.BlobId);
+
+                        MessageViewDOBlob result = blob.Adapt<MessageViewDOBlob>() with
+                        {
+                            DownloadLink = link,
+                            DownloadLinkExpirationDate = expirationDate,
+                        };
+
+                        return result;
+                    })
+                    .ToArray();
+
+                fields.Add(item.Key, blobs);
+            }
+            else
+            {
+                fields.Add(item.Key, item.Value);
+            }
         }
 
         return this.Ok(result with
         {
-            Fields = fields,
-            Blobs = newBlobs
+            Fields = fields
         });
     }
 }

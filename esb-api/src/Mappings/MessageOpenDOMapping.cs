@@ -15,12 +15,9 @@ public class MessageOpenDOMapping : IRegister
             .Map(dest => dest.DateReceived, src => src.DateReceived)
             .Map(dest => dest.RecipientLogin, src => src.RecipientLogin)
             .Map(dest => dest.Subject, src => src.Subject)
-            .Map(dest => dest.Orn, src => src.Orn)
-            .Map(dest => dest.ReferencedOrn, src => src.ReferencedOrn)
-            .Map(dest => dest.AdditionalIdentifier, src => src.AdditionalIdentifier)
+            .Map(dest => dest.Rnu, src => src.Rnu)
             .Map(dest => dest.TemplateId, src => src.TemplateId)
-            .Map(dest => dest.Fields, src => new Dictionary<Guid, string>())
-            .Map(dest => dest.Blobs, src => src.Blobs)
+            .Map(dest => dest.Fields, src => new Dictionary<Guid, object?>())
             .Map(dest => dest.ForwardedMessageId, src => src.ForwardedMessageId);
 
         config.NewConfig<DomainServices.Esb.GetMessageResponse.Types.Blob, MessageOpenDOBlob>()

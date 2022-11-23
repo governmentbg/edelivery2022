@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
@@ -45,20 +46,25 @@ public class EsbAuthHandler : AuthenticationHandler<EsbAuthenticationOptions>
                         OId = headerInfo.OId,
                         ClientId = headerInfo.ClientId,
                         OperatorIdentifier = headerInfo.OperatorId,
-                        RepresentedProfileIdentifier = headerInfo.RepresentedPersonId,
+                        RepresentedProfileIdentifier = headerInfo.RepresentedProfileIdentifier,
                     });
+
+            if (resp.Result == null)
+            {
+                return await Task.FromResult(AuthenticateResult.Fail("No esb user found"));
+            }
 
             Claim[] claims = new Claim[]
             {
-                new Claim(ClaimTypes.NameIdentifier, resp.ProfileId.ToString()),
-                new Claim(EsbAuthClaimTypes.LoginId, resp.LoginId.ToString()),
-                new Claim(EsbAuthClaimTypes.OperatorLoginId, resp.OperatorLoginId?.ToString() ?? string.Empty),
-                new Claim(EsbAuthClaimTypes.RepresentedProfileId, resp.RepresentedProfileId?.ToString() ?? string.Empty),
+                new Claim(ClaimTypes.NameIdentifier, resp.Result.ProfileId.ToString()),
+                new Claim(EsbAuthClaimTypes.LoginId, resp.Result.LoginId.ToString()),
+                new Claim(EsbAuthClaimTypes.OperatorLoginId, resp.Result.OperatorLoginId?.ToString() ?? string.Empty),
+                new Claim(EsbAuthClaimTypes.RepresentedProfileId, resp.Result.RepresentedProfileId?.ToString() ?? string.Empty),
 
                 new Claim(EsbAuthClaimTypes.OId, headerInfo.OId),
                 new Claim(EsbAuthClaimTypes.ClientId, headerInfo.ClientId),
                 new Claim(EsbAuthClaimTypes.OperatorId, headerInfo.OperatorId),
-                new Claim(EsbAuthClaimTypes.RepresentedPersonId, headerInfo.RepresentedPersonId),
+                new Claim(EsbAuthClaimTypes.RepresentedProfileIdentifier, headerInfo.RepresentedProfileIdentifier),
             };
 
             ClaimsIdentity claimsIdentity = new(claims, nameof(EsbAuthHandler));
@@ -80,7 +86,7 @@ public class EsbAuthHandler : AuthenticationHandler<EsbAuthenticationOptions>
     private record HeaderInfo(
         string OId,
         string ClientId,
-        string RepresentedPersonId,
+        string RepresentedProfileIdentifier,
         string OperatorId);
     private HeaderInfo ParseDpMiscinfo(string header)
     {
@@ -109,12 +115,20 @@ public class EsbAuthHandler : AuthenticationHandler<EsbAuthenticationOptions>
             .Select(e => e.Trim())
             .Last();
 
+        string representedProfileIdentifier = string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(representedPersonId))
+        {
+            Match match = Regex.Match(representedPersonId, @"\d+");
+            representedProfileIdentifier = match.Value;
+        }
+
         string operatorId = values[3]
-            .Split(new char[] { '=' })
+            .Split(new char[] { ':' })
             .Select(e => e.Trim())
             .Last();
 
-        return new HeaderInfo(oId, clientId, representedPersonId, operatorId);
+        return new HeaderInfo(oId, clientId, representedProfileIdentifier, operatorId);
     }
 }
 

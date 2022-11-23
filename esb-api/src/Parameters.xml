@@ -15,4 +15,13 @@
       match="/configuration/location/system.webServer/aspNetCore/@stdoutLogFile"
     />
   </parameter>
+
+  <parameter name="SharedSecretDPKey">
+    <parameterEntry
+      kind="XmlFile"
+      scope="Web.config"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__EsbApi__SharedSecretDPKey']/@value"
+      defaultValue=""
+    />
+  </parameter>
 </parameters>
