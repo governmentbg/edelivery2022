@@ -81,6 +81,7 @@ namespace ED.Blobs
             Registration = 2,
             Template = 3,
             PdfStamp = 4,
+            Translation = 5,
         }
 
         public async Task<BlobInfo> UploadProfileBlobFromStreamReaderAsync<T>(
@@ -315,6 +316,63 @@ namespace ED.Blobs
                 BlobUtils.GetHexString(hash),
                 malwareScanStatus,
                 signatureStatus);
+        }
+
+        public async Task UpdateMessageTranslationRequestAsync(
+            int messageTranslationId,
+            long requestId,
+            string targetLanguage,
+            int? targetBlobId,
+            int status,
+            string? errorMessage,
+            CancellationToken ct)
+        {
+            await using SqlConnection connection = new(this.connectionString);
+            await connection.OpenAsync(ct);
+
+            await using SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText =
+                $@"UPDATE mtr
+                SET
+                    mtr.[TargetBlobId] = @targetBlobId,
+                    mtr.[Status] = @status,
+                    mtr.[ErrorMessage] = @errorMessage
+                FROM [dbo].[MessageTranslationRequests] mtr
+                JOIN [dbo].[MessageTranslations] mt
+                    ON mtr.[MessageTranslationId] = mt.[MessageTranslationId]
+                WHERE mtr.[RequestId] = @requestId
+                    AND mt.[MessageTranslationId] = @messageTranslationId
+                    AND mt.[TargetLanguage] = @targetLanguage";
+            cmd.Parameters.AddRange(
+                new[]
+                {
+                    new SqlParameter("requestId", SqlDbType.BigInt)
+                    {
+                        Value = requestId
+                    },
+                    new SqlParameter("messageTranslationId", SqlDbType.Int)
+                    {
+                        Value = messageTranslationId
+                    },
+                    new SqlParameter("targetLanguage", SqlDbType.NVarChar, 4)
+                    {
+                        Value = targetLanguage
+                    },
+                    new SqlParameter("targetBlobId", SqlDbType.Int)
+                    {
+                        Value = (object?)targetBlobId ?? DBNull.Value
+                    },
+                    new SqlParameter("status", SqlDbType.Int)
+                    {
+                        Value = status
+                    },
+                     new SqlParameter("errorMessage", SqlDbType.NVarChar, -1)
+                    {
+                        Value = (object?)errorMessage ?? DBNull.Value
+                    },
+                });
+
+            await cmd.ExecuteNonQueryAsync(ct);
         }
 
         /// <summary>

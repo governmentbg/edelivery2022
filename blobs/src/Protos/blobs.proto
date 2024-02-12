@@ -28,6 +28,7 @@ enum ProfileBlobAccessKeyType {
   REGISTRATION = 2;
   TEMPLATE = 3;
   PDF_STAMP = 4;
+  TRANSLATION = 5;
 }
 
 message UploadProfileBlobRequest {

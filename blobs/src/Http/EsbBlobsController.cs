@@ -56,6 +56,15 @@ namespace ED.Blobs
             [FromServices] IHttpContextAccessor httpContextAccessor,
             CancellationToken ct)
         {
+            if (type != BlobWriter.ProfileBlobAccessKeyType.Temporary
+                && type != BlobWriter.ProfileBlobAccessKeyType.Storage)
+            {
+                return new JsonResult($"Unsupported value '{type}' for {nameof(type)} parameter")
+                {
+                    StatusCode = StatusCodes.Status400BadRequest
+                };
+            }
+
             int profileId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserProfileId();
             int loginId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserLoginId();
 
@@ -102,6 +111,15 @@ namespace ED.Blobs
             [FromServices] IHttpContextAccessor httpContextAccessor,
             CancellationToken ct)
         {
+            if (type != BlobWriter.ProfileBlobAccessKeyType.Temporary
+                && type != BlobWriter.ProfileBlobAccessKeyType.Storage)
+            {
+                return new JsonResult($"Unsupported value '{type}' for {nameof(type)} parameter")
+                {
+                    StatusCode = StatusCodes.Status400BadRequest
+                };
+            }
+
             int representedProfileId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserRepresentedProfileId()
                 ?? throw new ArgumentException($"Invalid authentication header");
             int loginId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserLoginId();

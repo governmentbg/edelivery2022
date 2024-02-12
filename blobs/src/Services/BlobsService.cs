@@ -93,6 +93,7 @@ namespace ED.Blobs
                     ProfileBlobAccessKeyType.Registration => BlobWriter.ProfileBlobAccessKeyType.Registration,
                     ProfileBlobAccessKeyType.Template => BlobWriter.ProfileBlobAccessKeyType.Template,
                     ProfileBlobAccessKeyType.PdfStamp => BlobWriter.ProfileBlobAccessKeyType.PdfStamp,
+                    ProfileBlobAccessKeyType.Translation => BlobWriter.ProfileBlobAccessKeyType.Translation,
                     _ => throw new Exception("Unknown ProfileBlobAccessKeyType"),
                 };
 
