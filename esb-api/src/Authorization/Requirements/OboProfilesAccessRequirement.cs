@@ -32,6 +32,14 @@ public class OboProfilesAccessRequirementHandler : AuthorizationHandler<OboProfi
         AuthorizationHandlerContext context,
         OboProfilesAccessRequirement requirement)
     {
+        int? representedProfileId = context.User.GetAuthenticatedUserRepresentedProfileId();
+
+        if (!representedProfileId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
         int profileId = context.User.GetAuthenticatedUserProfileId();
 
         DomainServices.Esb.CheckProfileOnBehalfOfAccessResponse resp =
@@ -47,7 +55,7 @@ public class OboProfilesAccessRequirementHandler : AuthorizationHandler<OboProfi
         }
         else
         {
-            this.httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Fail();
         }
 
         return;

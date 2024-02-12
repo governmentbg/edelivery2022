@@ -1,7 +1,7 @@
 ﻿namespace ED.EsbApi;
 
 /// <summary>
-/// Документ
+/// Профил
 /// </summary>
 /// <param name="ProfileId">Публичен идентификатор на профил</param>
 /// <param name="Name">Наименование на профил</param>

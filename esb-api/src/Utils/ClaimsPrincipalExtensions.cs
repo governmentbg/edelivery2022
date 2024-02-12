@@ -25,12 +25,19 @@ public static class ClaimsPrincipalExtensions
         return int.Parse(nameIdentifierClaim.Value);
     }
 
-    public static int? GetAuthenticatedUserRepresentedProfileId(
+    public static int GetAuthenticatedUserRepresentedProfileId(
+        this ClaimsPrincipal user)
+    {
+        return user.GetAuthenticatedUserRepresentedProfileIdOrDefault()
+            ?? throw new Exception("User has no representing profile.");
+    }
+
+    public static int? GetAuthenticatedUserRepresentedProfileIdOrDefault(
         this ClaimsPrincipal user)
     {
         if (user.Identity?.IsAuthenticated != true)
         {
-            throw new Exception($"Missing {EsbAuthClaimTypes.RepresentedProfileId} claim");
+            return null;
         }
 
         Claim claim =
@@ -44,9 +51,15 @@ public static class ClaimsPrincipalExtensions
 
     public static int GetAuthenticatedUserLoginId(this ClaimsPrincipal user)
     {
+        return user.GetAuthenticatedUserLoginIdOrDefault()
+            ?? throw new Exception("User has no login.");
+    }
+
+    public static int? GetAuthenticatedUserLoginIdOrDefault(this ClaimsPrincipal user)
+    {
         if (user.Identity?.IsAuthenticated != true)
         {
-            throw new Exception($"Missing {EsbAuthClaimTypes.LoginId} claim");
+            return null;
         }
 
         Claim claim =
@@ -56,17 +69,25 @@ public static class ClaimsPrincipalExtensions
         return int.Parse(claim.Value);
     }
 
-    public static int? GetAuthenticatedUserOperatorLoginId(this ClaimsPrincipal user)
+    public static int GetAuthenticatedUserOperatorLoginId(this ClaimsPrincipal user)
+    {
+       return user.GetAuthenticatedUserOperatorLoginIdOrDefault()
+            ?? throw new Exception("User has no operator.");
+    }
+
+    public static int? GetAuthenticatedUserOperatorLoginIdOrDefault(this ClaimsPrincipal user)
     {
         if (user.Identity?.IsAuthenticated != true)
         {
-            throw new Exception($"Missing {EsbAuthClaimTypes.OperatorLoginId} claim");
+            return null;
         }
 
         Claim claim =
             user.FindFirst(EsbAuthClaimTypes.OperatorLoginId)
                 ?? throw new Exception($"Missing {EsbAuthClaimTypes.OperatorLoginId} claim");
 
-        return int.Parse(claim.Value);
+        return int.TryParse(claim.Value, out int operatorLoginId)
+            ? operatorLoginId
+            : null;
     }
 }

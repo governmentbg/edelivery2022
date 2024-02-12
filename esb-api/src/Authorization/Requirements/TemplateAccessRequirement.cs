@@ -32,7 +32,13 @@ public class TemplateAccessRequirementHandler : AuthorizationHandler<TemplateAcc
         AuthorizationHandlerContext context,
         TemplateAccessRequirement requirement)
     {
-        int profileId = context.User.GetAuthenticatedUserProfileId();
+        int? profileId = context.User.GetAuthenticatedUserProfileIdOrDefault();
+        if (!profileId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
         string? templateIdParam = this.httpContext.GetFromRouteOrQuery("templateId");
         bool isRequirementMet = false;
 
@@ -42,7 +48,7 @@ public class TemplateAccessRequirementHandler : AuthorizationHandler<TemplateAcc
                 await this.esbClient.CheckProfileTemplateAccessAsync(
                     new DomainServices.Esb.CheckProfileTemplateAccessRequest
                     {
-                        ProfileId = profileId,
+                        ProfileId = profileId.Value,
                         TemplateId = templateId,
                     });
 

@@ -22,7 +22,6 @@ public class BlobsController : ControllerBase
     [Authorize]
     [HttpGet("")]
     [ProducesResponseType(typeof(TableResultDO<BlobDO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ListAsync(
         [FromServices] EsbClient esbClient,
@@ -68,12 +67,11 @@ public class BlobsController : ControllerBase
     /// Връща файл от хранилището
     /// </summary>
     /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
-    [Authorize] // TODO: access
+    [Authorize]
     [HttpGet("{blobId:int}")]
-    [ProducesResponseType(typeof(TableResultDO<BlobDO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(BlobDO), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DetailsAsync(
         [FromServices] EsbClient esbClient,
         [FromServices] BlobUrlCreator blobUrlCreator,
@@ -113,12 +111,11 @@ public class BlobsController : ControllerBase
     /// Изтрива файл от хранилището
     /// </summary>
     /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
-    [Authorize] // TODO: access
+    [Authorize]
     [HttpDelete("{blobId:int}")]
-    [ProducesResponseType(typeof(TableResultDO<BlobDO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync(
         [FromServices] EsbClient esbClient,
         [FromServices] BlobUrlCreator blobUrlCreator,
@@ -127,6 +124,20 @@ public class BlobsController : ControllerBase
         CancellationToken ct)
     {
         int profileId = this.HttpContext.User.GetAuthenticatedUserProfileId();
+
+        DomainServices.Esb.CheckStorageBlobResponse resp =
+            await esbClient.CheckStorageBlobAsync(
+                new DomainServices.Esb.CheckStorageBlobRequest
+                {
+                    ProfileId = profileId,
+                    BlobId = blobId,
+                },
+                cancellationToken: ct);
+
+        if (!resp.IsThere)
+        {
+            return this.NotFound();
+        }
 
         _ = await esbClient.DeteleStorageBlobAsync(
             new DomainServices.Esb.DeteleStorageBlobRequest

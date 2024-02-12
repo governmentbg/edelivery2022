@@ -10,10 +10,13 @@ public static class Policies
 
     public const string ReadMessageAsSender = "ReadMessageAsSender";
     public const string ReadMessageAsRecipient = "ReadMessageAsRecipient";
+    public const string ReadForwardedMessageAsRecipient = "ReadForwardedMessageAsRecipient";
     public const string SendMessage = "SendMessage";
 
     public const string OboProfilesAccess = "OboProfilesAccess";
     public const string OboReadInbox = "OboReadInbox";
     public const string OboReadOutbox = "OboReadOutbox";
     public const string OboSendMessage = "OboSendMessage";
+
+    public const string OboStorageAccess = "OboStorageAccess";
 }

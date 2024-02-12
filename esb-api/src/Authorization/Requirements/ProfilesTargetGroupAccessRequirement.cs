@@ -38,7 +38,13 @@ public class ProfilesTargetGroupAccessRequirementHandler : AuthorizationHandler<
         AuthorizationHandlerContext context,
         ProfilesTargetGroupAccessRequirement requirement)
     {
-        int profileId = context.User.GetAuthenticatedUserProfileId();
+        int? profileId = context.User.GetAuthenticatedUserProfileIdOrDefault();
+        if (!profileId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
         string? targetGroupIdParam = this.httpContext.GetFromRouteOrQuery("targetGroupId");
         int targetGroupId;
 
@@ -59,7 +65,7 @@ public class ProfilesTargetGroupAccessRequirementHandler : AuthorizationHandler<
             await this.esbClient.CheckProfileTargetGroupAccessAsync(
                 new DomainServices.Esb.CheckProfileTargetGroupAccessRequest
                 {
-                    ProfileId = profileId,
+                    ProfileId = profileId.Value,
                     TargetGroupId = targetGroupId,
                 });
 

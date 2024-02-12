@@ -32,12 +32,17 @@ public class OboTemplateAccessRequirementHandler : AuthorizationHandler<OboTempl
         AuthorizationHandlerContext context,
         OboTemplateAccessRequirement requirement)
     {
-        int? representedProfileId = this.httpContext.User.GetAuthenticatedUserRepresentedProfileId();
+        int? representedProfileId = this.httpContext.User.GetAuthenticatedUserRepresentedProfileIdOrDefault();
+        if (!representedProfileId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
         string? templateIdParam = this.httpContext.GetFromRouteOrQuery("templateId");
         bool isRequirementMet = false;
 
-        if (representedProfileId.HasValue
-            && int.TryParse(templateIdParam, out int templateId))
+        if (int.TryParse(templateIdParam, out int templateId))
         {
             DomainServices.Esb.CheckProfileTemplateAccessResponse resp =
                 await this.esbClient.CheckProfileTemplateAccessAsync(

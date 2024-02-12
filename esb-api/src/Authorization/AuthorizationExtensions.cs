@@ -79,6 +79,13 @@ public static class AuthorizationExtensions
                         new ReadMessageAsRecipientRequirement()));
 
             opts.AddPolicy(
+                Policies.ReadForwardedMessageAsRecipient,
+                policyBuilder => policyBuilder
+                    .Combine(opts.DefaultPolicy)
+                    .AddRequirements(
+                        new ReadForwardedMessageAsRecipientRequirement()));
+
+            opts.AddPolicy(
                 Policies.OboReadInbox,
                 policyBuilder => policyBuilder
                     .Combine(opts.DefaultPolicy)
@@ -98,6 +105,20 @@ public static class AuthorizationExtensions
                     .Combine(opts.DefaultPolicy)
                     .AddRequirements(
                         new SendMessageRequirement()));
+
+            opts.AddPolicy(
+                Policies.OboSendMessage,
+                policyBuilder => policyBuilder
+                    .Combine(opts.DefaultPolicy)
+                    .AddRequirements(
+                        new OboSendMessageRequirement()));
+
+            opts.AddPolicy(
+                Policies.OboStorageAccess,
+                policyBuilder => policyBuilder
+                    .Combine(opts.DefaultPolicy)
+                    .AddRequirements(
+                        new OboProfilesAccessRequirement()));
         });
 
         services.Scan(scan => scan

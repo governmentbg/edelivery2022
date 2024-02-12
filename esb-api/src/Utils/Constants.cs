@@ -6,4 +6,7 @@ public static class Constants
     public const int LegalEntityTargetGroupId = 2;
     public const int PublicAdministrationTargetGroupId = 3;
     public const int SocialOrganizationTargetGroupId = 4;
+
+    public const int SystemProfileId = 1;
+    public const int SystemLoginId = 1;
 }

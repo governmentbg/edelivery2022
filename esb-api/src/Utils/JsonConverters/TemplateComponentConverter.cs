@@ -88,6 +88,7 @@ public class TemplateComponentConverter : JsonConverter
                         bool.Parse(dict["IsEncrypted"]!),
                         bool.Parse(dict["IsRequired"]!),
                         int.Parse(dict["MaxSize"]!),
+                        int.Parse(dict["ExpirationPeriod"]!),
                         dict["AllowedExtensions"]!,
                         int.Parse(dict["Instances"]!));
                     break;
