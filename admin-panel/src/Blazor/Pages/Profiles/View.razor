@@ -111,6 +111,14 @@
                         </div>
                     }
                     <div class="form-group">
+                        <label>&nbsp;</label>
+                        <label>
+                            <a href="@($"profiles/{ProfileId}/history")">
+                                @Localizer["LinkProfileiHistory"]
+                            </a>
+                        </label>
+                    </div>
+                    <div class="form-group">
                         <label>@Localizer["Status"]</label>
                         <label class="strong">
                             @(profile.IsActive
@@ -445,7 +453,7 @@
                                         </tr>
                                     }
 
-                                    @foreach (var login in profile.Logins)
+                                    @foreach (var login in profile.Logins.OrderByDescending(e => e.AccessGrantedOn))
                                     {
                                         <tr>
                                             <td>

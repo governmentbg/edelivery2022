@@ -74,6 +74,8 @@ namespace ED.AdminPanel.Blazor.Pages.Registrations
 
     public partial class Index
     {
+        [CascadingParameter] private ConnectionInfo ConnectionInfo { get; set; }
+
         [Inject] private Nomenclature.NomenclatureClient NomenclatureClient { get; set; }
 
         [Inject] private Admin.AdminClient AdminClient { get; set; }
@@ -162,7 +164,8 @@ namespace ED.AdminPanel.Blazor.Pages.Registrations
                         Residence = this.model.Residence,
                         TargetGroupId = int.Parse(this.model.TargetGroupId),
                         BlobId = this.model.BlobValue?.BlobId,
-                        AdminUserId = currentUserId
+                        AdminUserId = currentUserId,
+                        Ip = this.ConnectionInfo.RemoteIpAddress,
                     });
 
             if (response.IsSuccessful)

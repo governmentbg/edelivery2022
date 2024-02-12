@@ -300,6 +300,9 @@
   <data name="LegalEntityIdentifier" xml:space="preserve">
     <value>ЕИК</value>
   </data>
+  <data name="LinkProfileiHistory" xml:space="preserve">
+    <value>История на профил</value>
+  </data>
   <data name="MessageConfirmDocumentDelete" xml:space="preserve">
     <value>Сигурни ли сте, че искате да изтриете документа?</value>
   </data>

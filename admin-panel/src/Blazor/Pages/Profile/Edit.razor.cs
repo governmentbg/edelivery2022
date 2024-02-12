@@ -102,7 +102,7 @@ namespace ED.AdminPanel.Blazor.Pages.Profile
 
     public partial class Edit
     {
-        [Inject] private UserManager<IdentityUser<int>> userManager { get; set; }
+        [Inject] private UserManager<IdentityUser<int>> UserManager { get; set; }
 
         [Inject] private Admin.AdminClient AdminClient { get; set; }
 
@@ -159,15 +159,15 @@ namespace ED.AdminPanel.Blazor.Pages.Profile
                 await this.AuthenticationStateHelper
                     .GetAuthenticatedUserClaimPrincipal();
             IdentityUser<int> user =
-                await this.userManager.GetUserAsync(claimsPrincipal);
+                await this.UserManager.GetUserAsync(claimsPrincipal);
 
-            if (await this.userManager.CheckPasswordAsync(user, this.changePasswordModel.OldPassword))
+            if (await this.UserManager.CheckPasswordAsync(user, this.changePasswordModel.OldPassword))
             {
                 await this.AdminClient.ChangePasswordAdminProfileAsync(
                     new ChangePasswordAdminProfileRequest
                     {
                         Id = currentUserId,
-                        PasswordHash = this.userManager.PasswordHasher.HashPassword(
+                        PasswordHash = this.UserManager.PasswordHasher.HashPassword(
                               null,
                               this.changePasswordModel.Password),
                     });

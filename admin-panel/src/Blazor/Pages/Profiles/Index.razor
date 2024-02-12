@@ -2,13 +2,6 @@
 @inherits PagedComponent
 @attribute [Authorize]
 
-@using System.Threading
-@using ED.DomainServices.Admin
-@using Microsoft.Extensions.Primitives
-@inject Admin.AdminClient AdminClient
-@inject IStringLocalizer<Index> Localizer
-@inject AuthenticationStateHelper AuthenticationStateHelper
-
 <Breadcrumb Items="@(
     new Dictionary<string, string>()
     {
@@ -22,25 +15,43 @@
         <div class="content-right">
             <h3>@Localizer["Title"]</h3>
 
-            <form class="width-100" onsubmit="return false;">
-                <div class="form-group">
-                    <label for="IdentifierOrName">@Localizer["IdentifierOrNameLabel"]:</label>
-                    <div style="display: inline-block; width:50%; margin: 0 10px;">
-                        <input class="form-control"
-                               name="IdentifierOrName"
-                               type="text"
-                               @bind="term" />
-                    </div>
-                    <div class="aright">
-                        <button type="submit"
-                                class="btn-primary btn-l"
-                                @onclick="Search"
-                        >
-                            @Localizer["SearchBtn"]
-                        </button>
-                    </div>
+            <EditForm EditContext="@editContext" OnValidSubmit="Search">
+                <DataAnnotationsValidator />
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="@nameof(SearchProfilesModel.Identifier)">
+                                    @Localizer["LabelIdentifier"]
+                                </label>
+                                <div class="form-element">
+                                    <InputText type="text" id="@nameof(SearchProfilesModel.Identifier)" @bind-Value="model.Identifier" />
+                                    <ValidationMessage For="@(() => model.Identifier)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchProfilesModel.NameEmailPhone)">
+                                    @Localizer["LabelNameEmailPhone"]
+                                </label>
+                                <div class="form-element">
+                                    <InputText type="text" id="@nameof(SearchProfilesModel.NameEmailPhone)" @bind-Value="model.NameEmailPhone" />
+                                    <ValidationMessage For="@(() => model.NameEmailPhone)" />
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                    <section class="form-section form-row button-row-right">
+                        <a href="@recordsReportLink"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           download
+                           class="btn btn-border btn-m butright">
+                            @Localizer["BtnExport"]
+                        </a>
+                        <button class="btn-primary btn-l" type="submit">@Localizer["BtnSearch"]</button>
+                    </section>
                 </div>
-            </form>
+            </EditForm>
 
             <Pager Page="@(Page)"
                    PageSize="@PageSize"
@@ -83,7 +94,7 @@
                                 <tr>
                                     <td>
                                         <a href="profiles/@profile.ProfileId">
-                                            @profile.ElectronicSubjectName
+                                            @($"{profile.ElectronicSubjectName} ({profile.Email})")
                                         </a>
                                     </td>
                                     <td>@profile.Identifier</td>
@@ -101,41 +112,3 @@
         </div>
     </div>
 </div>
-
-@code
-{
-    private GetProfileListResponse profiles;
-    private string term;
-
-    protected override void ExtractQueryStringParams()
-    {
-        base.ExtractQueryStringParams();
-        this.term = this.NavigationManager.GetCurrentQueryItem<string>("term");
-    }
-
-    protected override async Task LoadDataAsync(CancellationToken ct)
-    {
-        int currentUserId = await this.AuthenticationStateHelper.GetAuthenticatedUserId();
-
-        this.profiles =
-        await this.AdminClient.GetProfileListAsync(
-            new GetProfileListRequest
-            {
-                AdminUserId = currentUserId,
-                Term = term,
-                Offset = base.Offset,
-                Limit = base.Limit,
-            },
-            cancellationToken: ct);
-    }
-
-    private void Search()
-    {
-        this.NavigationManager.NavigateToSameWithQuery(
-                new Dictionary<string, StringValues>
-                {
-                    { "page", 1.ToString() },
-                    { "term", term }
-                });
-    }
-}

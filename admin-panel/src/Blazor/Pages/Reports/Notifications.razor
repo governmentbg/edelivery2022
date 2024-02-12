@@ -28,14 +28,14 @@
                                     @Localizer["FormFromDate"]<span class="txt-red">*</span>
                                 </label>
                                 <div class="form-element">
-                                    <DateField id="@nameof(SearchNotificationsModel.FromDate)" @bind-Value="model.FromDate" Placeholder=@Constants.DateTimeFormat  />
+                                    <DateField id="@nameof(SearchNotificationsModel.FromDate)" @bind-Value="model.FromDate" Placeholder=@Constants.DateTimeFormat />
                                     <ValidationMessage For="@(() => model.FromDate)" />
                                 </div>
                             </li>
                             <li class="form-row">
                                 <label for="@nameof(SearchNotificationsModel.ToDate)">@Localizer["FormToDate"]<span class="txt-red">*</span></label>
                                 <div class="form-element">
-                                    <DateField id="@nameof(SearchNotificationsModel.ToDate)" @bind-Value="model.ToDate" Placeholder=@Constants.DateTimeFormat  />
+                                    <DateField id="@nameof(SearchNotificationsModel.ToDate)" @bind-Value="model.ToDate" Placeholder=@Constants.DateTimeFormat />
                                     <ValidationMessage For="@(() => model.ToDate)" />
                                 </div>
                             </li>
@@ -101,31 +101,25 @@
                                 else
                                 {
                                     var groupedRecords = records.Result
-                                        .GroupBy(q => q.Type)
-                                        .Select(g => new
-                                        {
-                                            Type = g.Key,
-                                            Sent = g.Sum(sent => sent.Sent),
-                                            Error = g.Sum(error => error.Error),
-                                            Total = g.Sum(all => all.Error + all.Sent)
-                                        })
-                                        .ToList();
+                                    .GroupBy(q => q.Type)
+                                    .Select(g => new
+                                    {
+                                        Type = g.Key,
+                                        Sent = g.Sum(sent => sent.Sent),
+                                        Error = g.Sum(error => error.Error),
+                                        Total = g.Sum(all => all.Error + all.Sent)
+                                    })
+                                    .ToList();
 
                                     var emails = groupedRecords
-                                        .Where(e => e.Type == NotificationType.Email)
-                                        .FirstOrDefault();
+                                    .Where(e => e.Type == NotificationType.Email)
+                                    .FirstOrDefault();
                                     var sms = groupedRecords
-                                        .Where(e => e.Type == NotificationType.Sms)
-                                        .FirstOrDefault();
-                                    var smsDeliveryCheck = groupedRecords
-                                        .Where(e => e.Type == NotificationType.SmsDeliveryCheck)
-                                        .FirstOrDefault();
+                                    .Where(e => e.Type == NotificationType.Sms)
+                                    .FirstOrDefault();
                                     var viber = groupedRecords
-                                        .Where(e => e.Type == NotificationType.Viber)
-                                        .FirstOrDefault();
-                                    var viberDeliveryCheck = groupedRecords
-                                        .Where(e => e.Type == NotificationType.ViberDeliveryCheck)
-                                        .FirstOrDefault();
+                                    .Where(e => e.Type == NotificationType.Viber)
+                                    .FirstOrDefault();
 
                                     <tr>
                                         <td>@(emails?.Type ?? NotificationType.Email)</td>
@@ -136,16 +130,16 @@
 
                                     <tr>
                                         <td>@(sms?.Type ?? NotificationType.Sms)</td>
-                                        <td>@(sms?.Sent ?? 0) (@(smsDeliveryCheck?.Sent ?? 0))</td>
-                                        <td>@(sms?.Error ?? 0) (@(smsDeliveryCheck?.Error ?? 0))</td>
-                                        <td>@(sms?.Total ?? 0) (@(smsDeliveryCheck?.Total ?? 0))</td>
+                                        <td>@(sms?.Sent ?? 0)</td>
+                                        <td>@(sms?.Error ?? 0)</td>
+                                        <td>@(sms?.Total ?? 0)</td>
                                     </tr>
 
                                     <tr>
                                         <td>@(viber?.Type ?? NotificationType.Viber)</td>
-                                        <td>@(viber?.Sent ?? 0) (@(viberDeliveryCheck?.Sent ?? 0))</td>
-                                        <td>@(viber?.Error ?? 0) (@(viberDeliveryCheck?.Error ?? 0))</td>
-                                        <td>@(viber?.Total ?? 0) (@(viberDeliveryCheck?.Total ?? 0))</td>
+                                        <td>@(viber?.Sent ?? 0)</td>
+                                        <td>@(viber?.Error ?? 0)</td>
+                                        <td>@(viber?.Total ?? 0)</td>
                                     </tr>
                                 }
                             }
@@ -188,9 +182,9 @@
                                     @foreach (DateTime day in EachDay(model.FromDate!.Value, model.ToDate!.Value))
                                     {
                                         var email = records.Result
-                                            .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
-                                                && x.Date.ToLocalDateTime().Month == day.Month
-                                                && x.Type == NotificationType.Email);
+                                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
+                                        && x.Date.ToLocalDateTime().Month == day.Month
+                                        && x.Type == NotificationType.Email);
 
                                         <tr>
                                             <td>@day.Date.ToString(Constants.DateTimeFormat)</td>
@@ -201,39 +195,29 @@
                                         </tr>
 
                                         var sms = records.Result
-                                            .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
-                                                && x.Date.ToLocalDateTime().Month == day.Month
-                                                && x.Type == NotificationType.Sms);
-
-                                        var smsDeliveryCheck = records.Result
-                                            .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
-                                                && x.Date.ToLocalDateTime().Month == day.Month
-                                                && x.Type == NotificationType.SmsDeliveryCheck);
+                                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
+                                        && x.Date.ToLocalDateTime().Month == day.Month
+                                        && x.Type == NotificationType.Sms);
 
                                         <tr>
                                             <td>@day.Date.ToString(Constants.DateTimeFormat)</td>
                                             <td>@(sms?.Type ?? NotificationType.Sms)</td>
-                                            <td>@(sms?.Sent ?? 0) (@(smsDeliveryCheck?.Sent ?? 0))</td>
-                                            <td>@(sms?.Error ?? 0) (@(smsDeliveryCheck?.Error ?? 0))</td>
-                                            <td>@((sms?.Error ?? 0) + (sms?.Sent ?? 0)) (@((smsDeliveryCheck?.Error ?? 0) + (smsDeliveryCheck?.Sent ?? 0)))</td>
+                                            <td>@(sms?.Sent ?? 0)</td>
+                                            <td>@(sms?.Error ?? 0)</td>
+                                            <td>@((sms?.Error ?? 0) + (sms?.Sent ?? 0))</td>
                                         </tr>
 
                                         var viber = records.Result
-                                            .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
-                                                && x.Date.ToLocalDateTime().Month == day.Month
-                                                && x.Type == NotificationType.Viber);
-
-                                        var viberDeliveryCheck = records.Result
-                                            .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
-                                                && x.Date.ToLocalDateTime().Month == day.Month
-                                                && x.Type == NotificationType.ViberDeliveryCheck);
+                                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
+                                        && x.Date.ToLocalDateTime().Month == day.Month
+                                        && x.Type == NotificationType.Viber);
 
                                         <tr>
                                             <td>@day.Date.ToString(Constants.DateTimeFormat)</td>
                                             <td>@(viber?.Type ?? NotificationType.Viber)</td>
-                                            <td>@(viber?.Sent ?? 0) (@(viberDeliveryCheck?.Sent ?? 0))</td>
-                                            <td>@(viber?.Error ?? 0) (@(viberDeliveryCheck?.Error ?? 0))</td>
-                                            <td>@((viber?.Error ?? 0) + (viber?.Sent ?? 0)) (@((viberDeliveryCheck?.Error ?? 0) + (viberDeliveryCheck?.Sent ?? 0)))</td>
+                                            <td>@(viber?.Sent ?? 0)</td>
+                                            <td>@(viber?.Error ?? 0)</td>
+                                            <td>@((viber?.Error ?? 0) + (viber?.Sent ?? 0))</td>
                                         </tr>
                                     }
                                 }

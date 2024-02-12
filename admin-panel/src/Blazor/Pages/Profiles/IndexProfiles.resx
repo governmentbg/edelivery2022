@@ -117,31 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DelayedMessages" xml:space="preserve">
-    <value>Забавено връчване</value>
+  <data name="BtnExport" xml:space="preserve">
+    <value>Експорт</value>
   </data>
-  <data name="EForms" xml:space="preserve">
-    <value>Справка еФорми</value>
+  <data name="BtnSearch" xml:space="preserve">
+    <value>Търси</value>
   </data>
-  <data name="Notifications" xml:space="preserve">
-    <value>Справка нотификации</value>
+  <data name="ColumnElectronicSubjectName" xml:space="preserve">
+    <value>Наименование</value>
   </data>
-  <data name="ReceivedMessages" xml:space="preserve">
-    <value>Справка получени съобщения</value>
+  <data name="ColumnIdentifier" xml:space="preserve">
+    <value>Идентификатор</value>
   </data>
-  <data name="SentMessages" xml:space="preserve">
-    <value>Справка изпратени съобщения</value>
+  <data name="ColumnIsActivated" xml:space="preserve">
+    <value>Статус</value>
   </data>
-  <data name="Statistics" xml:space="preserve">
-    <value>Обща статистика</value>
+  <data name="ColumnIsActivated_False" xml:space="preserve">
+    <value>Неактивен</value>
   </data>
-  <data name="Tickets" xml:space="preserve">
-    <value>Справка административни актове</value>
+  <data name="ColumnIsActivated_True" xml:space="preserve">
+    <value>Активен</value>
   </data>
-  <data name="Timestamps" xml:space="preserve">
-    <value>Справка Timestamp заявки</value>
+  <data name="ColumnTargetGroupName" xml:space="preserve">
+    <value>Целева група</value>
+  </data>
+  <data name="LabelIdentifier" xml:space="preserve">
+    <value>Идентификатор</value>
+  </data>
+  <data name="LabelNameEmailPhone" xml:space="preserve">
+    <value>Наименование/имейл/телефон</value>
+  </data>
+  <data name="NoItems" xml:space="preserve">
+    <value>Няма намерени профили.</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Справки</value>
+    <value>Търсене на профил в системата е-Връчване</value>
   </data>
 </root>

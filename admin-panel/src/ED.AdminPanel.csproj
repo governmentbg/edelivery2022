@@ -80,6 +80,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>EditResources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Blazor\Pages\Profiles\HistoryResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HistoryResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Blazor\Pages\Profiles\IndexProfiles.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IndexProfiles.resx</DependentUpon>
+    </Compile>
     <Compile Update="Blazor\Pages\Profile\EditResources.Designer.cs">
       <DependentUpon>EditResources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -140,6 +150,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SentMessagesResources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Blazor\Pages\Reports\TicketsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TicketsResources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Blazor\Pages\Reports\TimestampsResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -180,6 +195,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>CreateEditResources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Blazor\Pages\Templates\IndexTemplates.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IndexTemplates.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\CommonResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -217,6 +237,14 @@
       <LastGenOutput>EditNotificationsModalResources.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\HistoryResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>HistoryResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Profiles\IndexProfiles.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IndexProfiles.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Blazor\Pages\Profile\EditResources.resx">
       <LastGenOutput>EditResources.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -244,6 +272,10 @@
     <EmbeddedResource Update="Blazor\Pages\Registrations\IndexResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IndexResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Reports\TicketsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TicketsResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Blazor\Pages\Reports\TimestampsResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -296,6 +328,10 @@
     <EmbeddedResource Update="Blazor\Pages\Templates\CreateEditResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CreateEditResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Blazor\Pages\Templates\IndexTemplates.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IndexTemplates.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\CommonResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

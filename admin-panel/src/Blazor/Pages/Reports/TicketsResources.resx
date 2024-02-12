@@ -117,31 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DelayedMessages" xml:space="preserve">
-    <value>Забавено връчване</value>
+  <data name="BtnExport" xml:space="preserve">
+    <value>Експорт</value>
   </data>
-  <data name="EForms" xml:space="preserve">
-    <value>Справка еФорми</value>
+  <data name="BtnSearch" xml:space="preserve">
+    <value>Търси</value>
   </data>
-  <data name="Notifications" xml:space="preserve">
-    <value>Справка нотификации</value>
+  <data name="ColumnAll" xml:space="preserve">
+    <value>Справка административни актове за {0}</value>
   </data>
-  <data name="ReceivedMessages" xml:space="preserve">
-    <value>Справка получени съобщения</value>
+  <data name="FormReportDate" xml:space="preserve">
+    <value>Ден</value>
   </data>
-  <data name="SentMessages" xml:space="preserve">
-    <value>Справка изпратени съобщения</value>
+  <data name="LabelDailyActiveProfiles" xml:space="preserve">
+    <value>Активни профили</value>
   </data>
-  <data name="Statistics" xml:space="preserve">
-    <value>Обща статистика</value>
+  <data name="LabelDailyIndividualPenalDecrees" xml:space="preserve">
+    <value>НП - ФЛ</value>
   </data>
-  <data name="Tickets" xml:space="preserve">
-    <value>Справка административни актове</value>
+  <data name="LabelDailyIndividualTickets" xml:space="preserve">
+    <value>Фиш - ФЛ</value>
   </data>
-  <data name="Timestamps" xml:space="preserve">
-    <value>Справка Timestamp заявки</value>
+  <data name="LabelDailyIndividualTotalTickets" xml:space="preserve">
+    <value>Общо (НП + фиш) - ФЛ</value>
+  </data>
+  <data name="LabelDailyLegalEntityPenalDecrees" xml:space="preserve">
+    <value>НП - ЮЛ</value>
+  </data>
+  <data name="LabelDailyLegalEntityTickets" xml:space="preserve">
+    <value>Фиш - ЮЛ</value>
+  </data>
+  <data name="LabelDailyLegalEntityTotalTickets" xml:space="preserve">
+    <value>Общо (НП + фиш) - ЮЛ</value>
+  </data>
+  <data name="LabelDailyNotifications" xml:space="preserve">
+    <value>Нотификации Общо</value>
+  </data>
+  <data name="LabelDailyNotificationsByEmail" xml:space="preserve">
+    <value>Имейл</value>
+  </data>
+  <data name="LabelDailyNotificationsByPhone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="LabelDailyPassiveProfiles" xml:space="preserve">
+    <value>Пасивни профили</value>
+  </data>
+  <data name="LabelDailyReceivedIndividualPenalDecrees" xml:space="preserve">
+    <value>Връчени НП - ФЛ</value>
+  </data>
+  <data name="LabelDailyReceivedIndividualTickets" xml:space="preserve">
+    <value>Връчени Фиш - ФЛ</value>
+  </data>
+  <data name="LabelDailyReceivedLegalEntityPenalDecrees" xml:space="preserve">
+    <value>Връчени НП - ЮЛ</value>
+  </data>
+  <data name="LabelDailyReceivedLegalEntityTickets" xml:space="preserve">
+    <value>Връчени Фиш - ЮЛ</value>
+  </data>
+  <data name="LabelDailyReceivedTickets" xml:space="preserve">
+    <value>Брой връчени през ССЕВ</value>
+  </data>
+  <data name="LabelDailyTickets" xml:space="preserve">
+    <value>Брой получени в ССЕВ</value>
+  </data>
+  <data name="LabelTotalTickets" xml:space="preserve">
+    <value>Брой адм. актове</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Справки</value>
+    <value>Справка административни актове</value>
   </data>
 </root>

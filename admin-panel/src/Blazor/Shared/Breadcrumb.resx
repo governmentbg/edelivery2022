@@ -141,6 +141,9 @@
   <data name="profile" xml:space="preserve">
     <value>Профил</value>
   </data>
+  <data name="profileHistory" xml:space="preserve">
+    <value>История на профил</value>
+  </data>
   <data name="profiles" xml:space="preserve">
     <value>Търсене</value>
   </data>
