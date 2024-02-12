@@ -28,8 +28,9 @@ namespace ED.Domain
             TableResultVO<GetAllowedTemplatesVO> table =
                 await (
                     from t in this.DbContext.Set<Template>()
-                    where t.ArchiveDate == null &&
-                        allowedTemplateIdsQuery.Any(atId => t.TemplateId == atId)
+                    where t.ArchiveDate == null
+                        && t.PublishDate != null
+                        && allowedTemplateIdsQuery.Any(atId => t.TemplateId == atId)
                     select new GetAllowedTemplatesVO(
                         t.TemplateId,
                         t.Name)

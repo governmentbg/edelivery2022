@@ -6,18 +6,24 @@ namespace ED.Domain
 {
     internal record RemoveProfileBlobCommandHandler(
         IUnitOfWork UnitOfWork,
-        IAggregateRepository<Profile> ProfileAggregateRepository)
+        IProfileBlobAccessKeyAggregateRepository ProfileBlobAccessKeyAggregateRepository)
         : IRequestHandler<RemoveProfileBlobCommand>
     {
         public async Task<Unit> Handle(
             RemoveProfileBlobCommand command,
             CancellationToken ct)
         {
-            Profile profile = await this.ProfileAggregateRepository.FindAsync(
+            ProfileBlobAccessKey? profileBlobAccessKey =
+                await this.ProfileBlobAccessKeyAggregateRepository.FindAsync(
                 command.ProfileId,
+                command.BlobId,
+                ProfileBlobAccessKeyType.Storage,
                 ct);
 
-            profile.RemoveBlob(command.BlobId, ProfileBlobAccessKeyType.Storage);
+            if (profileBlobAccessKey != null)
+            {
+                this.ProfileBlobAccessKeyAggregateRepository.Remove(profileBlobAccessKey);
+            }
 
             await this.UnitOfWork.SaveAsync(ct);
 

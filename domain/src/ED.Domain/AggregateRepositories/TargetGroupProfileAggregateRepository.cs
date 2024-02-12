@@ -15,7 +15,9 @@ namespace ED.Domain
             int profileId,
             CancellationToken ct)
         {
-            return this.FindEntityAsync(new object[] { targetGroupId, profileId }, ct);
+            return this.FindEntityAsync(
+                new object[] { targetGroupId, profileId },
+                ct);
         }
     }
 }

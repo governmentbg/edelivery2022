@@ -11,31 +11,21 @@ namespace ED.Domain
         {
         }
 
-        public ProfilesHistory(
+        public static ProfilesHistory CreateInstanceByLogin(
             int profileId,
             ProfileHistoryAction action,
             int actionLogin,
             string? actionDetails,
             string? ipAddress)
-        {
-            this.ProfileId = profileId;
-            this.Action = action;
-            this.ActionLogin = actionLogin;
-            this.ActionDate = DateTime.Now;
-            this.ActionDetails = actionDetails;
-            this.IPAddress = ipAddress;
-        }
-
-        public ProfilesHistory(
-            int profileId,
-            ProfileHistoryAction action,
-            int adminUserId)
-        {
-            this.ProfileId = profileId;
-            this.Action = action;
-            this.ActionDate = DateTime.Now;
-            this.ActionByAdminUserId = adminUserId;
-        }
+            => new()
+            {
+                ProfileId = profileId,
+                Action = action,
+                ActionDate = DateTime.Now,
+                ActionLogin = actionLogin,
+                ActionDetails = actionDetails,
+                IPAddress = ipAddress,
+            };
 
         public static ProfilesHistory CreateInstanceByAdmin(
             int profileId,

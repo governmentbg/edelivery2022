@@ -6,9 +6,11 @@ namespace ED.DomainJobs
     {
         private int successes;
         private int failures;
+        private int cancels;
 
-        public int Successes => successes;
-        public int Failures => failures;
+        public int Successes => this.successes;
+        public int Failures => this.failures;
+        public int Cancels => this.cancels;
 
         public void CountSuccess()
         {
@@ -18,6 +20,11 @@ namespace ED.DomainJobs
         public void CountFailure()
         {
             Interlocked.Increment(ref this.failures);
+        }
+
+        public void CountCancel()
+        {
+            Interlocked.Increment(ref this.cancels);
         }
     }
 }

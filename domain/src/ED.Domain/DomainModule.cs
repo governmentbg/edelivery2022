@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Autofac;
 using Grpc.Net.Client.Web;
 using MediatR;
@@ -57,8 +58,9 @@ namespace ED.Domain
             services.Configure<DomainOptions>(configuration.GetSection("ED:Domain"));
             services.Configure<PdfOptions>(configuration.GetSection("ED:Pdf"));
             services.Configure<RegixOptions>(configuration.GetSection("ED:Regix"));
+            services.Configure<EsbOptions>(configuration.GetSection("ED:Domain:Clients:Esb"));
 
-            var domainOptions = new DomainOptions();
+            DomainOptions domainOptions = new();
             configuration.GetSection("ED:Domain").Bind(domainOptions);
 
             services.AddMediatR(this.domainAssembly);
@@ -88,6 +90,77 @@ namespace ED.Domain
                 })
                 .AddTransientHttpErrorPolicy(
                     p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(600)));
+
+            void configureEsbServiceTokenPurposeHttpClient(HttpClient client)
+            {
+                client.BaseAddress =
+                    new Uri(
+                        domainOptions.Clients.Esb.TokenApiUrl
+                        ?? throw new Exception($"Missing setting {nameof(EsbOptions)}.{nameof(EsbOptions.TokenApiUrl)}"));
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            }
+
+            void configureEsbServiceSubmitHttpClient(HttpClient client)
+            {
+                client.BaseAddress =
+                    new Uri(
+                        domainOptions.Clients.Esb.ApiUrl
+                        ?? throw new Exception($"Missing setting {nameof(EsbOptions)}.{nameof(EsbOptions.ApiUrl)}"));
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            }
+
+            string? certStore = domainOptions.Clients.Esb.ServiceCertificateStore;
+            StoreLocation? certStoreLocation = domainOptions.Clients.Esb.ServiceCertificateStoreLocation;
+            string? certThumprint = domainOptions.Clients.Esb.ServiceCertificateThumbprint;
+
+            X509Certificate2? esbServiceCert = null;
+            if (!string.IsNullOrEmpty(certStore)
+                && certStoreLocation != null
+                && !string.IsNullOrEmpty(certThumprint))
+            {
+                esbServiceCert = X509Certificate2Utils.LoadX509CertificateByThumbPrint(
+                    certStore,
+                    certStoreLocation.Value,
+                    certThumprint);
+            }
+
+            HttpClientHandler configureEsbServiceMessageHandler()
+            {
+                var handler = new HttpClientHandler();
+
+                if (esbServiceCert != null)
+                {
+                    handler.ClientCertificates.Add(esbServiceCert);
+
+                    if (domainOptions.Clients.Esb.AllowUntrustedCertificates)
+                    {
+                        handler.ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                    }
+                }
+
+                return handler;
+            }
+
+            services
+                .AddHttpClient(
+                    EsbServiceClient.SubmitHttpClientName,
+                    configureEsbServiceSubmitHttpClient)
+                .ConfigurePrimaryHttpMessageHandler(configureEsbServiceMessageHandler)
+                .AddTransientHttpErrorPolicy(
+                    p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(600)));
+
+            services
+                .AddHttpClient(
+                    EsbServiceClient.TokenPurposeHttpClientName,
+                    httpClient =>
+                    {
+                        configureEsbServiceTokenPurposeHttpClient(httpClient);
+                        httpClient.Timeout = TimeSpan.FromSeconds(60);
+                    })
+                .ConfigurePrimaryHttpMessageHandler(configureEsbServiceMessageHandler);
+
+            services.AddTransient<EsbServiceClient>();
 
             services.AddTransient<BlobsServiceClient>();
             services.AddSingleton(
@@ -128,6 +201,7 @@ namespace ED.Domain
             builder.RegisterType<MessageAggregateRepository>().As<IAggregateRepository<Message>>().InstancePerLifetimeScope();
             builder.RegisterType<RecipientGroupAggregateRepository>().As<IAggregateRepository<RecipientGroup>>().InstancePerLifetimeScope();
             builder.RegisterType<TargetGroupAggregateRepository>().As<IAggregateRepository<TargetGroup>>().InstancePerLifetimeScope();
+            builder.RegisterType<MessageTranslationAggregateRepository>().As<IAggregateRepository<MessageTranslation>>().InstancePerLifetimeScope();
             builder.RegisterType<TargetGroupProfileAggregateRepository>()
                 .As<IAggregateRepository<TargetGroupProfile>>()
                 .As<ITargetGroupProfileAggregateRepository>()
@@ -136,6 +210,11 @@ namespace ED.Domain
             builder.RegisterType<LoginAggregateRepository>()
                 .As<LoginAggregateRepository>()
                 .InstancePerLifetimeScope();
+            builder.RegisterType <ProfileBlobAccessKeyAggregateRepository>()
+                .As<IAggregateRepository<ProfileBlobAccessKey>>()
+                .As<IProfileBlobAccessKeyAggregateRepository>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<TicketAggregateRepository>().As<IAggregateRepository<Ticket>>().InstancePerLifetimeScope();
 
             builder.RegisterType<LoginSecurityLevelNomsRepository>().As<ILoginSecurityLevelNomsRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CountryNomsRepository>().As<ICountryNomsRepository>().InstancePerLifetimeScope();

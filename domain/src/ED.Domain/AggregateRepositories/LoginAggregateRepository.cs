@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace ED.Domain
 {
+    // todo: use interface for DI
     internal class LoginAggregateRepository : AggregateRepository<Login>
     {
         public LoginAggregateRepository(UnitOfWork unitOfWork)

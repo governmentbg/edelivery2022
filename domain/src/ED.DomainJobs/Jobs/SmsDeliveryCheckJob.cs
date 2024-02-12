@@ -2,13 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ED.Domain;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ED.DomainJobs
 {
-    public class SmsDeliveryCheckJob : QueueJob<SmsDeliveryCheckQueueMessage, DisposableTuple<LinkMobilityServiceClient, IServiceScope>>
+    public class SmsDeliveryCheckJob : QueueJob<SmsDeliveryCheckQueueMessage, DisposableTuple<InfosystemsServiceClient, IServiceScope>>
     {
         private IServiceScopeFactory scopeFactory;
 
@@ -21,24 +22,42 @@ namespace ED.DomainJobs
             this.scopeFactory = scopeFactory;
         }
 
-        protected override Task<DisposableTuple<LinkMobilityServiceClient, IServiceScope>> CreateThreadContextAsync(CancellationToken ct)
+        protected override Task<DisposableTuple<InfosystemsServiceClient, IServiceScope>> CreateThreadContextAsync(CancellationToken ct)
         {
             var scope = this.scopeFactory.CreateScope();
-            var client = scope.ServiceProvider.GetRequiredService<LinkMobilityServiceClient>();
+            var client = scope.ServiceProvider.GetRequiredService<InfosystemsServiceClient>();
             return Task.FromResult(DisposableTuple.Create(client, scope));
         }
 
-        protected override async Task<(QueueJobProcessingResult result, string? error)>
-            HandleMessageAsync(
-                DisposableTuple<LinkMobilityServiceClient, IServiceScope> context,
-                SmsDeliveryCheckQueueMessage payload,
-                CancellationToken ct)
+        protected override async Task<(QueueJobProcessingResult result, string? error)> HandleMessageAsync(
+            DisposableTuple<InfosystemsServiceClient, IServiceScope> context,
+            SmsDeliveryCheckQueueMessage payload,
+            bool isLastAttempt,
+            CancellationToken ct)
         {
-            var client = context.Item1;
+            InfosystemsServiceClient client = context.Item1;
 
             try
             {
-                await client.SendSmsDeliveryRequest(payload.SmsId, ct);
+                if (!this.ShouldProcessQueueMessage(payload.Feature))
+                {
+                    return (QueueJobProcessingResult.Cancel, null);
+                }
+
+                CreateSmsViberDeliveryCommandMessages[] messages =
+                    await client.SendSmsDeliveryRequest(payload.SmsId, ct);
+
+                using var scope = this.scopeFactory.CreateScope();
+
+                await scope.ServiceProvider
+                    .GetRequiredService<IMediator>()
+                    .Send(
+                        new CreateSmsViberDeliveryCommand(
+                            Convert.ToInt32(payload.SmsId),
+                            payload.Feature,
+                            messages),
+                            ct);
+
                 return (QueueJobProcessingResult.Success, null);
             }
 #pragma warning disable CA1031 // Do not catch general exception types

@@ -7,7 +7,8 @@ namespace ED.Domain
     {
         Task<TableResultVO<GetProfilesVO>> GetProfilesAsync(
             int adminUserId,
-            string term,
+            string? identifier,
+            string? nameEmailPhone,
             int offset,
             int limit,
             CancellationToken ct);

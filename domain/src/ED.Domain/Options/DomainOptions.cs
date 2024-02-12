@@ -38,5 +38,12 @@ namespace ED.Domain
         public StoreLocation? SigningCertificateStoreLocation { get; set; }
 
         public string? SigningCertificateThumprint { get; set; }
+
+        public DomainClientsOptions Clients { get; set; } = null!;
+    }
+
+    public class DomainClientsOptions
+    {
+        public EsbOptions Esb { get; set; } = null!;
     }
 }

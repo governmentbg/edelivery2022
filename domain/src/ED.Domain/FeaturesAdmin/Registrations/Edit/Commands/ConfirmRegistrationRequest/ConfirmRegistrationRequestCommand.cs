@@ -5,7 +5,8 @@ namespace ED.Domain
     public record ConfirmRegistrationRequestCommand(
         int AdminUserId,
         int RegistrationRequestId,
-        string Comment)
+        string Comment,
+        string Ip)
         : IRequest<ConfirmRegistrationRequestCommandResult>;
 
     public record ConfirmRegistrationRequestCommandResult(

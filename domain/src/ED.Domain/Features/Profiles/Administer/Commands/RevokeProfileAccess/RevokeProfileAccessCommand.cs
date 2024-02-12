@@ -6,6 +6,6 @@ namespace ED.Domain
         int ProfileId,
         int LoginId,
         int ActionLoginId,
-        string IP)
+        string Ip)
         : IRequest;
 }

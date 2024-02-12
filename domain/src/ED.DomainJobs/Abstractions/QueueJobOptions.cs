@@ -1,9 +1,12 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ED.DomainJobs
 {
     public class QueueJobOptions
     {
+        public string[] Features { get; set; } = Array.Empty<string>();
+
         [Required]
         public int PeriodInSeconds { get; set; }
 

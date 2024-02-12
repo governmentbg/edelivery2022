@@ -230,14 +230,17 @@ namespace ED.Domain
             this.Address = new(residence);
         }
 
-        public static Profile CreateInstanceEsbPassiveRegistration(
+        public static Profile CreateInstanceEsbPassiveIndividualRegistration(
+            string identifier,
             string firstName,
             string middleName,
             string lastName,
-            string identifier,
             string phone,
             string email,
             string residence,
+            string? city,
+            string? state,
+            string? countryIso,
             int loginId,
             string provider,
             string keyName,
@@ -245,13 +248,12 @@ namespace ED.Domain
             DateTime issuedAt,
             DateTime expiresAt)
         {
-
             DateTime now = DateTime.Now;
 
             Profile profile = new()
             {
                 IsActivated = false,
-                ActivatedDate = now,
+                ActivatedDate = null,
                 ProfileType = ProfileType.Individual,
                 ElectronicSubjectName = $"{firstName} {middleName} {lastName}",
                 EmailAddress = email,
@@ -264,7 +266,7 @@ namespace ED.Domain
                 IsReadOnly = false,
                 IsPassive = true,
                 Individual = new(firstName, middleName, lastName),
-                Address = new(residence),
+                Address = new(residence, city, state, countryIso),
             };
 
             profile.keys.Add(
@@ -274,6 +276,184 @@ namespace ED.Domain
                     oaepPadding,
                     issuedAt,
                     expiresAt));
+
+            return profile;
+        }
+
+        public static Profile CreateInstanceEsbTicketPassiveIndividualRegistration(
+            string identifier,
+            string firstName,
+            string middleName,
+            string lastName,
+            string? phone,
+            string? email,
+            int loginId,
+            string provider,
+            string keyName,
+            string oaepPadding,
+            DateTime issuedAt,
+            DateTime expiresAt)
+        {
+            DateTime now = DateTime.Now;
+
+            Profile profile = new()
+            {
+                IsActivated = false,
+                ActivatedDate = null,
+                ProfileType = ProfileType.Individual,
+                ElectronicSubjectName = $"{firstName} {middleName} {lastName}",
+                EmailAddress = email ?? string.Empty,
+                Phone = phone ?? string.Empty,
+                Identifier = identifier,
+                DateCreated = now,
+                CreatedBy = loginId,
+                ModifyDate = now,
+                ModifiedBy = loginId,
+                IsReadOnly = false,
+                IsPassive = true,
+                Individual = new(firstName, middleName, lastName),
+                Address = null,
+            };
+
+            profile.keys.Add(
+                new ProfileKey(
+                    provider,
+                    keyName,
+                    oaepPadding,
+                    issuedAt,
+                    expiresAt));
+
+            return profile;
+        }
+
+        public static Profile CreateInstanceEsbIndividualRegistration(
+            string identifier,
+            string firstName,
+            string middleName,
+            string lastName,
+            string phone,
+            string email,
+            string residence,
+            string? city,
+            string? state,
+            string? countryIso,
+            bool isFullFeatured,
+            int loginId,
+            string provider,
+            string keyName,
+            string oaepPadding,
+            DateTime issuedAt,
+            DateTime expiresAt)
+        {
+
+            DateTime now = DateTime.Now;
+
+            Profile profile = new()
+            {
+                IsActivated = true,
+                ActivatedDate = now,
+                ProfileType = ProfileType.Individual,
+                ElectronicSubjectName = $"{firstName} {middleName} {lastName}",
+                EmailAddress = email,
+                Phone = phone,
+                Identifier = identifier,
+                DateCreated = now,
+                CreatedBy = loginId,
+                ModifyDate = now,
+                ModifiedBy = loginId,
+                IsReadOnly = false,
+                IsPassive = !isFullFeatured,
+                Individual = new(firstName, middleName, lastName),
+                Address = new(residence, city, state, countryIso),
+            };
+
+            profile.keys.Add(
+                new ProfileKey(
+                    provider,
+                    keyName,
+                    oaepPadding,
+                    issuedAt,
+                    expiresAt));
+
+            return profile;
+        }
+
+        public static Profile CreateInstanceEsbLegalEntityRegistration(
+            string identifier,
+            string name,
+            string phone,
+            string email,
+            string residence,
+            string? city,
+            string? state,
+            string? countryIso,
+            (int LoginId, string Email, string Phone)[] ownersData,
+            int actionLoginId,
+            string provider,
+            string keyName,
+            string oaepPadding,
+            DateTime issuedAt,
+            DateTime expiresAt)
+        {
+
+            DateTime now = DateTime.Now;
+
+            Profile profile = new()
+            {
+                IsActivated = true,
+                ActivatedDate = now,
+                ProfileType = ProfileType.LegalEntity,
+                ElectronicSubjectName = name,
+                EmailAddress = email,
+                Phone = phone,
+                Identifier = identifier,
+                DateCreated = now,
+                CreatedBy = actionLoginId,
+                ModifyDate = now,
+                ModifiedBy = actionLoginId,
+                IsReadOnly = false,
+                IsPassive = false,
+                LegalEntity = new(name),
+                Address = new(residence, city, state, countryIso),
+            };
+
+            profile.keys.Add(
+                new ProfileKey(
+                    provider,
+                    keyName,
+                    oaepPadding,
+                    issuedAt,
+                    expiresAt));
+
+            var permissions = new (LoginProfilePermissionType permission, int? templateId)[]
+            {
+                (LoginProfilePermissionType.FullMessageAccess, null),
+                (LoginProfilePermissionType.AdministerProfileAccess, null),
+            };
+
+            foreach (var ownerData in ownersData)
+            {
+                profile.logins.Add(
+                    new LoginProfile(
+                        ownerData.LoginId,
+                        false,
+                        emailNotificationActive: false,
+                        emailNotificationOnDeliveryActive: false,
+                        smsNotificationActive: false,
+                        smsNotificationOnDeliveryActive: false,
+                        viberNotificationActive: false,
+                        viberNotificationOnDeliveryActive: false,
+                        ownerData.Email,
+                        ownerData.Phone,
+                        actionLoginId));
+
+                profile.loginPermissions.AddRange(
+                    permissions
+                        .Select(e => new LoginProfilePermission(
+                            ownerData.LoginId,
+                            e.permission,
+                            e.templateId)));
+            }
 
             return profile;
         }
@@ -333,11 +513,6 @@ namespace ED.Domain
 
         public int? CreatedByAdminUserId { get; set; }
 
-        private List<ProfileBlobAccessKey> blobs = new();
-
-        public IReadOnlyCollection<ProfileBlobAccessKey> Blobs =>
-            this.blobs.AsReadOnly();
-
         private List<ProfileKey> keys = new();
 
         public IReadOnlyCollection<ProfileKey> Keys =>
@@ -379,7 +554,7 @@ namespace ED.Domain
             this.EmailAddress = emailAddress;
             this.Phone = phone;
             this.IsActivated = true;
-            this.ActivatedDate = now;
+            this.ActivatedDate = now; // todo: something fishy here
             this.IsPassive = isPassive;
 
             this.Individual!.Update(firstName, middleName, lastName);
@@ -391,6 +566,42 @@ namespace ED.Domain
             else
             {
                 this.Address = new(residence);
+            }
+        }
+
+        public void UpdateIndividual(
+            string firstName,
+            string middleName,
+            string lastName,
+            string phone,
+            string emailAddress,
+            bool isPassive,
+            string residence,
+            string? city,
+            string? state,
+            string? countryIso,
+            int modifiedBy)
+        {
+            DateTime now = DateTime.Now;
+
+            this.ModifyDate = now;
+            this.ModifiedBy = modifiedBy;
+            this.ElectronicSubjectName = $"{firstName} {middleName} {lastName}";
+            this.EmailAddress = emailAddress;
+            this.Phone = phone;
+            this.IsActivated = true;
+            this.ActivatedDate = now;
+            this.IsPassive = isPassive;
+
+            this.Individual!.Update(firstName, middleName, lastName);
+
+            if (this.Address != null)
+            {
+                this.Address.Update(residence, city, state, countryIso);
+            }
+            else
+            {
+                this.Address = new(residence, city, state, countryIso);
             }
         }
 
@@ -540,10 +751,7 @@ namespace ED.Domain
             if (sync)
             {
                 LoginProfile? login = this.Logins.SingleOrDefault(e => e.IsDefault);
-                if (login != null)
-                {
-                    login.Sync(email, phone);
-                }
+                login?.Sync(email, phone);
             }
         }
 
@@ -760,16 +968,6 @@ namespace ED.Domain
                 updatesLog);
         }
 
-        public void RemoveBlob(int blobId, ProfileBlobAccessKeyType type)
-        {
-            this.AssertActive();
-
-            ProfileBlobAccessKey profileBlob =
-                this.blobs.Single(pb => pb.BlobId == blobId && pb.Type == type);
-
-            this.blobs.Remove(profileBlob);
-        }
-
         public ProfileKey AddProfileKey(
             string provider,
             string keyName,
@@ -816,27 +1014,6 @@ namespace ED.Domain
             this.ActivatedByAdminUserId = adminUserId;
             this.IsPassive = false;
             this.IsActivated = true;
-        }
-
-        public void AddBlob(
-            int blobId,
-            int profileKeyId,
-            int? createdByLoginId,
-            int? createdByAdminUserId,
-            byte[] encryptedKey,
-            ProfileBlobAccessKeyType type)
-        {
-            this.AssertActive();
-
-            ProfileBlobAccessKey profileBlob = new(
-                blobId,
-                profileKeyId,
-                createdByLoginId,
-                createdByAdminUserId,
-                encryptedKey,
-                type);
-
-            this.blobs.Add(profileBlob);
         }
 
         public void Activate(int adminUserId)
@@ -950,10 +1127,6 @@ namespace ED.Domain
             builder.Property(e => e.Id).ValueGeneratedOnAdd();
 
             builder.Property(e => e.ElectronicSubjectId).ValueGeneratedOnAdd();
-
-            builder.HasMany(e => e.Blobs)
-                .WithOne()
-                .HasForeignKey(e => e.ProfileId);
 
             builder.HasMany(e => e.Keys)
                 .WithOne()

@@ -21,7 +21,6 @@ namespace ED.Domain
         IAggregateRepository<Message> MessageAggregateRepository,
         IAggregateRepository<Profile> ProfileAggregateRepository,
         IAggregateRepository<TargetGroupProfile> TargetGroupProfileAggregateRepository,
-        BlobsServiceClient BlobsServiceClient,
         IEncryptorFactory EncryptorFactory,
         ED.Keystore.Keystore.KeystoreClient KeystoreClient,
         TimestampServiceClient TimestampServiceClient,
@@ -308,18 +307,22 @@ namespace ED.Domain
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.EmailQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.SmsQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.PushNotificationQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.ViberQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.UnitOfWork.SaveAsync(ct);
@@ -688,6 +691,7 @@ namespace ED.Domain
             EmailQueueMessage[] emailRecipients = notificationRecipients
                 .Where(e => e.IsEmailNotificationEnabled)
                 .Select(e => new EmailQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.Email,
                     emailSubect,
                     string.Format(
@@ -709,6 +713,7 @@ namespace ED.Domain
             SmsQueueMessage[] smsRecipients = notificationRecipients
                 .Where(e => e.IsSmsNotificationEnabled)
                 .Select(e => new SmsQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.Phone,
                     string.Format(
                         smsBody,
@@ -731,6 +736,7 @@ namespace ED.Domain
             PushNotificationQueueMessage[] pushNotificationRecipients = notificationRecipients
                 .Where(e => !string.IsNullOrEmpty(e.PushNotificationUrl))
                 .Select(e => new PushNotificationQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.PushNotificationUrl!,
                     new
                     {
@@ -749,6 +755,7 @@ namespace ED.Domain
             ViberQueueMessage[] viberRecipients = notificationRecipients
                 .Where(e => e.IsViberNotificationEnabled)
                 .Select(e => new ViberQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.Phone,
                     string.Format(
                         viberBody,

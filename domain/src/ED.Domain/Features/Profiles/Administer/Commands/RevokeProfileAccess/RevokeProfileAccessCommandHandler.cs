@@ -25,7 +25,7 @@ namespace ED.Domain
                 command.LoginId,
                 ct);
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByLogin(
                profile.Id,
                ProfileHistoryAction.RemoveAccessToProfile,
                command.ActionLoginId,
@@ -34,7 +34,7 @@ namespace ED.Domain
                     login.ElectronicSubjectId,
                     login.ElectronicSubjectName,
                     string.Empty),
-               command.IP);
+               command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

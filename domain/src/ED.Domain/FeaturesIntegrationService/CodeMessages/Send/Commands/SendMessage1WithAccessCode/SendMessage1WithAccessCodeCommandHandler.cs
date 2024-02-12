@@ -21,7 +21,6 @@ namespace ED.Domain
         IAggregateRepository<Message> MessageAggregateRepository,
         IAggregateRepository<Profile> ProfileAggregateRepository,
         IAggregateRepository<TargetGroupProfile> TargetGroupProfileAggregateRepository,
-        BlobsServiceClient BlobsServiceClient,
         IEncryptorFactory EncryptorFactory,
         ED.Keystore.Keystore.KeystoreClient KeystoreClient,
         TimestampServiceClient TimestampServiceClient,
@@ -248,10 +247,12 @@ namespace ED.Domain
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.EmailQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.SmsQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.UnitOfWork.SaveAsync(ct);
@@ -626,6 +627,7 @@ namespace ED.Domain
 
             EmailQueueMessage[] emailRecipients = notificationRecipients
                 .Select(e => new EmailQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.Email,
                     emailSubect,
                     string.Format(
@@ -645,6 +647,7 @@ namespace ED.Domain
 
             SmsQueueMessage[] smsRecipients = notificationRecipients
                 .Select(e => new SmsQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.Phone,
                     string.Format(
                         smsBody,

@@ -14,6 +14,6 @@ namespace ED.Domain
         bool ViberNotificationActive,
         bool ViberNotificationOnDeliveryActive,
         int AdminUserId,
-        string IP)
+        string Ip)
         : IRequest;
 }

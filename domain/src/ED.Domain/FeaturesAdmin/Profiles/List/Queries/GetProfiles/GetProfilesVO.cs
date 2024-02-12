@@ -7,6 +7,7 @@ namespace ED.Domain
             ProfileType ProfileType,
             string Identifier,
             string ElectronicSubjectName,
+            string Email,
             bool IsActivated,
             string TargetGroupName);
     }

@@ -40,7 +40,7 @@ namespace ED.Domain
 
             login.UpdateNames(profile.ElectronicSubjectName);
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByLogin(
                 profile.Id,
                 ProfileHistoryAction.ProfileUpdated,
                 command.ActionLoginId,
@@ -49,7 +49,7 @@ namespace ED.Domain
                     profile.ElectronicSubjectId,
                     profile.ElectronicSubjectName,
                     updatesLog.ToString()),
-                command.IP);
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

@@ -13,12 +13,12 @@ namespace ED.Domain
             CreateAccessProfilesHistoryCommand command,
             CancellationToken ct)
         {
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByLogin(
                 command.ProfileId,
                 ProfileHistoryAction.AccessProfile,
                 command.LoginId,
                 null,
-                command.IP);
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

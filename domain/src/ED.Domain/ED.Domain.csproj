@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="DistributedLock" Version="2.2.0" />
+    <PackageReference Include="Enums.NET" Version="4.0.1" />
     <PackageReference Include="itextsharp.netstandard20" Version="5.5.14" />
     <PackageReference Include="jsoncanonicalizer" Version="1.0.5-gf4267c1f60" />
     <PackageReference Include="Mapster" Version="7.2.0" />

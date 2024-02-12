@@ -10,7 +10,8 @@ namespace ED.Domain
         string Residence,
         int TargetGroupId,
         int? BlobId,
-        int AdminUserId)
+        int AdminUserId,
+        string Ip)
         : IRequest<CreateLegalEntityCommandResult>;
 
     public record CreateLegalEntityCommandResult(

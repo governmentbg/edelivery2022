@@ -13,7 +13,7 @@ namespace ED.Domain
             int loginId,
             CancellationToken ct)
         {
-            GetNewMessagesCountVO[] vos = await (
+            var profileMessages = await (
                 from p in this.DbContext.Set<Profile>()
 
                 join lp in this.DbContext.Set<LoginProfile>()
@@ -25,13 +25,15 @@ namespace ED.Domain
                 where p.IsActivated
                     && lp.LoginId == loginId
                     && !mr.DateReceived.HasValue
+                    && !this.DbContext.Set<Ticket>().Any(t => t.MessageId == mr.MessageId)
 
-                group p by p.Id into g
-
-                select new GetNewMessagesCountVO(
-                    g.Key,
-                    g.Count()))
+                select new { ProfileId = p.Id, mr.MessageId })
                 .ToArrayAsync(ct);
+
+            GetNewMessagesCountVO[] vos = profileMessages
+                .GroupBy(e => e.ProfileId)
+                .Select(e => new GetNewMessagesCountVO(e.Key, e.Count()))
+                .ToArray();
 
             return vos;
         }

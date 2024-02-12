@@ -24,19 +24,16 @@ namespace ED.Domain
                 command.StorageQuotaInMb,
                 command.AdminUserId);
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
                 profile.Id,
                 ProfileHistoryAction.ProfileUpdated,
-                command.AdminUserId)
-            {
-                ActionDetails =
-                    ProfilesHistory.GenerateAccessDetails(
-                        ProfileHistoryAction.ProfileUpdated,
-                        profile.ElectronicSubjectId,
-                        profile.ElectronicSubjectName,
-                        ActionDetails),
-                IPAddress = command.Ip,
-            };
+                command.AdminUserId,
+                ProfilesHistory.GenerateAccessDetails(
+                    ProfileHistoryAction.ProfileUpdated,
+                    profile.ElectronicSubjectId,
+                    profile.ElectronicSubjectName,
+                    CreateOrUpdateProfileQuotasCommandHandler.ActionDetails),
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

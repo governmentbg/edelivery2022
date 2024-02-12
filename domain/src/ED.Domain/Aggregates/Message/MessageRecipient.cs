@@ -35,6 +35,20 @@ namespace ED.Domain
         {
             this.MessagePdfBlobId = blobId;
         }
+
+        public void UpdateAsOpen(
+            int loginId,
+            DateTime dateReceived,
+            byte[] timestamp,
+            byte[]? messageSummary,
+            string? messageSummaryXml)
+        {
+            this.DateReceived = dateReceived;
+            this.LoginId = loginId;
+            this.Timestamp = timestamp;
+            this.MessageSummary = messageSummary;
+            this.MessageSummaryXml = messageSummaryXml;
+        }
     }
 
     class MessageRecipientMapping : EntityMapping

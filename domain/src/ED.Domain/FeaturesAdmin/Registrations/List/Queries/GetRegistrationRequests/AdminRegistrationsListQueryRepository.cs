@@ -17,6 +17,13 @@ namespace ED.Domain
             int limit,
             CancellationToken ct)
         {
+            this.logger.LogInformation(
+                "{method}({adminUserId}, {offset}, {limit}) called",
+                nameof(GetRegistrationRequestsAsync),
+                adminUserId,
+                offset,
+                limit);
+
             Expression<Func<RegistrationRequest, bool>> predicate =
                 PredicateBuilder.True<RegistrationRequest>();
             if (status.HasValue)
@@ -24,10 +31,6 @@ namespace ED.Domain
                 predicate = predicate
                     .And(e => e.Status == (RegistrationRequestStatus)status.Value);
             }
-
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetRegistrationRequestsAsync)}({adminUserId}, {offset}, {limit}) called");
 
             TableResultVO<GetRegistrationRequestsVO> vos = await (
                 from rr in this.DbContext.Set<RegistrationRequest>().Where(predicate)

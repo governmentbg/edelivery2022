@@ -209,5 +209,37 @@ WHERE
                 .AsNoTracking()
                 .ToListAsync(ct);
         }
+
+        public async Task SetStatusCancelledAsync(
+            QueueMessageType type,
+            long dueDate,
+            int queueMessageId,
+            DateTime statusDate,
+            CancellationToken ct)
+        {
+            var sql =
+$@"
+UPDATE QueueMessages SET
+    {nameof(QueueMessage.Status)} = {(int)QueueMessageStatus.Cancelled},
+    {nameof(QueueMessage.StatusDate)} = @statusDate
+WHERE
+    {nameof(QueueMessage.Status)} = {(int)QueueMessageStatus.Processing} AND
+    {nameof(QueueMessage.Type)} = @type AND
+    {nameof(QueueMessage.DueDate)} = @dueDate AND
+    {nameof(QueueMessage.QueueMessageId)} = @queueMessageId
+";
+
+            await this.unitOfWork.DbContext.Database
+                .ExecuteSqlRawAsync(
+                    sql,
+                    new[]
+                    {
+                        new SqlParameter("type", type),
+                        new SqlParameter("dueDate", dueDate),
+                        new SqlParameter("queueMessageId", queueMessageId),
+                        new SqlParameter("statusDate", statusDate),
+                    },
+                    ct);
+        }
     }
 }

@@ -532,7 +532,6 @@ namespace ED.Domain
         public IReadOnlyCollection<MessageRecipient> Recipients =>
             this.recipients.AsReadOnly();
 
-
         public MessagesAccessCode? AccessCode { get; set; }
 
         public void UpdateExtendedSubject(
@@ -592,11 +591,12 @@ namespace ED.Domain
             MessageRecipient recipient =
                 this.Recipients.First(e => e.ProfileId == profileId);
 
-            recipient.DateReceived = dateReceived;
-            recipient.LoginId = loginId;
-            recipient.Timestamp = timestamp;
-            recipient.MessageSummary = messageSummary;
-            recipient.MessageSummaryXml = messageSummaryXml;
+            recipient.UpdateAsOpen(
+                loginId,
+                dateReceived,
+                timestamp,
+                messageSummary,
+                messageSummaryXml);
         }
 
         public void UpdateRecipientMessagePdfBlob(int profileId, int? blobId)
@@ -681,6 +681,10 @@ namespace ED.Domain
                 .HasPrincipalKey<Message>(e => e.MessageId)
                 .HasForeignKey<MessagesAccessCode>(e => e.MessageId)
                 .IsRequired(false);
+
+            builder.HasOne<Ticket>()
+                .WithOne()
+                .HasForeignKey<Ticket>(e => e.MessageId);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace ED.Domain
         bool IsSsmsNotificationEnabled,
         bool IsViberNotificationEnabled,
         int ActionLoginId,
-        string IP)
+        string Ip)
         : IRequest<CreateOrUpdateIndividualCommandResult>;
 
     public record CreateOrUpdateIndividualCommandResult(

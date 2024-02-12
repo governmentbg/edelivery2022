@@ -5,6 +5,7 @@ namespace ED.Domain
     public record RejectRegistrationRequestCommand(
         int AdminUserId,
         int RegistrationRequestId,
-        string Comment)
+        string Comment,
+        string Ip)
         : IRequest;
 }

@@ -6,7 +6,7 @@ namespace ED.Domain
 {
     internal record RemoveProfileRegistrationDocumentCommandHandler(
         IUnitOfWork UnitOfWork,
-        IAggregateRepository<Profile> ProfileAggregateRepository,
+        IProfileBlobAccessKeyAggregateRepository ProfileBlobAccessKeyAggregateRepository,
         IAdminProfilesCreateEditViewQueryRepository AdminProfilesCreateEditViewQueryRepository)
         : IRequestHandler<RemoveProfileRegistrationDocumentCommand, Unit>
     {
@@ -14,11 +14,17 @@ namespace ED.Domain
             RemoveProfileRegistrationDocumentCommand command,
             CancellationToken ct)
         {
-            Profile profile = await this.ProfileAggregateRepository.FindAsync(
-                command.ProfileId,
-                ct);
+            ProfileBlobAccessKey? profileBlobAccessKey =
+                await this.ProfileBlobAccessKeyAggregateRepository.FindAsync(
+                    command.ProfileId,
+                    command.BlobId,
+                    ProfileBlobAccessKeyType.Registration,
+                    ct);
 
-            profile.RemoveBlob(command.BlobId, ProfileBlobAccessKeyType.Registration);
+            if (profileBlobAccessKey != null)
+            {
+                this.ProfileBlobAccessKeyAggregateRepository.Remove(profileBlobAccessKey);
+            }
 
             await this.UnitOfWork.SaveAsync(ct);
 

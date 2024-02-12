@@ -251,11 +251,11 @@ message GetProfileInfoRequest {
 
 message GetProfileInfoResponse {
   message Address {
-    int32 address_id = 11;
-    google.protobuf.StringValue residence = 12;
-    google.protobuf.StringValue city = 13;
-    google.protobuf.StringValue state = 14; 
-    google.protobuf.StringValue country = 15;
+    int32 address_id = 1;
+    google.protobuf.StringValue residence = 2;
+    google.protobuf.StringValue city = 3;
+    google.protobuf.StringValue state = 4;
+    google.protobuf.StringValue country = 5;
   }
 
   message Individual {

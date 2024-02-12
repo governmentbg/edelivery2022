@@ -40,10 +40,14 @@ namespace ED.Domain
                 })
                 .ToArrayAsync(ct);
 
+            int legalEntites = counts.FirstOrDefault(e => e.TargetGroupId == TargetGroup.LegalEntityTargetGroupId)?.Value ?? 0;
+            int administrations = counts.FirstOrDefault(e => e.TargetGroupId == TargetGroup.PublicAdministrationTargetGroupId)?.Value ?? 0;
+            int organizations = counts.FirstOrDefault(e => e.TargetGroupId == TargetGroup.SocialOrganizationTargetGroupId)?.Value ?? 0;
+
             GetStatisticsVO vo = new(
-                counts[0].Value,
-                counts[1].Value,
-                counts[2].Value);
+                legalEntites,
+                administrations,
+                organizations);
 
             return vo;
         }

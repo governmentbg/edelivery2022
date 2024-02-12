@@ -13,8 +13,11 @@
     <Protobuf Include="Protos\blob.proto" ProtoRoot="Protos/" GrpcServices="Server" />
     <Protobuf Include="Protos\admin.proto" ProtoRoot="Protos/" GrpcServices="Server" />
     <Protobuf Include="Protos\code_message.proto" ProtoRoot="Protos/" GrpcServices="Server" />
+    <Protobuf Include="Protos\esb_ticket.proto" ProtoRoot="Protos/" GrpcServices="Server" />
     <Protobuf Include="Protos\esb.proto" ProtoRoot="Protos/" GrpcServices="Server" />
     <Protobuf Include="Protos\integration_service.proto" ProtoRoot="Protos/" GrpcServices="Server" />
+    <Protobuf Include="Protos\ticket.proto" ProtoRoot="Protos/" GrpcServices="Server" />
+    <Protobuf Include="Protos\translation.proto" ProtoRoot="Protos/" GrpcServices="Server" />
     <Protobuf Include="Protos\profile.proto" ProtoRoot="Protos/" GrpcServices="Server" />
     <Protobuf Include="Protos\nomenclature.proto" ProtoRoot="Protos/" GrpcServices="Server" />
     <Protobuf Include="Protos\journal.proto" ProtoRoot="Protos/" GrpcServices="Server" />

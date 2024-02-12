@@ -8,6 +8,6 @@ namespace ED.Domain
         string MiddleName,
         string LastName,
         int ActionLoginId,
-        string IP)
+        string Ip)
         : IRequest;
 }

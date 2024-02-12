@@ -7,7 +7,7 @@ namespace ED.Domain
         int LoginId,
         string Details,
         int ActionLoginId,
-        string IP,
+        string Ip,
         GrantProfileAccessCommandPermission[] Permissions)
         : IRequest;
 

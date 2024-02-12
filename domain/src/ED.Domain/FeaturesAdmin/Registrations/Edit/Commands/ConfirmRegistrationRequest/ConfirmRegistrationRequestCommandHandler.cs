@@ -13,6 +13,7 @@ namespace ED.Domain
         IProfilesService ProfilesService,
         IAggregateRepository<RegistrationRequest> RegistrationRequestAggregateRepository,
         IAggregateRepository<Profile> ProfileAggregateRepository,
+        IProfileBlobAccessKeyAggregateRepository ProfileBlobAccessKeyAggregateRepository,
         IAggregateRepository<ProfilesHistory> ProfilesHistoryAggregateRepository,
         IAdminRegistrationsEditQueryRepository AdminRegistrationsEditQueryRepository,
         IQueueMessagesService QueueMessagesService,
@@ -66,10 +67,12 @@ namespace ED.Domain
 
             await this.UnitOfWork.SaveAsync(ct);
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
                 registrationRequest.RegisteredProfileId,
                 ProfileHistoryAction.ProfileActivated,
-                command.AdminUserId);
+                command.AdminUserId,
+                null,
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,
@@ -83,13 +86,18 @@ namespace ED.Domain
                     registrationRequest.RegisteredProfileId,
                     ct);
 
-            profile.AddBlob(
+            ProfileBlobAccessKey profileBlobAccessKey = new(
+                profile.Id,
                 blobAccessKey.BlobId,
                 blobAccessKey.ProfileKeyId,
                 blobAccessKey.CreatedByLoginId,
                 null,
                 blobAccessKey.EncryptedKey,
                 ProfileBlobAccessKeyType.Registration);
+
+            await this.ProfileBlobAccessKeyAggregateRepository.AddAsync(
+                profileBlobAccessKey,
+                ct);
 
             await this.UnitOfWork.SaveAsync(ct);
 
@@ -196,6 +204,7 @@ namespace ED.Domain
                   $"Missing required option {nameof(DomainOptions.WebPortalUrl)}");
 
             return new EmailQueueMessage(
+                QueueMessageFeatures.Register,
                 registrationRequestRecipient,
                 string.Format(emailSubect, registrationRequestProfile),
                 string.Format(

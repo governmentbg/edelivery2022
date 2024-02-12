@@ -27,18 +27,28 @@ namespace ED.DomainJobs
             var pushNotificationServiceClient = scope.ServiceProvider.GetRequiredService<PushNotificationServiceClient>();
             return Task.FromResult(DisposableTuple.Create(pushNotificationServiceClient, scope));
         }
-        
+
         protected override async Task<(QueueJobProcessingResult result, string? error)>
             HandleMessageAsync(
                 DisposableTuple<PushNotificationServiceClient, IServiceScope> context,
                 PushNotificationQueueMessage payload,
+                bool isLastAttempt,
                 CancellationToken ct)
         {
-            var pushNotificationServiceClient = context.Item1;
+            PushNotificationServiceClient pushNotificationServiceClient = context.Item1;
 
             try
             {
-                await pushNotificationServiceClient.SendPushNotificationAsync(payload.Recipient, payload.Body, ct);
+                if (!this.ShouldProcessQueueMessage(payload.Feature))
+                {
+                    return (QueueJobProcessingResult.Cancel, null);
+                }
+
+                await pushNotificationServiceClient.SendPushNotificationAsync(
+                    payload.Recipient,
+                    payload.Body,
+                    ct);
+
                 return (QueueJobProcessingResult.Success, null);
             }
 #pragma warning disable CA1031 // Do not catch general exception types

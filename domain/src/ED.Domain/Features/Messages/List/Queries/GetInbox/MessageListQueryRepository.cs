@@ -17,25 +17,27 @@ namespace ED.Domain
             int limit,
             string? subject,
             string? profile,
-            DateTime? fromDate,
-            DateTime? toDate,
+            DateTime? from,
+            DateTime? to,
             string? rnu,
             CancellationToken ct)
         {
             Expression<Func<Message, bool>> messagePredicate =
                 BuildMessagePredicate(
                     subject,
-                    fromDate,
-                    toDate,
+                    from,
+                    to,
                     rnu);
 
             Expression<Func<Profile, bool>> profilePredicate =
                 BuildProfilePredicate(profile);
 
             IQueryable<int> countQuery =
-                this.DbContext.Set<MessageRecipient>()
-                    .Where(mr => mr.ProfileId == profileId)
-                    .Select(mr => mr.MessageId);
+                from mr in this.DbContext.Set<MessageRecipient>()
+                where mr.ProfileId == profileId
+                    && !this.DbContext.Set<Ticket>().Any(t => t.MessageId == mr.MessageId)
+                select mr.MessageId;
+
             if (!profilePredicate.IsTrueLambdaExpr())
             {
                 countQuery = countQuery.Where(
@@ -93,6 +95,7 @@ namespace ED.Domain
                     on m.TemplateId equals t.TemplateId
 
                 where mr.ProfileId == profileId
+                    && !this.DbContext.Set<Ticket>().Any(t => t.MessageId == mr.MessageId)
 
                 orderby mr.DateReceived ?? sqlMaxDate descending, m.DateSent descending
 
@@ -115,8 +118,8 @@ namespace ED.Domain
 
             Expression<Func<Message, bool>> BuildMessagePredicate(
                 string? subject,
-                DateTime? fromDate,
-                DateTime? toDate,
+                DateTime? from,
+                DateTime? to,
                 string? rnu)
             {
                 Expression<Func<Message, bool>> predicate =
@@ -128,16 +131,16 @@ namespace ED.Domain
                         .And(e => e.Subject.Contains(subject));
                 }
 
-                if (fromDate.HasValue)
+                if (from.HasValue)
                 {
                     predicate = predicate
-                        .And(e => e.DateSent.HasValue && e.DateSent.Value > fromDate.Value);
+                        .And(e => e.DateSent.HasValue && e.DateSent.Value > from.Value);
                 }
 
-                if (toDate.HasValue)
+                if (to.HasValue)
                 {
                     predicate = predicate
-                        .And(e => e.DateSent.HasValue && e.DateSent < toDate.Value.AddDays(1));
+                        .And(e => e.DateSent.HasValue && e.DateSent < to.Value.AddDays(1));
                 }
 
                 if (!string.IsNullOrEmpty(rnu))

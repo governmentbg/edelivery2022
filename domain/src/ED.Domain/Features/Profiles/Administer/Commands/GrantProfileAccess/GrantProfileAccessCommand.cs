@@ -14,7 +14,7 @@ namespace ED.Domain
         bool IsViberNotificationOnDeliveryEnabled,
         string Details,
         int ActionLoginId,
-        string IP,
+        string Ip,
         GrantProfileAccessCommandPermission[] Permissions)
         : IRequest;
 
