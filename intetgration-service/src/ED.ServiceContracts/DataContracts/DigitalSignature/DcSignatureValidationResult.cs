@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Web;
-using EDelivery.Common.DataContracts;
 
 namespace EDelivery.Common.DataContracts
 {
@@ -11,10 +8,10 @@ namespace EDelivery.Common.DataContracts
     public class DcSignatureValidationResult
     {
         [DataMember]
-        public EDelivery.Common.Enums.eVerificationResult Status { get; set; }
+        public Enums.eVerificationResult Status { get; set; }
 
         [DataMember]
-        public EDelivery.Common.Enums.eRevokationResult RevocationStatus { get; set; }
+        public Enums.eRevokationResult RevocationStatus { get; set; }
 
         [DataMember]
         public List<string> ChainErrors { get; set; }

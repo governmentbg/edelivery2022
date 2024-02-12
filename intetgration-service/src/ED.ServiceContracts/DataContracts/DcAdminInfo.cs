@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDelivery.Common.DataContracts
 {
@@ -48,7 +44,7 @@ namespace EDelivery.Common.DataContracts
     }
 
     [DataContract]
-    public class DcAdminUpdateInfo:DcAdminInfo
+    public class DcAdminUpdateInfo : DcAdminInfo
     {
         [DataMember]
         public string PhoneNumber { get; set; }

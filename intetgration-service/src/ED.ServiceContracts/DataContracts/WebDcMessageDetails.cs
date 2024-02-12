@@ -1,26 +1,20 @@
-﻿using EDelivery.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDelivery.Common.DataContracts
 {
     [DataContract]
-    public class WebDcMessageDetails:WebDcMessage
+    public class WebDcMessageDetails : WebDcMessage
     {
         public WebDcMessageDetails()
         {
-
         }
 
-        public WebDcMessageDetails(WebDcMessage webDcMessage):base(webDcMessage)
+        public WebDcMessageDetails(WebDcMessage webDcMessage) : base(webDcMessage)
         {
         }
 
-        public WebDcMessageDetails(DcMessageDetails message):base(message)
+        public WebDcMessageDetails(DcMessageDetails message) : base(message)
         {
             this.MessageText = message.MessageText;
             this.AttachedDocuments = message.AttachedDocuments;
@@ -35,7 +29,7 @@ namespace EDelivery.Common.DataContracts
 
         [DataMember]
         public List<DcDocument> AttachedDocuments { get; set; }
-               
+
         [DataMember]
         public DcTimeStamp TimeStampNRO { get; set; }
 

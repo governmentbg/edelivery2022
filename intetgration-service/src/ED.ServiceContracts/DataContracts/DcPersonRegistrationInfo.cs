@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDelivery.Common.DataContracts
 {
@@ -17,7 +13,7 @@ namespace EDelivery.Common.DataContracts
         }
         public DcPersonRegistrationInfo(string personIdentificator)
         {
-            PersonIdentificator = personIdentificator;
+            this.PersonIdentificator = personIdentificator;
         }
 
         [DataMember]
@@ -28,7 +24,7 @@ namespace EDelivery.Common.DataContracts
 
         [DataMember]
         public bool HasRegistration { get; set; }
-        
+
         [DataMember]
         public List<DcSubjectShortInfo> AccessibleProfiles { get; set; }
     }

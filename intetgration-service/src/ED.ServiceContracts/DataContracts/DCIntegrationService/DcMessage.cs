@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDelivery.Common.DataContracts
 {
@@ -16,7 +12,8 @@ namespace EDelivery.Common.DataContracts
         }
         public DcMessage(WebDcMessage m)
         {
-            if (m == null) return;
+            if (m == null)
+                return;
             this.Id = m.Id;
             this.IsDraft = m.IsDraft;
             this.DateCreated = m.DateCreated;
@@ -68,7 +65,5 @@ namespace EDelivery.Common.DataContracts
 
         [DataMember]
         public DcProfile ReceiverProfile { get; set; }
-
-
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace EDelivery.Common.DataContracts
 {
@@ -17,6 +12,6 @@ namespace EDelivery.Common.DataContracts
         public bool EnableSmsNotifications { get; set; }
 
         [DataMember]
-        public bool  EnableEmailNotificationsOnDelivery {get;set;}
+        public bool EnableEmailNotificationsOnDelivery { get; set; }
     }
 }

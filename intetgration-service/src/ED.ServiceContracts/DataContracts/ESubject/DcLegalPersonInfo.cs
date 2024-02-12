@@ -22,6 +22,5 @@ namespace EDelivery.Common.DataContracts.ESubject
 
         [DataMember]
         public DateTime? DateOutOfForce { get; set; }
-
     }
 }

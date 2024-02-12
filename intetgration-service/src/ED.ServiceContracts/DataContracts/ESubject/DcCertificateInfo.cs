@@ -1,26 +1,18 @@
 ﻿using EDelivery.Common.Enums;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace EDelivery.Common.DataContracts.ESubject
 {
     public interface IVerificationInfo
     {
-         bool IsValid { get; set; }
+        bool IsValid { get; set; }
 
         eVerificationInfoType VerificationInfoType { get; set; }
     }
 
     [DataContract]
-    public class DcCertificateInfo:IVerificationInfo
+    public class DcCertificateInfo : IVerificationInfo
     {
         public DcCertificateInfo()
         {

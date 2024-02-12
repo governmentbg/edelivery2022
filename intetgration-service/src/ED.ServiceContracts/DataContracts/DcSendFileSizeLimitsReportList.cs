@@ -13,6 +13,6 @@ namespace EDelivery.Common.DataContracts
         public int AllRecordsCount { get; set; }
 
         [DataMember]
-        public int PageSize  { get; set; }
+        public int PageSize { get; set; }
     }
 }
