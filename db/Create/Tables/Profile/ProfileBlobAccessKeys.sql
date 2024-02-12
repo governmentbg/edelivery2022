@@ -34,7 +34,8 @@ CREATE TABLE [dbo].[ProfileBlobAccessKeys](
         1, -- Storage
         2, -- Registration
         3, -- Template
-        4,  -- PdfStamp
+        4, -- PdfStamp
+        5, -- Translation
         10 -- Unknown
     ) 
     -- Storage Type is applicable only for non-system profiles

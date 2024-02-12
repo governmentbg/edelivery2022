@@ -56,6 +56,8 @@ GO
 :r $(rootPath)/Create/Tables/Message/MessageBlobAccessKeys.sql
 :r $(rootPath)/Create/Tables/Message/MessagesAccessCodes.sql
 :r $(rootPath)/Create/Tables/Message/ForwardedMessages.sql
+:r $(rootPath)/Create/Tables/Message/MessageTranslations.sql
+:r $(rootPath)/Create/Tables/Message/MessageTranslationRequests.sql
 
 :r $(rootPath)/Create/Tables/RecipientGroup/RecipientGroups.sql
 :r $(rootPath)/Create/Tables/RecipientGroup/RecipientGroupProfiles.sql
@@ -63,6 +65,14 @@ GO
 :r $(rootPath)/Create/Tables/Administration/AdminsProfiles.sql
 :r $(rootPath)/Create/Tables/Administration/RegistrationRequests.sql
 :r $(rootPath)/Create/Tables/Administration/StatisticsMessagesByMonth.sql
+
+:r $(rootPath)/Create/Tables/Ticket/Tickets.sql
+:r $(rootPath)/Create/Tables/Ticket/TicketStatuses.sql
+
+:r $(rootPath)/Create/Tables/Report/EmailDelivery.sql
+:r $(rootPath)/Create/Tables/Report/SmsDelivery.sql
+:r $(rootPath)/Create/Tables/Report/TicketDelivery.sql
+:r $(rootPath)/Create/Tables/Report/ViberDelivery.sql
 
 :r $(rootPath)/Create/Tables/__ForRemoval/CertificateFlags.sql
 :r $(rootPath)/Create/Tables/__ForRemoval/ExternalLogins.sql

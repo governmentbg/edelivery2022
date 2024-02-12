@@ -84,6 +84,10 @@ GO
 USE [$(dbName)]
 GO
 
+-- create `reports` schema
+CREATE SCHEMA [reports];
+GO
+
 -- create blobs partition function
 CREATE PARTITION FUNCTION pfBlobs (INT)
 AS RANGE RIGHT FOR VALUES (
@@ -99,4 +103,44 @@ GO
 
 CREATE PARTITION SCHEME psBlobsFileStream
 AS PARTITION pfBlobs ALL TO ([FG_Blobs_1]);
+GO
+
+-- create sms delivery partition function & scheme
+CREATE PARTITION FUNCTION pfSmsDelivery (datetime2)
+AS RANGE RIGHT
+FOR VALUES ('20230101', '20240101', '20250101', '20260101');
+
+CREATE PARTITION SCHEME psSmsDelivery
+AS PARTITION pfSmsDelivery
+ALL TO ([PRIMARY]);
+GO
+
+-- create viber delivery partition function & scheme
+CREATE PARTITION FUNCTION pfViberDelivery (datetime2)
+AS RANGE RIGHT
+FOR VALUES ('20230101', '20240101', '20250101', '20260101');
+
+CREATE PARTITION SCHEME psViberDelivery
+AS PARTITION pfViberDelivery
+ALL TO ([PRIMARY]);
+GO
+
+-- create email delivery partition function & scheme
+CREATE PARTITION FUNCTION pfEmailDelivery (datetime2)
+AS RANGE RIGHT
+FOR VALUES ('20230101', '20240101', '20250101', '20260101');
+
+CREATE PARTITION SCHEME psEmailDelivery
+AS PARTITION pfEmailDelivery
+ALL TO ([PRIMARY]);
+GO
+
+-- create ticket delivery partition function & scheme
+CREATE PARTITION FUNCTION pfTicketDelivery (datetime2)
+AS RANGE RIGHT
+FOR VALUES ('20230101', '20240101', '20250101', '20260101');
+
+CREATE PARTITION SCHEME psTicketDelivery
+AS PARTITION pfTicketDelivery
+ALL TO ([PRIMARY]);
 GO

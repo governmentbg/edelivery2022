@@ -57,7 +57,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_Profiles]
 ON [dbo].[Profiles]([ElectronicSubjectId])
 GO
 
-CREATE NONCLUSTERED INDEX [IX_Profiles_ElectronicSubjectName_527E0]
+CREATE NONCLUSTERED INDEX [IX_Profiles_ElectronicSubjectName]
 ON [dbo].[Profiles]([ElectronicSubjectName])
 INCLUDE([Id])
 GO

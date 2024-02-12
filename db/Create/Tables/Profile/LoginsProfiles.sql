@@ -37,7 +37,7 @@ CREATE TABLE [dbo].[LoginsProfiles](
 )
 GO
 
-CREATE NONCLUSTERED INDEX [IX_LoginsProfiles_ProfileId_641FA]
+CREATE NONCLUSTERED INDEX [IX_LoginsProfiles_ProfileId]
 ON [dbo].[LoginsProfiles]([ProfileId])
 INCLUDE(
   [LoginId],
