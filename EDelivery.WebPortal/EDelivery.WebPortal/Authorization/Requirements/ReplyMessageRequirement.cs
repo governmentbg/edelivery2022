@@ -71,12 +71,7 @@ namespace EDelivery.WebPortal.Authorization
                     messageId.Value,
                     forwardingMessageId);
 
-            if (hasWriteMessageAccess && hasReadMessageAccess)
-            {
-                return true;
-            }
-
-            return false;
+            return hasWriteMessageAccess && hasReadMessageAccess;
         }
 
         private bool HasWriteMessageAccess(
@@ -102,15 +97,17 @@ namespace EDelivery.WebPortal.Authorization
             int profileId,
             int messageId)
         {
-            AuthorizationClient authorizationClient = GrpcClientFactory.CreateAuthorizationClient();
+            AuthorizationClient authorizationClient =
+                GrpcClientFactory.CreateAuthorizationClient();
 
-            var resp = authorizationClient.HasReadMessageAsRecipientAccess(
-                new HasReadMessageAsRecipientAccessRequest
-                {
-                    LoginId = loginId,
-                    ProfileId = profileId,
-                    MessageId = messageId,
-                });
+            HasAccessResponse resp =
+                authorizationClient.HasReadMessageAsRecipientAccess(
+                    new HasReadMessageAsRecipientAccessRequest
+                    {
+                        LoginId = loginId,
+                        ProfileId = profileId,
+                        MessageId = messageId,
+                    });
 
             return resp.HasAccess;
         }
@@ -121,16 +118,18 @@ namespace EDelivery.WebPortal.Authorization
             int messageId,
             int? forwardingMessageId)
         {
-            AuthorizationClient authorizationClient = GrpcClientFactory.CreateAuthorizationClient();
+            AuthorizationClient authorizationClient =
+                GrpcClientFactory.CreateAuthorizationClient();
 
-            var resp = authorizationClient.HasReadMessageThroughForwardingAsRecipientAccess(
-                new HasReadMessageThroughForwardingAsRecipientAccessRequest
-                {
-                    LoginId = loginId,
-                    ProfileId = profileId,
-                    MessageId = messageId,
-                    ForwardingMessageId = forwardingMessageId,
-                });
+            HasAccessResponse resp =
+                authorizationClient.HasReadMessageThroughForwardingAsRecipientAccess(
+                    new HasReadMessageThroughForwardingAsRecipientAccessRequest
+                    {
+                        LoginId = loginId,
+                        ProfileId = profileId,
+                        MessageId = messageId,
+                        ForwardingMessageId = forwardingMessageId,
+                    });
 
             return resp.HasAccess;
         }

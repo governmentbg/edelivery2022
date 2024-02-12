@@ -12,6 +12,7 @@
         Administration,
         Storage,
         CreateProfile,
-        HelpInfo
+        HelpInfo,
+        ReceivedTickets,
     }
 }

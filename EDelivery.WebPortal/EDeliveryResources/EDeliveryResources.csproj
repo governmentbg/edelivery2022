@@ -73,6 +73,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Help.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Help.resx</DependentUpon>
+    </Compile>
     <Compile Include="Site.en-US.Designer.cs">
       <DependentUpon>Site.en-US.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -114,6 +119,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StoragePage.en-US.resx</DependentUpon>
     </Compile>
+    <Compile Include="Translations.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Translations.resx</DependentUpon>
+    </Compile>
     <Compile Include="UIControls.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -140,12 +150,18 @@
       <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Help.en-US.resx" />
+    <EmbeddedResource Include="Help.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Help.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Landing.en-US.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Landing.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Landing.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Site.en-US.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -181,6 +197,11 @@
     <EmbeddedResource Include="StoragePage.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>StoragePage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Translations.en-US.resx" />
+    <EmbeddedResource Include="Translations.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Translations.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UIControls.en-US.resx" />
     <EmbeddedResource Include="UIControls.resx">

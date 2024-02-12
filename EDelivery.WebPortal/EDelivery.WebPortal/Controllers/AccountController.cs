@@ -13,12 +13,10 @@ using EDelivery.WebPortal.Enums;
 using EDelivery.WebPortal.Extensions;
 using EDelivery.WebPortal.Models;
 using EDelivery.WebPortal.Utils;
+using EDelivery.WebPortal.Utils.Attributes;
 using EDelivery.WebPortal.Utils.Exceptions;
 
 using EDeliveryResources;
-
-using JWT;
-using JWT.Serializers;
 
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -73,6 +71,17 @@ namespace EDelivery.WebPortal.Controllers
             {
                 return HttpContext.GetOwinContext().Authentication;
             }
+        }
+
+        [AllowAnonymous]
+        [Route("s")]
+        public ActionResult ShortsCertificateAuthV2(
+            bool login = true,
+            string returnUrl = null)
+        {
+            return RedirectToAction(
+                    nameof(AccountController.CertificateAuthV2),
+                    new { login, returnUrl });
         }
 
         [AllowAnonymous]
@@ -259,17 +268,7 @@ namespace EDelivery.WebPortal.Controllers
             }
         }
 
-        [AllowAnonymous]
-        public async Task<ActionResult> AuthenticateNoiPikRegisterLegal(
-            string jwt)
-        {
-            return await AuthenticateNOIPIK(
-                jwt,
-                Url.Action(
-                    nameof(AccountController.RegisterLegalEntity1),
-                    "Account"));
-        }
-
+        [Obsolete("used only for debug/dev purposes")]
         [AllowAnonymous]
         public async Task<ActionResult> AuthenticateNOIPIK(
             string jwt,
@@ -279,7 +278,7 @@ namespace EDelivery.WebPortal.Controllers
             if (!string.IsNullOrWhiteSpace(jwt))
             {
                 tokenObject =
-                    GetJWTDetails<NoiUserDetails>(
+                    JwtService.GetJWTDetails<NoiUserDetails>(
                         jwt,
                         true,
                         WebConfigurationManager.AppSettings["NOIAuthSharedSecret"]);
@@ -323,12 +322,29 @@ namespace EDelivery.WebPortal.Controllers
                 }
             }
 
-            //the user does not exists -> register it
-            //return a form for filling additional fields
-            PIKRegistrationModel regModel =
-                new PIKRegistrationModel(jwt, tokenObject);
+#if DEBUG
+            // fake kep authentication
+            CertificateAuthResponse cert = new CertificateAuthResponse()
+            {
+                DateOfBirth = DateTime.UtcNow,
+                EGN = tokenObject.EGN,
+                LatinNames = $"{tokenObject.FirstName} {tokenObject.Surname} {tokenObject.LastName}",
+                PhoneNumber = tokenObject.Phone,
+                Email = tokenObject.Email,
+                ResponseStatus = eCertResponseStatus.Success,
+                ResponseStatusMessage = null,
+            };
 
-            //try get person names from regixt
+            KEPRegistrationModel regModel = new KEPRegistrationModel()
+            {
+                CertInfo = cert,
+                FirstName = tokenObject.FirstName,
+                MiddleName = tokenObject.Surname,
+                LastName = tokenObject.LastName,
+                EmailAddress = tokenObject.Email,
+                PhoneNumber = tokenObject.Phone,
+            };
+
             GetRegixPersonInfoResponse regixResp =
                 await this.profileClient.Value.GetRegixPersonInfoAsync(
                     new GetRegixPersonInfoRequest()
@@ -344,10 +360,14 @@ namespace EDelivery.WebPortal.Controllers
                 regModel.LastName = regixResp.Result.FamilyName;
             }
 
+            this.Session[KepIdentifier] = regModel.CertInfo.EGN;
             this.SetTempModel(regModel, false);
 
             return RedirectToAction(
-                nameof(AccountController.RegisterPersonWithPIK));
+                nameof(AccountController.RegisterPersonWithKEP));
+#else
+            return Redirect("/");
+#endif
         }
 
         // keep it as there are 3rd party systems using this url
@@ -370,44 +390,25 @@ namespace EDelivery.WebPortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [HandleHttpAntiForgeryException]
         public ActionResult LogOff()
         {
             this.HttpContext.ClearCachedUserData();
 
             AuthenticationManager.SignOut();
 
-            return RedirectToAction("Index", "Home");
-        }
-
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult ChooseRegisterType(ChooseRegistrationModel model)
-        {
-            if (model.TargetGroupId == TargetGroupId.Individual)
+            if (Request.Cookies[SystemConstants.EAuthCookieName] != null)
             {
-                switch (model.RegistrationType)
+                HttpCookie eauthIdp = new HttpCookie(SystemConstants.EAuthCookieName)
                 {
-                    case eRegistrationType.PIK:
-                        string noiPikAuthUrl = string.Format(
-                            "{0}{1}",
-                            ConfigurationManager.AppSettings["NOIAuthUrl"],
-                            HttpUtility.UrlEncode(
-                                Url.Action(
-                                    "AuthenticateNoiPik",
-                                    "Account",
-                                    null,
-                                    this.Request.Url.Scheme)));
+                    Expires = DateTime.Now.AddDays(-1d),
+                    Domain = SystemConstants.EAuthCookieDomain
+                };
 
-                        return Redirect(noiPikAuthUrl);
-                    case eRegistrationType.Certificate:
-                        return RedirectToAction(
-                            SamlHelper.SamlConfiguration.LoginUrl,
-                            new { login = false });
-                }
+                Response.Cookies.Add(eauthIdp);
             }
 
-            throw new ArgumentException(
-                $"{nameof(model.TargetGroupId)} has invalid value.");
+            return RedirectToAction("Index", "Home");
         }
 
         [AllowAnonymous]
@@ -520,143 +521,6 @@ namespace EDelivery.WebPortal.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
-        public ActionResult RegisterPersonWithPIK()
-        {
-            PIKRegistrationModel vm = this.GetTempModel<PIKRegistrationModel>(true);
-            if (vm != null)
-            {
-                return View(vm);
-            }
-
-            string NOIAuthUrl = ConfigurationManager.AppSettings["NOIAuthUrl"];
-
-            string encodedUrl = HttpUtility.UrlEncode(
-                Url.Action(
-                    "AuthenticateNoiPik",
-                    "Account",
-                    null,
-                    this.Request.Url.Scheme));
-
-            string redirectToNOI = $"{NOIAuthUrl}{encodedUrl}";
-
-            return Redirect(redirectToNOI);
-        }
-
-        [AllowAnonymous]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisterPersonWithPIK(
-            PIKRegistrationModel model)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    this.SetTempModel(model, true);
-
-                    return RedirectToAction(
-                        nameof(AccountController.RegisterPersonWithPIK));
-                }
-
-                if (string.IsNullOrEmpty(model.Token))
-                {
-                    ModelState.AddModelError(
-                        string.Empty,
-                        ErrorMessages.NotAuthenticatedByThirdParty);
-
-                    this.SetTempModel(model, true);
-
-                    return RedirectToAction(
-                        nameof(AccountController.RegisterPersonWithPIK));
-                }
-
-                NoiUserDetails userDetails =
-                    GetJWTDetails<NoiUserDetails>(
-                        model.Token,
-                        false,
-                        WebConfigurationManager.AppSettings["NOIAuthSharedSecret"]);
-                if (userDetails == null || model.EGN != userDetails.EGN)
-                {
-                    ElmahLogger.Instance.Error(
-                        $"RegisterPersonWithPIK called without invalid token {model.Token}");
-
-                    ModelState.AddModelError(
-                        string.Empty,
-                        ErrorMessages.NotAuthenticatedByThirdParty);
-
-                    this.SetTempModel(model, true);
-
-                    return RedirectToAction(
-                        nameof(AccountController.RegisterPersonWithPIK));
-                }
-
-                CheckIndividualUniquenessResponse resp =
-                    await profileClient.Value.CheckIndividualUniquenessAsync(
-                        new CheckIndividualUniquenessRequest
-                        {
-                            Identifier = userDetails.EGN,
-                            Email = model.EmailAddress,
-                        });
-
-                if (!resp.IsUniqueEmail || !resp.IsUniqueIdentifier)
-                {
-                    if (!resp.IsUniqueIdentifier)
-                    {
-                        ModelState.AddModelError(
-                            string.Empty,
-                            ErrorMessages.UsernameAlredyRegistered);
-                    }
-
-                    if (!resp.IsUniqueEmail)
-                    {
-                        ModelState.AddModelError(
-                            nameof(PIKRegistrationModel.EmailAddress),
-                            ErrorMessages.EmailAlredyRegistered);
-                    }
-
-                    this.SetTempModel(model, true);
-
-                    return RedirectToAction(
-                        nameof(AccountController.RegisterPersonWithPIK));
-                }
-
-                if (model.PhoneNotifications && model.ViberNotifications)
-                {
-                    model.PhoneNotifications = false;
-                }
-
-                return await RegisterPersonInternal(
-                    model.FirstName,
-                    model.MiddleName,
-                    model.LastName,
-                    model.EGN,
-                    model.EmailAddress,
-                    model.PhoneNumber,
-                    model.Address,
-                    model.CreateProfile,
-                    model.EmailNotifications,
-                    model.PhoneNotifications,
-                    model.ViberNotifications);
-            }
-            catch (Exception ex)
-            {
-                ElmahLogger.Instance.Error(
-                    ex,
-                    "Unsuccessful registration with PIK");
-
-                ModelState.AddModelError(
-                    string.Empty,
-                    ErrorMessages.ErrorSystemGeneral);
-
-                this.SetTempModel(model, true);
-
-                return RedirectToAction(
-                    nameof(AccountController.RegisterPersonWithPIK));
-            }
-        }
-
-        [AllowAnonymous]
         [Route("Register/LegalEntity")]
         [HttpGet]
         public ActionResult RegisterLegalEntity1()
@@ -732,6 +596,7 @@ namespace EDelivery.WebPortal.Controllers
                             TargetGroupId = (int)TargetGroupId.LegalEntity,
                             BlobId = model.FileId.Value,
                             LoginId = this.UserData.LoginId,
+                            Ip = this.Request.UserHostAddress,
                         },
                         cancellationToken: Response.ClientDisconnectedToken);
 
@@ -904,38 +769,6 @@ namespace EDelivery.WebPortal.Controllers
             SignInManager.SignIn(user, false, false);
 
             return string.Empty;
-        }
-
-        private T GetJWTDetails<T>(
-            string jwt,
-            bool validate,
-            string sharedSecret)
-        {
-            try
-            {
-                JsonNetSerializer serializer = new JsonNetSerializer();
-                UtcDateTimeProvider dateTimeProvider = new UtcDateTimeProvider();
-                JwtBase64UrlEncoder encoder = new JwtBase64UrlEncoder();
-                JwtValidator validator =
-                    new JwtValidator(serializer, dateTimeProvider);
-                JwtDecoder decoder =
-                    new JwtDecoder(serializer, validator, encoder);
-
-                T tokenObject = decoder.DecodeToObject<T>(
-                    jwt,
-                    sharedSecret,
-                    validate);
-
-                return tokenObject;
-            }
-            catch (Exception ex)
-            {
-                ElmahLogger.Instance.Error(
-                    ex,
-                    $"Get Json Token failed for token {jwt}");
-
-                return default;
-            }
         }
 
         // TODO: remove, useless and confusing

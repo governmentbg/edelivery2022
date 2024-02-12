@@ -537,4 +537,13 @@
   <data name="ProfileChange" xml:space="preserve">
     <value>Смяна на профила</value>
   </data>
+  <data name="LabelNoMessageTranslations" xml:space="preserve">
+    <value>Няма заявени преводи към съобщението.</value>
+  </data>
+  <data name="ButtonCreateTranslation" xml:space="preserve">
+    <value>Заяви превод</value>
+  </data>
+  <data name="MessageConfirmDeleteTranslation" xml:space="preserve">
+    <value>Сигурни ли сте, че желаете да изтриете превода?</value>
+  </data>
 </root>

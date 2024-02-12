@@ -275,4 +275,13 @@
   <data name="ErrorPageNotFound" xml:space="preserve">
     <value>The resource could not be found!</value>
   </data>
+  <data name="ErrorCantCreateTranslation" xml:space="preserve">
+    <value>Due to system error a request for message translation could not be created at the moment.</value>
+  </data>
+  <data name="ErrorMaxArchivedMessageTranslations" xml:space="preserve">
+    <value>You have reached the max number of archived translations per message!</value>
+  </data>
+  <data name="ErrorObligationNotFound" xml:space="preserve">
+    <value>The obligation could not be found or it is already paid!</value>
+  </data>
 </root>

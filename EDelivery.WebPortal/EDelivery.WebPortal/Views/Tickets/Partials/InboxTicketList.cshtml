@@ -1,0 +1,102 @@
+﻿@using EDelivery.WebPortal.Extensions
+
+@model EDelivery.WebPortal.Models.Tickets.TicketsInboxViewModel
+
+@{
+    var options = new PagedListRenderOptions();
+    options.Display = PagedListDisplayMode.IfNeeded;
+    options.MaximumPageNumbersToDisplay = 6;
+    options.DisplayLinkToPreviousPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToNextPage = PagedListDisplayMode.IfNeeded;
+    options.DisplayLinkToFirstPage = PagedListDisplayMode.Never;
+    options.DisplayLinkToLastPage = PagedListDisplayMode.Never;
+}
+
+<div class="table-responsive" id="tickets-list-content">
+    @Html.CustomPagedListPager(
+        Model.Tickets,
+        p => Url.Action(
+            "Inbox",
+            new
+            {
+                from = Model.SearchFilter.From,
+                to = Model.SearchFilter.To,
+                page = p
+            }),
+        options)
+
+    <table class="statistics unbreakable mails">
+        <tbody>
+            <tr>
+                <th>@ProfilePage.TableHeaderMessageStatus</th>
+                <th>@ProfilePage.TableHeaderMessageSender</th>
+                <th>@ProfilePage.TableHeaderMessageTitle</th>
+                <th>@ProfilePage.TableHeaderMessageDateSent</th>
+                <th>Тип</th>
+                <th>Дата на нарушение</th>
+                <th>Текущо състояние</th>
+            </tr>
+
+            @if (Model.Tickets.Count == 0)
+            {
+                <tr>
+                    <td colspan="10">
+                        @ViewBag.NoMessages
+                    </td>
+                </tr>
+            }
+
+            @foreach (var ticket in Model.Tickets)
+            {
+                var received = ticket.StatusSeenDate != null;
+
+                string statusClass = $"{(received ? "read" : "unread")}";
+                string statusName = received ? ProfilePage.TooltipMessageOpened : ProfilePage.TooltipMessageNew;
+
+                <tr>
+                    <td class="mail @statusClass">
+                        <div data-toggle="tooltip"
+                             data-original-title="@statusName">
+                            <a href="@Url.Action("Open", "Tickets", new { id = ticket.MessageId })"
+                               style="display:block; height:100%; width: 100%;">
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        @ticket.SenderProfileName
+                    </td>
+                    <td class="title">
+                        <a href="@Url.Action("Open", "Tickets", new { id = ticket.MessageId })"
+                           title="@ProfilePage.TableActionOpenMessage">
+                            @ticket.Subject
+                        </a>
+                    </td>
+                    <td>
+                        @ticket.DateSent.ToString(SystemConstants.DateTimeFormat)
+                    </td>
+                    <td>
+                        @ticket.Type
+                    </td>
+                    <td>
+                        @ticket.ViolationDate.ToString(SystemConstants.DateTimeFormat)
+                    </td>
+                    <td>
+                        @ticket.GetStatus
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.CustomPagedListPager(
+        Model.Tickets,
+        p => Url.Action(
+            "Inbox",
+            new
+            {
+                from = Model.SearchFilter.From,
+                to = Model.SearchFilter.To,
+                page = p
+            }),
+        options)
+</div>

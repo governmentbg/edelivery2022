@@ -22,6 +22,19 @@
 
                 @Html.Partial("Partials/_Open", Model)
 
+                <section class="form-section form-row button-row-right">
+                    <a class="btn btn-l"
+                       href="@Url.Action("List", "Translations", new { id = Model.MessageId })">
+                        @Common.ButtonTranslations
+                    </a>
+
+                    <button class="btn-border btn-l"
+                            type="button"
+                            data-modal-href="@Url.Action("CreateTranslation", "Messages" , new { messageId = Model.MessageId })">
+                        @ProfilePage.ButtonCreateTranslation
+                    </button>
+                </section>
+
                 @if (!Model.Recipient.IsReadOnly)
                 {
                     var userData = Context.GetCachedUserData();

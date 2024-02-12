@@ -124,6 +124,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Преводи.
+        /// </summary>
+        public static string ButtonTranslations {
+            get {
+                return ResourceManager.GetString("ButtonTranslations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;copy; 2018  Министерство на електронното управление.
         /// </summary>
         public static string CopyRight {
@@ -799,6 +808,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Преглед получен административен акт.
+        /// </summary>
+        public static string TitleOpenTicket {
+            get {
+                return ResourceManager.GetString("TitleOpenTicket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Статистика за достъп до профила.
         /// </summary>
         public static string TitleProfileAccessHistory {
@@ -831,6 +849,15 @@ namespace EDeliveryResources {
         public static string TitleReceivedMessages {
             get {
                 return ResourceManager.GetString("TitleReceivedMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Получени административни актове.
+        /// </summary>
+        public static string TitleReceivedTickets {
+            get {
+                return ResourceManager.GetString("TitleReceivedTickets", resourceCulture);
             }
         }
         
@@ -903,6 +930,24 @@ namespace EDeliveryResources {
         public static string TitleStorageHome {
             get {
                 return ResourceManager.GetString("TitleStorageHome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Преглед на превод.
+        /// </summary>
+        public static string TitleTranslationDetails {
+            get {
+                return ResourceManager.GetString("TitleTranslationDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Преводи.
+        /// </summary>
+        public static string TitleTranslations {
+            get {
+                return ResourceManager.GetString("TitleTranslations", resourceCulture);
             }
         }
     }

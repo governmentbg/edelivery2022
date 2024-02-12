@@ -45,19 +45,30 @@
         <li class="@(b?.ELeftMenu == eLeftMenu.ReceivedMessages ? "selected" : string.Empty)">
             <a href="@Url.Action("Inbox", "Messages")">
                 @Common.FooterNavReceived
+
+                <span class="number"
+                      data-type="delivery"
+                      data-profileid="@profile.ProfileId"
+                      style="display: none;">
+                </span>
             </a>
-            <span class="number"
-                  data-type="delivery"
-                  data-profileid="@profile.ProfileId"
-                  style="display: none;">
-            </span>
         </li>
         <li class="@(b?.ELeftMenu == eLeftMenu.SentMessages ? "selected" : string.Empty)">
             <a href="@Url.Action("Outbox", "Messages")">
                 @Common.FooterNavSent
             </a>
         </li>
+        <li class="@(b?.ELeftMenu == eLeftMenu.ReceivedTickets ? "selected" : string.Empty)">
+            <a href="@Url.Action("Inbox", "Tickets")">
+                @Common.TitleReceivedTickets
 
+                <span class="number"
+                      data-type="tickets"
+                      data-profileid="@profile.ProfileId"
+                      style="display: none;">
+                </span>
+            </a>
+        </li>
         <li class="@(b?.ELeftMenu == eLeftMenu.Storage ? "selected" : string.Empty)">
             <a href="@Url.Action("Index", "Storage")">
                 @Common.TitleStorageHome
@@ -69,12 +80,13 @@
             <li class="@(b?.ELeftMenu == eLeftMenu.Seos ? "selected" : string.Empty)">
                 <a href="@Url.Action("Index", "SEOS")">
                     @SEOS.TitleSEOS
+
+                    <span class="number"
+                          data-type="seos"
+                          data-profileid="@profile.ProfileId"
+                          style="display: none;">
+                    </span>
                 </a>
-                <span class="number"
-                      data-type="seos"
-                      data-profileid="@profile.ProfileId"
-                      style="display: none;">
-                </span>
             </li>
         }
 

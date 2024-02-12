@@ -91,9 +91,8 @@
     <Reference Include="itextsharp.netstandard20, Version=5.5.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\itextsharp.netstandard20.5.5.14\lib\netstandard2.0\itextsharp.netstandard20.dll</HintPath>
     </Reference>
-    <Reference Include="JWT, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\JWT.3.0.0\lib\net35\JWT.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="JWT, Version=8.0.0.0, Culture=neutral, PublicKeyToken=6f98bca0f40f2ecf, processorArchitecture=MSIL">
+      <HintPath>..\packages\JWT.8.9.0\lib\net46\JWT.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -380,6 +379,12 @@
     <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\profile.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
       <Link>Grpc\Protos\profile.proto</Link>
     </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\translation.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Grpc\Protos\translation.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\ticket.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Grpc\Protos\ticket.proto</Link>
+    </Protobuf>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AuthConfig.cs" />
@@ -421,23 +426,38 @@
     <Compile Include="Authorization\Requirements\ReadMessageAsSenderRequirement.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\CodeMessagesController.cs" />
+    <Compile Include="Controllers\CoordinatorController.cs" />
+    <Compile Include="Controllers\ShortsController.cs" />
+    <Compile Include="Controllers\TicketsController.cs" />
+    <Compile Include="Controllers\TranslationsController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\TemplatesController.cs" />
     <Compile Include="Controllers\SEOSController.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\OpenXmlExtensions.cs" />
     <Compile Include="Extensions\TimestampExtensions.cs" />
+    <Compile Include="Models\Messages\CreateTranslationViewModel.cs" />
     <Compile Include="Models\Messages\MessageRecipientsViewModel.cs" />
     <Compile Include="Models\Profile\CreateProfileViewModel.cs" />
     <Compile Include="Models\Templates\Components\MarkdownComponent.cs" />
+    <Compile Include="Models\Tickets\TicketsReadViewModel.cs" />
+    <Compile Include="Models\Tickets\TicketsSearchViewModel.cs" />
+    <Compile Include="Models\Tickets\TicketsInboxViewModel.cs" />
+    <Compile Include="Models\Translations\TranslationiewModel.cs" />
+    <Compile Include="Models\Translations\TranslationsListViewModel.cs" />
     <Compile Include="Services\ExportService.cs" />
+    <Compile Include="Services\JwtService.cs" />
     <Compile Include="Utils\Attributes\BreadCrumbAttribute.cs" />
     <Compile Include="Utils\Attributes\ChildActionOnlyOrAjaxAttribute.cs" />
+    <Compile Include="Utils\Attributes\HandleHttpAntiForgeryExceptionAttribute.cs" />
     <Compile Include="Utils\Attributes\PersonalIdentifierValidationAttribute.cs" />
     <Compile Include="Utils\Attributes\HttpEnumModelBinder.cs" />
     <Compile Include="Utils\Attributes\RequireTrueAttribute.cs" />
     <Compile Include="Authentication\EDeliveryUserManager.cs" />
     <Compile Include="Authentication\EDeliverySignInManager.cs" />
+    <Compile Include="Utils\Cache\CachedSystemDataOwinExtensions.cs" />
+    <Compile Include="Utils\EncriptionHelper.cs" />
+    <Compile Include="Utils\Encryption\AesHelper.cs" />
     <Compile Include="Utils\Exceptions\ModelStateException.cs" />
     <Compile Include="Enums\eCertResponseStatus.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -453,7 +473,6 @@
     <Compile Include="Utils\Attributes\RequiredRes.cs" />
     <Compile Include="Enums\eLeftMenu.cs" />
     <Compile Include="Enums\eRegisteredSubjectsType.cs" />
-    <Compile Include="Enums\eRegistrationType.cs" />
     <Compile Include="Enums\eSiteCulture.cs" />
     <Compile Include="Enums\eSortColumn.cs" />
     <Compile Include="Enums\eSortOrder.cs" />
@@ -469,11 +488,9 @@
     <Compile Include="Models\Account\BaseRegistrationModel.cs" />
     <Compile Include="Models\Account\CertAuthViewModel.cs" />
     <Compile Include="Models\Account\CertificateAuthResponse.cs" />
-    <Compile Include="Models\Account\ChooseRegistrationModel.cs" />
     <Compile Include="Models\Account\KEPRegistrationModel.cs" />
     <Compile Include="Models\Account\RegisterLegalEntityViewModel.cs" />
     <Compile Include="Models\Account\LoginEIDViewModel.cs" />
-    <Compile Include="Models\Account\PIKRegistrationModel.cs" />
     <Compile Include="Models\Account\StringViewModel.cs" />
     <Compile Include="Models\Common\BreadCrumb.cs" />
     <Compile Include="Models\CodeMessages\CodeMessageProfileInfoViewModel.cs" />
@@ -581,7 +598,6 @@
     <Compile Include="Utils\DbAuditLogs\JWTTokenAuditLog.cs" />
     <Compile Include="Utils\DbAuditLogs\JWTTokenType.cs" />
     <Compile Include="Errors\ElmahLogger.cs" />
-    <Compile Include="Utils\EncriptionHelper.cs" />
     <Compile Include="Utils\Filters\StripAuthCookieAttribute.cs" />
     <Compile Include="Utils\Filters\SeosFilterAttribute.cs" />
     <Compile Include="Utils\MemoryCacheExtensions.cs" />
@@ -617,26 +633,31 @@
     <Content Include="Content\img\edit-icon.png" />
     <Content Include="Content\img\footer-flags.png" />
     <Content Include="Content\img\footer-flags2.png" />
-    <Content Include="Content\img\help\1.jpeg" />
-    <Content Include="Content\img\help\10.png" />
-    <Content Include="Content\img\help\11.jpeg" />
-    <Content Include="Content\img\help\12.jpeg" />
-    <Content Include="Content\img\help\13.jpeg" />
-    <Content Include="Content\img\help\14.jpeg" />
-    <Content Include="Content\img\help\15.jpeg" />
-    <Content Include="Content\img\help\16.jpeg" />
-    <Content Include="Content\img\help\17.jpeg" />
-    <Content Include="Content\img\help\18.jpeg" />
-    <Content Include="Content\img\help\19.jpeg" />
-    <Content Include="Content\img\help\2.jpeg" />
-    <Content Include="Content\img\help\20.jpeg" />
-    <Content Include="Content\img\help\3.png" />
-    <Content Include="Content\img\help\4.jpeg" />
-    <Content Include="Content\img\help\5.jpeg" />
-    <Content Include="Content\img\help\6.jpeg" />
-    <Content Include="Content\img\help\7.jpeg" />
-    <Content Include="Content\img\help\8.jpeg" />
-    <Content Include="Content\img\help\9.jpeg" />
+    <Content Include="Content\img\help\1_1.jpeg" />
+    <Content Include="Content\img\help\2_2.png" />
+    <Content Include="Content\img\help\3_2.png" />
+    <Content Include="Content\img\help\4_10.png" />
+    <Content Include="Content\img\help\4_11.png" />
+    <Content Include="Content\img\help\4_3.png" />
+    <Content Include="Content\img\help\4_4.jpeg" />
+    <Content Include="Content\img\help\4_5.jpeg" />
+    <Content Include="Content\img\help\5_1.jpeg" />
+    <Content Include="Content\img\help\5_2.jpeg" />
+    <Content Include="Content\img\help\5_3.jpeg" />
+    <Content Include="Content\img\help\5_4.jpeg" />
+    <Content Include="Content\img\help\5_5.png" />
+    <Content Include="Content\img\help\5_6.jpeg" />
+    <Content Include="Content\img\help\1_2.jpeg" />
+    <Content Include="Content\img\help\6_1.jpeg" />
+    <Content Include="Content\img\help\1_3.png" />
+    <Content Include="Content\img\help\2_1.jpeg" />
+    <Content Include="Content\img\help\4_6.png" />
+    <Content Include="Content\img\help\4_7.png" />
+    <Content Include="Content\img\help\4_8.png" />
+    <Content Include="Content\img\help\4_9.png" />
+    <Content Include="Content\img\help\3_1.jpeg" />
+    <Content Include="Content\img\help\4_1.jpeg" />
+    <Content Include="Content\img\help\4_2.jpeg" />
     <Content Include="Content\img\info-icon.png" />
     <Content Include="Content\img\info-neutral.png" />
     <Content Include="Content\img\lion-form.svg" />
@@ -653,6 +674,7 @@
     <Content Include="Content\img\timestamp.png" />
     <Content Include="Content\img\trash-icon.png" />
     <Content Include="Content\img\unread-forward.png" />
+    <Content Include="Content\img\view_icon.png" />
     <Content Include="Content\img\warning-big.png" />
     <Content Include="Content\img\warning-icon.png" />
     <Content Include="Content\img\warning.png" />
@@ -889,7 +911,6 @@
     <Content Include="Views\Profile\History.cshtml" />
     <Content Include="Views\Shared\_Cultures.cshtml" />
     <Content Include="Views\Messages\Partials\_OpenDocumentSignatureInfo.cshtml" />
-    <Content Include="Views\Account\RegisterPersonWithPIK.cshtml" />
     <Content Include="Views\Search\Search.cshtml" />
     <Content Include="Views\Messages\Partials\_MessageProfileInfo.cshtml" />
     <Content Include="Views\SEOS\Index.cshtml" />
@@ -908,8 +929,8 @@
     <Content Include="Views\Messages\Partials\_OutboxMessageList.cshtml" />
     <Content Include="Views\Messages\Partials\_InboxMessageList.cshtml" />
     <Content Include="Views\Account\Partials\_RegisterPersonFields.cshtml" />
-    <Content Include="Views\Messages\Partials\_Forward.cshtml" />
-    <Content Include="Views\Messages\Partials\_ForwardMessageSuccess.cshtml" />
+    <Content Include="Views\Messages\Modals\_Forward.cshtml" />
+    <Content Include="Views\Messages\Modals\_ForwardMessageSuccess.cshtml" />
     <Content Include="Views\Messages\Partials\_ForwardedMessageHistory.cshtml" />
     <Content Include="Views\Profile\Partials\_ProfileBlobs.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -993,6 +1014,20 @@
     <Content Include="Views\Profile\NoProfile.cshtml" />
     <Content Include="Views\Messages\TemplatesByCategory.cshtml" />
     <Content Include="Views\Templates\Partials\Render\_Markdown.cshtml" />
+    <Content Include="Views\Translations\List.cshtml" />
+    <Content Include="Views\Translations\Details.cshtml" />
+    <Content Include="Views\Messages\Modals\_CreateTranslation.cshtml" />
+    <Content Include="Views\Messages\Modals\_CreateTranslationSuccess.cshtml" />
+    <Content Include="Views\Translations\Partials\ListTranslations.cshtml" />
+    <Content Include="Views\Tickets\Inbox.cshtml" />
+    <Content Include="Views\Tickets\Partials\InboxTicketList.cshtml" />
+    <Content Include="Views\Tickets\Partials\SearchTickets.cshtml" />
+    <Content Include="Views\Tickets\Open.cshtml" />
+    <Content Include="Views\Tickets\Partials\Open.cshtml" />
+    <Content Include="Views\Tickets\Partials\OpenDocumentSignatureInfo.cshtml" />
+    <Content Include="Views\Tickets\LoadObligations.cshtml" />
+    <Content Include="Views\Shorts\LoadObligation.cshtml" />
+    <Content Include="Views\Shared\_LayoutClean.cshtml" />
     <None Include="Web.EGovTestV2.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -9,6 +9,22 @@ namespace EDelivery.WebPortal.Utils
 {
     public static class Utils
     {
+        public static string PayObligationByAccessCode
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["PayObligationByAccessCode"];
+            }
+        }
+
+        public static string PayObligations
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["PayObligations"];
+            }
+        }
+
         public static bool MatomoEnabled
         {
             get
@@ -111,6 +127,27 @@ namespace EDelivery.WebPortal.Utils
         public static string ToUrlSafeBase64(string message)
         {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(message)).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        }
+
+        public static string FromUrlSafeBase64(string dataString)
+        {
+            string incoming = dataString.Replace('_', '/').Replace('-', '+');
+
+            switch (dataString.Length % 4)
+            {
+                case 2:
+                    incoming += "==";
+                    break;
+                case 3:
+                    incoming += "=";
+                    break;
+            }
+
+            byte[] buffer = Convert.FromBase64String(incoming);
+
+            string decoded = Encoding.UTF8.GetString(buffer);
+
+            return decoded;
         }
     }
 }

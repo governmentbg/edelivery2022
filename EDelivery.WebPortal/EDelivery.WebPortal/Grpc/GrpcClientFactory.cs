@@ -15,6 +15,8 @@ using static ED.DomainServices.Messages.Message;
 using static ED.DomainServices.Nomenclatures.Nomenclature;
 using static ED.DomainServices.Profiles.Profile;
 using static ED.DomainServices.Templates.Template;
+using static ED.DomainServices.Tickets.Ticket;
+using static ED.DomainServices.Translations.Translation;
 
 namespace EDelivery.WebPortal.Grpc
 {
@@ -24,7 +26,7 @@ namespace EDelivery.WebPortal.Grpc
             new Lazy<IServiceProvider>(
                 () =>
                 {
-                    var services = new ServiceCollection();
+                    ServiceCollection services = new ServiceCollection();
 
                     string domainServicesUrl = ConfigurationManager.AppSettings["DomainServicesUrl"];
                     bool domainServicesUseGrpcWeb =
@@ -40,6 +42,8 @@ namespace EDelivery.WebPortal.Grpc
                     AddGrpcClient<ProfileClient>(services, domainServicesUrl, domainServicesUseGrpcWeb);
                     AddGrpcClient<JournalClient>(services, domainServicesUrl, domainServicesUseGrpcWeb);
                     AddGrpcClient<AuthorizationClient>(services, domainServicesUrl, domainServicesUseGrpcWeb);
+                    AddGrpcClient<TranslationClient>(services, domainServicesUrl, domainServicesUseGrpcWeb);
+                    AddGrpcClient<TicketClient>(services, domainServicesUrl, domainServicesUseGrpcWeb);
 
                     return services.BuildServiceProvider();
                 },
@@ -116,6 +120,16 @@ namespace EDelivery.WebPortal.Grpc
         public static AuthorizationClient CreateAuthorizationClient()
         {
             return GrpcServiceProvider.Value.GetRequiredService<AuthorizationClient>();
+        }
+
+        public static TranslationClient CreateTranslationClient()
+        {
+            return GrpcServiceProvider.Value.GetRequiredService<TranslationClient>();
+        }
+
+        public static TicketClient CreateTicketClient()
+        {
+            return GrpcServiceProvider.Value.GetRequiredService<TicketClient>();
         }
     }
 }

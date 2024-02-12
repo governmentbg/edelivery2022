@@ -102,7 +102,7 @@ namespace EDelivery.WebPortal.Models.Profile.Administration
                     });
             }
 
-            foreach (var item in this.Templates)
+            foreach (UpdateLoginProfilePermissionsViewModelTemplates item in this.Templates)
             {
                 if (item.HasReadPermission)
                 {

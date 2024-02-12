@@ -1,0 +1,25 @@
+﻿@model TranslationsListViewModel
+
+@{
+    ViewBag.Title = Common.TitleTranslations;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleTranslations</h2>
+
+        <a href="@Url.Action("Open","Messages", new { id = Model.MessageId })"
+           class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+
+        @Html.Action("ListTranslations", new { id = Model.MessageId })
+
+        <a href="@Url.Action("Open","Messages", new { id = Model.MessageId })"
+           class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

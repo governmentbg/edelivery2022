@@ -210,9 +210,10 @@
         <script type="text/javascript">
             $(function () {
                 var url = '@Url.Action("GetProfilesMessagesCounts", "Messages")';
-                var timeout = 60000;
+                var ticket_url = '@Url.Action("GetProfilesTicketsCounts", "Tickets")';
+                var timeout = 3 * 60000;
 
-                gf.refreshMessagesCount(url, timeout);
+                gf.refreshMessagesCount(url, ticket_url, timeout);
             })
         </script>
     }

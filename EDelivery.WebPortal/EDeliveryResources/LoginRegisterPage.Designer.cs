@@ -430,33 +430,6 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to КЕП / ПИК на НАП.
-        /// </summary>
-        public static string RadioChooseRegisterTypeEauth {
-            get {
-                return ResourceManager.GetString("RadioChooseRegisterTypeEauth", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Карта за Електронна Идентичност (eID).
-        /// </summary>
-        public static string RadioChooseRegisterTypeEID {
-            get {
-                return ResourceManager.GetString("RadioChooseRegisterTypeEID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Персонален Идентификационен Код на НОИ.
-        /// </summary>
-        public static string RadioChooseRegisterTypePIK {
-            get {
-                return ResourceManager.GetString("RadioChooseRegisterTypePIK", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to За регистрация на физическо лице, моля излезте от профила си!.
         /// </summary>
         public static string TextAuthentictedRegisterPerson {
@@ -568,29 +541,11 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Вход с eID.
-        /// </summary>
-        public static string TitleLoginEID {
-            get {
-                return ResourceManager.GetString("TitleLoginEID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Вход с КЕП / ПИК на НАП.
+        ///   Looks up a localized string similar to Вход.
         /// </summary>
         public static string TitleLoginKEP {
             get {
                 return ResourceManager.GetString("TitleLoginKEP", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Вход с ПИК на НОИ.
-        /// </summary>
-        public static string TitleLoginNoiPIK {
-            get {
-                return ResourceManager.GetString("TitleLoginNoiPIK", resourceCulture);
             }
         }
         

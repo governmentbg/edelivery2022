@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Messages" xml:space="preserve">
+    <value>&lt;div id="tab_box_4" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Изпращане и получаване на съобщение &lt;/h2&gt;
+            &lt;p&gt;За изпращане на съобщение, потребителят трябва да избере бутон „Вход“ и да влезе в профила си чрез КЕП, чрез ПИК на НАП или чрез ПИК на НОИ, след което се отваря началният екран на Системата за сигурно електронно връчване (Фигура 4.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_1.jpeg" class="lazy" alt="Фигура 4.1." title="Фигура 4.1."&gt;
+                &lt;figcaption&gt;Фигура 4.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Всяко физическо лице може да изпрати ново съобщение чрез меню „Изпрати съобщение“ на фиг. 4.1. При избор на менюто се визуализират шаблоните, за които има права за работа съответното физическо лице (Фигура 4.2).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_2.jpeg" class="lazy" alt="Фигура 4.2." title="Фигура 4.2."&gt;
+                &lt;figcaption&gt;Фигура 4.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;За изпращане на съобщение от името на юридическо лице/администрация, за което физическото лице е оправомощено, последното трябва да избере бутон „Смяна на профила“ и да избере желания профил. След това се избира меню „Изпрати съобщение“ и съответния шаблон, който потребителят желае да използва (Фигура 4.3).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_3.png" class="lazy" alt="Фигура 4.3." title="Фигура 4.3."&gt;
+                &lt;figcaption&gt;Фигура 4.3.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;След избор на шаблон се зарежда формата за изпращане на съобщение, съгласно съответния шаблон. Със звезда (*) се отбелязват задължителните за попълване полета, без които съобщението не може да бъде изпратено.&lt;/p&gt;
+            &lt;p&gt;В случай че шаблонът не отговаря на нуждите на потребителя, той може да избере бутон „Откажи“ и след потвърждаване да се върне на страницата за избор на шаблон. Получателят на съобщението се указва чрез бутон „Добави“ в поле получател. Изпращачът може да избере няколко получателя, включително да изпрати съобщение до всички потребители, обособени в целева и/или профилна група (Фигура 4.4). Вече добавените получатели се визуализират след текста „Избрани получатели“ и могат да бъдат премахвани чрез избор на хикса (х) до името/наименованието на получателя (Фигура 4.4). Всички избрани получатели се добавят чрез избор на бутон „Добави“.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_4.jpeg" class="lazy" alt="Фигура 4.4." title="Фигура 4.4."&gt;
+                &lt;figcaption&gt;Фигура 4.4.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;За изпращането на съобщението се попълва заглавие, което следва да обобщава целта на съставеното съобщение. Попълват се всички други задължителни атрибути, съгласно изискванията на шаблона. За изпращане на съобщението се избира бутон „Изпрати“.&lt;/p&gt;
+            &lt;p&gt;След изпращане, съобщението се визуализира в меню „Получени съобщения“ на получателите (Фигура 4.5). В менюто най-отгоре се показват съобщенията, които не са прочетени от потребителя. Те се обозначават с изцяло син плик в колона „Статус“, като за тях няма налична информация в колони „Връчено“ и „Получено от“ (Фигура 4.5).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_5.jpeg" class="lazy" alt="Фигура 4.5." title="Фигура 4.5."&gt;
+                &lt;figcaption&gt;Фигура 4.5.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;За всяко съобщение се визуализира информация за статус (колона „Статус“ - отворено/ново), изпращач (колона „Връчител“), заглавие на полученото съобщение (колона „Заглавие“) и дата и час на изпращане (колона „Изпратено“). За прочетените от потребителя съобщения се визуализира и информация за дата и час на връване (колона „Връчено“) и за лице, от което съобщението е отворено (колона „Получено от“).&lt;/p&gt;
+            &lt;p&gt;За по-лесна и бърза ориентация на потребителите е възможно търсене в получените съобщения (бутон „Търсене в получени съобщения“). Потребителят може да въведе само един критерий за търсене или да попълни два и повече. За прилагане на филтрите се избира бутон „Търси“. Когато е допуснал неточност или иска да извърши различно търсене, потребителят може да изчисти текста в попълнените полета или да избере бутон „Изчисти филтрите“.&lt;/p&gt;
+            &lt;p&gt;За преглед на получено съобщение потребителят трябва да последва линка в колона „Заглавие“. Текстът в тази колона представлява заглавието на съобщението. След избор на линка може да се извърши преглед на Връчител, Съдържание, дата и час на подаване, дата и час на връчване, връчените документи, както и TimeStamp (Времеви печат) (Фигура 4.6).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_6.png" class="lazy" alt="Фигура 4.6." title="Фигура 4.6."&gt;
+                &lt;figcaption&gt;Фигура 4.6.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Ако желае да отговори на съобщението, потребителят избира бутона „Отговор“ долу в дясно (Фигура 4.6).&lt;/p&gt;
+            &lt;br /&gt;
+            &lt;p&gt;При необходимост, потребителят може да заяви превод на полученото съобщение, включително на прикачените към последното документи. За целта потребителят избира бутон "Заяви превод" (Фигура 4.6). Зарежда се форма, от която потребителят следва да избере език на оригиналния текст на съобщението и език, на който съобщението следва да бъде преведено (фигура 4.7).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_7.png" class="lazy" alt="Фигура 4.7." title="Фигура 4.7."&gt;
+                &lt;figcaption&gt;Фигура 4.7.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;При извършен избор, потребителят завършва заявката чрез бутон "Заяви". При приключване на операцията и липса на грешка, системата генерира съобщение за успешно заявен превод (фигура 4.8).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_8.png" class="lazy" alt="Фигура 4.8." title="Фигура 4.8."&gt;
+                &lt;figcaption&gt;Фигура 4.8.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Готовите преводи на съобщението са достъпни при отворено за преглед съобщение посредством бутон "Преводи". В случай че за съответното съобщение няма заявен превод, системата генерира съобщение за липса на преводи (фигура 4.9). &lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_9.png" class="lazy" alt="Фигура 4.9." title="Фигура 4.9."&gt;
+                &lt;figcaption&gt;Фигура 4.9.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Когато за съобщението вече има заявени преводи, те се визуализират в табличен вид в хронологичен ред, спрямо датата и часа на създаване. От колона целеви език може да бъде установен езикът, на който е преведено съобщението, при наличие на повече от един превод. Преведеният текст се преглежда чрез бутона в края на реда, съдържащ съответния превод (фигура 4.10).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_10.png" class="lazy" alt="Фигура 4.10." title="Фигура 4.10."&gt;
+                &lt;figcaption&gt;Фигура 4.10.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;При отпаднала необходимост от превод, потребителят може да изтрие съществуващ такъв чрез бутона за изтриване в края на реда със съответния превод (фигура 4.10).&lt;/p&gt;
+            &lt;p&gt;При преглед на превода на съобщение се вижда информация относно заглавие и оригинален език на съобщението, избран език за превод на съобщението и дата на създаване. Дали преводът е получен от системата за преводи се разбира по неговия статус. Когато съобщението/файлът е преведен, неговият статус е "успешно обработен" и в колона "Превод" е достъпен за преглед (фигура 4.11). Когато към съобщението има прикачен файл, неговият превод се вижда в отделно поле, независимо от превода на съобщението (фигура 4.11).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_11.png" class="lazy" alt="Фигура 4.11." title="Фигура 4.11."&gt;
+                &lt;figcaption&gt;Фигура 4.11.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Преводите са достъпни за всички потребители с достъп до конкретен профил - получател на съобщението, независимо кое лице е заявило превода.&lt;/p&gt;
+            &lt;p&gt;При наличие на грешка при обработка на превода от средството за превод на Европейската комисия, тя ще бъде визуализирана в секцията за преводи. Потенциалните грешки, които могат да възникнат, са следните:&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;strong&gt;(-2) Unexpected response&lt;/strong&gt; - Недокументиран отговор на заявка от услугата за превод&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-20000) Source language not specified&lt;/strong&gt; - Липсва език на оригиналния текст&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-20001) Invalid source language&lt;/strong&gt; - Невалиден език на оригиналния текст&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-20002) Target language(s) not specified&lt;/strong&gt; - Липсва целеви език&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-20003) Invalid target language(s)&lt;/strong&gt; - Невалиден целеви език&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-20028) Concurrency quota exceeded&lt;/strong&gt; - Надвишаване на квотата за превод&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-20029) Document format not supported&lt;/strong&gt; - Неподдържан формат на документа&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-20031) Missing text or document to translate&lt;/strong&gt; - Липсва текст/документ за превод&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-20046) Document too big (&gt;20Mb)&lt;/strong&gt; - Документът е прекалено голям за превод&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;(-40010) Too many segments to translate&lt;/strong&gt; - Прекалено много сегменти за превод&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;Въведени са ограничения за максимален брой от пет превода за съобщение. Потребител не може да заяви повторен превод на съобщение на език, на който има вече съществуващ превод в своя профил. При заявяване на превод допустими са прикачени файлове, които са с размер под 20 MB и са в един от следните формати: &lt;strong&gt;"odt", "ods", "odp", "odg", "ott", "ots", "otp", "otg", "rtf", "doc", "docx", "xls", "xlsx", "ppt", "ppts", "pdf", "txt", "htm", "html", "xhtml", "xml", "xlf", "xliff", "sdlxliff", "tmx", "rdf"&lt;/strong&gt;.&lt;/p&gt;
+            &lt;br /&gt;
+            &lt;h3&gt;Удостоверяване на времето на изпращане и получаване на документ/съобщение (Електронни времеви печати)&lt;/h3&gt;
+            &lt;p&gt;Удостоверяването на времето на изпращане и получаване на документа/съобщението се извършва, като се ползва услуга за удостоверяване на време. Удостоверението за време (Електронен времеви печат по &lt;a target="_blank" rel="noopener" href="http://eur-lex.europa.eu/legal-content/BG/TXT/?uri=CELEX:32014R0910"&gt;Регламент (ЕС) № 910/2014&lt;/a&gt; на Европейския парламент и на Съвета от 23 юли 2014 година относно електронната идентификация и удостоверителните услуги при електронни трансакции на вътрешния пазар и за отмяна на Директива 1999/93/ЕО е електронна квитанция, която удостоверява съдържанието на електронен документ към даден момент. Практическата полза е възможността да се докаже пред съд или друго физическо или юридическо лице, че някакъв блок информация е съществувал преди някаква дата, час, минути и секунди.&lt;/p&gt;
+            &lt;p&gt;Относно правната сила на електронните времеви печати съгласно Регламента:&lt;/p&gt;
+            &lt;br /&gt;
+            &lt;h3&gt;Член 41&lt;/h3&gt;
+            &lt;h3&gt;Правна сила на електронните времеви печати&lt;/h3&gt;
+            &lt;ul&gt;
+                &lt;li&gt;1. Правната сила и допустимостта на електронния времеви печат като доказателство в съдебни производства не могат да бъдат оспорени единствено на основанието, че той е в електронна форма или че не отговаря на изискванията за квалифициран електронен времеви печат.&lt;/li&gt;
+                &lt;li&gt;2. Квалифицираният електронен времеви печат се ползва от презумпцията за точност на указаните от него дата и час и за цялост на данните, с които са обвързани датата и часът.&lt;/li&gt;
+                &lt;li&gt;3. Квалифицираният електронен времеви печат, издаден в една държава членка, се признава за квалифициран електронен времеви печат във всички държави членки.&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;Услуги за електронна препоръчана поща&lt;/p&gt;
+            &lt;p&gt;Системата за сигурно електронно връчване е услуга за електронна препоръчана поща по смисъла на Регламент (ЕС) № 910/2014. Относно правната сила на услугите за електронна препоръчана поща съгласно Регламента:&lt;/p&gt;
+            &lt;br /&gt;
+            &lt;h3&gt;Член 43&lt;/h3&gt;
+            &lt;h3&gt;Правна сила на услугите за електронна препоръчана поща&lt;/h3&gt;
+            &lt;ul&gt;
+                &lt;li&gt;1. Правната сила и допустимостта на данните, изпращани и получавани чрез използване на услуги за електронна препоръчана поща, не могат да бъдат оспорени като доказателство в съдебни производства единствено на основанието, че са в електронна форма или че не отговарят на изискванията за квалифицирана услуга за електронна препоръчана поща.&lt;/li&gt;
+                &lt;li&gt;2. Данните, изпращани и получавани чрез използване на услуги за електронна препоръчана поща, се ползват от презумпцията за цялост на данните, за изпращане на тези данни от идентифицирания изпращач, тяхното получаване от идентифицирания получател и за точност на указаните чрез квалифицираната услуга за електронна препоръчана поща дата и час на изпращане и получаване на данните.&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>&lt;div id="tab_box_5" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Администриране на профила&lt;/h2&gt;
+            &lt;p&gt;Чрез менюто „Администриране на профила“ потребителите могат да създават свои профилни групи, да конфигурират профила си, да получат статистика за достъп и да променят настройките в своя профил (Фигура 5.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_1.jpeg" class="lazy" alt="Фигура 5.1." title="Фигура 5.1."&gt;
+                &lt;figcaption&gt;Фигура 5.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Нова профилна група се създава чрез избор на меню „Профилни групи“, бутон „Създай група“ и въвеждане на наименование на групата. След въвеждане на наименование и потвърждаване чрез бутон „Създай“ се визуализира информация за създадената група - наименование, дата на създаване и дата на последна промяна (към създаването датата на създаване и на последна промяна съвпадат). Потребители се добавят в групата чрез бутон „Добави“ в поле „Членове“. Добавянето се осъществява аналогично на добавяне на получател към съобщение (виж секция „Профил на физическо лице. Изпращане на съобщение“). Списък на участниците в групата се визуализира под бутон „Добави“, като се изписва наименованието на участника и целевата група, към която последният принадлежи. Участник може да се премахне от групата чрез избор на бутона в края на реда („кошче“) (Фигура 5.2).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_2.jpeg" class="lazy" alt="Фигура 5.2." title="Фигура 5.2."&gt;
+                &lt;figcaption&gt;Фигура 5.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Чрез бутон „Редактирай“ на Фигура 5.2 може да бъде актуализирано наименованието на профилната група, а чрез бутон „Архивирай“ тя може да бъде архивирана, когато отпадне нуждата от нейнот използване от потребителя. Създадените профилни групи могат да бъдат използвани за изпращане на съобщение от потребителя до всички участници в групата. За целта при изпращане на съобщение като получател се избира съответната профилна група. &lt;/p&gt;
+            &lt;p&gt;Профилните групи се създават локално за всеки профил и са достъпни само за лицето, което има достъп до съответния профил.&lt;/p&gt;
+            &lt;p&gt;Чрез меню „Конфигурация“ на Фигура 5.1 всяко физическо лице може да синхронизира своите лични данни (имена и ЕГН) посредством интеграцията на Системата за сигурно електронно връчване със системата RegiX.&lt;/p&gt;
+            &lt;p&gt;В допълнение потребителят може да промени своя имейл, телефон и/или адрес. Промените се потвърждават чрез бутон „Запис“. Такива промени могат да бъдат извършвани и от администратор на профил на юридическо лице/администрация. В меню „Конфигурация“ се указват и лицата, които имат достъп до профил на юридическо лице/администрация. Това се извършва от полето „Достъп до профила“ чрез бутон „+ Добави физическо лице, имащо достъп до профила“ и въвеждане на данни за физическото лице (Фигура 5.3).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_3.jpeg" class="lazy" alt="Фигура 5.3." title="Фигура 5.3."&gt;
+                &lt;figcaption&gt;Фигура 5.3.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;При избор на бутон „Добави“ се визуализира прозорец с информация за лицето (имена и ЕГН) и ролите, които могат да бъдат дадени на потребителя (Фигура 5.4*).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_4.jpeg" class="lazy" alt="Фигура 5.4." title="Фигура 5.4."&gt;
+                &lt;figcaption&gt;Фигура 5.4.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;&lt;i&gt;* Данните на лицето на фигурата са заличени в съответствие с Общия регламент за защита на данните и Закона за защита на личните данни. В реална ситуация данните на потребителя ще се визуализират в съответните полета.&lt;/i&gt;&lt;/p&gt;
+            &lt;p&gt;При избор на роля „представител“ се предоставя възможност за указване на права на потребителя за работа с шаблони, достъп до които има съответното юридическо лице/администрация. За всеки шаблон по отделно могат да бъдат предоставяни права за „четене“ (отваряне и преглед на отворено съобщение) и за „писане“ (за изпращане на съобщения на база съответния шаблон). Потребителите, на които е роля „представител с пълни права“ получават пълни права (получаване и изпращане) за работа с всички шаблони, за които профилът има права. По този начин се облекчава администрирането на профила, като се избягва нуждата на определени потребители да се дават права за всеки от шаблоните поотделно. Ролята „администратор“ дава пълни права за администриране на профил, включително добавяне и премахване на потребители с достъп до профила.&lt;/p&gt;
+            &lt;p&gt;След добавяне на физическото лице неговите имена се визуализират, ведно с информация за лицето, което му е предоставило достъп до профила, дата на добавяне и бутон за преглед на правата му („i“) и за прекратяване на достъпа да потребителя чрез бутона в края на реда („кошче“).&lt;/p&gt;
+            &lt;p&gt;Чрез меню „Статистика за достъп до профила“ на Фигура 5.1 потребителят може да види пълен списък на лицата, които са осъществили достъп до съответния профил, действието, което са извършили, както и точен час на осъщественото действие и IP адрес на потребителя.&lt;/p&gt;
+            &lt;p&gt;Чрез меню „Настройки на нотификациите“ на Фигура 5.1 потребителят може да управлява начините и данните си за уведомяване при получаване, както и при отваряне на съобщение. Нотификациите по електронна поща се получават на посочения от потребителя имейл адрес (Фигура 5.5).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_5.png" class="lazy" alt="Фигура 5.5." title="Фигура 5.5."&gt;
+                &lt;figcaption&gt;Фигура 5.5.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;При посочване на мобилен телефон и избор на нотификация по този начин при възникване на съответното събитие потребителят получава кратко съобщение (SMS) (Фигура 5.6).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_6.jpeg" class="lazy" alt="Фигура 5.6." title="Фигура 5.6."&gt;
+                &lt;figcaption&gt;Фигура 5.6.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Register1" xml:space="preserve">
+    <value>&lt;div id="tab_box_1" class="tab-box active"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Регистрация на физическо лице с ПИК на НОИ&lt;/h2&gt;
+            &lt;p&gt;За да се регистрирате с персонален идентификационен код на НОИ, е необходимо да имате такъв. Ако нямате издаден, може да се запознаете с процедурата за получаване на ПИК на адрес: &lt;a href="https://www.nssi.bg/" rel="noopener" target="_blank"&gt;www.nssi.bg&lt;/a&gt;&lt;/p&gt;
+            &lt;p&gt;Отворете &lt;a href="https://edelivery.egov.bg"&gt;https://edelivery.egov.bg&lt;/a&gt;.&lt;/p&gt;
+            &lt;p&gt;Ще се зареди началният екран на уеб интерфейса (Фигура 1.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="1_1.jpeg" class="lazy" alt="Фигура 1.1." title="Фигура 1.1."&gt;
+                &lt;figcaption&gt;Фигура 1.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;По подразбиране страницата предлага регистрация на Физическо лице. Избирате идентификатор, чрез които искате да се регистрирате - в случая Персонален Идентификационен Код на НОИ – фиг. 1.1.&lt;/p&gt;
+            &lt;p&gt;След направения избор ще се отвори нов прозорец, в който трябва да въведете Идентификатор (Вашето ЕГН) и ПИК на НОИ.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="1_2.jpeg" class="lazy" alt="Фигура 1.2." title="Фигура 1.2."&gt;
+                &lt;figcaption&gt;Фигура 1.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;След въвеждане на идентификатор (ЕГН) и ПИК и потвърждаване, ще се отвори нов прозорец. В него трябва да въведете допълнителна информация, различна от вашето ЕГН, което не може да бъде променено - то ви идентифицира по уникален начин (Фигура 1.3) относно вашия профил – имена, електронна поща, телефон и други.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="1_3.png" class="lazy" alt="Фигура 1.3." title="Фигура 1.3."&gt;
+                &lt;figcaption&gt;Фигура 1.3.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Register2" xml:space="preserve">
+    <value>&lt;div id="tab_box_2" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Регистрация на физическо лице с КЕП&lt;/h2&gt;
+            &lt;p&gt;Свържете Вашия четец за карти и картата с КЕП (или друг носител на КЕП, с който ще се регистрирате).&lt;/p&gt;
+            &lt;p&gt;Отворете &lt;a href="https://edelivery.egov.bg"&gt;https://edelivery.egov.bg&lt;/a&gt;.&lt;/p&gt;
+            &lt;p&gt;Ще се зареди началният екран на уеб интерфейса.&lt;/p&gt;
+            &lt;p&gt;По подразбиране страницата предлага регистрация на Физическо лице. Избирате идентификатор, чрез които искате да се регистрирате - в случая Квалифициран електронен подпис (Фигура 2.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="2_1.jpeg" class="lazy" alt="Фигура 2.1." title="Фигура 2.1."&gt;
+                &lt;figcaption&gt;Фигура 2.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Ще се зареди нов прозорец (фиг. 2.2), в който следва да изберете доставчика на Вашия електронен подпис. &lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="2_2.png" class="lazy" alt="Фигура 2.2." title="Фигура 2.2."&gt;
+                &lt;figcaption&gt;Фигура 2.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;След избора въведете Вашия ПИН код и попълнете изискуемата информация.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Register3" xml:space="preserve">
+    <value>&lt;div id="tab_box_3" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Регистрация на физическо лице с ПИК на НАП&lt;/h2&gt;
+            &lt;p&gt;За да се регистрирате с персонален идентификационен код на Националната агенция по приходите (НАП) е необходимо да имате такъв. Ако нямате издаден, можете да се запознаете с процедурата на официалната интернет страница на &lt;a href="https://nra.bg/wps/portal/nra/uslugi/poluchavane-na-personalen-identifikacionen-kod"&gt;НАП&lt;/a&gt;.&lt;/p&gt;
+            &lt;p&gt;Отворете &lt;a href="https://edelivery.egov.bg"&gt;https://edelivery.egov.bg&lt;/a&gt;.&lt;/p&gt;
+            &lt;p&gt;Ще се зареди началният екран на уеб интерфейса (Фигура 3.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="3_1.jpeg" class="lazy" alt="Фигура 3.1." title="Фигура 3.1."&gt;
+                &lt;figcaption&gt;Фигура 3.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;По подразбиране страницата предлага регистрация на Физическо лице. Избирате идентификатор, чрез които искате да се регистрирате - в случая Квалифициран електронен подпис, който съдържа и възможност за регистрация с ПИК на НАП (Фигура 3.1)&lt;/p&gt;
+            &lt;p&gt;Ще се зареди нов прозорец (Фигура 3.2), в който следва да изберете ПИК на НАП.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="3_2.png" class="lazy" alt="Фигура 3.2." title="Фигура 3.2."&gt;
+                &lt;figcaption&gt;Фигура 3.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;След избора въведете Вашия идентификатор (ЕГН) и Вашия ПИК, предоставен от НАП, и попълнете изискуемата информация.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Storage" xml:space="preserve">
+    <value>&lt;div id="tab_box_6" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Хранилище&lt;/h2&gt;
+            &lt;p&gt;В меню „Хранилище“, секция „Качени файлове“ всеки потребител може да добавя документи, които предстои да бъдат изпратени като прикачени файлове към съобщение. Документите се добавят чрез бутон „Качи файл“ (Фигура 6.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="6_1.jpeg" class="lazy" alt="Фигура 6.1." title="Фигура 6.1."&gt;
+                &lt;figcaption&gt;Фигура 6.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;След добавяне на документа се визуализира информация за неговото наименование, дата и час на добавяне, размер и бутони с възможност за повторно запаметяване на документа локално при потребителя и за премахване на документа от менюто.&lt;/p&gt;
+            &lt;p&gt;След добавяне на документа като прикачен файл към съобщение, документът се визуализира в секция „Изпратени“, като освен наименование на документа, се генерира информация за дата и час на изпращане, размер и наименование на съобщението. В тази секция е възможно единствено повторното запаметяване на документа локално при потребителя, но не и неговото изтриване, тъй като той вече е част от съобщение, достигнало до получателя. След изпращане на документ като прикачен файл, той може да бъде премахнат от секция „Качени файлове“, в случай че няма да участва повторно при изпращане на съобщение с цел оптимизиране и организиране на хранилището на потребителя.&lt;/p&gt;
+            &lt;p&gt;В секция „Получени“ се визуализира информация за получените от потребителя прикачени файлове - тяхното наименование, дата и час на получаване, размер и заглавие на съобщението, към което те са били прикачени, както и възможност за запаметяване на файла локалко при потребителя.&lt;/p&gt;
+            &lt;p&gt;Във всяка от секциите в меню „Хранилище“  при избор на линка, съставящ заглавието на документа, последният се запаметява („сваля“) локално при потребителя. При избор на линка, представляващ заглавие на съобщението, се отваря информация за съобщението.&lt;/p&gt;
+            &lt;p&gt;Във всяка от секциите в меню „Хранилище“ за по-лесна ориентация на потребителя е възможно филтриране на наличните документи. Филтрирането е възможно чрез бутон „Филтър на файлове“. Потребителят може да филтрира по един или повече критерии и да потвърди избора си чрез бутон „Търси“. За цялостно изчистване на въведените критерии потребителят може да използва бутон „Изчисти филтрите“.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="TitleMessages" xml:space="preserve">
+    <value>Изпращане и получаване на съобщение</value>
+  </data>
+  <data name="TitleProfile" xml:space="preserve">
+    <value>Администриране на профила</value>
+  </data>
+  <data name="TitleRegister1" xml:space="preserve">
+    <value>Регистрация на физическо лице с ПИК на НОИ</value>
+  </data>
+  <data name="TitleRegister2" xml:space="preserve">
+    <value>Регистрация на физическо лице с КЕП</value>
+  </data>
+  <data name="TitleRegister3" xml:space="preserve">
+    <value>Регистрация на физическо лице с ПИК на НАП</value>
+  </data>
+  <data name="TitleStorage" xml:space="preserve">
+    <value>Хранилище</value>
+  </data>
+</root>

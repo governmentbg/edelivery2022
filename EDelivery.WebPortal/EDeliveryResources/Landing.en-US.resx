@@ -147,6 +147,9 @@
   <data name="BgGovLink5" xml:space="preserve">
     <value>Electronic validation</value>
   </data>
+  <data name="BgGovLink6" xml:space="preserve">
+    <value>General conditions for joining and using the Secure Electronic Delivery System</value>
+  </data>
   <data name="HelpDesk" xml:space="preserve">
     <value>Help desk</value>
   </data>
@@ -184,7 +187,7 @@
     <value>Support Center</value>
   </data>
   <data name="Message1" xml:space="preserve">
-    <value>As of 17.01.2022, the upgraded Secure Electronic Delivery System is operational. In case of problems and difficulties related to the newly built functionalities, please write to &lt;a href="mailto:Help@e-gov.bg"&gt;Help@e-gov.bg&lt;/a&gt;, and for greater efficiency kindly provide your (mobile) phone number.</value>
+    <value>Dear users, as of June 7, 2023, the EA еGovernment Infrastructure suspends SMS and Viber notifications to individuals. This is due to the need to optimize the operation of the system. Notifications to administrative bodies and individuals shall be send only to the e-mail addresses given in the accounts.</value>
   </data>
   <data name="Message2" xml:space="preserve">
     <value>As of 24.03.2022, a maximum total size of 1 GB is introduced for each profile in the "Uploaded files" section of the "Archive" menu of the SEDS. The maximum size of a single file uploaded independently to the Archive and attached to a message is up to 255 MB.</value>

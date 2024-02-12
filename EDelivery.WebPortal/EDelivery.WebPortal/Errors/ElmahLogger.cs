@@ -41,7 +41,7 @@ namespace EDelivery.WebPortal
 
         private void ErrorInternal(Exception ex, string message)
         {
-            var context = HttpContext.Current;
+            HttpContext context = HttpContext.Current;
 
             if (context != null)
             {

@@ -6,20 +6,10 @@
 }
 
 @{
-    var NOIAuthUrl = System.Configuration.ConfigurationManager.AppSettings["NOIAuthUrl"];
-
-    var loginKEP = Url.Action(
+    string loginKEP = Url.Action(
         EDelivery.WebPortal.Utils.SamlHelper.SamlConfiguration.LoginUrl,
         "Account",
         new { login = true, returnUrl = Model.ReturnUrl });
-
-    var loginPIK = NOIAuthUrl
-        + HttpUtility.UrlEncode(
-            Url.Action(
-                "AuthenticateNoiPik",
-                "Account",
-                new { returnUrl = Model.ReturnUrl },
-                this.Request.Url.Scheme));
 }
 
 <div class="gradient-decor"></div>
@@ -56,8 +46,9 @@
             <p class="explain">
                 @LoginRegisterPage.LoginKepNotice
             </p>
-            <a href="@loginKEP" class="btn btn-primary btn-l width-100">@LoginRegisterPage.TitleLoginKEP</a>
-            <a href="@loginPIK" class="btn btn-light btn-l width-100">@LoginRegisterPage.TitleLoginNoiPIK</a>
+            <a href="@loginKEP" class="btn btn-primary btn-l width-100" style="margin-top: 40px;">
+                @LoginRegisterPage.TitleLoginKEP
+            </a>
         </div>
         <div class="home-right-col content-wrapper">
             <h2>@LoginRegisterPage.TitleRegisterPerson</h2>
@@ -65,30 +56,16 @@
             <p>
                 @LoginRegisterPage.LoginKepNotice
             </p>
-            @using (Html.BeginForm("ChooseRegisterType", "Account", FormMethod.Post, new { id = "registerPersonForm" }))
-            {
-                @Html.Hidden("TargetGroupId", EDelivery.WebPortal.Enums.TargetGroupId.Individual)
-                <div class="form-row">
-                    <div class="form-group">
-                        @Html.RadioButton("RegistrationType", EDelivery.WebPortal.Enums.eRegistrationType.Certificate, true, new { id = "digi-sign" })
-                        <label for="digi-sign">@LoginRegisterPage.RadioChooseRegisterTypeEauth</label>
-                    </div>
-                    <div class="form-group">
-                        @Html.RadioButton("RegistrationType", EDelivery.WebPortal.Enums.eRegistrationType.PIK, new { id = "personal-code" })
-                        <label for="personal-code">@LoginRegisterPage.RadioChooseRegisterTypePIK</label>
-                    </div>
-                </div>
-                <div class="form-row btn-row">
-                    <button class="btn-border btn-l" type="submit" form="registerPersonForm">@UIControls.ButtonRegister</button>
-                    @Html.ActionLink($"{Common.FooterNavHelp} >", "Index", "Help", new { }, new { @class = "btn btn-m btn-clear" })
-                </div>
-            }
+            <div class="form-row btn-row" style="margin-top: 50px;">
+                <a class="btn btn-border btn-l" href=" @Url.Action(EDelivery.WebPortal.Utils.SamlHelper.SamlConfiguration.LoginUrl, "Account", new { login = false })">@UIControls.ButtonRegister</a>
+                @Html.ActionLink($"{Common.FooterNavHelp} >", "Index", "Help", new { }, new { @class = "btn btn-m btn-clear" })
+            </div>
         </div>
     </div>
 
     <!-- Tab content 2 -->
     @{
-        var registerLegalPersonKEP = Request.IsAuthenticated
+        string registerLegalPersonKEP = Request.IsAuthenticated
             ? Url.Action("LegalEntity", "Register")
             : Url.Action(
                 EDelivery.WebPortal.Utils.SamlHelper.SamlConfiguration.LoginUrl,
@@ -98,14 +75,6 @@
                     login = true,
                     returnUrl = "/Register/LegalEntity"
                 });
-
-        var urlEncoded = HttpUtility.UrlEncode(
-            Url.Action(
-                "AuthenticateNoiPikRegisterLegal",
-                "Account",
-                null,
-                this.Request.Url.Scheme));
-        var registerLegalPersonPIK = NOIAuthUrl + urlEncoded;
     }
 
     <div class="home-tabs-target" id="homeTab2">
@@ -140,7 +109,6 @@
                 </div>
                 <div class="form-row btn-row">
                     <a href="@registerLegalPersonKEP" class="btn btn-primary btn-l">@LoginRegisterPage.TitleLoginKEP</a>
-                    <a href="@registerLegalPersonPIK" class="btn btn-light btn-l">@LoginRegisterPage.TitleLoginNoiPIK</a>
                 </div>
             </section>
         </div>
@@ -185,7 +153,6 @@
                 <p>@LoginRegisterPage.YouCanUseIt</p>
                 <div class="form-row btn-row">
                     <a href="@loginKEP" class="btn btn-primary btn-l">@LoginRegisterPage.TitleLoginKEP</a>
-                    <a href="@loginPIK" class="btn btn-light btn-l">@LoginRegisterPage.TitleLoginNoiPIK</a>
                 </div>
             </section>
         </div>
@@ -203,7 +170,7 @@
             @Landing.HelpDeskInfo
             <span class="help-phone">0700 20 341</span>
             <a href="mailto:help@e-gov.bg" class="display-block">help@e-gov.bg</a>
-            <a href="https://e-gov.bg/wps/portal/agency/about-us/administration-service/helpdesk/helpdesk/!ut/p/z1/pVFbT8IwFP4tPvDYnLIVVh7nZOJlyjQT1hdTug4qrBtbuf17izESMGKMfTrN-c6X7wIMxsA0X6spN6rUfGH_Keu-DmLqtx-pc3cdYopjf0iSYRzESZ_A6BiAryzAH9w_JD0atnHQAXb-_gUYsEqoDFIhhZe1BUeS5j1EaFcgLtwOIiR3HCwm0st6e7TQpjIzSDMuVy3cKCNbmE_KlUGrxk5ZobRqTP1hATWyXithETO5qDLZzA_Tqfbv4vba8Q_Px_aeHds7dU8-AWc4UqvBOzDQy8jFcfx0E4Zd4mDPg9FayQ0kuqwL28fzH-MaYLj9rQLbsVNHQTS1zNzMkNJ5CeOvlOxavS2XzLfJl9rIrYHxv6OviqSg7g7N86jvEjbZbfyLd2ZnU-o!/dz/d5/L2dBISEvZ0FBIS9nQSEh/?urile=wcm%3Apath%3A%2Fdaeu%2Fsite%2Fabout-us%2Fadministration-service%2Fhelpdesk%2Fhelpdesk"
+            <a href="https://egov.bg/wps/portal/egov/helpdesk"
                rel="noopener"
                target="_blank"
                class="display-block">
@@ -233,7 +200,12 @@
     </div>
 </div>
 <div class="wrapper flex-row mt-spacer">
-    @Html.Action("GetStatistics")
+    <div class="content-wrapper col-2 bgr-gray">
+        <h2>@Landing.TitleRegisteredUsers</h2>
+        <div id="statistics-content">
+            <div class="loader"></div>
+        </div>
+    </div>
 
     <div class="content-wrapper col-2 bgr-gray">
         <h2>@Landing.TitlePartOfBgGov</h2>
@@ -241,7 +213,21 @@
             <li><a target="_blank" rel="noopener" href="http://www.egov.bg/">@Landing.BgGovLink1</a></li>
             <li><a target="_blank" rel="noopener" href="http://www.strategy.bg/">@Landing.BgGovLink3</a></li>
             <li><a target="_blank" rel="noopener" href="http://opendata.government.bg/">@Landing.BgGovLink4</a></li>
-            <li>@Html.ActionLink(Common.FooterNavHelp, "Index", "Help")</li>
+            <li>
+                <a target="_blank"
+                   rel="noopener"
+                   href="https://iaieu.egov.bg/wps/wcm/connect/iaieu.egov.bg-27159/6d9d1e1b-e4c4-4594-a266-f2d0a801ba7a/%D0%9E%D0%A3-%D0%B5%D0%92%D1%80%D1%8A%D1%87%D0%B2%D0%B0%D0%BD%D0%B5-v1-dd.pdf?MOD=AJPERES&CONVERT_TO=url&CACHEID=ROOTWORKSPACE.Z18_PPGAHG800HER206O2CR2RV8VK6-6d9d1e1b-e4c4-4594-a266-f2d0a801ba7a-oi4Gr.i">
+                    @Landing.BgGovLink6
+                </a>
+            </li>
         </ul>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $.post('/Home/GetStatistics', {}, function (content) {
+            $('#statistics-content').html(content);
+        });
+    });
+</script>

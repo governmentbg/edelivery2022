@@ -151,6 +151,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Общи условия за присъединяване към и използване на Системата за сигурно електронно връчване.
+        /// </summary>
+        public static string BgGovLink6 {
+            get {
+                return ResourceManager.GetString("BgGovLink6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Помощен контактен център.
         /// </summary>
         public static string HelpDesk {
@@ -259,7 +268,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to От 17.01.2022 г. функционира надградената Система за сигурно електронно връчване. При проблеми и затруднения, отнасящи се до новоизградените функционалности, може да сигнализирате на &lt;a href=&quot;mailto:Help@e-gov.bg&quot;&gt;Help@e-gov.bg&lt;/a&gt;, като за по-голяма оперативност e необходимо да предоставите Ваш (мобилен) телефон..
+        ///   Looks up a localized string similar to Уважаеми потребители, считано от 07.06.2023г. ИА ИЕУ преустановява известяването по SMS и Viber към физическите лица поради необходимост от оптимизиране работата на системата. Нотификациите към административни органи и физически лица ще се изпращат само по е-мейл, вписан в профила..
         /// </summary>
         public static string Message1 {
             get {

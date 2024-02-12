@@ -1,0 +1,129 @@
+﻿@using EDelivery.WebPortal.Utils
+
+@{
+    Layout = null;
+
+    ViewBag.Title = "Зареждане на задължения";
+
+    var currentCulture = EDelivery.WebPortal.Utils.CultureHelper.ToSiteCulture(UICulture);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>@Common.EDeliveryTitle - @ViewBag.Title</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    @Styles.Render("~/Content/css/site")
+
+</head>
+
+@{
+    string importantBarMessage = string.Empty;
+    string importantBarMessageBase64 = Utils.ToUrlSafeBase64(importantBarMessage);
+}
+
+<body>
+    <header id="scale-wrapper">
+        <div class="wrapper header-wrapper">
+            <div class="logo-wrapper" id="scale-in">
+                <a href="/">
+                    <img src="~/Content/img/lion-form.svg" class="icon-lion-form">
+                </a>
+                <div class="titles-box">
+                    <h2 class="main-title-long">@Site.Title</h2>
+                    <h4 class="sub-title">@Site.Subtitle</h4>
+
+                    @if (Utils.IsTestEnvironment)
+                    {
+                        <style>
+                            .test-alert {
+                                position: fixed;
+                                top: 10px;
+                                right: 10px;
+                                z-index: 10;
+                                padding: 0.75rem 1.25rem;
+                                color: #721c24;
+                                background-color: #f8d7da;
+                                border: 1px solid transparent;
+                                border-radius: 0.25rem;
+                            }
+                        </style>
+
+                        <div class="test-alert">@Site.Title_TestEnv</div>
+                    }
+                </div>
+            </div>
+            <div class="right-content">
+                <ul>
+
+                    @if (currentCulture != EDelivery.WebPortal.Enums.eSiteCulture.EN)
+                    {
+                        <li>
+                            <a href="@Url.Action(
+                                        "ChangeCulture",
+                                        "Home",
+                                        new { culture = EDelivery.WebPortal.Enums.eSiteCulture.EN })"
+                               class="language">
+                                <svg viewBox="0 0 32 32" class="icon icon-circle">
+                                    <path d="M27.3,4.7c-3-3-7-4.7-11.3-4.7C11.7,0,7.7,1.7,4.7,4.7S0,11.7,0,16s1.7,8.3,4.7,11.3c3,3,7,4.7,11.3,4.7
+                                    c4.3,0,8.3-1.7,11.3-4.7S32,20.3,32,16S30.3,7.7,27.3,4.7z M26,26c-2.6,2.6-6.2,4.1-10,4.1S8.7,28.6,6,26s-4.1-6.2-4.1-10
+                                    S3.4,8.7,6,6s6.2-4.1,10-4.1S23.3,3.4,26,6c2.6,2.6,4.1,6.2,4.1,10S28.6,23.3,26,26z" />
+                                </svg>
+                                En
+                            </a>
+                        </li>
+                    }
+                    @if (currentCulture != EDelivery.WebPortal.Enums.eSiteCulture.BG && currentCulture != EDelivery.WebPortal.Enums.eSiteCulture.Invariant)
+                    {
+                        <li>
+                            <a href="@Url.Action(
+                                        "ChangeCulture",
+                                        "Home",
+                                        new { culture = EDelivery.WebPortal.Enums.eSiteCulture.BG })"
+                               class="language">
+                                <svg viewBox="0 0 32 32" class="icon icon-circle">
+                                    <path d="M27.3,4.7c-3-3-7-4.7-11.3-4.7C11.7,0,7.7,1.7,4.7,4.7S0,11.7,0,16s1.7,8.3,4.7,11.3c3,3,7,4.7,11.3,4.7
+                                    c4.3,0,8.3-1.7,11.3-4.7S32,20.3,32,16S30.3,7.7,27.3,4.7z M26,26c-2.6,2.6-6.2,4.1-10,4.1S8.7,28.6,6,26s-4.1-6.2-4.1-10
+                                    S3.4,8.7,6,6s6.2-4.1,10-4.1S23.3,3.4,26,6c2.6,2.6,4.1,6.2,4.1,10S28.6,23.3,26,26z" />
+                                </svg>
+                                Бг
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="inner">
+        @RenderBody()
+    </main>
+
+    @Html.Partial("_Footer")
+
+    <script type="text/javascript" src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+    @RenderSection("scripts", required: false)
+
+    @*<script>
+            $(function () {
+                $.post(
+                    '/Tickets/LoadObligationsInternal', {}, function (data) {
+                        if (data.count > 0) {
+                            window.location.replace('@EDelivery.WebPortal.Utils.Utils.PayObligations');
+                        } else {
+                            $('#obligation-content').html('<div>@(EDeliveryResources.ErrorMessages.ErrorObligationNotFound)</div>');
+                        }
+                    })
+                    .fail(function () {
+                        $('#obligation-content').html('<div>Възникна грешка, моля, опитайте по-късно!</div>');
+                    });
+            });
+        </script>*@
+
+</body>
+</html>

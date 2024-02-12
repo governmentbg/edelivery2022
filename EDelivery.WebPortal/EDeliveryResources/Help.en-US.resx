@@ -1,0 +1,384 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Messages" xml:space="preserve">
+    <value>&lt;div id="tab_box_4" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Sending and receiving messages&lt;/h2&gt;
+            &lt;p&gt;To send a message, the user must select the "Sign in" button and log on to his account using the QES, the PIC by the NRA or the PIC by the NSSI, after which the home page of the Secure Electronic Serving System will open (Figure 4.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_1.jpeg" class="lazy" alt="Figure 4.1." title="Figure 4.1."&gt;
+                &lt;figcaption&gt;Figure 4.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Any Natural person can send a new message via the "Send message" menu in Fig. 4.1. When selecting the menu, the templates, for which the respective natural person has the right to work with, will be displayed (Figure 4.2).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_2.jpeg" class="lazy" alt="Figure 4.2." title="Figure 4.2."&gt;
+                &lt;figcaption&gt;Figure 4.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;To send a message on behalf of a legal entity / administration, for which the natural person is duly empowered, the latter must select the "Change account profile" button and select the desired account. Then select the menu "Send message" and the corresponding template the user wants to use (Figure 4.3).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_3.png" class="lazy" alt="Figure 4.3." title="Figure 4.3."&gt;
+                &lt;figcaption&gt;Figure 4.3.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;After selecting a template, the form for sending out a message as per the respective template will be loaded. An asterisk (*) indicates the required fields, without which the message will not be sent.&lt;/p&gt;
+            &lt;p&gt;If the template does not meet the user's needs, he can select the "Cancel" button and return to the template selection page after confirmation. The recipient of the message will be indicated by the "Add" button in the Recipient field. The sender can select several recipients, including sending a message to all users organized in a target and / or profile group (Figure 4.4). Already added recipients will be displayed after the text "Selected recipients" and may be removed by selecting the X next to the recipient's name/title (Figure 4.4). All selected recipients will be added by selecting the "Add" button.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_4.jpeg" class="lazy" alt="Figure 4.4." title="Figure 4.4."&gt;
+                &lt;figcaption&gt;Figure 4.4.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;A Subject line summarizing the purpose of the drafted message must be filled in in order to send it. All other mandatory attributes must be filled in as per the requirements of the template. To send the message, press "Send".&lt;/p&gt;
+            &lt;p&gt;After sending it, the message will be visible in the "Received messages" menu of the recipients (Figure 4.5). At the top of the menu will be shown the messages that have not yet been read by the user. They will be marked with an all-blue envelope in the "Status" column, and no information will be available for them in the columns "Served" and "Received by" (Figure 4.5). &lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_5.jpeg" class="lazy" alt="Figure 4.5." title="Figure4.5."&gt;
+                &lt;figcaption&gt;Figure 4.5.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;For each message there will be visible information about its status (column "Status - opened / new"), its sender (column "Person serving papers"), its subject (column "Subject line") and date and time of sending it (column "Sent"). For the messages read by the user, information will also be shown about the date and time of delivery (column "Served"), and about the person who has opened the message (column "Received by").&lt;/p&gt;
+            &lt;p&gt;For easier and faster user experience, a Search option will be available within the received messages (the button "Search in received messages"). The user can enter only one search criterion or fill in two or more. To apply the filters, select the "Search" button. In case of inaccurate search or when he wants to fine-tune his search, the user can clear the text in the fields or select the "Clear filters" button.&lt;/p&gt;
+            &lt;p&gt;To view a received message, the user must follow the link in the "Subject" column. The text in this column represents the subject of the message. Selecting the link will allow you to view the Person serving the papers, Content, Date and Time of Submission, Date and Time of serving, the documents served, as well as a Time Stamp (Figure 4.6).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_6.png" class="lazy" alt="Figure 4.6." title="Figure 4.6."&gt;
+                &lt;figcaption&gt;Figure 4.6.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;If the user wishes to reply to the message, he must select the "Reply" button at the bottom right end (Figure 4.6).&lt;/p&gt;
+            &lt;br /&gt;
+            &lt;p&gt;If needed, the user can request a translation of the received message and of the documents attached to it as well. For this purpose, the user selects the "Request translation" button (Figure 4.6). A form is loaded, from which the user must select the language of the message’s original text (source language) and the language into which the message should be translated (target language) (Figure 4.7).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_7.png" class="lazy" alt="Figure 4.7." title="Figure 4.7."&gt;
+                &lt;figcaption&gt;Figure 4.7.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;When selection is made, the user completes the request using the "Submit" button. When the operation is completed and there is no error, the system generates a message about a successfully requested translation (Figure 4.8).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_8.png" class="lazy" alt="Figure 4.8." title="Figure 4.8."&gt;
+                &lt;figcaption&gt;Figure 4.8.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Translations of a message are available when the message is open for viewing using the "Translations" button. In case there is no requested translation for the respective message, the system generates a No Translations message (figure 4.9).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_9.png" class="lazy" alt="Figure 4.9." title="Figure 4.9."&gt;
+                &lt;figcaption&gt;Figure 4.9.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;When there are already requested translations for the message, they are displayed in tabular form in chronological order according to the date and time of creation. The target language column shows the language into which the message was translated, if there is more than one translation. The translated text is viewed using the button at the end of the line containing the corresponding translation (Figure 4.10).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_10.png" class="lazy" alt="Figure 4.10." title="Figure 4.10."&gt;
+                &lt;figcaption&gt;Figure 4.10.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;If a translation is no longer needed, the user can delete an existing one using the Delete button at the end of the line with the corresponding translation (figure 4.10).&lt;/p&gt;
+            &lt;p&gt;When reviewing the translation of the message, you can see information about the title and original language of the message, the selected language for translation and the date of creation. The status of the translation shows whether the system has received it or not. When the message/file is translated, its status reads as "successfully processed" and it is available for review in the "Translation" column (Figure 4.11). When there is an attachment to the message, its translation is visible in a separate field from the translation of the message itself (Figure 4.11).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="4_11.png" class="lazy" alt="Фигура 4.11." title="Фигура 4.11."&gt;
+                &lt;figcaption&gt;Фигура 4.11.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;Translations are available to all users with access to a specific profile-recipient of the message, regardless of who requested the translation.&lt;/p&gt;
+            &lt;p&gt;If there is an error while processing the translation by the European Commission's translation tool, it will be visualized in the translations section. Potential errors that can occur are as follows:&lt;/p&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;strong&gt;Unexpected response&lt;/strong&gt; - Недокументиран отговор на заявка от услугата за превод&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Source language not specified&lt;/strong&gt; - Липсва език на оригиналния текст&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Invalid source language&lt;/strong&gt; - Невалиден език на оригиналния текст&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Target language(s) not specified&lt;/strong&gt; - Липсва целеви език&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Invalid target language(s)&lt;/strong&gt; - Невалиден целеви език&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Concurrency quota exceeded&lt;/strong&gt; - Надвишаване на квотата за превод&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Document format not supported&lt;/strong&gt; - Неподдържан формат на документа&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Missing text or document to translate&lt;/strong&gt; - Липсва текст/документ за превод&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Document too big (&gt;20Mb)&lt;/strong&gt; - Документът е прекалено голям за превод&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Too many segments to translate&lt;/strong&gt; - Прекалено много сегменти за превод&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;Limits have been introduced to a maximum of five translations per message. A user cannot request a second translation of a message in a language for which there is already an existing translation in their profile. When requesting a translation, acceptable shall be attachments that are less than 20 MB in size and in one of the following formats: "odt", "ods", "odp", "odg", "ott", "ots", "otp", "otg", "rtf", "doc", "docx", "xls", "xlsx", "ppt", "ppts", "pdf", "txt", "htm", "html", "xhtml", "xml", "xlf", "xliff", "sdlxliff", "tmx", "rdf".&lt;/p&gt;
+            &lt;br /&gt;
+            &lt;h3&gt;Authenticating the time of sending and receiving a document/message (Electronic time stamps)&lt;/h3&gt;
+            &lt;p&gt;Authenticating the time of sending and receiving a document/message is done with the help of a time-authentication service. Time authentication (Electronic time stamp under &lt;a target="_blank" rel="noopener" href="http://eur-lex.europa.eu/legal-content/BG/TXT/?uri=CELEX:32014R0910"&gt;Regulation (EU) № 910/2014&lt;/a&gt; of the European Parliament and of the Council of 23 July 2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC is an electronic receipt that certifies the content of an electronic document at a given time. The practical benefit is the possibility to prove in court or before another natural or legal person that a certain amount of information has existed prior to a given date, hour, minute and second.&lt;/p&gt;
+            &lt;p&gt;With respect to the legal effect of electronic time stamps under the Regulation:&lt;/p&gt;
+            &lt;br /&gt;
+            &lt;h3&gt;Article 41&lt;/h3&gt;
+            &lt;h3&gt;Legal effect of electronic time stamps&lt;/h3&gt;
+            &lt;ul&gt;
+                &lt;li&gt;1. The legal effect and admissibility of electronic time stamp as evidence in legal proceedings may not be challenged solely on the ground that it is in electronic form or that it does not meet the requirements for qualified electronic time stamp.&lt;/li&gt;
+                &lt;li&gt;2. The qualified electronic time stamp shall enjoy the presumption of accuracy of the date and time indicated by it and of data integrity, to which the date and time are linked.&lt;/li&gt;
+                &lt;li&gt;3. The qualified electronic timestamp issued in one Member State shall be recognized as qualified electronic timestamp in all Member States.&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;Electronic registered delivery services&lt;/p&gt;
+            &lt;p&gt;The Secure Electronic Serving System is an electronic registered delivery service within the meaning of Regulation (EU) № 910/2014. With respect to the legal effect of electronic registered delivery services under the Regulation:&lt;/p&gt;
+            &lt;br /&gt;
+            &lt;h3&gt;Article 43&lt;/h3&gt;
+            &lt;h3&gt;Legal effect of electronic registered delivery services&lt;/h3&gt;
+            &lt;ul&gt;
+                &lt;li&gt;1. The legal effect and admissibility of data sent and received through the use of electronic registered delivery services may not be challenged as evidence in legal proceedings on the sole ground that it is in electronic form or that it does not meet the requirements for a qualified service for electronic registered delivery.&lt;/li&gt;
+                &lt;li&gt;2. Data sent and received using electronic registered delivery services shall benefit from the presumption of data integrity, of transmission of such data by the identified sender, its receipt by the identified recipient and with an accuracy of date and time of sending and receiving data, indicated by the qualified service of electronic registered delivery.&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>&lt;div id="tab_box_5" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Account administration&lt;/h2&gt;
+            &lt;p&gt;Through the "Account Administration" menu, users can create their own profile groups, configure their account, get obtain access statistics and change the settings in their accounts (Figure 5.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_1.jpeg" class="lazy" alt="Figure 5.1." title="Figure 5.1."&gt;
+                &lt;figcaption&gt;Figure 5.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;A new profile group is created by selecting the "Profile groups" menu, the "Create group" button and entering the group’s name. Upon entering a name and confirming this with the "Create" button, information about the created group will be displayed: name, date of creation and date of last change (the date of creation and the last change date will coincide at the time of creating the group). Users are added to the group via the "Add" button in the "Members" field. Adding is done in the same way as adding a recipient to a message (see section "Natural person profile. Sending messages"). A list of all participants in the group is displayed under the "Add" button, showing the name of the participant and the target group, to which the latter belongs. A participant can be removed from the group by selecting the button at the end of the line ("trash") (Figure 5.2).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_2.jpeg" class="lazy" alt="Figure 5.2." title="Figure 5.2."&gt;
+                &lt;figcaption&gt;Figure 5.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;With the "Edit" button in Figure 5.2, the name of the profile group can be updated, and with the "Archive" button it can be archived when there is no need for it to be used by the user. The created profile groups can be used to send a message by the user to all participants in the group. To do that, when sending a message, the corresponding profile group is selected as recipient&lt;/p&gt;
+            &lt;p&gt;Profile groups are created locally for each account and are only available to the person who has access to that account.&lt;/p&gt;
+            &lt;p&gt;From the "Configuration" menu in Figure 5.1, each natural person can synchronize his personal data (names and PINs) through the integration of the Secure Electronic Serving System with the RegiX system.&lt;/p&gt;
+            &lt;p&gt;In addition, the user can change his email, phone and/or address. Changes are confirmed via the "Save" button. Such changes can also be made by an administrator of a legal entity / administration account. The "Configuration" menu also indicates the persons who have access to the profile of a legal entity / administration. This is done from the field "Access to the account" via the button "+ Add a natural person with access to the account" and entering data about this natural person (Figure 5.3).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_3.jpeg" class="lazy" alt="Figure 5.3." title="Figure 5.3."&gt;
+                &lt;figcaption&gt;Figure 5.3.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;When selecting the "Add" button, a window with information about the person (names and PIN) and the roles that can be given to the user is displayed (Figure 5.4*).&lt;/p&gt;
+            &lt;p&gt;При избор на бутон „Добави“ се визуализира прозорец с информация за лицето (имена и ЕГН) и ролите, които могат да бъдат дадени на потребителя (Фигура 5.4*).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_4.jpeg" class="lazy" alt="Figure 5.4." title="Figure 5.4."&gt;
+                &lt;figcaption&gt;Figure 5.4.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;&lt;i&gt;* The data of the person of the figure have been deleted in accordance with the General Data Protection Regulation and the Personal Data Protection Act. In a real situation, the user's data will be displayed in the appropriate fields.&lt;/i&gt;&lt;/p&gt;
+            &lt;p&gt;When choosing the role of "representative", it is possible to specify the user's rights to work with templates, to which the respective legal entity / administration has access. Reading (opening and viewing an open message) and "writing" rights (to send messages based on the respective template) can be granted for each template separately. Users who have the role of "representative with full rights" will receive full rights (receiving and sending) to work with all templates, for which the account is authorsed. This makes it easier to administer the account, avoiding the need certain users to be granted rights for each of the templates separately. The "administrator" role gives full account administration rights, including adding and removing users with access to the account.&lt;/p&gt;
+            &lt;p&gt;After adding the natural person, his names will be displayed, together with information about the person who granted him access to the account, the date of addition and a button to review his rights ("i") and to terminate the user's access via the end button ("trash").&lt;/p&gt;
+            &lt;p&gt;Through the menu "Statistics for access to the account" in Figure 5.1, the user can see a complete list of persons who have accessed the respective account, the action they have performed, as well as the exact time of the performed action and the IP address of the user.&lt;/p&gt;
+            &lt;p&gt;Through the "Notification Settings" menu in Figure 5.1, the user can control their notification methods and data when receiving and opening a message. Email notifications are received at the user-specified email address (Figure 5.5).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_5.png" class="lazy" alt="Figure 5.5." title="Figure 5.5."&gt;
+                &lt;figcaption&gt;Figure 5.5.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;When specifying a mobile phone number and selecting a notification in this way, when the respective event occurs, the user will receive a short message (SMS) (Figure 5.6).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="5_6.jpeg" class="lazy" alt="Figure 5.6." title="Figure 5.6."&gt;
+                &lt;figcaption&gt;Figure 5.6.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Register1" xml:space="preserve">
+    <value>&lt;div id="tab_box_1" class="tab-box active"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Registration of a natural person with a PIC by the NSSI&lt;/h2&gt;
+            &lt;p&gt;In order to register with a Personal Identification Code by the National Social Security Institute, you need to have one issued. If you have not been issued one already, you can get acquainted with the procedure for obtaining a PIC here: &lt;a href="https://www.nssi.bg/" rel="noopener" target="_blank"&gt;www.nssi.bg&lt;/a&gt;&lt;/p&gt;
+            &lt;p&gt;Open &lt;a href="https://edelivery.egov.bg"&gt;https://edelivery.egov.bg&lt;/a&gt;.&lt;/p&gt;
+            &lt;p&gt;The home page of the web interface will open (Figure 1.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="1_1.jpeg" class="lazy" alt="Figure 1.1." title="Figure 1.1."&gt;
+                &lt;figcaption&gt;Figure 1.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;By default, the page shows registration for Natural persons. You select the identifier you will use to register - in this case a Personal Identification Code by the NSSI - the red arrow in Figure 1.1.&lt;/p&gt;
+            &lt;p&gt;After the selection is made, a new window will open, in which you must enter your personal Identifier (your PIN) and the PIC by the NSSI.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="1_2.jpeg" class="lazy" alt="Figure 1.2." title="Figure 1.2."&gt;
+                &lt;figcaption&gt;Figure 1.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;After entering the PIN identifier and the PIC, and confirming it, a new window will open. In it you must enter additional information, different from your PIN, which cannot be changed as it identifies you in a unique way (Figure 1.3) with regard to your profile - names, e-mail, phone, etc.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="1_3.png" class="lazy" alt="Figure 1.3." title="Figure 1.3."&gt;
+                &lt;figcaption&gt;Figure 1.3.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Register2" xml:space="preserve">
+    <value>&lt;div id="tab_box_2" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Registration of a natural person with Qualified Electronic Signature (QES)&lt;/h2&gt;
+            &lt;p&gt;Connect your card reader to the QES card (or other QES medium, with which you will register).&lt;/p&gt;
+            &lt;p&gt;Open &lt;a href="https://edelivery.egov.bg"&gt;https://edelivery.egov.bg&lt;/a&gt;&lt;/p&gt;
+            &lt;p&gt;The home page of the web interface will open.&lt;/p&gt;
+            &lt;p&gt;By default, the page shows registration for Natural persons. You select the identifier you will use to register - in this case a Qualified Electronic Signature (the red arrow in Figure 2.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="2_1.jpeg" class="lazy" alt="Figure 2.1." title="Figure 2.1."&gt;
+                &lt;figcaption&gt;Figure 2.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;A new window will open (Figure 2.2) where you must select the Provider of your electronic signature.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="2_2.png" class="lazy" alt="Figure 2.2." title="Figure 2.2."&gt;
+                &lt;figcaption&gt;Figure 2.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;After the selection, enter your PIN code and fill in the required information.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Register3" xml:space="preserve">
+    <value>&lt;div id="tab_box_3" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Registration of a natural person with a PIC by the NRA&lt;/h2&gt;
+            &lt;p&gt;In order to register with a Personal Identification Code by the National Revenue Authority (NRA), you need to have one issued. If you have not been issued with one already, you can get acquainted with the procedure for obtaining a PIC from &lt;a href="https://nra.bg/wps/portal/nra/uslugi/poluchavane-na-personalen-identifikacionen-kod"&gt;the official NRA website&lt;/a&gt;.&lt;/p&gt;
+            &lt;p&gt;Open &lt;a href="https://edelivery.egov.bg"&gt;https://edelivery.egov.bg&lt;/a&gt;.&lt;/p&gt;
+            &lt;p&gt;The home page of the web interface will open (Figure 3.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="3_1.jpeg" class="lazy" alt="Figure 3.1." title="Figure 3.1."&gt;
+                &lt;figcaption&gt;Figure 3.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;By default, the page offers registration for Natural persons. You select the identifier you will use to register - in this case, a Qualified Electronic Signature which also contains the possibility for registration with the PIC by the NRA (the red arrow in Figure 3.1).&lt;/p&gt;
+            &lt;p&gt;A new window will open (Figure 3.2) where you must select the PIC by the NRA.&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="3_2.png" class="lazy" alt="Figure 3.2." title="Figure 3.2."&gt;
+                &lt;figcaption&gt;Figure 3.2.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;After the selection, enter your PIN and the PIC by the NRA, and fill in the required information.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="Storage" xml:space="preserve">
+    <value>&lt;div id="tab_box_6" class="tab-box"&gt;
+    &lt;div class="tab-box-content"&gt;
+        &lt;div class="content-wrapper message-box"&gt;
+            &lt;h2&gt;Storage&lt;/h2&gt;
+            &lt;p&gt;In the "Storage" menu, "Uploaded files" section, each user can add documents that are to be sent as attachments to a message. Documents are added via the "Upload file" button (Figure 6.1).&lt;/p&gt;
+            &lt;figure&gt;
+                &lt;img src="~/Content/img/pixel.gif" data-src="6_1.jpeg" class="lazy" alt="Figure 6.1." title="Figure 6.1."&gt;
+                &lt;figcaption&gt;Figure 6.1.&lt;/figcaption&gt;
+            &lt;/figure&gt;
+            &lt;p&gt;After adding the document, information about its name, date and time of addition, size and buttons are displayed, with the option to re-save the document locally at the user’s, and to remove the document from the menu altogether.&lt;/p&gt;
+            &lt;p&gt;After adding the document as an attachment to a message, the document will be displayed in the "Sent" section, and in addition to the name of the document, information about the date and time of sending, size and subject line of the message is generated. In this section, it is only possible to re-save the document locally with the user, but not to delete it, as it is already part of a message that has reached its recipient. After sending a document as an attachment, it can be removed from the "Uploaded files" section, in case it will not be sent again in a message, in order to optimize and organize the user's storage.&lt;/p&gt;
+            &lt;p&gt;The "Received" section displays information about the attachments received by the user - their name, date and time of receipt, size and subject line of the message, to which they were attached, as well as the option to save the file locally with the user.&lt;/p&gt;
+            &lt;p&gt;In each of the sections in the "Storage" menu, when selecting the link that makes up the subject line of the document, the latter is saved ("downloaded") locally at the user. When you select the link that is the subject of the message, information about the message opens.&lt;/p&gt;
+            &lt;p&gt;In each of the sections in the "Storage" menu, for easier user orientation, it is possible to filter the available documents. Filtering is possible via the "File Filter" button. The user can filter by one or more criteria and confirm their selection with the "Search" button. The user can use the "Clear filters" button to completely delete the entered criteria.&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
+  <data name="TitleMessages" xml:space="preserve">
+    <value>Sending and receiving messages</value>
+  </data>
+  <data name="TitleProfile" xml:space="preserve">
+    <value>Account administration</value>
+  </data>
+  <data name="TitleRegister1" xml:space="preserve">
+    <value>Registration of a natural person with a PIC by the NSSI</value>
+  </data>
+  <data name="TitleRegister2" xml:space="preserve">
+    <value>Registration of a natural person with Qualified Electronic Signature (QES)</value>
+  </data>
+  <data name="TitleRegister3" xml:space="preserve">
+    <value>Registration of a natural person with a PIC by the NRA</value>
+  </data>
+  <data name="TitleStorage" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+</root>

@@ -152,7 +152,7 @@
         }
     };
 
-    this.removeMessageRecipientSelect2 = function(e, selectorId) {
+    this.removeMessageRecipientSelect2 = function (e, selectorId) {
         var id = $(e.target).attr('data-id');
         var option = $('#modalcontacts #' + selectorId + ' option[value="' + id + '"]');
         var selector = $('#modalcontacts #' + selectorId);
@@ -216,8 +216,8 @@
         alertify.error(message, wait);
     };
 
-    this.refreshMessagesCount = function (url, timeout) {
-        function getMessagesCount(url) {
+    this.refreshMessagesCount = function (messageUrl, ticketUrl, timeout) {
+        function getMessagesCount(messageUrl, ticketUrl) {
             function setCount($element, count) {
                 if (!$element.length) {
                     return;
@@ -233,9 +233,37 @@
                 }
             }
 
-            $.get(url, function (data) {
-                if (data.Success) {
-                    $.each(data.Profiles, function (key, value) {
+            function setCountWithIncrement($element, count) {
+                if (!$element.length) {
+                    return;
+                }
+
+                var current = parseInt($element.text(), 10);
+                var total = count + current;
+                $element.text(total);
+
+                if (total == 0) {
+                    $element.hide();
+                }
+                else {
+                    $element.show();
+                }
+            }
+
+            if (document.hidden) {
+                return;
+            }
+
+            var promise1 = $.post(messageUrl, {});
+
+            var promise2 = $.post(ticketUrl, {});
+
+            Promise.all([promise1, promise2]).then(function (values) {
+                var messagesCount = values[0];
+                var ticketsCount = values[1];
+
+                if (messagesCount.Success) {
+                    $.each(messagesCount.Profiles, function (key, value) {
                         // profile dropdown
                         var profileMessageCounters = $('nav.nav-select-profile span.number[data-profileid=' + value.ProfileId + ']');
                         setCount($(profileMessageCounters[0]), value.NewMessages);
@@ -256,13 +284,31 @@
                         }
                     });
                 }
-            });
+
+                if (ticketsCount.Success) {
+                    $.each(ticketsCount.Profiles, function (key, value) {
+                        // profile dropdown
+                        var profileTicketCounters = $('nav.nav-select-profile span.number[data-profileid=' + value.ProfileId + ']');
+                        setCountWithIncrement($(profileTicketCounters[0]), value.TicketsCount);
+
+                        // left menu
+                        setCount(
+                            $('ul.left-nav-menu span.number[data-type=tickets][data-profileid=' + value.ProfileId + ']'),
+                            value.TicketsCount);
+
+                        // big blocks on profile homepage
+                        if (value.IsCurrentProfile) {
+                            setCount($('#tickets-count'), value.TicketsCount);
+                        }
+                    });
+                }
+            })
         }
 
-        getMessagesCount(url);
+        getMessagesCount(messageUrl, ticketUrl);
 
         setInterval(function () {
-            getMessagesCount(url);
+            getMessagesCount(messageUrl, ticketUrl);
         }, timeout);
     };
 

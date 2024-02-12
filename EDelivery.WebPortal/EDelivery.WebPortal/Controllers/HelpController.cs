@@ -11,7 +11,7 @@ namespace EDelivery.WebPortal.Controllers
         [BreadCrumb(2, typeof(EDeliveryResources.Common), "TitleHelp", eLeftMenu.None)]
         public ActionResult Index()
         {
-            var executingAssembly = this.GetType().Assembly;
+            System.Reflection.Assembly executingAssembly = this.GetType().Assembly;
             ViewBag.SiteVersion = string.Format(
                 "{0} - {1:dd MMM yyyy HH:mm:ss}",
                 executingAssembly.GetName().Version,

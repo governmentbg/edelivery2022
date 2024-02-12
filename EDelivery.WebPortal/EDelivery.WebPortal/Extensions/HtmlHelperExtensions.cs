@@ -14,12 +14,12 @@ namespace EDelivery.WebPortal.Extensions
         // follow https://iterativo.wordpress.com/2013/04/04/converting-c-razor-models-into-javascript-objects/
         public static IHtmlString ToJson(this HtmlHelper helper, string obj)
         {
-            var settings = new JsonSerializerSettings
+            JsonSerializerSettings settings = new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
-            var result = helper.Raw(
+            IHtmlString result = helper.Raw(
                 JsonConvert.SerializeObject(
                     obj == null
                         ? null
@@ -32,7 +32,9 @@ namespace EDelivery.WebPortal.Extensions
         {
             if (value is string str)
             {
-                var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+                MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
+                    .UseAdvancedExtensions()
+                    .Build();
 
                 return helper.Raw(Markdig.Markdown.ToHtml(str, pipeline));
             }

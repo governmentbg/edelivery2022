@@ -360,4 +360,19 @@
   <data name="PayLinkAdmin" xml:space="preserve">
     <value>Claim an obligation</value>
   </data>
+  <data name="ButtonTranslations" xml:space="preserve">
+    <value>Translations</value>
+  </data>
+  <data name="TitleTranslations" xml:space="preserve">
+    <value>Translations</value>
+  </data>
+  <data name="TitleTranslationDetails" xml:space="preserve">
+    <value>View message translation</value>
+  </data>
+  <data name="TitleReceivedTickets" xml:space="preserve">
+    <value>Received tickets</value>
+  </data>
+  <data name="TitleOpenTicket" xml:space="preserve">
+    <value>View ticket sent</value>
+  </data>
 </root>

@@ -1,0 +1,57 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutClean.cshtml";
+
+    ViewBag.Title = "Зареждане на задължение";
+    string notFoundMessage = ViewBag.NotFoundMessage;
+    string accessCode = ViewBag.AccessCode;
+    string formAction = $"{EDelivery.WebPortal.Utils.Utils.PayObligationByAccessCode}?code={accessCode}";
+}
+
+<div class="gradient-decor"></div>
+
+<div class="wrapper content-wrapper pt-0">
+    <div class="content-right" style="padding-top:30px;">
+        <div class="wrapper content-wrapper message-box message-flex-center">
+            <noscript>
+                <p>
+                    <strong>Важно:</strong> Моля, натиснете бутон „Изпрати”, за да заредите задължението
+                </p>
+            </noscript>
+
+            <h2>@ViewBag.Title</h2>
+        </div>
+        <div class="wrapper content-wrapper message-box message-flex-center">
+            @if (!string.IsNullOrEmpty(accessCode))
+            {
+                <form id="loadObligationForm" action="@formAction" method="post">
+                    <noscript>
+                        <div>
+                            <input type="submit" value="Изпрати заявка за зареждане на задължение" />
+                        </div>
+                    </noscript>
+                </form>
+
+                <div class="loader"></div>
+            }
+            else
+            {
+                <div>
+                    @(notFoundMessage ?? EDeliveryResources.ErrorMessages.ErrorObligationNotFound)
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @if (!string.IsNullOrEmpty(accessCode))
+    {
+        <script>
+            $(function () {
+                $('#loadObligationForm').submit();
+            });
+        </script>
+    }
+}

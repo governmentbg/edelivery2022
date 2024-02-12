@@ -357,7 +357,10 @@ namespace EDelivery.WebPortal.Controllers
             {
                 GetRecipientGroupMembersResponse members =
                     profileClient.Value.GetRecipientGroupMembers(
-                        new GetRecipientGroupMembersRequest { RecipientGroupId = recipientGroupId, });
+                        new GetRecipientGroupMembersRequest
+                        {
+                            RecipientGroupId = recipientGroupId,
+                        });
 
                 if (members.Length >= MaxRecipientGroupMembers.Value)
                 {
@@ -1291,60 +1294,6 @@ namespace EDelivery.WebPortal.Controllers
             return ExportService.ExportHistory(parsedHistory);
         }
 
-        #region json token
-
-        [Obsolete("Unused code")]
-        [AllowAnonymous]
-        public async Task<ActionResult> GenerateTestJWT(string egn, string pass)
-        {
-            try
-            {
-                HMACSHA256Algorithm algorithm = new HMACSHA256Algorithm();
-                JsonNetSerializer serializer = new JsonNetSerializer();
-                JwtBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
-                JwtEncoder encoderJWT = new JwtEncoder(algorithm, serializer, urlEncoder);
-
-                string issuer = ConfigurationManager.AppSettings["ReportsIssuer"];
-                string audience = "Audience";
-                string subject = ConfigurationManager.AppSettings["ReportsSubject"];
-                int expSeconds = 3600;
-
-                DateTime now = DateTime.UtcNow;
-                DateTime exp = now.AddSeconds(expSeconds);
-                DateTime unixEpoch = JwtValidator.UnixEpoch; // 1970-01-01 00:00:00 UTC
-                double createdTime = Math.Round((now - unixEpoch).TotalSeconds);
-                double expTime = Math.Round((exp - unixEpoch).TotalSeconds);
-                Guid jti = Guid.NewGuid();
-
-                string encryptedIdentificator = EncriptionHelper.EncryptStringAES(egn, pass);
-                string identificatorType = IdentificatorType.EGN;
-
-                JWTPayloadBase tokenObject = new JWTPayloadBase(
-                    encryptedIdentificator,
-                    identificatorType,
-                    issuer,
-                    subject,
-                    audience,
-                    createdTime,
-                    expTime,
-                    jti);
-
-                string token = encoderJWT.Encode(tokenObject, pass);
-
-                await CreateJWTAuditLog(
-                    now,
-                    Utils.DbAuditLogs.JWTTokenType.Test,
-                    jti,
-                    token);
-
-                return Content($"Generated token for egn: {egn} and password: {pass} is: {token}");
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
-        }
-
         #region Reports
 
         /// <summary>
@@ -1366,7 +1315,7 @@ namespace EDelivery.WebPortal.Controllers
                 Jti = Guid.NewGuid()
             };
 
-            string token = GetToken(
+            string token = JwtService.GetToken(
                 this.UserData.ActiveProfile.TargetGroupId,
                 this.UserData.ActiveProfile.Identifier,
                 data);
@@ -1449,7 +1398,7 @@ namespace EDelivery.WebPortal.Controllers
                 Jti = Guid.NewGuid()
             };
 
-            string token = GetToken(
+            string token = JwtService.GetToken(
                 this.UserData.ActiveProfile.TargetGroupId,
                 this.UserData.ActiveProfile.Identifier,
                 data);
@@ -1496,7 +1445,7 @@ namespace EDelivery.WebPortal.Controllers
                 Email = UserData.ActiveProfile.Email
             };
 
-            string token = GetToken(
+            string token = JwtService.GetToken(
                 this.UserData.ActiveProfile.TargetGroupId,
                 this.UserData.ActiveProfile.Identifier,
                 data);
@@ -1540,7 +1489,7 @@ namespace EDelivery.WebPortal.Controllers
                 Jti = Guid.NewGuid()
             };
 
-            string token = GetToken(
+            string token = JwtService.GetToken(
                 this.UserData.ActiveProfile.TargetGroupId,
                 this.UserData.ActiveProfile.Identifier,
                 data);
@@ -1563,70 +1512,6 @@ namespace EDelivery.WebPortal.Controllers
         }
 
         #endregion pay.egov.bg
-
-        /// <summary>
-        /// Generate a token, sent in a link to Technologiga in order to get reports 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="personalIdentifier"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        private string GetToken<T>(
-            int targetGroupId,
-            string personalIdentifier,
-            T data)
-            where T : JWTTokenData
-        {
-            try
-            {
-                HMACSHA256Algorithm algorithm = new HMACSHA256Algorithm();
-                JsonNetSerializer serializer = new JsonNetSerializer();
-                JwtBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
-
-                JwtEncoder encoderJWT =
-                    new JwtEncoder(algorithm, serializer, urlEncoder);
-
-                // to implement a ClockSkew mechanism to account for unsynchronized clocks
-                // treat the ExpSeconds as a period of time with NOW in its center
-                long createdTime = DateTimeOffset.UtcNow.AddSeconds(-data.ExpSeconds / 2).ToUnixTimeSeconds();
-                long expTime = createdTime + data.ExpSeconds;
-
-                string encryptedIdentificator =
-                    EncriptionHelper.EncryptStringAES(
-                        personalIdentifier,
-                        data.Key);
-
-                string identificatorType = IdentificatorType.EGN;
-
-                if (targetGroupId == (int)TargetGroupId.Individual)
-                {
-                    if (!TextHelper.IsEGN(personalIdentifier) && TextHelper.IsLNCh(personalIdentifier))
-                    {
-                        identificatorType = IdentificatorType.PNF;
-                    }
-                }
-                else
-                {
-                    identificatorType = IdentificatorType.EIK;
-                }
-
-                JWTPayloadBase tokenObject = data.GetJWTPayload(
-                    encryptedIdentificator,
-                    identificatorType,
-                    createdTime,
-                    expTime);
-
-                string token = encoderJWT.Encode(tokenObject, data.Key);
-
-                return token;
-            }
-            catch (Exception ex)
-            {
-                ElmahLogger.Instance.Error(ex, "Create Json Token failed");
-
-                return string.Empty;
-            }
-        }
 
         /// <summary>
         /// Create a regix report audit log
@@ -1671,7 +1556,5 @@ namespace EDelivery.WebPortal.Controllers
                     "Error in CreateJWTAuditLog");
             }
         }
-
-        #endregion json token
     }
 }

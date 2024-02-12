@@ -106,6 +106,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Заяви превод.
+        /// </summary>
+        public static string ButtonCreateTranslation {
+            get {
+                return ResourceManager.GetString("ButtonCreateTranslation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Препрати.
         /// </summary>
         public static string ButtonForwardMessage {
@@ -658,6 +667,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Няма заявени преводи към съобщението..
+        /// </summary>
+        public static string LabelNoMessageTranslations {
+            get {
+                return ResourceManager.GetString("LabelNoMessageTranslations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Все още няма получени съобщения..
         /// </summary>
         public static string LabelNoReceivedMessages {
@@ -771,6 +789,15 @@ namespace EDeliveryResources {
         public static string LinkSignatureEgnInfo {
             get {
                 return ResourceManager.GetString("LinkSignatureEgnInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сигурни ли сте, че желаете да изтриете превода?.
+        /// </summary>
+        public static string MessageConfirmDeleteTranslation {
+            get {
+                return ResourceManager.GetString("MessageConfirmDeleteTranslation", resourceCulture);
             }
         }
         

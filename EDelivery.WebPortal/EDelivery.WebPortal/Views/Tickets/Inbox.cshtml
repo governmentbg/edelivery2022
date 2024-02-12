@@ -1,0 +1,17 @@
+﻿@model EDelivery.WebPortal.Models.Tickets.TicketsInboxViewModel
+
+@{
+    ViewBag.Title = Common.TitleReceivedTickets;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleReceivedTickets</h2>
+
+        @Html.Partial("Partials/SearchTickets", Model.SearchFilter)
+
+        @Html.Partial("Partials/InboxTicketList", Model)
+    </div>
+</div>

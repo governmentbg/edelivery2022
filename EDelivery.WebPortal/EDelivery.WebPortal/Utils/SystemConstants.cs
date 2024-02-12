@@ -44,5 +44,9 @@ namespace EDelivery.WebPortal
         public const int SystemTemplateId = 1;
 
         public const string OptionSeparator = "|";
+
+        public const string EAuthCookieName = "eauthIdp";
+
+        public const string EAuthCookieDomain = ".egov.bg";
     }
 }

@@ -24,7 +24,7 @@ namespace EDelivery.WebPortal
         {
             DateTime now = DateTime.Now;
 
-            var excelStream = new MemoryStream();
+            MemoryStream excelStream = new MemoryStream();
             using (var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true))
             {
                 WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
@@ -55,10 +55,10 @@ namespace EDelivery.WebPortal
 
                 workbookPart.Workbook = new Workbook(new Sheets());
 
-                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
 
-                var sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
-                var lastSheet = sheets.GetLastChild<Sheet>();
+                Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+                Sheet lastSheet = sheets.GetLastChild<Sheet>();
 
                 sheets.AppendChild(
                     new Sheet()
@@ -70,27 +70,26 @@ namespace EDelivery.WebPortal
 
                 worksheetPart.InitNormalWorksheet();
 
-                var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
-                var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+                int titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+                int headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
 
-                var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Bottom,
                     horizontalAlignment: HorizontalAlignmentValues.Left,
                     wrapText: true,
                     fontId: titleFont);
 
-                var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Center,
                     horizontalAlignment: HorizontalAlignmentValues.Center,
                     wrapText: true,
                     fontId: headerFont);
 
-                var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     // special date number format added in the Stylesheet
                     numberFormatId: 165);
 
-                string[] headerRowColumnTitles =
-                new string[]
+                string[] headerRowColumnTitles = new string[]
                 {
                     "Уникален №",
                     "Шаблон",
@@ -100,7 +99,7 @@ namespace EDelivery.WebPortal
                     "Дата на получаване"
                 };
 
-                var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+                Row titleRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                 titleRow.AppendRelativeInlineStringCell(
                     text: $"Експорт на първите {SystemConstants.ExportSize} резултата от списък Получени съобщения към дата {now.ToString(SystemConstants.DateTimeFormat)}",
@@ -118,8 +117,8 @@ namespace EDelivery.WebPortal
                     .AppendCustomWidthColumn(5, 5, primaryColWidth)
                     .AppendCustomWidthColumn(6, 6, primaryColWidth);
 
-                var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
-                foreach (var columnTitle in headerRowColumnTitles)
+                Row headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+                foreach (string columnTitle in headerRowColumnTitles)
                 {
                     headerRow
                         .AppendRelativeInlineStringCell(
@@ -129,7 +128,7 @@ namespace EDelivery.WebPortal
 
                 foreach (var message in data.Result)
                 {
-                    var messageRow = worksheetPart.Worksheet.AppendRelativeRow();
+                    Row messageRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                     messageRow.AppendRelativeNumberCell(
                         number: message.MessageId);
@@ -168,7 +167,7 @@ namespace EDelivery.WebPortal
         {
             DateTime now = DateTime.Now;
 
-            var excelStream = new MemoryStream();
+            MemoryStream excelStream = new MemoryStream();
             using (var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true))
             {
                 WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
@@ -199,10 +198,10 @@ namespace EDelivery.WebPortal
 
                 workbookPart.Workbook = new Workbook(new Sheets());
 
-                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
 
-                var sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
-                var lastSheet = sheets.GetLastChild<Sheet>();
+                Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+                Sheet lastSheet = sheets.GetLastChild<Sheet>();
 
                 sheets.AppendChild(
                     new Sheet()
@@ -214,27 +213,26 @@ namespace EDelivery.WebPortal
 
                 worksheetPart.InitNormalWorksheet();
 
-                var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
-                var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+                int titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+                int headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
 
-                var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Bottom,
                     horizontalAlignment: HorizontalAlignmentValues.Left,
                     wrapText: true,
                     fontId: titleFont);
 
-                var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Center,
                     horizontalAlignment: HorizontalAlignmentValues.Center,
                     wrapText: true,
                     fontId: headerFont);
 
-                var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     // special date number format added in the Stylesheet
                     numberFormatId: 165);
 
-                string[] headerRowColumnTitles =
-                new string[]
+                string[] headerRowColumnTitles = new string[]
                 {
                     "Уникален №",
                     "Шаблон",
@@ -244,7 +242,7 @@ namespace EDelivery.WebPortal
                     "Брой получени"
                 };
 
-                var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+                Row titleRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                 titleRow.AppendRelativeInlineStringCell(
                     text: $"Експорт на първите {SystemConstants.ExportSize} резултата от списък Изпратени съобщения към дата {now.ToString(SystemConstants.DateTimeFormat)}",
@@ -262,8 +260,8 @@ namespace EDelivery.WebPortal
                     .AppendCustomWidthColumn(5, 5, primaryColWidth)
                     .AppendCustomWidthColumn(6, 6, primaryColWidth);
 
-                var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
-                foreach (var columnTitle in headerRowColumnTitles)
+                Row headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+                foreach (string columnTitle in headerRowColumnTitles)
                 {
                     headerRow
                         .AppendRelativeInlineStringCell(
@@ -273,7 +271,7 @@ namespace EDelivery.WebPortal
 
                 foreach (var message in data.Result)
                 {
-                    var messageRow = worksheetPart.Worksheet.AppendRelativeRow();
+                    Row messageRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                     messageRow.AppendRelativeNumberCell(
                         number: message.MessageId);
@@ -311,7 +309,7 @@ namespace EDelivery.WebPortal
         {
             DateTime now = DateTime.Now;
 
-            var excelStream = new MemoryStream();
+            MemoryStream excelStream = new MemoryStream();
             using (var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true))
             {
                 WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
@@ -342,10 +340,10 @@ namespace EDelivery.WebPortal
 
                 workbookPart.Workbook = new Workbook(new Sheets());
 
-                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
 
-                var sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
-                var lastSheet = sheets.GetLastChild<Sheet>();
+                Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+                Sheet lastSheet = sheets.GetLastChild<Sheet>();
 
                 sheets.AppendChild(
                     new Sheet()
@@ -357,27 +355,26 @@ namespace EDelivery.WebPortal
 
                 worksheetPart.InitNormalWorksheet();
 
-                var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
-                var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+                int titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+                int headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
 
-                var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Bottom,
                     horizontalAlignment: HorizontalAlignmentValues.Left,
                     wrapText: true,
                     fontId: titleFont);
 
-                var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Center,
                     horizontalAlignment: HorizontalAlignmentValues.Center,
                     wrapText: true,
                     fontId: headerFont);
 
-                var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     // special date number format added in the Stylesheet
                     numberFormatId: 165);
 
-                string[] headerRowColumnTitles =
-                new string[]
+                string[] headerRowColumnTitles = new string[]
                 {
                     "Дата",
                     "Действие",
@@ -386,7 +383,7 @@ namespace EDelivery.WebPortal
                     "Детайли",
                 };
 
-                var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+                Row titleRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                 titleRow.AppendRelativeInlineStringCell(
                     text: $"Експорт на първите {SystemConstants.ExportSize} резултата от списък История на профил към дата {now.ToString(SystemConstants.DateTimeFormat)}",
@@ -403,8 +400,8 @@ namespace EDelivery.WebPortal
                     .AppendCustomWidthColumn(4, 4, primaryColWidth)
                     .AppendCustomWidthColumn(5, 5, primaryColWidth * 4);
 
-                var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
-                foreach (var columnTitle in headerRowColumnTitles)
+                Row headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+                foreach (string columnTitle in headerRowColumnTitles)
                 {
                     headerRow
                         .AppendRelativeInlineStringCell(
@@ -414,7 +411,7 @@ namespace EDelivery.WebPortal
 
                 foreach (var record in data)
                 {
-                    var messageRow = worksheetPart.Worksheet.AppendRelativeRow();
+                    Row messageRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                     messageRow.AppendRelativeDateCell(
                        date: record.Date,
@@ -449,7 +446,7 @@ namespace EDelivery.WebPortal
         {
             DateTime now = DateTime.Now;
 
-            var excelStream = new MemoryStream();
+            MemoryStream excelStream = new MemoryStream();
             using (var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true))
             {
                 WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
@@ -480,10 +477,10 @@ namespace EDelivery.WebPortal
 
                 workbookPart.Workbook = new Workbook(new Sheets());
 
-                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
 
-                var sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
-                var lastSheet = sheets.GetLastChild<Sheet>();
+                Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+                Sheet lastSheet = sheets.GetLastChild<Sheet>();
 
                 sheets.AppendChild(
                     new Sheet()
@@ -495,27 +492,26 @@ namespace EDelivery.WebPortal
 
                 worksheetPart.InitNormalWorksheet();
 
-                var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
-                var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+                int titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+                int headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
 
-                var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Bottom,
                     horizontalAlignment: HorizontalAlignmentValues.Left,
                     wrapText: true,
                     fontId: titleFont);
 
-                var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Center,
                     horizontalAlignment: HorizontalAlignmentValues.Center,
                     wrapText: true,
                     fontId: headerFont);
 
-                var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     // special date number format added in the Stylesheet
                     numberFormatId: 165);
 
-                string[] headerRowColumnTitles =
-                new string[]
+                string[] headerRowColumnTitles = new string[]
                 {
                     "Уникален №",
                     "Име на файл",
@@ -523,7 +519,7 @@ namespace EDelivery.WebPortal
                     "Размер",
                 };
 
-                var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+                Row titleRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                 titleRow.AppendRelativeInlineStringCell(
                     text: $"Експорт на първите {SystemConstants.ExportSize} резултата от списък Хранилище към дата {now.ToString(SystemConstants.DateTimeFormat)}",
@@ -539,8 +535,8 @@ namespace EDelivery.WebPortal
                     .AppendCustomWidthColumn(3, 3, primaryColWidth)
                     .AppendCustomWidthColumn(4, 4, primaryColWidth);
 
-                var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
-                foreach (var columnTitle in headerRowColumnTitles)
+                Row headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+                foreach (string columnTitle in headerRowColumnTitles)
                 {
                     headerRow
                         .AppendRelativeInlineStringCell(
@@ -550,7 +546,7 @@ namespace EDelivery.WebPortal
 
                 foreach (var blob in data.Result)
                 {
-                    var blobRow = worksheetPart.Worksheet.AppendRelativeRow();
+                    Row blobRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                     blobRow.AppendRelativeNumberCell(
                         number: blob.BlobId);
@@ -582,7 +578,7 @@ namespace EDelivery.WebPortal
         {
             DateTime now = DateTime.Now;
 
-            var excelStream = new MemoryStream();
+            MemoryStream excelStream = new MemoryStream();
             using (var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true))
             {
                 WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
@@ -613,10 +609,10 @@ namespace EDelivery.WebPortal
 
                 workbookPart.Workbook = new Workbook(new Sheets());
 
-                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
 
-                var sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
-                var lastSheet = sheets.GetLastChild<Sheet>();
+                Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+                Sheet lastSheet = sheets.GetLastChild<Sheet>();
 
                 sheets.AppendChild(
                     new Sheet()
@@ -628,27 +624,26 @@ namespace EDelivery.WebPortal
 
                 worksheetPart.InitNormalWorksheet();
 
-                var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
-                var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+                int titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+                int headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
 
-                var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Bottom,
                     horizontalAlignment: HorizontalAlignmentValues.Left,
                     wrapText: true,
                     fontId: titleFont);
 
-                var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Center,
                     horizontalAlignment: HorizontalAlignmentValues.Center,
                     wrapText: true,
                     fontId: headerFont);
 
-                var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     // special date number format added in the Stylesheet
                     numberFormatId: 165);
 
-                string[] headerRowColumnTitles =
-                new string[]
+                string[] headerRowColumnTitles = new string[]
                 {
                     "Уникален №",
                     "Име на файл",
@@ -658,7 +653,7 @@ namespace EDelivery.WebPortal
                     "Съобщение",
                 };
 
-                var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+                Row titleRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                 titleRow.AppendRelativeInlineStringCell(
                     text: $"Експорт на първите {SystemConstants.ExportSize} резултата от списък Хранилище (Получени) към дата {now.ToString(SystemConstants.DateTimeFormat)}",
@@ -676,8 +671,8 @@ namespace EDelivery.WebPortal
                     .AppendCustomWidthColumn(5, 5, primaryColWidth)
                     .AppendCustomWidthColumn(6, 6, primaryColWidth * 4);
 
-                var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
-                foreach (var columnTitle in headerRowColumnTitles)
+                Row headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+                foreach (string columnTitle in headerRowColumnTitles)
                 {
                     headerRow
                         .AppendRelativeInlineStringCell(
@@ -687,7 +682,7 @@ namespace EDelivery.WebPortal
 
                 foreach (var blob in data.Result)
                 {
-                    var blobRow = worksheetPart.Worksheet.AppendRelativeRow();
+                    Row blobRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                     blobRow.AppendRelativeNumberCell(
                         number: blob.BlobId);
@@ -725,7 +720,7 @@ namespace EDelivery.WebPortal
         {
             DateTime now = DateTime.Now;
 
-            var excelStream = new MemoryStream();
+            MemoryStream excelStream = new MemoryStream();
             using (var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true))
             {
                 WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
@@ -756,10 +751,10 @@ namespace EDelivery.WebPortal
 
                 workbookPart.Workbook = new Workbook(new Sheets());
 
-                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
 
-                var sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
-                var lastSheet = sheets.GetLastChild<Sheet>();
+                Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+                Sheet lastSheet = sheets.GetLastChild<Sheet>();
 
                 sheets.AppendChild(
                     new Sheet()
@@ -771,27 +766,26 @@ namespace EDelivery.WebPortal
 
                 worksheetPart.InitNormalWorksheet();
 
-                var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
-                var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+                int titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+                int headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
 
-                var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Bottom,
                     horizontalAlignment: HorizontalAlignmentValues.Left,
                     wrapText: true,
                     fontId: titleFont);
 
-                var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     verticalAlignment: VerticalAlignmentValues.Center,
                     horizontalAlignment: HorizontalAlignmentValues.Center,
                     wrapText: true,
                     fontId: headerFont);
 
-                var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                int dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                     // special date number format added in the Stylesheet
                     numberFormatId: 165);
 
-                string[] headerRowColumnTitles =
-                new string[]
+                string[] headerRowColumnTitles = new string[]
                 {
                     "Уникален №",
                     "Име на файл",
@@ -801,7 +795,7 @@ namespace EDelivery.WebPortal
                     "Съобщение",
                 };
 
-                var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+                Row titleRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                 titleRow.AppendRelativeInlineStringCell(
                     text: $"Експорт на първите {SystemConstants.ExportSize} резултата от списък Хранилище (Изпратени) към дата {now.ToString(SystemConstants.DateTimeFormat)}",
@@ -819,8 +813,8 @@ namespace EDelivery.WebPortal
                     .AppendCustomWidthColumn(5, 5, primaryColWidth)
                     .AppendCustomWidthColumn(6, 6, primaryColWidth * 4);
 
-                var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
-                foreach (var columnTitle in headerRowColumnTitles)
+                Row headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+                foreach (string columnTitle in headerRowColumnTitles)
                 {
                     headerRow
                         .AppendRelativeInlineStringCell(
@@ -830,7 +824,7 @@ namespace EDelivery.WebPortal
 
                 foreach (var blob in data.Result)
                 {
-                    var blobRow = worksheetPart.Worksheet.AppendRelativeRow();
+                    Row blobRow = worksheetPart.Worksheet.AppendRelativeRow();
 
                     blobRow.AppendRelativeNumberCell(
                         number: blob.BlobId);
@@ -860,6 +854,154 @@ namespace EDelivery.WebPortal
                 return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 {
                     FileDownloadName = $"storage_outbox_{now:yyyyMMdd}.xlsx"
+                };
+            }
+        }
+
+        public static FileStreamResult ExportTicketsInbox(ED.DomainServices.Tickets.InboxResponse data)
+        {
+            DateTime now = DateTime.Now;
+
+            MemoryStream excelStream = new MemoryStream();
+            using (var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true))
+            {
+                WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
+                    @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+                    "workbook");
+
+                WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>("styles");
+                workbookStylesPart.Stylesheet = new Stylesheet(
+                    new NumberingFormats(
+                        new NumberingFormat()
+                        {
+                            NumberFormatId = 165,
+                            FormatCode = @"[$]dd\.mm\.yy;@",
+                        }
+                    ),
+                    new Fonts(
+                        new Font() // Default style
+                    ),
+                    new Fills(
+                        new Fill() // Default fill
+                    ),
+                    new Borders(
+                        new Border() // Default border
+                    ),
+                    new CellFormats(
+                        new CellFormat() // Default cell format
+                    ));
+
+                workbookPart.Workbook = new Workbook(new Sheets());
+
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+
+                Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>();
+                Sheet lastSheet = sheets.GetLastChild<Sheet>();
+
+                sheets.AppendChild(
+                    new Sheet()
+                    {
+                        Id = workbookPart.GetIdOfPart(worksheetPart),
+                        SheetId = (lastSheet?.SheetId?.Value ?? 0) + 1,
+                        Name = "Резултат",
+                    });
+
+                worksheetPart.InitNormalWorksheet();
+
+                int titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+                int headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+
+                int titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                    verticalAlignment: VerticalAlignmentValues.Bottom,
+                    horizontalAlignment: HorizontalAlignmentValues.Left,
+                    wrapText: true,
+                    fontId: titleFont);
+
+                int headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                    verticalAlignment: VerticalAlignmentValues.Center,
+                    horizontalAlignment: HorizontalAlignmentValues.Center,
+                    wrapText: true,
+                    fontId: headerFont);
+
+                int dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                    // special date number format added in the Stylesheet
+                    numberFormatId: 165);
+
+                string[] headerRowColumnTitles =
+                new string[]
+                {
+                    "Id",
+                    "Профил подател",
+                    "Дата на изпращане",
+                    "Заглавие",
+                    "Тип",
+                    "Дата на нарушение",
+                    "Статус",
+                };
+
+                Row titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+                titleRow.AppendRelativeInlineStringCell(
+                    text: $"Експорт на първите {SystemConstants.ExportSize} резултата от списък Получени фишове към дата {now.ToString(SystemConstants.DateTimeFormat)}",
+                    styleIndex: titleTableCellFormat);
+                worksheetPart.Worksheet
+                    .AppendMergeCell($"A{titleRow.RowIndex}:" +
+                        $"{OpenXmlExtensions.ColumnIdToColumnIndex(headerRowColumnTitles.Length - 1)}{titleRow.RowIndex}");
+
+                double primaryColWidth = 13;
+                worksheetPart.Worksheet.GetColumns()
+                    .AppendCustomWidthColumn(1, 1, primaryColWidth)
+                    .AppendCustomWidthColumn(2, 2, primaryColWidth * 4)
+                    .AppendCustomWidthColumn(3, 3, primaryColWidth)
+                    .AppendCustomWidthColumn(4, 4, primaryColWidth * 4)
+                    .AppendCustomWidthColumn(5, 5, primaryColWidth)
+                    .AppendCustomWidthColumn(6, 6, primaryColWidth);
+
+                Row headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+                foreach (string columnTitle in headerRowColumnTitles)
+                {
+                    headerRow
+                        .AppendRelativeInlineStringCell(
+                            text: $"{columnTitle}",
+                            styleIndex: headerTableCell);
+                }
+
+                foreach (var ticket in data.Result)
+                {
+                    Row ticketRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+                    ticketRow.AppendRelativeNumberCell(
+                        number: ticket.MessageId);
+
+                    ticketRow.AppendRelativeInlineStringCell(
+                        text: ticket.SenderProfileName);
+
+                    ticketRow.AppendRelativeDateCell(
+                        date: ticket.DateSent.ToLocalDateTime(),
+                        styleIndex: dateCell);
+
+                    ticketRow.AppendRelativeInlineStringCell(
+                        text: ticket.Subject);
+
+                    ticketRow.AppendRelativeInlineStringCell(
+                        text: ticket.Type);
+
+                    ticketRow.AppendRelativeDateCell(
+                        date: ticket.ViolationDate.ToLocalDateTime(),
+                        styleIndex: dateCell);
+
+                    ticketRow.AppendRelativeInlineStringCell(
+                        text: ticket.Status.ToString());
+                }
+
+                worksheetPart.Worksheet.Finalize();
+                document.Close();
+
+                excelStream.Seek(0, SeekOrigin.Begin);
+
+                return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                {
+                    FileDownloadName = $"ticket_inbox_{now:yyyyMMdd}.xlsx"
                 };
             }
         }
