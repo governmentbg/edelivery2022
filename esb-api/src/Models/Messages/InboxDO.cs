@@ -15,6 +15,7 @@ namespace ED.EsbApi;
 /// <param name="RecipientLoginName">Наименование на потребител, получил съобщението</param>
 /// <param name="Url">Url за преглед на съобщението в ССЕВ</param>
 /// <param name="Rnu">Референтен номер на услуга (РНУ)</param>
+/// <param name="TemplateId">Идентификатор на шаблон на съобщение</param>
 public record InboxDO(
     int MessageId,
     DateTime DateSent,
@@ -25,4 +26,5 @@ public record InboxDO(
     string RecipientProfileName,
     string RecipientLoginName,
     string Url,
-    string? Rnu);
+    string? Rnu,
+    int TemplateId);

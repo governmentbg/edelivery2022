@@ -9,7 +9,7 @@ namespace ED.Domain
         string Residence,
         bool Sync,
         int ActionLoginId,
-        string IP)
+        string Ip)
         : IRequest<UpdateProfileCommandResult>;
 
     public record UpdateProfileCommandResult(

@@ -18,9 +18,10 @@ namespace ED.Domain
             int adminUserId,
             CancellationToken ct)
         {
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetStatisticsAsync)}({adminUserId}) called");
+            this.logger.LogInformation(
+                "{method}({adminUserId}) called",
+                nameof(GetStatisticsAsync),
+                adminUserId);
 
             int totalUsers = await (
                 from l in this.DbContext.Set<Login>()
@@ -43,12 +44,12 @@ namespace ED.Domain
                     on new
                     {
                         tgp.ProfileId,
-                        IsActived = true
+                        IsActivated = true
                     }
                     equals new
                     {
                         ProfileId = p.Id,
-                        IsActived = p.IsActivated
+                        p.IsActivated
                     }
                     into lj2
                 from p in lj2.DefaultIfEmpty()

@@ -16,20 +16,56 @@
     />
   </parameter>
 
-<parameter name="LinkMobilityApiKey">
+  <parameter name="InfosystemsApiUserName">
     <parameterEntry
       kind="XmlFile"
       scope="Web.config"
-      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__Clients__LinkMobility__ApiKey']/@value"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__Clients__Infosystems__ApiUserName']/@value"
       defaultValue=""
     />
   </parameter>
 
-<parameter name="LinkMobilityApiSecret">
+  <parameter name="InfosystemsApiPassword">
     <parameterEntry
       kind="XmlFile"
       scope="Web.config"
-      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__Clients__LinkMobility__ApiSecret']/@value"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__Clients__Infosystems__ApiPassword']/@value"
+      defaultValue=""
+    />
+  </parameter>
+
+  <parameter name="SharedSecretDPKey">
+    <parameterEntry
+      kind="XmlFile"
+      scope="Web.config"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__Authentication__SharedSecretDPKey']/@value"
+      defaultValue=""
+    />
+  </parameter>
+
+  <parameter name="ETranslationUsername">
+    <parameterEntry
+      kind="XmlFile"
+      scope="Web.config"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__Clients__ETranslation__Username']/@value"
+      defaultValue=""
+    />
+  </parameter>
+
+  <parameter name="ETranslationPassword">
+    <parameterEntry
+      kind="XmlFile"
+      scope="Web.config"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__Clients__ETranslation__Password']/@value"
+      defaultValue=""
+    />
+  </parameter>
+
+  <parameter name="DataPortalApiKey">
+    <parameterEntry
+      kind="XmlFile"
+      scope="Web.config"
+      match="/configuration/location/system.webServer/aspNetCore/environmentVariables/environmentVariable[@name='ED__Clients__DataPortal__ApiKey']/@value"
       defaultValue=""
     />
   </parameter>

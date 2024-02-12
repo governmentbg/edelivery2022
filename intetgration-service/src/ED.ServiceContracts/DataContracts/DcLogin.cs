@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
 namespace EDelivery.Common.DataContracts
@@ -25,7 +23,7 @@ namespace EDelivery.Common.DataContracts
 
         [DataMember]
         public string PhoneNumber { get; set; }
-        
+
         [DataMember]
         public List<DcProfile> Profiles { get; set; }
 
@@ -40,7 +38,7 @@ namespace EDelivery.Common.DataContracts
         {
             get
             {
-                return Profiles.Any() ? Profiles.SingleOrDefault(x => x.IsDefault) : null;
+                return this.Profiles.Any() ? this.Profiles.SingleOrDefault(x => x.IsDefault) : null;
             }
         }
 

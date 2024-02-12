@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices.Tickets";
+
+package ticket;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "enums.proto";
+
+service Ticket {
+  // list
+  rpc GetNewTicketsCount (GetNewTicketsCountRequest) returns (GetNewTicketsCountResponse);
+  rpc Inbox (BoxRequest) returns (InboxResponse);
+
+  // open
+  rpc Open (OpenRequest) returns (google.protobuf.Empty);
+
+  rpc Read (ReadRequest) returns (ReadResponse);
+  rpc LoadMultipleObligations (LoadMultipleObligationsRequest) returns (LoadMultipleObligationsResponse);
+  rpc GetSingleObligationAccessCode (GetSingleObligationAccessCodeRequest) returns (GetSingleObligationAccessCodeResponse);
+  rpc GetTicketTypeAndDocumentIdentifier (GetTicketTypeAndDocumentIdentifierRequest) returns (GetTicketTypeAndDocumentIdentifierResponse);
+}
+
+message GetNewTicketsCountRequest {
+  int32 login_id = 1;
+}
+
+message GetNewTicketsCountResponse {
+  message NewTicketsCount {
+    int32 profile_id = 1;
+    int32 count = 2;
+  }
+
+  repeated NewTicketsCount new_tickets_count = 1;
+}
+
+message BoxRequest {
+  int32 profile_id = 1;
+  int32 offset = 2;
+  int32 limit = 3;
+  google.protobuf.Timestamp from = 4;
+  google.protobuf.Timestamp to = 5;
+}
+
+message InboxResponse{
+  message TicketStatus {
+    enums.TicketStatusStatus status = 1;
+    google.protobuf.Timestamp seen_date = 2;
+  }
+
+  message Ticket {
+    int32 message_id = 1;
+    google.protobuf.Timestamp date_sent = 2;
+    string sender_profile_name = 3;
+    string subject = 4;
+    string type = 5;
+    google.protobuf.Timestamp violation_date = 6;
+    enums.TicketStatusStatus status = 7;
+    google.protobuf.Timestamp seen_date = 8;
+  }
+
+  repeated Ticket result = 1;
+  int32 length = 2;
+}
+
+message OpenRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+  int32 login_id = 3;
+}
+
+message ReadRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+}
+
+message ReadResponse {
+  message MessageProfile {
+    int32 profile_id = 1;
+    string name = 2;
+    enums.ProfileType type = 3;
+    bool is_read_only = 4;
+    string login_name = 5;
+  }
+
+  message MessageBlob {
+    int32 blob_id = 1;
+    string file_name = 2;
+    google.protobuf.Int64Value size = 3;
+    google.protobuf.StringValue document_registration_number = 4;
+    enums.MalwareScanResultStatus status = 5;
+    google.protobuf.BoolValue is_malicious = 6;
+    repeated MessageBlobSignature signatures = 7;
+    string hash = 8;
+  }
+
+  message MessageBlobSignature {
+    bool covers_document = 1;
+    google.protobuf.Timestamp sign_date = 2;
+    bool is_timestamp = 3;
+    bool valid_at_time_of_signing = 4;
+    string issuer = 5;
+    string subject = 6;
+    google.protobuf.Timestamp valid_to = 7;
+    google.protobuf.Timestamp valid_from = 8;
+  }
+
+  message Ticket {
+    string type = 1;
+    TickeStatus status = 2;
+  }
+
+  message TickeStatus {
+    enums.TicketStatusStatus status = 1;
+    google.protobuf.Timestamp serve_date = 2;
+    google.protobuf.Timestamp annul_date = 3;
+    google.protobuf.StringValue annulment_reason = 4;
+  }
+
+  message Message {
+    int32 message_id = 1;
+    google.protobuf.Timestamp date_sent = 2;
+    google.protobuf.Timestamp date_received = 3;
+    Ticket ticket= 4;
+    MessageProfile sender = 5;
+    MessageProfile recipient = 6;
+    string subject = 7;
+    string body = 8;
+    MessageBlob document = 9;
+    string safe_base64_url = 10;
+  }
+
+  Message message = 1;
+}
+
+message LoadMultipleObligationsRequest {
+  int32 profile_id = 1;
+}
+
+message LoadMultipleObligationsResponse {
+  int32 count = 1;
+  google.protobuf.StringValue not_found_message = 2;
+}
+
+message GetSingleObligationAccessCodeRequest {
+  int32 profile_id = 1;
+  string document_type = 2;
+  string document_identifier = 3;
+}
+
+message GetSingleObligationAccessCodeResponse {
+  google.protobuf.StringValue access_code = 1;
+  google.protobuf.StringValue not_found_message = 2;
+}
+
+message GetTicketTypeAndDocumentIdentifierRequest {
+  int32 message_id = 1;
+}
+
+message GetTicketTypeAndDocumentIdentifierResponse {
+  string document_type = 1;
+  google.protobuf.StringValue document_identifier = 2;
+}

@@ -40,6 +40,18 @@ namespace ED.Domain
         {
             this.Residence = residence;
         }
+
+        public void Update(
+            string residence,
+            string? city,
+            string? state,
+            string? country)
+        {
+            this.Residence = residence;
+            this.City = city;
+            this.State = state;
+            this.Country = country;
+        }
     }
 
     class AddressMapping : EntityMapping

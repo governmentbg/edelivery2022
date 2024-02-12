@@ -10,14 +10,16 @@ namespace ED.EsbApi;
 /// <param name="IsEncrypted">Дали данните от полето се криптират</param>
 /// <param name="IsRequired">Дали полето е задължително за попълване</param>
 /// <param name="MaxSize">Максимална големина на прикачения файл</param>
+/// <param name="ExpirationPeriod">Време до архивиране (в месеци)</param>
 /// <param name="AllowedExtensions">Позволени вид файлове</param>
 /// <param name="Instances">Максимален брой прикачени файлове</param>
-public record FileComponent (
+public record FileComponent(
     Guid Id,
     string Label,
     bool IsEncrypted,
     bool IsRequired,
-    int MaxSize, // TODO: missing ExpirationPeriod
+    int MaxSize,
+    int ExpirationPeriod,
     string? AllowedExtensions,
     int Instances)
     : BaseComponent(Id, Label, ComponentType.file, IsEncrypted, IsRequired);

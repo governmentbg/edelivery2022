@@ -11,6 +11,7 @@ using EDelivery.WebPortal.Enums;
 using EDelivery.WebPortal.Models;
 using EDelivery.WebPortal.Models.Home;
 using EDelivery.WebPortal.Utils;
+using EDelivery.WebPortal.Utils.Attributes;
 
 namespace EDelivery.WebPortal.Controllers
 {
@@ -19,40 +20,42 @@ namespace EDelivery.WebPortal.Controllers
     {
         private readonly Lazy<Profile.ProfileClient> profileClient;
 
+        private readonly Lazy<CachedProfileStatisticsData> profileStatisticsData;
+
         public HomeController()
         {
             this.profileClient = new Lazy<Profile.ProfileClient>(
                 () => Grpc.GrpcClientFactory.CreateProfileClient(), isThreadSafe: false);
+
+            this.profileStatisticsData = new Lazy<CachedProfileStatisticsData>(
+                () => this.HttpContext.GetCachedProfileStatistics(), isThreadSafe: false);
         }
 
+        [HttpGet]
         public ActionResult Index(string returnUrl)
         {
             return View(new IndexViewModel { ReturnUrl = returnUrl });
         }
 
-        public ActionResult New(string returnUrl)
+        [HttpGet]
+        public ActionResult New()
         {
             return View();
         }
 
-        [OutputCache(Duration = 120)]
-        [ChildActionOnly]
+        [ChildActionOnlyOrAjax]
+        [HttpPost]
         public ActionResult GetStatistics()
         {
             StatisticsViewModel vm = null;
 
             try
             {
-                GetStatisticsResponse response =
-                    this.profileClient.Value.GetStatistics(
-                        new Google.Protobuf.WellKnownTypes.Empty(),
-                        cancellationToken: Response.ClientDisconnectedToken);
-
                 vm = new StatisticsViewModel
                 {
-                    PublicAdministrationsCount = response.PublicAdministrationsCount,
-                    SocialOrganizationsCount = response.SocialOrganizationsCount,
-                    LegalEntitiesCount = response.LegalEntitiesCount
+                    LegalEntitiesCount = this.profileStatisticsData.Value.LegalEntitiesCount,
+                    PublicAdministrationsCount = this.profileStatisticsData.Value.PublicAdministrationsCount,
+                    SocialOrganizationsCount = this.profileStatisticsData.Value.SocialOrganizationsCount,
                 };
             }
             catch (Exception ex)
@@ -70,6 +73,7 @@ namespace EDelivery.WebPortal.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [HttpGet]
         public ActionResult Registered(eRegisteredSubjectsType? id)
         {
             if (id == null || id == eRegisteredSubjectsType.Person)
@@ -86,6 +90,8 @@ namespace EDelivery.WebPortal.Controllers
         }
 
         [OutputCache(NoStore = true, Duration = 0, Location = System.Web.UI.OutputCacheLocation.Any)]
+        [ChildActionOnlyOrAjax]
+        [HttpPost]
         public async Task<ActionResult> GetRegisteredOfType(
             eRegisteredSubjectsType type,
             string search,
@@ -144,32 +150,6 @@ namespace EDelivery.WebPortal.Controllers
             return PartialView("Partials/_RegisteredSubjectsList", model);
         }
 
-        // TODO: remove?
-        [Route("~/Validation/EIDResult")]
-        public ActionResult RedirectToEValidation(
-            string Target,
-            string URL,
-            string SAMLArtifact)
-        {
-            ElmahLogger.Instance.Error("new request for EValidationAuth - artifact is" + SAMLArtifact);
-
-            string eValidationUrl =
-                ConfigurationManager.AppSettings["EValidationURL"];
-            if (!string.IsNullOrEmpty(eValidationUrl))
-            {
-                string url = string.Format(
-                    "{0}?Target={1}&URL={2}&SAMLArtifact={3}",
-                    eValidationUrl,
-                    Url.Encode(Target),
-                    Url.Encode(URL),
-                    Url.Encode(SAMLArtifact));
-
-                return RedirectPermanent(url);
-            }
-
-            return RedirectToAction("Index");
-        }
-
         [HttpGet]
         public ActionResult ChangeCulture(eSiteCulture culture)
         {
@@ -184,6 +164,7 @@ namespace EDelivery.WebPortal.Controllers
         }
 
         [Route("robots.txt", Name = "GetRobotsText"), OutputCache(Duration = 86400)]
+        [HttpGet]
         public ActionResult RobotsText()
         {
             // https://weblog.west-wind.com/posts/2015/nov/13/serving-urls-with-file-extensions-in-an-aspnet-mvc-application

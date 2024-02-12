@@ -5,6 +5,9 @@ namespace ED.DomainJobs
     public class ClientsOptions
     {
         [Required]
-        public LinkMobilityOptions LinkMobility { get; set; } = null!;
+        public InfosystemsOptions Infosystems { get; set; } = null!;
+
+        [Required]
+        public DataPortalOptions DataPortal { get; set; } = null!;
     }
 }

@@ -316,4 +316,13 @@
   <data name="ErrorExistingGroupName" xml:space="preserve">
     <value>Вече има съществуваща група с това име, моля изберете друго.</value>
   </data>
+  <data name="ErrorCantCreateTranslation" xml:space="preserve">
+    <value>Поради системна грешка заявка за превод на съобщението не може да бъде създадена.</value>
+  </data>
+  <data name="ErrorMaxArchivedMessageTranslations" xml:space="preserve">
+    <value>Стигнали сте максималния брой на архивирани преводи за съобщение!</value>
+  </data>
+  <data name="ErrorObligationNotFound" xml:space="preserve">
+    <value>Задължението, което се опитвате да достъпите, не беше открито или е вече платено!</value>
+  </data>
 </root>

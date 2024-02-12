@@ -456,4 +456,13 @@ In order to receive Viber messages, the application must be installed on your mo
   <data name="ProfileChange" xml:space="preserve">
     <value>Change of profile</value>
   </data>
+  <data name="LabelNoMessageTranslations" xml:space="preserve">
+    <value>There are no message translations.</value>
+  </data>
+  <data name="ButtonCreateTranslation" xml:space="preserve">
+    <value>Request translation</value>
+  </data>
+  <data name="MessageConfirmDeleteTranslation" xml:space="preserve">
+    <value>Are you sure you want to delete the translation?</value>
+  </data>
 </root>

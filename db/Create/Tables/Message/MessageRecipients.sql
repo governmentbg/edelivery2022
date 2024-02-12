@@ -34,3 +34,8 @@ CREATE NONCLUSTERED INDEX [IX_MessageRecipients_MessagePdfBlobId]
 ON [dbo].[MessageRecipients] ([MessagePdfBlobId])
 WHERE [MessagePdfBlobId] IS NOT NULL
 GO
+
+CREATE NONCLUSTERED INDEX [IX_MessageRecipients_MessageId_ProfileId]
+ON [dbo].[MessageRecipients] ([MessageId], [ProfileId])
+INCLUDE ([LoginId], [DateReceived])
+GO

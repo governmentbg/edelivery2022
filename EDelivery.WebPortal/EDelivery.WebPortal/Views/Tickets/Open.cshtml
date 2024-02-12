@@ -1,0 +1,31 @@
+﻿@using EDelivery.WebPortal.Models.Tickets
+
+@model TicketsReadViewModel
+
+@{
+    ViewBag.Title = Common.TitleOpenMessage + " - " + Model.Subject;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleOpenTicket</h2>
+
+        <a href="@Url.Action("Inbox")" class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+
+        <div class="wrapper content-wrapper message-box">
+            <div class="message-content">
+
+                @Html.Partial("Partials/Open", Model)
+
+            </div>
+        </div>
+
+        <a href="@Url.Action("Inbox")" class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

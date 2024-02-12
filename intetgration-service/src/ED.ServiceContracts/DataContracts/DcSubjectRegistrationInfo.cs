@@ -1,10 +1,5 @@
 ﻿using EDelivery.Common.DataContracts.ESubject;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDelivery.Common.DataContracts
 {
@@ -14,7 +9,7 @@ namespace EDelivery.Common.DataContracts
     {
         public DcSubjectRegistrationInfo(string identificator)
         {
-            Identificator = identificator;
+            this.Identificator = identificator;
         }
 
         [DataMember]
@@ -28,9 +23,9 @@ namespace EDelivery.Common.DataContracts
     }
 
     [DataContract]
-    public class DcRegisteredSubjectInfo:DcSubjectPublicInfo
+    public class DcRegisteredSubjectInfo : DcSubjectPublicInfo
     {
         [DataMember]
-        public Common.Enums.eInstitutionType? InstitutionType { get; set; }
+        public Enums.eInstitutionType? InstitutionType { get; set; }
     }
 }

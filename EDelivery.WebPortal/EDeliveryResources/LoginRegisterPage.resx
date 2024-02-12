@@ -192,12 +192,6 @@
   <data name="LoginWithKep" xml:space="preserve">
     <value>Вход с Квалифициран Електронен Подпис</value>
   </data>
-  <data name="RadioChooseRegisterTypeEauth" xml:space="preserve">
-    <value>КЕП / ПИК на НАП</value>
-  </data>
-  <data name="RadioChooseRegisterTypeEID" xml:space="preserve">
-    <value>Карта за Електронна Идентичност (eID)</value>
-  </data>
   <data name="TextChooseRegisterType" xml:space="preserve">
     <value>Моля, изберете начин за удостоверяване на Вашата самоличност при регистрация в системата за сигурно електронно връчване.</value>
   </data>
@@ -231,14 +225,8 @@
   <data name="TitleLoginCredentials" xml:space="preserve">
     <value>Вход с потребител и парола</value>
   </data>
-  <data name="TitleLoginEID" xml:space="preserve">
-    <value>Вход с eID</value>
-  </data>
   <data name="TitleLoginKEP" xml:space="preserve">
-    <value>Вход с КЕП / ПИК на НАП</value>
-  </data>
-  <data name="TitleLoginNoiPIK" xml:space="preserve">
-    <value>Вход с ПИК на НОИ</value>
+    <value>Вход</value>
   </data>
   <data name="TitleRegisterLegal" xml:space="preserve">
     <value>Регистрация Юридическо лице</value>
@@ -269,9 +257,6 @@
   </data>
   <data name="TitleSectionRegistrationInstructions" xml:space="preserve">
     <value>Инструкция за регистрация</value>
-  </data>
-  <data name="RadioChooseRegisterTypePIK" xml:space="preserve">
-    <value>Персонален Идентификационен Код на НОИ</value>
   </data>
   <data name="LoginAuthCertificateNote" xml:space="preserve">
     <value>Моля, уверете се, че устройството с електронния Ви подпис е поставено в компютъра. Ако не е поставено, поставете го и тогава продължете.</value>

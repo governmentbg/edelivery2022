@@ -1876,7 +1876,7 @@ $@"Error occured in GetSentMessageContent with params -
             catch (Exception ex)
             {
                 logger.Error(
-$@"Error occured in CheckPersonHasRegistration  with params -
+$@"Error occured in CheckPersonHasRegistration with params -
     certificate: {certificateThumbprint},
     personIdentificator: {personIdentificator}",
                     ex);
@@ -1924,7 +1924,7 @@ $@"Error occured in CheckPersonHasRegistration  with params -
             catch (Exception ex)
             {
                 logger.Error(
-$@"Error occured in CheckLegalPersonHasRegistration  with params -
+$@"Error occured in CheckLegalPersonHasRegistration with params -
     certificate: {certificateThumbprint},
     eik: {eik}",
                     ex);
@@ -1972,7 +1972,7 @@ $@"Error occured in CheckLegalPersonHasRegistration  with params -
             catch (Exception ex)
             {
                 logger.Error(
-$@"Error occured in CheckSubjectHasRegistration  with params -
+$@"Error occured in CheckSubjectHasRegistration with params -
     certificate: {certificateThumbprint},
     identificator: {identificator}",
                     ex);

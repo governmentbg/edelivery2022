@@ -23,6 +23,9 @@ namespace ED.Domain
                 join mr in this.DbContext.Set<MessageRecipient>()
                     on m.MessageId equals mr.MessageId
 
+                join rp in this.DbContext.Set<Profile>()
+                    on mr.ProfileId equals rp.Id
+
                 join sl in this.DbContext.Set<Login>()
                     on mr.LoginId equals sl.Id
                     into lj1
@@ -47,6 +50,8 @@ namespace ED.Domain
                     SenderProfileId = sp.Id,
                     SenderProfileName = sp.ElectronicSubjectName,
                     mr.DateReceived,
+                    RecipientProfileId = rp.Id,
+                    RecipientProfileName = rp.ElectronicSubjectName,
                     RecipientLoginId = sl != null ? (int?)sl.Id : null,
                     RecipientLoginName = sl != null ? (string?)sl.ElectronicSubjectName : null,
                     m.TemplateId,
@@ -130,6 +135,9 @@ namespace ED.Domain
                     message.SenderProfileId,
                     message.SenderProfileName),
                 message.DateReceived,
+                new GetAsRecipientVOProfileRecipient(
+                    message.RecipientProfileId,
+                    message.RecipientProfileName),
                 message.DateReceived.HasValue
                     ? new GetAsRecipientVORecipientLogin(
                         message.RecipientLoginId!.Value,

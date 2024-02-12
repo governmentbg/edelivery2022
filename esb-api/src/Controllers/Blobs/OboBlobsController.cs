@@ -19,11 +19,11 @@ public class OboBlobsController : ControllerBase
     /// Връща списък с файлове в хранилището от името на профил
     /// </summary>
     /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
-    [Authorize] // TODO
+    [Authorize(Policy = Policies.OboStorageAccess)]
     [HttpGet("")]
     [ProducesResponseType(typeof(TableResultDO<BlobDO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> ListOnBehalfAsync(
         [FromServices] EsbClient esbClient,
         [FromServices] BlobUrlCreator blobUrlCreator,
@@ -34,16 +34,11 @@ public class OboBlobsController : ControllerBase
     {
         int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
 
-        if (!representedProfileId.HasValue)
-        {
-            return this.BadRequest();
-        }
-
         DomainServices.Esb.GetStorageBlobsResponse resp =
             await esbClient.GetStorageBlobsAsync(
                 new DomainServices.Esb.GetStorageBlobsRequest
                 {
-                    ProfileId = representedProfileId.Value,
+                    ProfileId = representedProfileId!.Value,
                     Offset = offset,
                     Limit = limit,
                 },
@@ -73,12 +68,12 @@ public class OboBlobsController : ControllerBase
     /// Връща файл от хранилището от името на профил
     /// </summary>
     /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
-    [Authorize] // TODO: access
+    [Authorize(Policy = Policies.OboStorageAccess)]
     [HttpGet("{blobId:int}")]
-    [ProducesResponseType(typeof(TableResultDO<BlobDO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(BlobDO), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DetailsOnBehalfAsync(
         [FromServices] EsbClient esbClient,
         [FromServices] BlobUrlCreator blobUrlCreator,
@@ -88,16 +83,11 @@ public class OboBlobsController : ControllerBase
     {
         int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
 
-        if (!representedProfileId.HasValue)
-        {
-            return this.BadRequest();
-        }
-
         DomainServices.Esb.GetStorageBlobInfoResponse resp =
             await esbClient.GetStorageBlobInfoAsync(
                 new DomainServices.Esb.GetStorageBlobInfoRequest
                 {
-                    ProfileId = representedProfileId.Value,
+                    ProfileId = representedProfileId!.Value,
                     BlobId = blobId,
                 },
                 cancellationToken: ct);
@@ -123,12 +113,12 @@ public class OboBlobsController : ControllerBase
     /// Изтрива файл от хранилището от името на профил
     /// </summary>
     /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
-    [Authorize] // TODO: access
+    [Authorize(Policy = Policies.OboStorageAccess)]
     [HttpDelete("{blobId:int}")]
-    [ProducesResponseType(typeof(TableResultDO<BlobDO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteOnBehalfAsync(
         [FromServices] EsbClient esbClient,
         [FromServices] BlobUrlCreator blobUrlCreator,
@@ -138,15 +128,24 @@ public class OboBlobsController : ControllerBase
     {
         int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
 
-        if (!representedProfileId.HasValue)
+        DomainServices.Esb.CheckStorageBlobResponse resp =
+            await esbClient.CheckStorageBlobAsync(
+                new DomainServices.Esb.CheckStorageBlobRequest
+                {
+                    ProfileId = representedProfileId!.Value,
+                    BlobId = blobId,
+                },
+                cancellationToken: ct);
+
+        if (!resp.IsThere)
         {
-            return this.BadRequest();
+            return this.NotFound();
         }
 
         _ = await esbClient.DeteleStorageBlobAsync(
             new DomainServices.Esb.DeteleStorageBlobRequest
             {
-                ProfileId = representedProfileId.Value,
+                ProfileId = representedProfileId!.Value,
                 BlobId = blobId,
             },
             cancellationToken: ct);

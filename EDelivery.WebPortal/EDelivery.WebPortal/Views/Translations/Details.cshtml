@@ -1,0 +1,124 @@
+﻿@using EDelivery.WebPortal.Utils
+
+@model TranslationViewModel
+
+@{
+    ViewBag.Title = Common.TitleTranslations;
+
+    var activeProfileId = Context.GetCachedUserData().ActiveProfileId;
+}
+
+<div class="cols-wrapper">
+    @Html.Partial("_LeftMenu")
+
+    <div class="content-right">
+        <h2>@Common.TitleTranslations</h2>
+
+        <a href="@Url.Action("List", "Translations", new { id = Model.MessageId })"
+           class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+
+        <div class="wrapper content-wrapper message-box">
+            <div class="message-content">
+                <table class="blank-list message">
+                    <tbody>
+                        <tr>
+                            <td>@ProfilePage.LabelMessageTitle</td>
+                            <td>
+                                <a href="@Url.Action("Open","Messages", new { id = Model.MessageId })">
+                                    @Model.Subject
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Език на оригиналния текст</td>
+                            <td>@Model.SourceLanguage</td>
+                        </tr>
+                        <tr>
+                            <td>Целеви език</td>
+                            <td>@Model.TargetLanguage</td>
+                        </tr>
+                        <tr>
+                            <td>Дата на създаване</td>
+                            <td>@Model.CreateDate.ToString(SystemConstants.DateTimeFormat)</td>
+                        </tr>
+                        <tr>
+                            <td>Дата на последна редакция</td>
+                            <td>@Model.ModifyDate.ToString(SystemConstants.DateTimeFormat)</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="table-responsive">
+            <table class="statistics">
+                <tbody>
+                    <tr>
+                        <th>Оригинал</th>
+                        <th>Превод</th>
+                        <th>Статус</th>
+                    </tr>
+
+                    @if (Model.Requests.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4">
+                                В момент няма документи за превод. Моля, изчакайте заявката да бъде обработена.
+                            </td>
+                        </tr>
+                    }
+
+                    @foreach (var request in Model.Requests)
+                    {
+                        <tr>
+                            <td>
+                                @if (request.SourceBlobId.HasValue)
+                                {
+                                    <a href="@Url.CreateMessageBlobWebPortalToken(activeProfileId, Model.MessageId, request.SourceBlobId.Value)" class="file-link" rel="noopener" target="_blank">
+                                        @request.SourceBlobFileName <span class="note"></span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <p>служебно поле</p>
+                                }
+                            </td>
+                            <td>
+                                @if (request.TargetBlobId.HasValue)
+                                {
+                                    <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, request.TargetBlobId.Value)" class="file-link" rel="noopener" target="_blank">
+                                        @request.TargetBlobFileName <span class="note"></span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <p>-</p>
+                                }
+                            </td>
+                            <td>@request.StatusText</td>
+                        </tr>
+                    }
+                    <tr>
+                        <th colspan="4" style="text-align: right; font-weight: normal;">
+                            <a target="_blank" rel="noopener" href="/Help#messages">Помощна информация относно потенциални грешки при превод ></a>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </div>
+
+        <a href="@Url.Action("List", "Translations", new { id = Model.MessageId })"
+           class="btn btn-m btn-clear mtb-spacer">
+            < @UIControls.ButtonBack
+        </a>
+    </div>
+</div>

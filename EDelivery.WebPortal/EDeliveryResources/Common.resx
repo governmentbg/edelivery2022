@@ -399,4 +399,19 @@
   <data name="OptionAll" xml:space="preserve">
     <value>Всички</value>
   </data>
+  <data name="ButtonTranslations" xml:space="preserve">
+    <value>Преводи</value>
+  </data>
+  <data name="TitleTranslations" xml:space="preserve">
+    <value>Преводи</value>
+  </data>
+  <data name="TitleTranslationDetails" xml:space="preserve">
+    <value>Преглед на превод</value>
+  </data>
+  <data name="TitleReceivedTickets" xml:space="preserve">
+    <value>Получени административни актове</value>
+  </data>
+  <data name="TitleOpenTicket" xml:space="preserve">
+    <value>Преглед получен административен акт</value>
+  </data>
 </root>

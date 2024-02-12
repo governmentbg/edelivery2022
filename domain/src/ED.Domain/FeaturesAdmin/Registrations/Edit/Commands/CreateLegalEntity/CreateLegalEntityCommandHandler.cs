@@ -14,6 +14,7 @@ namespace ED.Domain
         IUnitOfWork UnitOfWork,
         KeystoreClient KeystoreClient,
         IAggregateRepository<Profile> ProfileAggregateRepository,
+        IProfileBlobAccessKeyAggregateRepository ProfileBlobAccessKeyAggregateRepository,
         IAggregateRepository<ProfilesHistory> ProfilesHistoryAggregateRepository,
         IAggregateRepository<TargetGroupProfile> TargetGroupProfileAggregateRepository,
         IAggregateRepository<RegistrationRequest> RegistrationRequestAggregateRepository,
@@ -23,6 +24,8 @@ namespace ED.Domain
         : IRequestHandler<CreateLegalEntityCommand, CreateLegalEntityCommandResult>
     {
         private const string NotificationEvent = "OnAdminRegistration";
+
+        private const string RegisterLegalEntityActionDetails = "Register legal entity from admin panel";
 
         public async Task<CreateLegalEntityCommandResult> Handle(
             CreateLegalEntityCommand command,
@@ -78,10 +81,16 @@ namespace ED.Domain
 
             await this.UnitOfWork.SaveAsync(ct);
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
                 profile.Id,
                 ProfileHistoryAction.ProfileActivated,
-                command.AdminUserId);
+                command.AdminUserId,
+                ProfilesHistory.GenerateAccessDetails(
+                    ProfileHistoryAction.CreateProfile,
+                    profile.ElectronicSubjectId,
+                    profile.ElectronicSubjectName,
+                    RegisterLegalEntityActionDetails),
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,
@@ -111,13 +120,18 @@ namespace ED.Domain
                        pk.OaepPadding,
                        ct);
 
-                profile.AddBlob(
+                ProfileBlobAccessKey profileBlobAccessKey = new(
+                    profile.Id,
                     blobAccessKey.BlobId,
                     blobAccessKey.ProfileKeyId,
                     Login.SystemLoginId,
                     command.AdminUserId,
                     blobAccessKey.EncryptedKey,
                     ProfileBlobAccessKeyType.Registration);
+
+                await this.ProfileBlobAccessKeyAggregateRepository.AddAsync(
+                    profileBlobAccessKey,
+                    ct);
 
                 await this.UnitOfWork.SaveAsync(ct);
             }
@@ -215,6 +229,7 @@ namespace ED.Domain
                   $"Missing required option {nameof(DomainOptions.WebPortalUrl)}");
 
             return new EmailQueueMessage(
+                QueueMessageFeatures.Register,
                 email,
                 string.Format(emailSubect, profileName),
                 string.Format(emailBody, profileName, webPortalUrl),

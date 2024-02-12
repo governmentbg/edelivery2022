@@ -554,6 +554,7 @@ message CreateRegisterRequestRequest {
   int32 blob_id = 14;
   int32 login_id = 15;
   bool registration_is_viber_notification_enabled = 16;
+  string ip = 17;
 }
 
 message CreateRegisterRequestResponse {

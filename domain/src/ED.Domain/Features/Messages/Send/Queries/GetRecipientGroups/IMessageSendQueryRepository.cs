@@ -5,7 +5,7 @@ namespace ED.Domain
 {
     public partial interface IMessageSendQueryRepository
     {
-        Task<TableResultVO<GetRecipientGroupsVO>> GetRecipientGroupsAsync(
+        Task<TableResultVO<GetRecipientGroupsQO>> GetRecipientGroupsAsync(
             string? term,
             int profileId,
             int templateId,

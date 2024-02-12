@@ -195,15 +195,6 @@
   <data name="LoginWithKep" xml:space="preserve">
     <value>Log in with qualified electronic signature</value>
   </data>
-  <data name="RadioChooseRegisterTypeCert" xml:space="preserve">
-    <value>Qualified electronic signature (QES)</value>
-  </data>
-  <data name="RadioChooseRegisterTypeEID" xml:space="preserve">
-    <value>Electronic Identity Card (eID)</value>
-  </data>
-  <data name="RadioChooseRegisterTypePIK" xml:space="preserve">
-    <value>NOI Personal Identifier (PIK)</value>
-  </data>
   <data name="TextChooseRegisterType" xml:space="preserve">
     <value>Please select a way to authenticate your identity when registering in the Secure Electronic Delivery System.</value>
   </data>
@@ -239,14 +230,8 @@ Complete your registration by uploading the completed and signed form in the for
   <data name="TitleLoginCredentials" xml:space="preserve">
     <value>Log in with username and password</value>
   </data>
-  <data name="TitleLoginEID" xml:space="preserve">
-    <value>Log in with eID</value>
-  </data>
   <data name="TitleLoginKEP" xml:space="preserve">
-    <value>Log in with QES</value>
-  </data>
-  <data name="TitleLoginNoiPIK" xml:space="preserve">
-    <value>Log in with PIK</value>
+    <value>Login</value>
   </data>
   <data name="TitleRegisterLegal" xml:space="preserve">
     <value>Registration of legal entity</value>
@@ -302,9 +287,6 @@ Complete your registration by uploading the completed and signed form in the for
   <data name="LoginKepNotice" xml:space="preserve">
     <value>For electronic authentication with a qualified electronic signature, the latter must contain information about the PIN of the author of the signature in the field Serial number = PIN. In accordance with § 1, item 22 of the additional provisions of the Electronic Management Act under the conditions of § 5 of the Ordinance on the general requirements for information systems, registers and electronic admin. services.</value>
   </data>
-  <data name="RadioChooseRegisterTypeEauth" xml:space="preserve">
-    <value>Login with QES/PIC of NRA</value>
-  </data>
   <data name="DescriptionRegisterLegalAddOn" xml:space="preserve">
     <value>We would like to inform you that currently, in connection with upgrading the functionalities of the Secure Electronic Delivery System, applications for joining the Secure Electronic Delivery System of legal entities can only be submitted by a person representing the company (manager, procurator, representative, etc.). In order to ensure the security of the profile and the overall process of applying for and receiving electronic administrative services, and the delivery of administrative acts, it is currently not possible to submit an application via proxy for a Legal Entity to join.</value>
   </data>
@@ -313,9 +295,6 @@ Complete your registration by uploading the completed and signed form in the for
   </data>
   <data name="TitleRegisterPublicAdministration" xml:space="preserve">
     <value>Administration registration</value>
-  </data>
-  <data name="String1" xml:space="preserve">
-    <value />
   </data>
   <data name="TitleRegisterPublicAdministrationApplication1" xml:space="preserve">
     <value>Application for persons under Art. 1, Para. 1 and Para. 2 of the Electronic Government Act to join the Secure Electronic Delivery System</value>

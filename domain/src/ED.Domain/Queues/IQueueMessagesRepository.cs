@@ -45,5 +45,12 @@ namespace ED.Domain
             QueueMessageType type,
             string tag,
             CancellationToken ct);
+
+        Task SetStatusCancelledAsync(
+            QueueMessageType type,
+            long dueDate,
+            int queueMessageId,
+            DateTime statusDate,
+            CancellationToken ct);
     }
 }

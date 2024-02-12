@@ -1,10 +1,6 @@
 ﻿using EDelivery.Common.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDelivery.Common.DataContracts.ESubject
 {
@@ -22,7 +18,7 @@ namespace EDelivery.Common.DataContracts.ESubject
         public eProfileType ProfileType { get; set; }
 
         [DataMember]
-        public Guid  ElectronicSubjectId { get; set; }
+        public Guid ElectronicSubjectId { get; set; }
 
         [DataMember]
         public string ElectronicSubjectName { get; set; }
@@ -36,5 +32,4 @@ namespace EDelivery.Common.DataContracts.ESubject
         [DataMember]
         public bool IsActivated { get; set; }
     }
-
 }

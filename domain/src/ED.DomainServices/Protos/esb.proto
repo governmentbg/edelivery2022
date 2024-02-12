@@ -14,11 +14,12 @@ service Esb {
   // messages
   rpc OpenMessage (OpenMessageRequest) returns (OpenMessageResponse);
   rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
+  rpc GetForwardedMessageOriginalRecipientProfile (GetForwardedMessageOriginalRecipientProfileRequest) returns (GetForwardedMessageOriginalRecipientProfileResponse);
 
   rpc Inbox (BoxRequest) returns (InboxResponse);
   rpc Outbox (BoxRequest) returns (OutboxResponse);
   rpc ViewMessage (ViewMessageRequest) returns (ViewMessageResponse);
-  rpc GetMessage (GetMessageRequest) returns (GetMessageResponse); // open message query
+  rpc GetMessage (GetMessageRequest) returns (GetMessageResponse);
   rpc CheckMessageRecipients (CheckMessageRecipientsRequest) returns (CheckMessageRecipientsResponse);
   rpc GetBlobsInfo (GetBlobsInfoRequest) returns (GetBlobsInfoResponse);
 
@@ -30,6 +31,8 @@ service Esb {
 
   // profiles
   rpc CreatePassiveIndividual (CreatePassiveIndividualRequest) returns (CreatePassiveIndividualResponse);
+  rpc CreateOrUpdateIndividual (CreateOrUpdateIndividualRequest) returns (CreateOrUpdateIndividualResponse);
+  rpc CreateLegalEntity (CreateLegalEntityRequest) returns (CreateLegalEntityResponse);
 
   rpc CheckProfileTargetGroupAccess (CheckProfileTargetGroupAccessRequest) returns (CheckProfileTargetGroupAccessResponse);
   rpc CheckProfileOnBehalfOfAccess (CheckProfileOnBehalfOfAccessRequest) returns (CheckProfileOnBehalfOfAccessResponse);
@@ -37,9 +40,14 @@ service Esb {
   rpc GetTargetGroupProfiles (GetTargetGroupProfilesRequest) returns (GetTargetGroupProfilesResponse);
   rpc SearchTargetGroupProfiles (SearchTargetGroupProfilesRequest) returns (SearchTargetGroupProfilesResponse);
   rpc GetEsbUser (GetEsbUserRequest) returns (GetEsbUserResponse);
+  rpc GetRegisteredProfiles (GetRegisteredProfilesRequest) returns (GetRegisteredProfilesResponse);
+  rpc CheckExistingLegalEntity (CheckExistingLegalEntityRequest) returns (CheckExistingLegalEntityResponse);
+  rpc CheckAllLoginsExist(CheckAllLoginsExistRequest) returns (CheckAllLoginsExistResponse);
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
 
   // target groups
   rpc GetTargetGroups (GetTargetGroupsRequest) returns (GetTargetGroupsResponse);
+  rpc CheckTargetGroupId (CheckTargetGroupIdRequest) returns (CheckTargetGroupIdResponse);
 
   // templates
   rpc CheckProfileTemplateAccess (CheckProfileTemplateAccessRequest) returns (CheckProfileTemplateAccessResponse);
@@ -50,12 +58,20 @@ service Esb {
   rpc GetStorageBlobs (GetStorageBlobsRequest) returns (GetStorageBlobsResponse);
   rpc GetStorageBlobInfo (GetStorageBlobInfoRequest) returns (GetStorageBlobInfoResponse);
   rpc DeteleStorageBlob (DeteleStorageBlobRequest) returns (google.protobuf.Empty);
+  rpc CheckStorageBlob (CheckStorageBlobRequest) returns (CheckStorageBlobResponse);
+
+  // countries
+  rpc GetCountries (GetCountriesRequest) returns (GetCountriesResponse);
+  rpc CheckCountryIso (CheckCountryIsoRequest) returns (CheckCountryIsoResponse);
 }
 
 message BoxRequest {
   int32 profile_id = 1;
-  google.protobuf.Int32Value offset = 2;
-  google.protobuf.Int32Value limit = 3;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+  google.protobuf.Int32Value template_id = 4;
+  google.protobuf.Int32Value offset = 5;
+  google.protobuf.Int32Value limit = 6;
 }
 
 message InboxResponse{
@@ -70,6 +86,7 @@ message InboxResponse{
     string recipient_login_name = 8;
     string url = 9;
     google.protobuf.StringValue rnu = 10;
+    int32 template_id = 11;
   }
 
   repeated Message result = 1;
@@ -87,6 +104,7 @@ message OutboxResponse{
     string recipients = 6;
     string url = 7;
     google.protobuf.StringValue rnu = 8;
+    int32 template_id = 9;
   }
 
   repeated Message result = 1;
@@ -201,13 +219,20 @@ message GetTargetGroupsResponse {
 }
 
 message CreatePassiveIndividualRequest {
+  message Address {
+    string residence = 1;
+    google.protobuf.StringValue city = 2;
+    google.protobuf.StringValue state = 3;
+    google.protobuf.StringValue country_iso = 4;
+  }
+
   string identifier = 1;
   string first_name = 2;
   string middle_name = 3;
   string last_name = 4;
   string email = 5;
   string phone = 6;
-  string residence = 7;
+  Address address = 7;
   int32 action_login_id = 8;
   string ip = 9;
 }
@@ -319,6 +344,11 @@ message GetMessageResponse {
     string name = 2;
   }
 
+  message RecipientProfile {
+    int32 profile_id = 1;
+    string name = 2;
+  }
+
   message RecipientLogin {
     int32 login_id = 1;
     string name = 2;
@@ -351,13 +381,14 @@ message GetMessageResponse {
     google.protobuf.Timestamp date_sent = 2;
     SenderProfile sender = 3;
     google.protobuf.Timestamp date_received = 4;
-    RecipientLogin recipient_login = 5;
-    string subject = 6;
-    int32 template_id = 7;
-    string body = 8;
-    repeated Blob blobs = 9;
-    google.protobuf.Int32Value forwarded_message_id = 10;
-    google.protobuf.StringValue rnu = 11;
+    RecipientProfile recipient = 5;
+    RecipientLogin recipient_login = 6;
+    string subject = 7;
+    int32 template_id = 8;
+    string body = 9;
+    repeated Blob blobs = 10;
+    google.protobuf.Int32Value forwarded_message_id = 11;
+    google.protobuf.StringValue rnu = 12;
   }
 
   Message message = 1;
@@ -422,6 +453,15 @@ message SendMessageRequest {
 
 message SendMessageResponse {
   int32 message_id = 1;
+}
+
+message GetForwardedMessageOriginalRecipientProfileRequest {
+  int32 message_id = 1;
+  int32 forwarded_message_id = 2;
+}
+
+message GetForwardedMessageOriginalRecipientProfileResponse {
+  int32 recipient_profile_id = 1;
 }
 
 message GetBlobsInfoRequest {
@@ -507,4 +547,172 @@ message GetStorageBlobInfoResponse {
 message DeteleStorageBlobRequest {
   int32 profile_id = 1;
   int32 blob_id = 2;
+}
+
+message CheckStorageBlobRequest {
+  int32 profile_id = 1;
+  int32 blob_id = 2;
+}
+
+message CheckStorageBlobResponse {
+  bool is_there = 1;
+}
+
+message GetRegisteredProfilesRequest {
+  string identifier = 1;
+  google.protobuf.Int32Value offset = 2;
+  google.protobuf.Int32Value limit = 3;
+}
+
+message GetRegisteredProfilesResponse {
+  message Address {
+    int32 address_id = 1;
+    google.protobuf.StringValue residence = 2;
+    google.protobuf.StringValue city = 3;
+    google.protobuf.StringValue state = 4;
+    google.protobuf.StringValue country_iso = 5;
+  }
+
+  message Profile {
+    int32 profile_id = 1;
+    string identifier = 2;
+    string name = 3;
+    string email = 4;
+    string phone = 5;
+    optional Address address = 8;
+    bool is_activated = 9;
+    bool is_passive= 10;
+    int32 target_group_id = 11;
+    string target_group_name = 12;
+  }
+
+  repeated Profile result = 1;
+  int32 length = 2;
+}
+
+message CreateOrUpdateIndividualRequest {
+  message Address {
+    string residence = 1;
+    google.protobuf.StringValue city = 2;
+    google.protobuf.StringValue state = 3;
+    google.protobuf.StringValue country_iso = 4;
+  }
+
+  string identifier = 1;
+  string first_name = 2;
+  string middle_name = 3;
+  string last_name = 4;
+  string email = 5;
+  string phone = 6;
+  Address address = 7;
+  bool is_email_notification_enabled = 8;
+  bool is_full_featured = 9;
+  int32 action_login_id = 10;
+  string ip = 11;
+}
+
+message CreateOrUpdateIndividualResponse {
+  int32 profile_id = 1;
+}
+
+message GetCountriesRequest
+{
+  google.protobuf.Int32Value offset = 1;
+  google.protobuf.Int32Value limit = 2;
+}
+
+message GetCountriesResponse {
+  message Country {
+    string iso = 1;
+    string name = 2;
+  }
+
+  repeated Country result = 1;
+  int32 length = 2;
+}
+
+message CheckCountryIsoRequest {
+  string iso = 1;
+}
+
+message CheckCountryIsoResponse {
+  bool is_valid = 1;
+}
+
+message CreateLegalEntityRequest {
+  message OwnerData {
+    string identifier = 1;
+    string email = 2;
+    string phone = 3;
+  }
+  message Address {
+    string residence = 1;
+    google.protobuf.StringValue city = 2;
+    google.protobuf.StringValue state = 3;
+    google.protobuf.StringValue country_iso = 4;
+  }
+
+  string identifier = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  Address address = 5;
+  int32 target_group_id = 6;
+  repeated OwnerData owners_data = 7;
+  int32 action_login_id = 8;
+  string ip = 9;
+}
+
+message CreateLegalEntityResponse {
+  int32 profile_id = 1;
+}
+
+message CheckTargetGroupIdRequest {
+  int32 target_group_id = 1;
+}
+
+message CheckTargetGroupIdResponse {
+  bool is_valid = 1;
+}
+
+message CheckExistingLegalEntityRequest {
+  string identifier = 1;
+  int32 target_group_id = 2;
+}
+
+message CheckExistingLegalEntityResponse {
+  bool is_existing = 1;
+}
+
+message CheckAllLoginsExistRequest {
+  repeated string identifiers = 1;
+}
+
+message CheckAllLoginsExistResponse {
+  bool is_valid = 1;
+}
+
+message GetProfileRequest {
+  int32 profile_id = 1;
+}
+
+message GetProfileResponse {
+  message Address {
+    int32 address_id = 1;
+    google.protobuf.StringValue residence = 2;
+    google.protobuf.StringValue city = 3;
+    google.protobuf.StringValue state = 4;
+    google.protobuf.StringValue country_iso = 5;
+  }
+
+  message Profile {
+    int32 profile_id = 1;
+    string identifier = 2;
+    string name = 3;
+    string email = 4;
+    string phone = 5;
+    optional Address address = 6;
+  }
+
+  optional Profile result = 1;
 }

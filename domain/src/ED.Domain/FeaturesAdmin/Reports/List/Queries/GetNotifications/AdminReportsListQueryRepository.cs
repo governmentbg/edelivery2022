@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -17,42 +16,85 @@ namespace ED.Domain
             DateTime toDate,
             CancellationToken ct)
         {
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetNotificationsAsync)} ({adminUserId}, \"{fromDate}\", \"{toDate}\") called");
+            this.logger.LogInformation(
+                "{method} ({adminUserId}, \"{fromDate}\", \"{toDate}\") called",
+                nameof(GetNotificationsAsync),
+                adminUserId,
+                fromDate,
+                toDate);
 
-            Expression<Func<QueueMessage, bool>> predicate =
-                PredicateBuilder.True<QueueMessage>();
+            DateTime toDateModified = toDate.AddDays(1);
 
-            GetNotificationsVO[] vos = await (
-                from q in this.DbContext.Set<QueueMessage>()
+            GetNotificationsVO[] sms = await (
+                from sd in this.DbContext.Set<SmsDelivery>()
 
-                where q.StatusDate >= fromDate
-                      && q.StatusDate < toDate.AddDays(1)
-                      && (q.Type == QueueMessageType.Email
-                        || q.Type == QueueMessageType.Sms
-                        || q.Type == QueueMessageType.SmsDeliveryCheck
-                        || q.Type == QueueMessageType.Viber
-                        || q.Type == QueueMessageType.ViberDeliveryCheck)
-                      && (q.Status == QueueMessageStatus.Processed
-                        || q.Status == QueueMessageStatus.Errored)
+                where sd.SentDate >= fromDate
+                      && sd.SentDate < toDateModified
 
-                group q by new
+                group sd by new
                 {
-                    q.Type,
-                    q.StatusDate.Date
+                    sd.SentDate.Date
                 }
                 into g
 
                 orderby g.Key.Date descending
 
                 select new GetNotificationsVO(
-                    g.Key.Type,
-                    g.Count(m => m.Status == QueueMessageStatus.Processed),
-                    g.Count(m => m.Status == QueueMessageStatus.Errored),
+                    QueueMessageType.Sms,
+                    g.Count(m => m.Status == DeliveryStatus.Delivered),
+                    g.Count(m => m.Status == DeliveryStatus.Error),
                     g.Key.Date
                 ))
                 .ToArrayAsync(ct);
+
+            GetNotificationsVO[] viber = await (
+                from vd in this.DbContext.Set<ViberDelivery>()
+
+                where vd.SentDate >= fromDate
+                      && vd.SentDate < toDateModified
+
+                group vd by new
+                {
+                    vd.SentDate.Date
+                }
+                into g
+
+                orderby g.Key.Date descending
+
+                select new GetNotificationsVO(
+                    QueueMessageType.Viber,
+                    g.Count(m => m.Status == DeliveryStatus.Delivered),
+                    g.Count(m => m.Status == DeliveryStatus.Error),
+                    g.Key.Date
+                ))
+                .ToArrayAsync(ct);
+
+            GetNotificationsVO[] email = await (
+                from ed in this.DbContext.Set<EmailDelivery>()
+
+                where ed.SentDate >= fromDate
+                      && ed.SentDate < toDateModified
+
+                group ed by new
+                {
+                    ed.SentDate.Date
+                }
+                into g
+
+                orderby g.Key.Date descending
+
+                select new GetNotificationsVO(
+                    QueueMessageType.Email,
+                    g.Count(m => m.Status == DeliveryStatus.Delivered),
+                    g.Count(m => m.Status == DeliveryStatus.Error),
+                    g.Key.Date
+                ))
+                .ToArrayAsync(ct);
+
+            GetNotificationsVO[] vos = sms
+                .Concat(email)
+                .Concat(viber)
+                .ToArray();
 
             return vos;
         }

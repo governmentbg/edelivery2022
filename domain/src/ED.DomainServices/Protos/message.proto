@@ -56,8 +56,8 @@ message BoxRequest {
   int32 limit = 4;
   google.protobuf.StringValue subject  = 5;
   google.protobuf.StringValue profile = 6;
-  google.protobuf.Timestamp from_date = 7;
-  google.protobuf.Timestamp to_date = 8;
+  google.protobuf.Timestamp from = 7;
+  google.protobuf.Timestamp to = 8;
   google.protobuf.StringValue rnu = 9;
 }
 

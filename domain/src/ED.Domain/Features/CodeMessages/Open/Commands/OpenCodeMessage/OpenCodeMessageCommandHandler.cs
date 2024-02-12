@@ -71,7 +71,6 @@ namespace ED.Domain
                 using MemoryStream memoryStream = new(
                     message.MessageSummary
                     ?? throw new Exception("MessageSummary should not be null"));
-                messageSummarySha256 = XmlCanonicalizationHelper.GetSha256Hash(memoryStream);
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
@@ -118,6 +117,9 @@ namespace ED.Domain
                 recipientMessageSummaryXml =
                     Encoding.UTF8.GetString(xmlMemoryStream.ToArray());
                 recipientMessageSummary = Encoding.UTF8.GetBytes(recipientMessageSummaryXml);
+
+                xmlMemoryStream.Position = 0;
+                messageSummarySha256 = XmlCanonicalizationHelper.GetSha256Hash(xmlMemoryStream);
             }
             else
             {
@@ -152,18 +154,22 @@ namespace ED.Domain
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.EmailQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.SmsQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.PushNotificationQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.ViberQueueMessages,
+                QueueMessageFeatures.Messages,
                 ct);
 
             await this.UnitOfWork.SaveAsync(ct);
@@ -227,6 +233,7 @@ namespace ED.Domain
             EmailQueueMessage[] emailRecipients = notificationRecipients
                 .Where(e => e.IsEmailNotificationOnDeliveryEnabled)
                 .Select(e => new EmailQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.Email,
                     emailSubect,
                     string.Format(
@@ -249,6 +256,7 @@ namespace ED.Domain
             SmsQueueMessage[] smsRecipients = notificationRecipients
                 .Where(e => e.IsSmsNotificationOnDeliveryEnabled)
                 .Select(e => new SmsQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.Phone,
                     string.Format(
                         smsBody,
@@ -268,6 +276,7 @@ namespace ED.Domain
             PushNotificationQueueMessage[] pushNotificationRecipients = notificationRecipients
                 .Where(e => !string.IsNullOrEmpty(e.PushNotificationUrl))
                 .Select(e => new PushNotificationQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.PushNotificationUrl!,
                     new
                     {
@@ -286,6 +295,7 @@ namespace ED.Domain
             ViberQueueMessage[] viberRecipients = notificationRecipients
                 .Where(e => e.IsViberNotificationOnDeliveryEnabled)
                 .Select(e => new ViberQueueMessage(
+                    QueueMessageFeatures.Messages,
                     e.Phone,
                     string.Format(
                         viberBody,

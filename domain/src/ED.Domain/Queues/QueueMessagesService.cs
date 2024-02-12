@@ -83,9 +83,9 @@ namespace ED.Domain
             return PostMessageAsyncInt(this.queueMessagesRepository, payload, dueDate, tag, null, ct);
         }
 
-        public Task PostMessagesAsync<T>(T[] payload, CancellationToken ct) where T : notnull
+        public Task PostMessagesAsync<T>(T[] payload, string? tag, CancellationToken ct) where T : notnull
         {
-            return PostMessagesAsyncInt(this.queueMessagesRepository, payload, null, null, null, ct);
+            return PostMessagesAsyncInt(this.queueMessagesRepository, payload, null, tag, null, ct);
         }
 
         public async Task<IEnumerable<(T, DateTime)>> CancelMessages<T>(
@@ -182,6 +182,22 @@ namespace ED.Domain
             else if (typeof(T) == typeof(ViberDeliveryCheckQueueMessage))
             {
                 return QueueMessageType.ViberDeliveryCheck;
+            }
+            else if (typeof(T) == typeof(TranslationQueueMessage))
+            {
+                return QueueMessageType.Translation;
+            }
+            else if (typeof(T) == typeof(TranslationClosureQueueMessage))
+            {
+                return QueueMessageType.TranslationClosure;
+            }
+            else if (typeof(T) == typeof(DeliveredTicketQueueMessage))
+            {
+                return QueueMessageType.DeliveredTicket;
+            }
+            else if (typeof(T) == typeof(DataPortalQueueMessage))
+            {
+                return QueueMessageType.DataPortal;
             }
             else
             {

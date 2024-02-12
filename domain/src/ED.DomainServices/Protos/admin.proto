@@ -38,6 +38,7 @@ service Admin {
   rpc UpdateProfileQuotas (UpdateProfileQuotasRequest) returns (google.protobuf.Empty);
   rpc GetProfileEsbUserInfo (GetProfileEsbUserInfoRequest) returns (GetProfileEsbUserInfoResponse);
   rpc UpdateProfileEsbUser (UpdateProfileEsbUserRequest) returns (google.protobuf.Empty);
+  rpc GetProfileHistory (GetProfileHistoryRequest) returns (GetProfileHistoryResponse);
 
   // nomenclatures
   rpc GetProfilesById (GetProfilesByIdRequest) returns (GetProfilesByIdResponse);
@@ -111,6 +112,7 @@ service Admin {
   rpc GetSentMessageReport (GetSentMessageReportRequest) returns (GetSentMessageReportResponse);
   rpc GetNotificationsReport (GetNotificationsReportRequest) returns (GetNotificationsReportResponse);
   rpc GetTimestampsReport (GetTimestampsReportRequest) returns (GetTimestampsReportResponse);
+  rpc GetTicketsReport (GetTicketsReportRequest) returns (GetTicketsReportResponse);
 
   // seos participants
   rpc GetSeosParticipantsList (GetSeosParticipantsListRequest) returns (GetSeosParticipantsListResponse);
@@ -121,9 +123,10 @@ service Admin {
 
 message GetProfileListRequest {
   int32 admin_user_id = 1;
-  google.protobuf.StringValue term = 2;
-  int32 offset = 3;
-  int32 limit = 4;
+  google.protobuf.StringValue identifier = 2;
+  google.protobuf.StringValue name_email_phone = 3;
+  int32 offset = 4;
+  int32 limit = 5;
 }
 
 message GetProfileListResponse {
@@ -132,8 +135,9 @@ message GetProfileListResponse {
     enums.ProfileType profile_type = 2;
     string identifier = 3;
     string electronic_subject_name = 4;
-    bool is_activated = 5;
-    string target_group_name = 6;
+    string email = 5;
+    bool is_activated = 6;
+    string target_group_name = 7;
   }
 
   repeated Profile result = 1;
@@ -531,8 +535,10 @@ message GetTemplateResponse {
 }
 
 message GetTemplateListRequest {
-  int32 offset = 1;
-  int32 limit = 2;
+  google.protobuf.StringValue term = 1;
+  enums.TemplateStatus template_status = 2;
+  int32 offset = 3;
+  int32 limit = 4;
 }
 
 message GetTemplateListResponse {
@@ -648,6 +654,7 @@ message RegisterProfileRequest {
   int32 target_group_id = 6;
   google.protobuf.Int32Value blob_id = 7;
   int32 admin_user_id = 8;
+  string ip = 9;
 }
 
 message RegisterProfileResponse {
@@ -715,6 +722,7 @@ message ConfirmRegistrationRequestRequest {
   int32 admin_user_id = 1;
   int32 registration_request_id = 2;
   string comment = 3;
+  string ip = 4;
 }
 
 message ConfirmRegistrationRequestResponse {
@@ -726,6 +734,7 @@ message RejectRegistrationRequestRequest {
   int32 admin_user_id = 1;
   int32 registration_request_id = 2;
   string comment = 3;
+  string ip = 4;
 }
 
 message ParseRegistrationDocumentRequest {
@@ -1225,6 +1234,28 @@ message GetTimestampsReportResponse {
   int32 count_error = 2;
 }
 
+message GetTicketsReportRequest {
+  int32 admin_user_id = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+}
+
+message GetTicketsReportResponse {
+  int32 total_tickets = 1;
+  int32 daily_individual_tickets = 2;
+  int32 daily_legal_entity_tickets = 3;
+  int32 daily_individual_penal_decrees = 4;
+  int32 daily_legal_entity_penal_decrees = 5;
+  int32 daily_notifications_by_email = 6;
+  int32 daily_notifications_by_phone = 7;
+  int32 daily_received_individual_tickets = 8;
+  int32 daily_received_legal_entity_tickets = 9;
+  int32 daily_received_individual_penal_decrees = 10;
+  int32 daily_received_legal_entity_penal_decrees = 11;
+  int32 daily_passive_profiles = 12;
+  int32 daily_active_profiles = 13;
+}
+
 message GetProfileQuotasInfoRequest {
   int32 profile_id = 1;
 }
@@ -1254,4 +1285,27 @@ message UpdateProfileEsbUserRequest {
   google.protobuf.StringValue o_id = 2;
   google.protobuf.StringValue client_id = 3;
   int32 admin_user_id = 4;
+}
+
+message GetProfileHistoryRequest {
+  int32 profile_id = 1;
+  repeated enums.ProfileHistoryAction actions = 2;
+  int32 offset = 3;
+  int32 limit = 4;
+}
+
+message GetProfileHistoryResponse {
+  message History {
+    int32 profiles_history_id = 1;
+    int32 profile_id = 2;
+    google.protobuf.Timestamp action_date = 3;
+    enums.ProfileHistoryAction action = 4;
+    google.protobuf.StringValue login_name = 5;
+    google.protobuf.StringValue details = 6;
+    google.protobuf.StringValue admin_name = 7;
+    google.protobuf.StringValue ip = 8;
+  }
+
+  repeated History result = 1;
+  int32 length = 2;
 }

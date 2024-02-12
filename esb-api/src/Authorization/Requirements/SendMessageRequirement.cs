@@ -23,7 +23,7 @@ public class SendMessageRequirementHandler : AuthorizationHandler<SendMessageReq
     {
         if (httpContextAccessor.HttpContext == null)
         {
-            throw new Exception($"'{nameof(ReadMessageAsSenderRequirementHandler)}' called outside of a request. IHttpContextAccessor.HttpContext is null!");
+            throw new Exception($"'{nameof(SendMessageRequirementHandler)}' called outside of a request. IHttpContextAccessor.HttpContext is null!");
         }
 
         this.httpContext = httpContextAccessor.HttpContext;
@@ -34,8 +34,19 @@ public class SendMessageRequirementHandler : AuthorizationHandler<SendMessageReq
         AuthorizationHandlerContext context,
         SendMessageRequirement requirement)
     {
-        int profileId = context.User.GetAuthenticatedUserProfileId();
-        int loginId = context.User.GetAuthenticatedUserLoginId();
+        int? profileId = context.User.GetAuthenticatedUserProfileIdOrDefault();
+        if (!profileId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
+        int? loginId = context.User.GetAuthenticatedUserLoginIdOrDefault();
+        if (!loginId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
 
         //https://github.com/alicommit-malp/Dotnet-Core-Request-Body-Peeker/blob/d18dc111c88dcf339b003ac93eea46652ea6d7ff/src/Request.Body.Peeker/HttpRequestExtension.cs
         this.httpContext.Request.EnableBuffering();
@@ -51,8 +62,8 @@ public class SendMessageRequirementHandler : AuthorizationHandler<SendMessageReq
             await this.authorizationClient.HasWriteMessageAccessAsync(
                 new DomainServices.HasWriteMessageAccessRequest
                 {
-                    ProfileId = profileId,
-                    LoginId = loginId,
+                    ProfileId = profileId.Value,
+                    LoginId = loginId.Value,
                     TemplateId = templateId,
                 });
 
@@ -60,28 +71,6 @@ public class SendMessageRequirementHandler : AuthorizationHandler<SendMessageReq
         {
             this.httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
             return;
-        }
-
-        string? forwardedMessageIdParam = JObject.Parse(body)["forwardedMessageId"]?.Value<string>();
-
-        if (!string.IsNullOrEmpty(forwardedMessageIdParam))
-        {
-            int forwardedMessageId = int.TryParse(forwardedMessageIdParam, out int temp2) ? temp : 0;
-
-            DomainServices.HasAccessResponse resp2 =
-                await this.authorizationClient.HasReadMessageAsRecipientAccessAsync(
-                    new DomainServices.HasReadMessageAsRecipientAccessRequest
-                    {
-                        MessageId = forwardedMessageId,
-                        ProfileId = profileId,
-                        LoginId = loginId,
-                    });
-
-            if (!resp2.HasAccess)
-            {
-                this.httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-                return;
-            }
         }
 
         context.Succeed(requirement);

@@ -32,19 +32,19 @@
             </div>
             <div class="col-2 flex-element date-group">
                 <div class="form-col">
-                    <label for="FromDate">@ProfilePage.PlaceholderDateFrom:</label>
+                    <label for="From">@ProfilePage.PlaceholderDateFrom:</label>
                     <div class="form-element">
-                        @Html.TextBoxFor(x => x.FromDate, new { @placeholder = SystemConstants.DatePickerDateFormat })
+                        @Html.TextBoxFor(x => x.From, new { @placeholder = SystemConstants.DatePickerDateFormat })
                         <div class="icon-hint icon-hint--clear icon-hint--input-text"></div>
-                        @Html.ValidationMessageFor(x => x.FromDate)
+                        @Html.ValidationMessageFor(x => x.From)
                     </div>
                 </div>
                 <div class="form-col">
-                    <label for="ToDate">@ProfilePage.PlaceholderDateТо:</label>
+                    <label for="To">@ProfilePage.PlaceholderDateТо:</label>
                     <div class="form-element">
-                        @Html.TextBoxFor(x => x.ToDate, new { @placeholder = SystemConstants.DatePickerDateFormat })
+                        @Html.TextBoxFor(x => x.To, new { @placeholder = SystemConstants.DatePickerDateFormat })
                         <div class="icon-hint icon-hint--clear icon-hint--input-text"></div>
-                        @Html.ValidationMessageFor(x => x.ToDate)
+                        @Html.ValidationMessageFor(x => x.To)
                     </div>
                 </div>
             </div>
@@ -76,8 +76,8 @@
 
         var dateFormat = 'dd-mm-yyyy';
 
-        $fromDate = $('#FromDate');
-        $toDate = $('#ToDate');
+        $fromDate = $('#From');
+        $toDate = $('#To');
 
         $fromDate
             .datepicker({

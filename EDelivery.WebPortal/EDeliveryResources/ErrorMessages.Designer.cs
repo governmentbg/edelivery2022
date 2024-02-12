@@ -115,6 +115,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Поради системна грешка заявка за превод на съобщението не може да бъде създадена..
+        /// </summary>
+        public static string ErrorCantCreateTranslation {
+            get {
+                return ResourceManager.GetString("ErrorCantCreateTranslation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Съобщението не може да бъде изпратено в момента! Моля опитайте по-късно или се свържете с администратор за помощ..
         /// </summary>
         public static string ErrorCantSendDocument {
@@ -332,6 +341,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Стигнали сте максималния брой на архивирани преводи за съобщение!.
+        /// </summary>
+        public static string ErrorMaxArchivedMessageTranslations {
+            get {
+                return ResourceManager.GetString("ErrorMaxArchivedMessageTranslations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Максималният размер на прикачения документ трябва да не надвишава {0} МБ!.
         /// </summary>
         public static string ErrorMaxFileLength {
@@ -364,6 +382,15 @@ namespace EDeliveryResources {
         public static string ErrorMessageInvalidEGNorLNCh {
             get {
                 return ResourceManager.GetString("ErrorMessageInvalidEGNorLNCh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Задължението, което се опитвате да достъпите, не беше открито или е вече платено!.
+        /// </summary>
+        public static string ErrorObligationNotFound {
+            get {
+                return ResourceManager.GetString("ErrorObligationNotFound", resourceCulture);
             }
         }
         

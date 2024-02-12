@@ -30,18 +30,23 @@ public class MessagesController : ControllerBase
     public async Task<IActionResult> GetInboxAsync(
         [FromServices] EsbClient esbClient,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        [FromQuery] int? templateId,
         [FromQuery] int? offset,
         [FromQuery] int? limit,
         CancellationToken ct)
     {
         int profileId = this.HttpContext.User.GetAuthenticatedUserProfileId();
-        int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
 
         DomainServices.Esb.InboxResponse resp =
             await esbClient.InboxAsync(
                 new DomainServices.Esb.BoxRequest
                 {
-                    ProfileId = representedProfileId ?? profileId,
+                    ProfileId = profileId,
+                    From = from?.ToTimestamp(),
+                    To = to?.ToTimestamp(),
+                    TemplateId = templateId,
                     Offset = offset,
                     Limit = limit,
                 },
@@ -61,18 +66,23 @@ public class MessagesController : ControllerBase
     public async Task<IActionResult> GetOutboxAsync(
         [FromServices] EsbClient esbClient,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        [FromQuery] int? templateId,
         [FromQuery] int? offset,
         [FromQuery] int? limit,
         CancellationToken ct)
     {
         int profileId = this.HttpContext.User.GetAuthenticatedUserProfileId();
-        int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
 
         DomainServices.Esb.OutboxResponse resp =
             await esbClient.OutboxAsync(
                 new DomainServices.Esb.BoxRequest
                 {
-                    ProfileId = representedProfileId ?? profileId,
+                    ProfileId = profileId,
+                    From = from?.ToTimestamp(),
+                    To = to?.ToTimestamp(),
+                    TemplateId = templateId,
                     Offset = offset,
                     Limit = limit,
                 },
@@ -186,7 +196,6 @@ public class MessagesController : ControllerBase
     [Authorize(Policy = Policies.ReadMessageAsRecipient)]
     [HttpGet("{messageId:int}/open")]
     [ProducesResponseType(typeof(MessageOpenDO), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> OpenAsync(
@@ -296,13 +305,115 @@ public class MessagesController : ControllerBase
     }
 
     /// <summary>
+    /// Преглед на получено препратено съобщение
+    /// </summary>
+    /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
+    [Authorize(Policy = Policies.ReadForwardedMessageAsRecipient)]
+    [HttpGet("{messageId:int}/open-forwarded/{forwardedMessageId:int}")]
+    [ProducesResponseType(typeof(ForwardedMessageOpenDO), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> OpenForwardedAsync(
+        [FromServices] EsbClient esbClient,
+        [FromServices] ITemplateService templateService,
+        [FromServices] BlobUrlCreator blobUrlCreator,
+        [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
+        [FromRoute] int messageId,
+        [FromRoute] int forwardedMessageId,
+        CancellationToken ct)
+    {
+        DomainServices.Esb.GetForwardedMessageOriginalRecipientProfileResponse recipientResp = 
+            await esbClient.GetForwardedMessageOriginalRecipientProfileAsync(
+                new DomainServices.Esb.GetForwardedMessageOriginalRecipientProfileRequest
+                {
+                    MessageId = messageId,
+                    ForwardedMessageId = forwardedMessageId,
+                },
+                cancellationToken: ct);
+
+        int profileId = recipientResp.RecipientProfileId;
+
+        DomainServices.Esb.GetMessageResponse resp =
+           await esbClient.GetMessageAsync(
+               new DomainServices.Esb.GetMessageRequest
+               {
+                   MessageId = forwardedMessageId,
+                   ProfileId = profileId,
+               },
+               cancellationToken: ct);
+
+        ForwardedMessageOpenDO result = resp.Message.Adapt<ForwardedMessageOpenDO>();
+
+        IList<BaseComponent> components =
+          await templateService.GetTemplateComponentsAsync(
+              result.TemplateId,
+              ct);
+
+        Dictionary<Guid, object?> parsedMessageBody =
+            JsonConvert.DeserializeObject<Dictionary<Guid, object?>>(
+                resp.Message.Body,
+                new MessageBodyConverter(components))
+                    ?? throw new Exception("Invalid message body");
+
+        Dictionary<Guid, object?> fields = new();
+
+        foreach (var item in parsedMessageBody)
+        {
+            if (item.Value is FileObject[] fos)
+            {
+                ForwardedMessageOpenDOBlob[] blobs = fos
+                    .Select(f =>
+                    {
+                        DomainServices.Esb.GetMessageResponse.Types.Blob blob =
+                            resp.Message.Blobs.FirstOrDefault(e => e.BlobId == f.FileId)
+                            ?? resp.Message.Blobs.First(e =>
+                                f.FileName.ToUpperInvariant().StartsWith(e.FileName.ToUpperInvariant())
+                                    && f.FileHash.ToUpperInvariant().EndsWith(e.Hash.ToUpperInvariant()));
+
+                        (string link, DateTime expirationDate) =
+                            blobUrlCreator.CreateMessageBlobUrl(
+                                profileId,
+                                forwardedMessageId,
+                                blob.BlobId);
+
+                        ForwardedMessageOpenDOBlob result = blob.Adapt<ForwardedMessageOpenDOBlob>() with
+                        {
+                            DownloadLink = link,
+                            DownloadLinkExpirationDate = expirationDate,
+                        };
+
+                        return result;
+                    })
+                    .ToArray();
+
+                fields.Add(item.Key, blobs);
+            }
+            else
+            {
+                fields.Add(item.Key, item.Value);
+            }
+        }
+
+        if (result.DateReceived.HasValue)
+        {
+            return this.Ok(result with
+            {
+                Fields = fields,
+            });
+        }
+        else
+        {
+            throw new Exception("Can not open forwarded message");
+        }
+    }
+
+    /// <summary>
     /// Преглед на изпратено съобщение
     /// </summary>
     /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
     [Authorize(Policy = Policies.ReadMessageAsSender)]
     [HttpGet("{messageId:int}/view")]
     [ProducesResponseType(typeof(MessageViewDO), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> ViewAsync(

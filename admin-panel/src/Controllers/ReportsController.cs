@@ -24,6 +24,7 @@ namespace ED.AdminPanel.Controllers
     [Route("[controller]/[action]")]
     public class ReportsController
     {
+        private const int MaxRows = 1000;
         private readonly Admin.AdminClient adminClient;
 
         public ReportsController(GrpcClientFactory grpcClientFactory)
@@ -584,7 +585,6 @@ namespace ED.AdminPanel.Controllers
             [FromServices] IHttpContextAccessor httpContextAccessor,
             CancellationToken ct)
         {
-
             fromDate = fromDate ?? throw new ArgumentNullException(nameof(fromDate));
             toDate = toDate ?? throw new ArgumentNullException(nameof(toDate));
 
@@ -966,11 +966,8 @@ namespace ED.AdminPanel.Controllers
                 {
                     "Тип",
                     "Изпратени",
-                    "Изпратени с проверка",
                     "Грешни",
-                    "Грешни с проверка",
                     "Тотал",
-                    "Тотал с проверка",
                 };
 
             string[] headerRowColumnTitlesDatesTable =
@@ -979,11 +976,8 @@ namespace ED.AdminPanel.Controllers
                     "Ден",
                     "Тип",
                     "Изпратени",
-                    "Изпратени с проверка",
                     "Грешни",
-                    "Грешни с проверка",
                     "Тотал",
-                    "Тотал с проверка",
                 };
 
             var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
@@ -1002,10 +996,7 @@ namespace ED.AdminPanel.Controllers
                 .AppendCustomWidthColumn(2, 2, primaryColWidth * 2)
                 .AppendCustomWidthColumn(3, 3, primaryColWidth)
                 .AppendCustomWidthColumn(4, 4, primaryColWidth)
-                .AppendCustomWidthColumn(5, 5, primaryColWidth)
-                .AppendCustomWidthColumn(6, 6, primaryColWidth)
-                .AppendCustomWidthColumn(7, 7, primaryColWidth)
-                .AppendCustomWidthColumn(8, 8, primaryColWidth);
+                .AppendCustomWidthColumn(5, 5, primaryColWidth);
 
             var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
 
@@ -1035,36 +1026,21 @@ namespace ED.AdminPanel.Controllers
                 var sms = groupedRecords
                     .Where(e => e.Type == NotificationType.Sms)
                     .FirstOrDefault();
-                var smsDeliveryCheck = groupedRecords
-                    .Where(e => e.Type == NotificationType.SmsDeliveryCheck)
-                    .FirstOrDefault();
                 var viber = groupedRecords
                     .Where(e => e.Type == NotificationType.Viber)
-                    .FirstOrDefault();
-                var viberDeliveryCheck = groupedRecords
-                    .Where(e => e.Type == NotificationType.ViberDeliveryCheck)
                     .FirstOrDefault();
 
                 // emails
                 var row = worksheetPart.Worksheet.AppendRelativeRow();
 
                 row.AppendRelativeInlineStringCell(
-                    text: emails?.Type.ToString() ?? NotificationType.Email.ToString());
-
-                row.AppendRelativeNumberCell(
-                    number: emails?.Sent ?? 0);
+                    text: emails?.Type.ToString());
 
                 row.AppendRelativeNumberCell(
                     number: emails?.Sent ?? 0);
 
                 row.AppendRelativeNumberCell(
                     number: emails?.Error ?? 0);
-
-                row.AppendRelativeNumberCell(
-                    number: emails?.Error ?? 0);
-
-                row.AppendRelativeNumberCell(
-                    number: emails?.Total ?? 0);
 
                 row.AppendRelativeNumberCell(
                     number: emails?.Total ?? 0);
@@ -1073,49 +1049,31 @@ namespace ED.AdminPanel.Controllers
                 row = worksheetPart.Worksheet.AppendRelativeRow();
 
                 row.AppendRelativeInlineStringCell(
-                    text: sms?.Type.ToString() ?? NotificationType.Sms.ToString());
+                    text: sms?.Type.ToString());
 
                 row.AppendRelativeNumberCell(
                     number: sms?.Sent ?? 0);
 
                 row.AppendRelativeNumberCell(
-                    number: smsDeliveryCheck?.Sent ?? 0);
-
-                row.AppendRelativeNumberCell(
                     number: sms?.Error ?? 0);
 
                 row.AppendRelativeNumberCell(
-                    number: smsDeliveryCheck?.Error ?? 0);
-
-                row.AppendRelativeNumberCell(
                     number: sms?.Total ?? 0);
-
-                row.AppendRelativeNumberCell(
-                    number: smsDeliveryCheck?.Total ?? 0);
 
                 // viber
                 row = worksheetPart.Worksheet.AppendRelativeRow();
 
                 row.AppendRelativeInlineStringCell(
-                    text: viber?.Type.ToString() ?? NotificationType.Viber.ToString());
+                    text: viber?.Type.ToString());
 
                 row.AppendRelativeNumberCell(
                     number: viber?.Sent ?? 0);
 
                 row.AppendRelativeNumberCell(
-                    number: viberDeliveryCheck?.Sent ?? 0);
-
-                row.AppendRelativeNumberCell(
                     number: viber?.Error ?? 0);
 
                 row.AppendRelativeNumberCell(
-                    number: viberDeliveryCheck?.Error ?? 0);
-
-                row.AppendRelativeNumberCell(
                     number: viber?.Total ?? 0);
-
-                row.AppendRelativeNumberCell(
-                    number: viberDeliveryCheck?.Total ?? 0);
             }
 
             var emptyRow = worksheetPart.Worksheet.AppendRelativeRow();
@@ -1144,35 +1102,21 @@ namespace ED.AdminPanel.Controllers
                         text: day.Date.ToString("dd/MM/yyyy"));
 
                     emailRow.AppendRelativeInlineStringCell(
-                        text: (email?.Type.ToString() ?? NotificationType.Email.ToString()));
+                        text: email?.Type.ToString());
 
                     emailRow.AppendRelativeNumberCell(
-                        number: (email?.Sent ?? 0));
+                        number: email?.Sent ?? 0);
 
                     emailRow.AppendRelativeNumberCell(
-                        number: (email?.Sent ?? 0));
+                        number: email?.Error ?? 0);
 
                     emailRow.AppendRelativeNumberCell(
-                        number: (email?.Error ?? 0));
-
-                    emailRow.AppendRelativeNumberCell(
-                        number: (email?.Error ?? 0));
-
-                    emailRow.AppendRelativeNumberCell(
-                        number: ((email?.Error ?? 0) + (email?.Sent ?? 0)));
-
-                    emailRow.AppendRelativeNumberCell(
-                        number: ((email?.Error ?? 0) + (email?.Sent ?? 0)));
+                        number: (email?.Error ?? 0) + (email?.Sent ?? 0));
 
                     GetNotificationsReportResponse.Types.NotificationsMessage? sms = report.Result
                         .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
                             && x.Date.ToLocalDateTime().Month == day.Month
                             && x.Type == NotificationType.Sms);
-
-                    GetNotificationsReportResponse.Types.NotificationsMessage? smsDeliveryCheck = report.Result
-                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
-                            && x.Date.ToLocalDateTime().Month == day.Month
-                            && x.Type == NotificationType.SmsDeliveryCheck);
 
                     var smsRow = worksheetPart.Worksheet.AppendRelativeRow();
 
@@ -1180,35 +1124,21 @@ namespace ED.AdminPanel.Controllers
                         text: day.Date.ToString("dd/MM/yyyy"));
 
                     smsRow.AppendRelativeInlineStringCell(
-                        text: sms?.Type.ToString() ?? NotificationType.Sms.ToString());
+                        text: sms?.Type.ToString());
 
                     smsRow.AppendRelativeNumberCell(
                         number: sms?.Sent ?? 0);
 
                     smsRow.AppendRelativeNumberCell(
-                        number: smsDeliveryCheck?.Sent ?? 0);
-
-                    smsRow.AppendRelativeNumberCell(
                         number: sms?.Error ?? 0);
 
                     smsRow.AppendRelativeNumberCell(
-                        number: smsDeliveryCheck?.Error ?? 0);
-
-                    smsRow.AppendRelativeNumberCell(
                         number: (sms?.Sent ?? 0) + (sms?.Error ?? 0));
-
-                    smsRow.AppendRelativeNumberCell(
-                        number: (smsDeliveryCheck?.Sent ?? 0) + (smsDeliveryCheck?.Error ?? 0));
 
                     GetNotificationsReportResponse.Types.NotificationsMessage? viber = report.Result
                         .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
                             && x.Date.ToLocalDateTime().Month == day.Month
                             && x.Type == NotificationType.Viber);
-
-                    GetNotificationsReportResponse.Types.NotificationsMessage? viberDeliveryCheck = report.Result
-                        .FirstOrDefault(x => x.Date.ToLocalDateTime().Day == day.Day
-                            && x.Date.ToLocalDateTime().Month == day.Month
-                            && x.Type == NotificationType.ViberDeliveryCheck);
 
                     var viberRow = worksheetPart.Worksheet.AppendRelativeRow();
 
@@ -1216,25 +1146,16 @@ namespace ED.AdminPanel.Controllers
                         text: day.Date.ToString("dd/MM/yyyy"));
 
                     viberRow.AppendRelativeInlineStringCell(
-                        text: viber?.Type.ToString() ?? NotificationType.Viber.ToString());
+                        text: viber?.Type.ToString());
 
                     viberRow.AppendRelativeNumberCell(
                        number: viber?.Sent ?? 0);
 
                     viberRow.AppendRelativeNumberCell(
-                        number: viberDeliveryCheck?.Sent ?? 0);
-
-                    viberRow.AppendRelativeNumberCell(
                         number: viber?.Error ?? 0);
 
                     viberRow.AppendRelativeNumberCell(
-                        number: viberDeliveryCheck?.Error ?? 0);
-
-                    viberRow.AppendRelativeNumberCell(
                         number: (viber?.Sent ?? 0) + (viber?.Error ?? 0));
-
-                    viberRow.AppendRelativeNumberCell(
-                        number: (viberDeliveryCheck?.Sent ?? 0) + (viberDeliveryCheck?.Error ?? 0));
                 }
             }
 
@@ -1387,6 +1308,361 @@ namespace ED.AdminPanel.Controllers
             return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
                 FileDownloadName = "timestamp_report.xlsx"
+            };
+        }
+
+        public async Task<ActionResult<object>> ExportProfilesAsync(
+            [FromQuery] string? identifier,
+            [FromQuery] string? nameEmailPhone,
+            [FromServices] IHttpContextAccessor httpContextAccessor,
+            CancellationToken ct)
+        {
+            int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
+
+            GetProfileListResponse report =
+                await this.adminClient.GetProfileListAsync(
+                    new GetProfileListRequest
+                    {
+                        AdminUserId = currentUserId,
+                        Identifier = identifier,
+                        NameEmailPhone = nameEmailPhone,
+                        Offset = 0,
+                        Limit = MaxRows,
+                    },
+                    cancellationToken: ct);
+
+            // do not dispose the stream, this will be done by the FileStreamResult
+            var excelStream = new MemoryStream();
+            using var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true);
+
+            WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
+                @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+                "workbook");
+
+            WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>("styles");
+            workbookStylesPart.Stylesheet = new Stylesheet(
+                new NumberingFormats(
+                    new NumberingFormat()
+                    {
+                        NumberFormatId = 165,
+                        FormatCode = @"[$]dd\.mm\.yy;@",
+                    }
+                ),
+                new Fonts(
+                    new Font() // Default style
+                ),
+                new Fills(
+                    new Fill() // Default fill
+                ),
+                new Borders(
+                    new Border() // Default border
+                ),
+                new CellFormats(
+                    new CellFormat() // Default cell format
+                ));
+
+            workbookPart.Workbook = new Workbook(new Sheets());
+
+            var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+
+            var sheets = workbookPart.Workbook.GetFirstChild<Sheets>()!;
+            var lastSheet = sheets.GetLastChild<Sheet>();
+
+            sheets.AppendChild(
+                new Sheet()
+                {
+                    Id = workbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = (lastSheet?.SheetId?.Value ?? 0) + 1,
+                    Name = "Резултат",
+                });
+
+            worksheetPart.InitNormalWorksheet();
+
+            var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+            var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+
+            var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                verticalAlignment: VerticalAlignmentValues.Bottom,
+                horizontalAlignment: HorizontalAlignmentValues.Left,
+                wrapText: true,
+                fontId: titleFont);
+
+            var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                verticalAlignment: VerticalAlignmentValues.Center,
+                horizontalAlignment: HorizontalAlignmentValues.Center,
+                wrapText: true,
+                fontId: headerFont);
+
+            var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                // special date number format added in the Stylesheet
+                numberFormatId: 165);
+
+            string[] headerRowColumnTitles =
+                new string[]
+                {
+                    "Наименование",
+                    "Имейл",
+                    "Идентификатор",
+                    "Статус",
+                    "Целева група",
+                };
+
+            var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+            titleRow
+                .AppendRelativeInlineStringCell(
+                    text: "Справка списък профили",
+                    styleIndex: titleTableCellFormat);
+            worksheetPart.Worksheet
+                .AppendMergeCell($"A{titleRow.RowIndex}:" +
+                    $"{OpenXmlExtensions.ColumnIdToColumnIndex(headerRowColumnTitles.Length - 1)}{titleRow.RowIndex}");
+
+            double primaryColWidth = 13;
+            worksheetPart.Worksheet.GetColumns()
+                .AppendCustomWidthColumn(1, 1, primaryColWidth * 8)
+                .AppendCustomWidthColumn(2, 2, primaryColWidth * 2)
+                .AppendCustomWidthColumn(3, 3, primaryColWidth * 2)
+                .AppendCustomWidthColumn(4, 4, primaryColWidth)
+                .AppendCustomWidthColumn(5, 5, primaryColWidth * 2);
+
+            var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+            foreach (var columnTitle in headerRowColumnTitles)
+            {
+                headerRow
+                    .AppendRelativeInlineStringCell(
+                        text: $"{columnTitle}",
+                        styleIndex: headerTableCell);
+            }
+
+            string activeStatus = "Активен";
+            string inActiveStatus = "Неактивен";
+
+            foreach (var profile in report.Result)
+            {
+                var row = worksheetPart.Worksheet.AppendRelativeRow();
+
+                row.AppendRelativeInlineStringCell(
+                    text: profile.ElectronicSubjectName);
+                row.AppendRelativeInlineStringCell(
+                    text: profile.Email);
+                row.AppendRelativeInlineStringCell(
+                    text: profile.Identifier);
+                row.AppendRelativeInlineStringCell(
+                    text: profile.IsActivated ? activeStatus : inActiveStatus);
+                row.AppendRelativeInlineStringCell(
+                    text: profile.TargetGroupName);
+            }
+
+            worksheetPart.Worksheet.Finalize();
+            document.Close();
+
+            excelStream.Seek(0, SeekOrigin.Begin);
+
+            return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                FileDownloadName = "profiles_report.xlsx"
+            };
+        }
+
+        public async Task<ActionResult<object>> ExportTicketsAsync(
+            [FromQuery, Required][DateTimeModelBinder] DateTime reportDate,
+            [FromServices] IHttpContextAccessor httpContextAccessor,
+            CancellationToken ct)
+        {
+            int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
+
+            DateTime to = reportDate.AddDays(1);
+
+            GetTicketsReportResponse report =
+                await this.adminClient.GetTicketsReportAsync(
+                    new GetTicketsReportRequest()
+                    {
+                        AdminUserId = currentUserId,
+                        From = reportDate.ToTimestamp(),
+                        To = to.ToTimestamp(),
+                    },
+                    cancellationToken: ct);
+
+            // do not dispose the stream, this will be done by the FileStreamResult
+            var excelStream = new MemoryStream();
+            using var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true);
+
+            WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
+                @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+                "workbook");
+
+            WorkbookStylesPart workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>("styles");
+            workbookStylesPart.Stylesheet = new Stylesheet(
+                new NumberingFormats(
+                    new NumberingFormat()
+                    {
+                        NumberFormatId = 165,
+                        FormatCode = @"[$]dd\.mm\.yy;@",
+                    }
+                ),
+                new Fonts(
+                    new Font() // Default style
+                ),
+                new Fills(
+                    new Fill() // Default fill
+                ),
+                new Borders(
+                    new Border() // Default border
+                ),
+                new CellFormats(
+                    new CellFormat() // Default cell format
+                ));
+
+            workbookPart.Workbook = new Workbook(new Sheets());
+
+            var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+
+            var sheets = workbookPart.Workbook.GetFirstChild<Sheets>()!;
+            var lastSheet = sheets.GetLastChild<Sheet>();
+
+            sheets.AppendChild(
+                new Sheet()
+                {
+                    Id = workbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = (lastSheet?.SheetId?.Value ?? 0) + 1,
+                    Name = "Резултат",
+                });
+
+            worksheetPart.InitNormalWorksheet();
+
+            var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+            var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+
+            var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+                verticalAlignment: VerticalAlignmentValues.Bottom,
+                horizontalAlignment: HorizontalAlignmentValues.Left,
+                wrapText: true,
+                fontId: titleFont);
+
+            var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                verticalAlignment: VerticalAlignmentValues.Center,
+                horizontalAlignment: HorizontalAlignmentValues.Center,
+                wrapText: true,
+                fontId: headerFont);
+
+            var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+                // special date number format added in the Stylesheet
+                numberFormatId: 165);
+
+            string[] headerRowColumnTitles =
+                new string[]
+                {
+                    "Брой адм. актове",
+                    "Брой получени в ССЕВ",
+                    "Общо (НП + фиш) - ФЛ",
+                    "Общо (НП + фиш) - ЮЛ",
+                    "Фиш - ФЛ",
+                    "Фиш - ЮЛ",
+                    "НП - ФЛ",
+                    "НП - ЮЛ",
+                    "Нотификации Общо",
+                    "Имейл",
+                    "Телефон",
+                    "Брой връчени през ССЕВ",
+                    "Връчени Фиш - ФЛ",
+                    "Връчени Фиш - ЮЛ",
+                    "Връчени НП - ФЛ",
+                    "Връчени НП - ЮЛ",
+                    "Пасивни профили",
+                    "Активни профили",
+                };
+
+            var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+            titleRow
+                .AppendRelativeInlineStringCell(
+                    text: $"Справка е-фишове за {reportDate:dd-MM-yyyy}",
+                    styleIndex: titleTableCellFormat);
+            worksheetPart.Worksheet
+                .AppendMergeCell($"A{titleRow.RowIndex}:" +
+                    $"{OpenXmlExtensions.ColumnIdToColumnIndex(headerRowColumnTitles.Length - 1)}{titleRow.RowIndex}");
+
+            double primaryColWidth = 40;
+            worksheetPart.Worksheet.GetColumns()
+                .AppendCustomWidthColumn(1, 1, primaryColWidth)
+                .AppendCustomWidthColumn(2, 2, primaryColWidth / 4);
+
+            var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+
+            foreach (var columnTitle in headerRowColumnTitles)
+            {
+                headerRow
+                    .AppendRelativeInlineStringCell(
+                        text: $"{columnTitle}",
+                        styleIndex: headerTableCell);
+            }
+
+            {
+                var row = worksheetPart.Worksheet.AppendRelativeRow();
+
+                row.AppendRelativeNumberCell(
+                    number: report.TotalTickets);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyIndividualTickets + report.DailyLegalEntityPenalDecrees + report.DailyIndividualPenalDecrees + report.DailyLegalEntityPenalDecrees);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyIndividualTickets + report.DailyIndividualPenalDecrees);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyLegalEntityPenalDecrees + report.DailyLegalEntityPenalDecrees);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyIndividualTickets);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyLegalEntityTickets);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyIndividualPenalDecrees);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyLegalEntityPenalDecrees);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyNotificationsByEmail + report.DailyNotificationsByPhone);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyNotificationsByEmail);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyNotificationsByPhone);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyReceivedIndividualTickets + report.DailyReceivedLegalEntityTickets + report.DailyReceivedIndividualPenalDecrees + report.DailyReceivedLegalEntityPenalDecrees);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyReceivedIndividualTickets);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyReceivedLegalEntityTickets);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyReceivedIndividualPenalDecrees);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyReceivedLegalEntityPenalDecrees);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyPassiveProfiles);
+
+                row.AppendRelativeNumberCell(
+                    number: report.DailyActiveProfiles);
+            }
+
+            worksheetPart.Worksheet.Finalize();
+            document.Close();
+
+            excelStream.Seek(0, SeekOrigin.Begin);
+
+            return new FileStreamResult(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                FileDownloadName = "tickets_report.xlsx"
             };
         }
 

@@ -10,7 +10,7 @@ using static ED.Blobs.UploadProfileBlobRequest.Types;
 
 namespace ED.Domain
 {
-    class BlobsServiceClient
+    public class BlobsServiceClient
     {
         // use the maxArrayLength of ArrayPool<byte>.Shared as we use it in the BlobReader
         private const int UploadChunkSize = 1 * 1024 * 1024; // 1 MB
@@ -263,6 +263,7 @@ namespace ED.Domain
                 ProfileBlobAccessKeyType.Registration => ED.Blobs.ProfileBlobAccessKeyType.Registration,
                 ProfileBlobAccessKeyType.Template => ED.Blobs.ProfileBlobAccessKeyType.Template,
                 ProfileBlobAccessKeyType.PdfStamp => ED.Blobs.ProfileBlobAccessKeyType.PdfStamp,
+                ProfileBlobAccessKeyType.Translation => ED.Blobs.ProfileBlobAccessKeyType.Translation,
                 _ => throw new Exception("Uknown ProfileBlobAccessKeyType"),
             };
     }

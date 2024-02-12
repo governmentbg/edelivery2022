@@ -2,7 +2,7 @@
 
 namespace ED.Domain
 {
-    sealed class X509Certificate2Utils
+    public sealed class X509Certificate2Utils
     {
         public static X509Certificate2? LoadX509CertificateByThumbPrint(
             string storeName,

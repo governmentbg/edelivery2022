@@ -9,7 +9,7 @@ namespace ED.Domain
             string oId,
             string clientId,
             string? operatorIdentifier,
-            string? representedIdentifier,
+            string? representedProfileIdentifier,
             CancellationToken ct);
     }
 }

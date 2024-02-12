@@ -38,7 +38,7 @@
                     @Model.DateReceived.Value.ToString(SystemConstants.DateTimeFormat)
                     <a href="@Url.Action("GetMessageTimestamp", "Messages", new { id = Model.MessageId, timeStampType = EDelivery.WebPortal.Enums.eTimeStampType.NRD })"
                        data-toggle="tooltip"
-                       data-original-title="@ProfilePage.TooltipDownloadNRO">
+                       data-original-title="@ProfilePage.TooltipDownloadNRD">
                         <img src="~/Content/img/timestamp.png">
                     </a>
                 }

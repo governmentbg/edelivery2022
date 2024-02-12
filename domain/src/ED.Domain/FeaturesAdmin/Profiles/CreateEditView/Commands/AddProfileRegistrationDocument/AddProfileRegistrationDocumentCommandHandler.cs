@@ -11,7 +11,7 @@ namespace ED.Domain
     internal record AddProfileRegistrationDocumentCommandHandler(
         KeystoreClient KeystoreClient,
         IUnitOfWork UnitOfWork,
-        IAggregateRepository<Profile> ProfileAggregateRepository,
+        IProfileBlobAccessKeyAggregateRepository ProfileBlobAccessKeyAggregateRepository,
         IProfilesService ProfilesService,
         IAdminProfilesCreateEditViewQueryRepository AdminProfilesCreateEditViewQueryRepository)
         : IRequestHandler<AddProfileRegistrationDocumentCommand, Unit>
@@ -57,17 +57,18 @@ namespace ED.Domain
                     },
                     cancellationToken: ct);
 
-            Profile profile = await this.ProfileAggregateRepository.FindAsync(
+            ProfileBlobAccessKey profileBlobAccessKey = new(
                 command.ProfileId,
-                ct);
-
-            profile.AddBlob(
                 command.BlobId,
                 profileKey.ProfileKeyId,
                 null,
                 command.AdminUserId,
                 encryptedKeyResp.EncryptedData.ToByteArray(),
                 ProfileBlobAccessKeyType.Registration);
+
+            await this.ProfileBlobAccessKeyAggregateRepository.AddAsync(
+                profileBlobAccessKey,
+                ct);
 
             await this.UnitOfWork.SaveAsync(ct);
 

@@ -26,4 +26,4 @@ public record CodeMessageSendDO(
     string Body,
     Dictionary<Guid, int[]> Blobs);
 
-// TODO: add validator
+// TODO: add validator when functionality is implemented

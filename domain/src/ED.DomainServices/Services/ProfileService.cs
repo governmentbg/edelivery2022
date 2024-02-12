@@ -769,7 +769,8 @@ namespace ED.DomainServices
                             request.Country,
                             request.TargetGroupId,
                             request.BlobId,
-                            request.LoginId),
+                            request.LoginId,
+                            request.Ip),
                         context.CancellationToken);
 
             return registration.Adapt<CreateRegisterRequestResponse>();

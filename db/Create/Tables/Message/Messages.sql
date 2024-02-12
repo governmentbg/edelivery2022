@@ -60,3 +60,8 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Messages_Rnu]
 ON [dbo].[Messages]([Rnu])
 GO
+
+CREATE NONCLUSTERED INDEX [IX_Messages_DataSent]
+ON [dbo].[Messages] ([DateSent])
+INCLUDE ([SenderProfileId])
+GO

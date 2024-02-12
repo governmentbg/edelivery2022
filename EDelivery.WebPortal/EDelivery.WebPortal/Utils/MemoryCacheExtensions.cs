@@ -7,6 +7,7 @@ namespace EDelivery.WebPortal
     {
         public static readonly MemoryCache AuthorizationCache = new MemoryCache("AuthorizationCache");
         public static readonly MemoryCache UserDataCache = new MemoryCache("UserDataCache");
+        public static readonly MemoryCache HomePageStatistics = new MemoryCache("HomePageStatistics");
 
         public static T AddOrGetExisting<T>(
             this MemoryCache memoryCache,

@@ -15,14 +15,14 @@
         public SearchMessagesViewModel(
             string subject,
             string profile,
-            string fromDate,
-            string toDate,
+            string from,
+            string to,
             BoxType boxType)
         {
             this.Subject = subject;
             this.Profile = profile;
-            this.FromDate = fromDate;
-            this.ToDate = toDate;
+            this.From = from;
+            this.To = to;
             this.BoxType = boxType;
         }
 
@@ -30,9 +30,9 @@
 
         public string Profile { get; set; }
 
-        public string FromDate { get; set; }
+        public string From { get; set; }
 
-        public string ToDate { get; set; }
+        public string To { get; set; }
 
         public BoxType BoxType { get; set; }
 
@@ -42,8 +42,8 @@
             {
                 return !string.IsNullOrEmpty(this.Subject)
                     || !string.IsNullOrEmpty(this.Profile)
-                    || !string.IsNullOrEmpty(this.FromDate)
-                    || !string.IsNullOrEmpty(this.ToDate);
+                    || !string.IsNullOrEmpty(this.From)
+                    || !string.IsNullOrEmpty(this.To);
             }
         }
     }

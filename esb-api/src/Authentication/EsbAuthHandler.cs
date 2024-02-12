@@ -92,20 +92,25 @@ public class EsbAuthHandler : AuthenticationHandler<EsbAuthenticationOptions>
     {
         // example for Dp-Miscinfo header
         // dn:/C=BG/ST=OID:2.16.100.1.1.22.1.3/CN=test.client.morska|representedPersonID:8507270464|correspondentOID:2222|operatorID=12345
+        // or
+        // dn:/C=BG/ST=OID:2.16.100.1.1.1.1.13/L=BG/CN=ciela.com|representedPersonID:|correspondentOID:|operatorID:
 
         string[] values = header
             .Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
         string[] identity = values[0]
             .Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
-            .ToArray()[^2..^0];
+            .ToArray();
 
-        string oId = identity[0]
+        string oidValue = identity.First(e => e.StartsWith("ST=OID", StringComparison.InvariantCultureIgnoreCase));
+        string clientIdValue = identity.First(e => e.StartsWith("CN=", StringComparison.InvariantCultureIgnoreCase));
+
+        string oId = oidValue
             .Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries)
             .Select(e => e.Trim())
             .Last();
 
-        string clientId = identity[1]
+        string clientId = clientIdValue
             .Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)
             .Select(e => e.Trim())
             .Last();

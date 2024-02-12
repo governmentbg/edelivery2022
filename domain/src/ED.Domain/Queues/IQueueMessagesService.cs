@@ -45,6 +45,7 @@ namespace ED.Domain
 
         Task PostMessagesAsync<T>(
             T[] payload,
+            string? tag,
             CancellationToken ct)
             where T : notnull;
     }

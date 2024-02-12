@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDelivery.Common.DataContracts.ESubject
 {
@@ -15,7 +13,7 @@ namespace EDelivery.Common.DataContracts.ESubject
 
         [DataMember]
         public string CountryIso2 { get; set; }
-        
+
         [DataMember]
         public string State { get; set; }
 
@@ -28,15 +26,15 @@ namespace EDelivery.Common.DataContracts.ESubject
         [DataMember]
         public string ZipCode { get; set; }
 
-        public string GetFullAddress(Dictionary<string,string> countries)
+        public string GetFullAddress(Dictionary<string, string> countries)
         {
-            if (string.IsNullOrEmpty(CountryIso2))
+            if (string.IsNullOrEmpty(this.CountryIso2))
             {
-                return Address;
+                return this.Address;
             }
 
-            var country = countries.FirstOrDefault(x => x.Key == CountryIso2).Value;
-            return $"{country}, {(!String.IsNullOrWhiteSpace(State)?State+", ":"")}{City}, {Address}";
+            var country = countries.FirstOrDefault(x => x.Key == this.CountryIso2).Value;
+            return $"{country}, {(!String.IsNullOrWhiteSpace(this.State) ? this.State + ", " : "")}{this.City}, {this.Address}";
         }
     }
 }

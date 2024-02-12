@@ -21,7 +21,7 @@ public class ReadMessageAsRecipientRequirementHandler : AuthorizationHandler<Rea
     {
         if (httpContextAccessor.HttpContext == null)
         {
-            throw new Exception($"'{nameof(ReadMessageAsSenderRequirementHandler)}' called outside of a request. IHttpContextAccessor.HttpContext is null!");
+            throw new Exception($"'{nameof(ReadMessageAsRecipientRequirementHandler)}' called outside of a request. IHttpContextAccessor.HttpContext is null!");
         }
 
         this.httpContext = httpContextAccessor.HttpContext;
@@ -32,10 +32,21 @@ public class ReadMessageAsRecipientRequirementHandler : AuthorizationHandler<Rea
         AuthorizationHandlerContext context,
         ReadMessageAsRecipientRequirement requirement)
     {
-        int profileId = context.User.GetAuthenticatedUserProfileId();
-        int loginId = context.User.GetAuthenticatedUserLoginId();
+        int? profileId = context.User.GetAuthenticatedUserProfileIdOrDefault();
+        if (!profileId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
+        int? loginId = context.User.GetAuthenticatedUserLoginIdOrDefault();
+        if (!loginId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
         string? messageIdParam = this.httpContext.GetFromRouteOrQuery("messageId");
-        bool isRequirementMet = false;
 
         if (int.TryParse(messageIdParam, out int messageId))
         {
@@ -44,25 +55,18 @@ public class ReadMessageAsRecipientRequirementHandler : AuthorizationHandler<Rea
                     new DomainServices.HasReadMessageAsRecipientAccessRequest
                     {
                         MessageId = messageId,
-                        ProfileId = profileId,
-                        LoginId = loginId,
+                        ProfileId = profileId.Value,
+                        LoginId = loginId.Value,
                     });
 
             if (resp.HasAccess)
             {
-                isRequirementMet = true;
+                context.Succeed(requirement);
+                return;
             }
         }
 
-        if (isRequirementMet)
-        {
-            context.Succeed(requirement);
-        }
-        else
-        {
-            this.httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-        }
-
+        context.Fail();
         return;
     }
 }

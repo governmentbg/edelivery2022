@@ -16,9 +16,12 @@ namespace ED.Domain
             DateTime toDate,
             CancellationToken ct)
         {
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetTimestampsAsync)} ({adminUserId}, \"{fromDate}\", \"{toDate}\") called");
+            this.logger.LogInformation(
+                "{method} ({adminUserId}, \"{fromDate}\", \"{toDate}\") called",
+                nameof(GetTimestampsAsync),
+                adminUserId,
+                fromDate,
+                toDate);
 
             int countSuccess = await (
                from tra in this.DbContext.Set<TimestampRequestAudit>()

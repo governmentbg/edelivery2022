@@ -11,6 +11,7 @@ namespace ED.Domain
     {
         public const int SystemTemplateId = 1;
         public const int SystemForwardTemplateId = 2;
+        public const int TicketTemplate = 10001;
 
         public static Guid SystemTemplateBodyFieldId() =>
             new("179ea4dc-7879-43ad-8073-72b263915656");

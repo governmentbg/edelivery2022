@@ -126,6 +126,9 @@ namespace ED.DomainServices
                 mapGrpcService<EsbService>();
                 mapGrpcService<IntegrationServiceService>();
                 mapGrpcService<JournalService>();
+                mapGrpcService<TranslationService>();
+                mapGrpcService<EsbTicketService>();
+                mapGrpcService<TicketService>();
 
                 endpoints.MapGet("/", async context =>
                 {

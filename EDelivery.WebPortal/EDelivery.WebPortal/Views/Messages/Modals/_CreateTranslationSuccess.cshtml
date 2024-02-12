@@ -1,0 +1,16 @@
+﻿<div class="notification-msg">
+    <div class="modal-content">
+        <h2>Заявка за превод на съобщение</h2>
+        <img src="~/Content/img/notif-success.png" class="icon-big" />
+        <p>Заявката за превод на съобщение е изпратена успешно!</p>
+    </div>
+</div>
+<section class="form-section form-row button-row-center">
+    <button class="btn-border btn-m" id="cancel-notif">Затвори</button>
+</section>
+
+<script type="text/javascript">
+    $(function () {
+        $('#cancel-notif').on('click', function () { gf.hideModal(); });
+    });
+</script>

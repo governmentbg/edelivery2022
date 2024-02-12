@@ -2,11 +2,6 @@
 @inherits PagedComponent
 @attribute [Authorize]
 
-@using System.Threading
-@using ED.DomainServices.Admin
-@inject Admin.AdminClient AdminClient
-@inject IStringLocalizer<Index> Localizer
-
 <Breadcrumb Items="@(
     new Dictionary<string, string>()
     {
@@ -27,6 +22,39 @@
                 <h3>@Localizer["Title"]</h3>
             </div>
 
+            <EditForm EditContext="@editContext" OnValidSubmit="Search">
+                <DataAnnotationsValidator />
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="@nameof(SearchTemplateModel.Term)">
+                                    @Localizer["FormTerm"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <InputText type="text" id="@nameof(SearchTemplateModel.Term)" @bind-Value="model.Term" />
+                                    <ValidationMessage For="@(() => model.Term)" />
+                                </div>
+                            </li>
+                            <li class="form-row">
+                                <label for="@nameof(SearchTemplateModel.TemplateStatus)">
+                                    @Localizer["FormTemplateStatus"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <Select2Field id="@nameof(SearchTemplateModel.TemplateStatus)"
+                                                  @bind-Value="model.TemplateStatus"
+                                                  Options="@templateStatuses" />
+                                    <ValidationMessage For="@(() => model.TemplateStatus)" />
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">@Localizer["BtnSearch"]</button>
+                    </section>
+                </div>
+            </EditForm>
+
             <Pager Page="@(Page)"
                    PageSize="@PageSize"
                    TotalItemsCount="@(templates?.Length ?? 0)" />
@@ -39,10 +67,11 @@
                 <table class="list">
                     <tbody>
                         <tr>
+                            <th>@Localizer["ColumIdentityNumber"]</th>
                             <th>@Localizer["ColumnName"]</th>
-                            <th>@Localizer["ColumnCategory"]</th>
+                            @*<th>@Localizer["ColumnCategory"]</th>*@
                             <th>@Localizer["ColumnCreateDate"]</th>
-                            <th>@Localizer["ColumnLoginSecurityLevelNames"]</th>
+                            @*<th>@Localizer["ColumnLoginSecurityLevelNames"]</th>*@
                             <th>@Localizer["ColumnIsSystemTemplate"]</th>
                             <th>@Localizer["ColumnPublishDate"]</th>
                             <th>@Localizer["ColumnArchiveDate"]</th>
@@ -72,24 +101,29 @@
                             {
                                 <tr>
                                     <td>
-                                        <a href="templates/@template.TemplateId" title="@Localizer["ViewBtn"]">
+                                        <a href="templates/@template.TemplateId" title="@Localizer["BtnView"]">
+                                            @template.IdentityNumber
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="templates/@template.TemplateId" title="@Localizer["BtnView"]">
                                             @template.Name
                                         </a>
                                     </td>
-                                    <td>@(template.Category ?? "-")</td>
+                                    @*<td>@(template.Category ?? "-")</td>*@
                                     <td>@template.CreateDate.ToLocalDateTime().ToString("g")</td>
-                                    <td>@($"{template.ReadLoginSecurityLevelName}/{template.WriteLoginSecurityLevelName}")</td>
+                                    @*<td>@($"{template.ReadLoginSecurityLevelName}/{template.WriteLoginSecurityLevelName}")</td>*@
                                     <td>@Localizer[$"ColumnIsSystemTemplate_{template.IsSystemTemplate}"]</td>
                                     <td>@(template.PublishDate?.ToLocalDateTime().ToString("g") ?? "-")</td>
                                     <td>@(template.ArchiveDate?.ToLocalDateTime().ToString("g") ?? "-")</td>
                                     <td style="padding: 10px;">
-                                        <a href="templates/create/@template.TemplateId" title="@Localizer["CopyBtn"]">
-                                            <img src="img/download-file.png" alt="@Localizer["CopyBtn"]" />
+                                        <a href="templates/create/@template.TemplateId" title="@Localizer["BtnCopy"]">
+                                            <img src="img/download-file.png" alt="@Localizer["BtnCopy"]" />
                                         </a>
                                     </td>
                                     <td style="padding: 10px;">
-                                        <a href="templates/@template.TemplateId" title="@Localizer["ViewBtn"]">
-                                            <img src="img/view_icon.png" alt="@Localizer["ViewBtn"]" />
+                                        <a href="templates/@template.TemplateId" title="@Localizer["BtnView"]">
+                                            <img src="img/view_icon.png" alt="@Localizer["BtnView"]" />
                                         </a>
                                     </td>
                                 </tr>
@@ -104,20 +138,3 @@
         </div>
     </div>
 </div>
-
-@code
-{
-    private GetTemplateListResponse templates;
-
-    protected override async Task LoadDataAsync(CancellationToken ct)
-    {
-        this.templates =
-            await this.AdminClient.GetTemplateListAsync(
-                new GetTemplateListRequest
-                    {
-                        Offset = base.Offset,
-                        Limit = base.Limit,
-                    },
-                cancellationToken: ct);
-    }
-}

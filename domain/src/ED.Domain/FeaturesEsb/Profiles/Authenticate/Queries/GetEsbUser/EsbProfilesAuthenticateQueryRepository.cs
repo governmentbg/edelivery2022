@@ -13,7 +13,7 @@ namespace ED.Domain
             string oId,
             string clientId,
             string? operatorIdentifier,
-            string? representedIdentifier,
+            string? representedProfileIdentifier,
             CancellationToken ct)
         {
             var profileLogin = await (
@@ -45,45 +45,48 @@ namespace ED.Domain
             }
 
             int? operatorLoginId = null;
-            if (!string.IsNullOrEmpty(operatorIdentifier))
-            {
-                operatorLoginId  = await (
-                    from lp in this.DbContext.Set<LoginProfile>()
-
-                    join l in this.DbContext.Set<Login>()
-                        on lp.LoginId equals l.Id
-
-                    join p in this.DbContext.Set<Profile>()
-                        on l.ElectronicSubjectId equals p.ElectronicSubjectId
-
-                    where lp.ProfileId == profileLogin.ProfileId
-                        && l.IsActive
-                        && EF.Functions.Like(p.Identifier, operatorIdentifier)
-
-                    select lp.LoginId)
-                    .FirstOrDefaultAsync(ct);
-
-                if (operatorLoginId == 0)
-                {
-                    throw new System.Exception("Invalid operator id");
-                }
-            }
-
             int? representedProfileId = null;
-            if (!string.IsNullOrEmpty(representedIdentifier))
+
+            if (!string.IsNullOrEmpty(representedProfileIdentifier))
             {
                 representedProfileId = await (
                     from p in this.DbContext.Set<Profile>()
 
                     where p.IsActivated
-                        && EF.Functions.Like(p.Identifier, representedIdentifier)
+                        && EF.Functions.Like(p.Identifier, representedProfileIdentifier)
 
                     select p.Id)
+                    .Cast<int?>()
                     .FirstOrDefaultAsync(ct);
 
-                if (representedProfileId == 0)
+                if (representedProfileId == null)
                 {
                     throw new System.Exception("Invalid represented person id");
+                }
+
+                if (!string.IsNullOrEmpty(operatorIdentifier))
+                {
+                    operatorLoginId = await (
+                        from lp in this.DbContext.Set<LoginProfile>()
+
+                        join l in this.DbContext.Set<Login>()
+                            on lp.LoginId equals l.Id
+
+                        join p in this.DbContext.Set<Profile>()
+                            on l.ElectronicSubjectId equals p.ElectronicSubjectId
+
+                        where lp.ProfileId == representedProfileId!.Value
+                            && l.IsActive
+                            && EF.Functions.Like(p.Identifier, operatorIdentifier)
+
+                        select lp.LoginId)
+                        .Cast<int?>()
+                        .FirstOrDefaultAsync(ct);
+
+                    if (operatorLoginId == null)
+                    {
+                        throw new System.Exception("Invalid operator id");
+                    }
                 }
             }
 

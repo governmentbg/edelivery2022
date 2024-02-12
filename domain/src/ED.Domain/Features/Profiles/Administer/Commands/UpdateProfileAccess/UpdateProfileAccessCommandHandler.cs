@@ -32,7 +32,7 @@ namespace ED.Domain
                     .Select(e => (e.Permission, e.TemplateId))
                     .ToArray());
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByLogin(
                 profile.Id,
                 ProfileHistoryAction.GrantAccessToProfile,
                 command.ActionLoginId,
@@ -41,7 +41,7 @@ namespace ED.Domain
                     loginInfo.ElectronicSubjectId,
                     loginInfo.ElectronicSubjectName,
                     command.Details),
-                command.IP);
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

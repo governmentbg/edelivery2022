@@ -1,0 +1,237 @@
+﻿@using EDelivery.WebPortal.Utils
+
+@using EDelivery.WebPortal.Models.Tickets
+
+@model TicketsReadViewModel
+
+@{
+    int activeProfileId = Context.GetCachedUserData().ActiveProfileId;
+    bool isIndividual =
+        Context.GetCachedUserData().ActiveProfile.TargetGroupId == (int)EDelivery.WebPortal.Enums.TargetGroupId.Individual;
+
+    string externalLink = string.Empty;
+    string externalLinkText = string.Empty;
+
+    if (string.IsNullOrEmpty(Model.SafeBase64Url))
+    {
+        string type = Model.Fields[new Guid("93803a3b-3040-4d4c-a47c-c2c85dcbacc6")].ToString();
+        string documentSeries = Model.Fields[new Guid("a1ad8553-8d2c-4dcb-aee7-8d3dd7414cfe")]?.ToString() ?? string.Empty;
+        string documentNumber = Model.Fields[new Guid("0a66e4d7-0d11-4d8f-bf4a-40c64035b25f")].ToString();
+        string dueAmount = Model.Fields[new Guid("5b6a0a84-9ad9-4c63-8a68-e6b0391d5859")].ToString();
+
+        int documentType = !type.Contains("постановление") ? 1 : 3;
+
+        externalLink = $"https://e-uslugi.mvr.bg/services/kat-obligations?mode=2&documentType={documentType}&documentSeries={documentSeries}&documentNumber={documentNumber}&amount={dueAmount}";
+        externalLinkText = "Може да заплатите в Портал за електронни административни услуги на МВР"; // todo: move to resources
+    }
+    else
+    {
+        externalLink = $"/o?q={Model.SafeBase64Url}";
+        externalLinkText = "Плащане на глоба"; // todo: move to resources
+    }
+}
+
+<table class="blank-list message">
+    <tbody>
+        <tr>
+            <td>@ProfilePage.LabelMessageSender:</td>
+            <td>
+                <a href="#" data-modal-href="@Url.Action("MessageProfileInfo", "Messages", new { messageId = Model.MessageId })">
+                    @Model.Sender.Name
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>Текущо състояние:</td>
+            <td>@Model.Ticket.GetStatus</td>
+        </tr>
+        <tr>
+            <td>@ProfilePage.LabelMessageTitle:</td>
+            <td>@Model.Subject</td>
+        </tr>
+        <tr>
+            <td>Съдържание:</td>
+            <td>@Model.Fields[new Guid("d7f6dcc0-7dbd-4e8f-b600-8dbfb6a05a49")].ToString()</td>
+        </tr>
+        <tr>
+            <td>@Model.Fields[new Guid("93803a3b-3040-4d4c-a47c-c2c85dcbacc6")].ToString()</td>
+            <td>
+
+                @{
+                    var blob = Model.Document;
+
+                    bool isMalicious = false;
+                    string errorMessage = string.Empty;
+
+                    if (blob.Status != ED.DomainServices.MalwareScanResultStatus.Complete)
+                    {
+                        errorMessage = SEOS.ErrorUnsuccessfulScan;
+                    }
+                    else
+                    {
+                        if (blob.IsMalicious ?? false)
+                        {
+                            errorMessage = SEOS.ErrorReceivedDocumentIsMalicious;
+                            isMalicious = true;
+                        }
+                    }
+
+                    string blobTimestamp = Url.Action("GetDocumentTimestamp", "Messages", new { id = Model.MessageId, documentId = blob.BlobId });
+                }
+
+                <div class="td-section">
+                    @if (isMalicious)
+                    {
+                        <span>
+                            @blob.FileName
+                        </span>
+                    }
+                    else
+                    {
+                        <a href="@Url.CreateMessageBlobWebPortalToken(activeProfileId, Model.MessageId, blob.BlobId)" class="file-link" rel="noopener" target="_blank">
+                            @blob.FileName <span class="note"></span>
+                        </a>
+                    }
+
+                    <a href="@blobTimestamp" data-toggle="tooltip" data-original-title="@ProfilePage.TooltipDocumentTimestamp">
+                        <img src="~/Content/img/timestamp.png">
+                    </a>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <span class="warning-message">@errorMessage</span>
+                    }
+
+
+                    @if (!string.IsNullOrEmpty(blob.DocumentRegistrationNumber))
+                    {
+                        <span class="additional-message">@blob.DocumentRegistrationNumber</span>
+                    }
+
+                    @if (blob.Signatures != null && blob.Signatures.Any())
+                    {
+                        for (int i = 0; i < blob.Signatures.Count; i++)
+                        {
+                            TicketsReadViewModel.TicketsReadViewModelBlobSignature signature = blob.Signatures[i];
+                            var validStatus = signature.CoversDocument && signature.ValidAtTimeOfSigning;
+
+                            <span class="@(validStatus ? (signature.IsTimestamp ? "timestamp-signature" : "signature") : "warning-message")">
+                                @ProfilePage.SignatureInformation: @EDelivery.WebPortal.Utils.TextHelper.GetSignatureSubjectShortName(signature.Subject)
+                                &nbsp;
+                                <a href="#" data-modal-tagId="signatureDataPanel_@(blob.BlobId)_@i">
+                                    @EDeliveryResources.ProfilePage.LinkSignatureDataMore
+                                </a>
+                            </span>
+
+                            <div id="signatureDataPanel_@(blob.BlobId)_@i" style="display:none;">
+                                @Html.Partial("Partials/OpenDocumentSignatureInfo", signature)
+                            </div>
+                        }
+                    }
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: right;">
+                <a class="btn"
+                   style="text-align: right; padding: 0px;"
+                   href="@externalLink"
+                   rel="noopener"
+                   target="_blank">
+                    @externalLinkText
+                </a>
+                @if (isIndividual)
+                {
+                    <br />
+                    <a class="btn"
+                       style="text-align: right; padding: 0px;"
+                       href="@Url.Action("LoadObligations", "Tickets")"
+                       rel="noopener"
+                       target="_blank">
+                        Проверка и плащане на регистрирани административни нарушения @*todo: move to resources*@
+                    </a>
+
+                }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr class="section-border" />
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="text-align: right;">
+                <a class="btn btn-l"
+                   style="text-align: right; padding: 0px;"
+                   href="#"
+                   data-modal-tagId="ticket_system_data">
+                    Системни данни
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div id="ticket_system_data" style="display: none">
+    <h2>Системни данни</h2>
+
+    <div class="modal-content">
+        <div class="form-col">
+            <div class="form-element">
+                Подадено в ССЕВ:
+                <a href="@Url.Action("GetMessageTimestamp", "Messages", new { id = Model.MessageId, timeStampType = EDelivery.WebPortal.Enums.eTimeStampType.NRO })"
+                   data-toggle="tooltip"
+                   data-original-title="@ProfilePage.TooltipDownloadNRO">
+                    <img src="~/Content/img/timestamp.png">
+                </a>
+            </div>
+        </div>
+
+        <div class="form-col">
+            <div class="form-element">
+                Връчено в ССЕВ:
+                @if (Model.DateReceived.HasValue)
+                {
+                    @Model.DateReceived.Value.ToString(SystemConstants.DateTimeFormat)
+                    <a href="@Url.Action("GetMessageTimestamp", "Messages", new { id = Model.MessageId, timeStampType = EDelivery.WebPortal.Enums.eTimeStampType.NRD })"
+                       data-toggle="tooltip"
+                       data-original-title="@ProfilePage.TooltipDownloadNRD">
+                        <img src="~/Content/img/timestamp.png">
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="form-col">
+            <div class="form-element">
+                PDF съобщение:
+                <a href="@Url.Action("GetPdfAsRecipient", "Messages", new { id = Model.MessageId })"
+                   class="file-link pdf"
+                   data-toggle="tooltip"
+                   data-original-title="@ProfilePage.TooltipDownloadStampPdfMessage">
+                </a>
+            </div>
+        </div>
+
+        <div class="form-col">
+            <div class="form-element">
+                XML съобщение:
+                <a href="@Url.Action("GetSummaryAsRecipient", "Messages", new { id = Model.MessageId })"
+                   class="file-link xml"
+                   data-toggle="tooltip"
+                   data-original-title="@ProfilePage.TooltipDownloadTimestampedMessage">
+                </a>
+            </div>
+        </div>
+
+        <div class="form-col">
+            <div class="form-element">
+                Валидиране:
+                <a href="https://evalidation.egov.bg/" target="_blank" rel="noreferrer">
+                    @UIControls.LinkEValidation
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

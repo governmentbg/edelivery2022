@@ -18,7 +18,8 @@ namespace ED.Domain
         string? Country,
         int TargetGroupId,
         int BlobId,
-        int LoginId)
+        int LoginId,
+        string Ip)
         : IRequest<CreateRegisterRequestCommandResult>;
 
     public record CreateRegisterRequestCommandResult(

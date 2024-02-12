@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using static ED.Domain.IMessageListQueryRepository;
 
@@ -11,14 +13,14 @@ namespace ED.Domain
 {
     partial class MessageListQueryRepository
     {
-        public async Task<TableResultVO<GetOutboxVO>> GetOutboxAsync(
+        public async Task<TableResultVO<GetOutboxQO>> GetOutboxAsync(
             int profileId,
             int offset,
             int limit,
             string? subject,
             string? profile,
-            DateTime? fromDate,
-            DateTime? toDate,
+            DateTime? from,
+            DateTime? to,
             string? rnu,
             CancellationToken ct)
         {
@@ -27,8 +29,8 @@ namespace ED.Domain
                     profileId,
                     subject,
                     profile,
-                    fromDate,
-                    toDate,
+                    from,
+                    to,
                     rnu);
 
             int count = await this.DbContext.Set<Message>()
@@ -37,62 +39,93 @@ namespace ED.Domain
 
             if (count == 0)
             {
-                return TableResultVO.Empty<GetOutboxVO>();
+                return TableResultVO.Empty<GetOutboxQO>();
             }
 
-            GetOutboxVO[] vos = await (
-                from m in this.DbContext.Set<Message>().Where(messagePredicate)
+            string query = $@"
+WITH RecipientCounts AS (
+    SELECT
+        [MessageId],
+        COUNT(CASE WHEN [DateReceived] IS NOT NULL THEN 1 END) AS NumberOfRecipients,
+        COUNT(*) AS NumberOfTotalRecipients
+    FROM [dbo].[MessageRecipients]
+    GROUP BY [MessageId]
+)
+SELECT
+    [m].[MessageId],
+    [m].[DateSent],
+    [p].[ElectronicSubjectName] AS SenderProfileName,
+    [l].[ElectronicSubjectName] AS SenderLoginName,
+    [m].[RecipientsAsText] AS Recipients,
+    [m].[SubjectExtended] AS Subject,
+    [m].[ForwardStatusId],
+    [t].[Name] AS TemplateName,
+    [rc].NumberOfRecipients,
+    [rc].NumberOfTotalRecipients,
+    [m].[Rnu]
+FROM [dbo].[Messages] AS [m]
+INNER JOIN [dbo].[Profiles] AS [p] ON [m].[SenderProfileId] = [p].[Id]
+INNER JOIN [dbo].[Logins] AS [l] ON [m].[SenderLoginId] = [l].[Id]
+INNER JOIN [dbo].[Templates] AS [t] ON [m].[TemplateId] = [t].[TemplateId]
+LEFT JOIN RecipientCounts AS [rc] ON [m].[MessageId] = [rc].[MessageId]
+WHERE
+    [m].[SenderProfileId] = @profileId AND
+    {(!string.IsNullOrEmpty(subject) ? "[m].[Subject] LIKE @subject AND " : "1=1 AND ")}
+    {(!string.IsNullOrEmpty(profile) ? "[m].[RecipientsAsText] LIKE @profile AND " : "1=1 AND ")}
+    {(from.HasValue ? "[m].[DateSent] >= @from AND " : "1=1 AND ")}
+    {(to.HasValue ? "[m].[DateSent] < @to AND " : "1=1 AND ")}
+    {(!string.IsNullOrEmpty(rnu) ? $"[m].[Rnu] LIKE @rnu AND " : "1=1 AND ")}
+    1=1
+ORDER BY [m].[DateSent] DESC
+OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+";
 
-                join p1 in this.DbContext.Set<Profile>()
-                    on m.SenderProfileId equals p1.Id
+            List<SqlParameter> parameters = new()
+            {
+                new SqlParameter("profileId", SqlDbType.Int) { Value = profileId },
+                new SqlParameter("offset", SqlDbType.Int) { Value = offset },
+                new SqlParameter("limit", SqlDbType.Int) { Value = limit },
+            };
 
-                join l1 in this.DbContext.Set<Login>()
-                    on m.SenderLoginId equals l1.Id
+            if (!string.IsNullOrEmpty(subject))
+            {
+                parameters.Add(new SqlParameter("subject", SqlDbType.NVarChar) { Value = $"%{subject}%" });
+            }
 
-                join t in this.DbContext.Set<Template>()
-                    on m.TemplateId equals t.TemplateId
+            if (!string.IsNullOrEmpty(profile))
+            {
+                parameters.Add(new SqlParameter("profile", SqlDbType.NVarChar) { Value = $"%{profile}%" });
+            }
 
-                join mr in this.DbContext.Set<MessageRecipient>()
-                    on m.MessageId equals mr.MessageId
+            if (from.HasValue)
+            {
+                parameters.Add(new SqlParameter("from", SqlDbType.DateTime2) { Value = from.Value });
+            }
 
-                group mr by new
-                {
-                    m.MessageId,
-                    DateSent = m.DateSent!.Value,
-                    ProfileName = p1.ElectronicSubjectName,
-                    LoginName = l1.ElectronicSubjectName,
-                    m.RecipientsAsText,
-                    m.SubjectExtended,
-                    m.ForwardStatusId,
-                    t.Name,
-                    m.Rnu,
-                } into g
+            if (to.HasValue)
+            {
+                parameters.Add(new SqlParameter("to", SqlDbType.DateTime2) { Value = to.Value.AddDays(1) });
+            }
 
-                orderby g.Key.DateSent descending
+            if (!string.IsNullOrEmpty(rnu))
+            {
+                parameters.Add(new SqlParameter("rnu", SqlDbType.NVarChar) { Value = rnu });
+            }
 
-                select new GetOutboxVO(
-                    g.Key.MessageId,
-                    g.Key.DateSent,
-                    g.Key.ProfileName,
-                    g.Key.LoginName,
-                    g.Key.RecipientsAsText,
-                    g.Key.SubjectExtended!,
-                    g.Key.ForwardStatusId,
-                    g.Key.Name,
-                    g.Count(gr => gr.DateReceived.HasValue),
-                    g.Count(),
-                    g.Key.Rnu))
-                .WithOffsetAndLimit(offset, limit)
-                .ToArrayAsync(ct);
+            GetOutboxQO[] qos =
+                await this.DbContext.Set<GetOutboxQO>()
+                    .FromSqlRaw(query, parameters.ToArray())
+                    .AsNoTracking()
+                    .ToArrayAsync(ct);
 
-            return new TableResultVO<GetOutboxVO>(vos, count);
+            return new TableResultVO<GetOutboxQO>(qos, count);
 
             static Expression<Func<Message, bool>> BuildMessagePredicate(
                 int profileId,
                 string? subject,
                 string? profile,
-                DateTime? fromDate,
-                DateTime? toDate,
+                DateTime? from,
+                DateTime? to,
                 string? rnu)
             {
                 Expression<Func<Message, bool>> predicate =
@@ -112,16 +145,16 @@ namespace ED.Domain
                         .And(e => e.RecipientsAsText.Contains(profile));
                 }
 
-                if (fromDate.HasValue)
+                if (from.HasValue)
                 {
                     predicate = predicate
-                        .And(e => e.DateSent.HasValue && e.DateSent.Value > fromDate.Value);
+                        .And(e => e.DateSent.HasValue && e.DateSent.Value > from.Value);
                 }
 
-                if (toDate.HasValue)
+                if (to.HasValue)
                 {
                     predicate = predicate
-                        .And(e => e.DateSent.HasValue && e.DateSent.Value < toDate.Value.AddDays(1));
+                        .And(e => e.DateSent.HasValue && e.DateSent.Value < to.Value.AddDays(1));
                 }
 
                 if (!string.IsNullOrEmpty(rnu))

@@ -22,13 +22,10 @@ public class OboTemplatesController : ControllerBase
     [Authorize(Policy = Policies.OboProfilesAccess)]
     [HttpGet("")]
     [ProducesResponseType(typeof(List<TemplateDO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ListAsync(
         [FromServices] EsbClient esbClient,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
-        [FromQuery] int? offset,
-        [FromQuery] int? limit,
         CancellationToken ct)
     {
         int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
@@ -51,7 +48,6 @@ public class OboTemplatesController : ControllerBase
     [Authorize(Policy = Policies.OboTemplateAccess)]
     [HttpGet("{templateId:int}")]
     [ProducesResponseType(typeof(TemplateDetailsDO), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

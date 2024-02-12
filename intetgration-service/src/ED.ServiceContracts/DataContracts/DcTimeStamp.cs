@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace EDelivery.Common.DataContracts
 {
@@ -12,13 +7,12 @@ namespace EDelivery.Common.DataContracts
     {
         public DcTimeStamp()
         {
-
         }
 
         public DcTimeStamp(string fileName, byte[] content)
         {
             this.FileName = fileName;
-            TimeStampData = content;
+            this.TimeStampData = content;
         }
 
         [DataMember]

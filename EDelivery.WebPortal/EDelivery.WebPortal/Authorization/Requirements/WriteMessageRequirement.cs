@@ -1,7 +1,11 @@
 ﻿using ED.DomainServices;
+
 using EDelivery.WebPortal.Grpc;
+
 using Microsoft.Owin.Security.Authorization;
+
 using System.Threading.Tasks;
+
 using static ED.DomainServices.Authorization;
 
 namespace EDelivery.WebPortal.Authorization
@@ -56,11 +60,15 @@ namespace EDelivery.WebPortal.Authorization
             return false;
         }
 
-        private bool HasWriteMessageAccess(int loginId, int profileId, int templateId)
+        private bool HasWriteMessageAccess(
+            int loginId,
+            int profileId,
+            int templateId)
         {
-            AuthorizationClient authorizationClient = GrpcClientFactory.CreateAuthorizationClient();
+            AuthorizationClient authorizationClient =
+                GrpcClientFactory.CreateAuthorizationClient();
 
-            var resp = authorizationClient.HasWriteMessageAccess(
+            HasAccessResponse resp = authorizationClient.HasWriteMessageAccess(
                 new HasWriteMessageAccessRequest
                 {
                     LoginId = loginId,

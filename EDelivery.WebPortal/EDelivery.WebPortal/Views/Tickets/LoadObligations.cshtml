@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutClean.cshtml";
+
+    ViewBag.Title = "Зареждане на задължения";
+}
+
+<div class="gradient-decor"></div>
+
+<div class="wrapper content-wrapper pt-0">
+    <div class="content-right" style="padding-top:30px;">
+        <div class="wrapper content-wrapper message-box message-flex-center">
+            <noscript>
+                <p>
+                    <strong>Важно:</strong> Моля, разрешете изпълнението на javascript във вашия браузър
+                </p>
+            </noscript>
+
+            <h2>Зареждане на задължения...</h2>
+        </div>
+        <div class="wrapper content-wrapper message-box message-flex-center"
+             id="obligation-content">
+            <div class="loader" />
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $.post(
+                '/Tickets/LoadObligationsInternal', {}, function (data) {
+                    if (data.count > 0) {
+                        window.location.replace('@EDelivery.WebPortal.Utils.Utils.PayObligations');
+                    } else {
+                        $('#obligation-content').html('<div>' + data.notFoundMessage +'</div>');
+                    }
+                })
+                .fail(function () {
+                    $('#obligation-content').html('<div>Възникна грешка, моля, опитайте по-късно!</div>');
+                });
+        });
+    </script>
+}

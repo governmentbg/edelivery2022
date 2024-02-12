@@ -9,6 +9,7 @@ namespace ED.Domain
             DateTime DateSent,
             GetAsRecipientVOProfileSender Sender,
             DateTime? DateReceived,
+            GetAsRecipientVOProfileRecipient Recipient,
             GetAsRecipientVORecipientLogin? RecipientLogin,
             string Subject,
             string? Rnu,
@@ -18,6 +19,10 @@ namespace ED.Domain
             int? ForwardedMessageId);
 
         public record GetAsRecipientVOProfileSender(
+            int ProfileId,
+            string Name);
+
+        public record GetAsRecipientVOProfileRecipient(
             int ProfileId,
             string Name);
 

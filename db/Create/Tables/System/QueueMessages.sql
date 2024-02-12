@@ -24,7 +24,18 @@ CREATE TABLE [dbo].[QueueMessages](
   [Version] [timestamp] NOT NULL,
   CONSTRAINT [PK_QueueMessages] PRIMARY KEY ([Status], [Type], [DueDate], [QueueMessageId]),
   CONSTRAINT [CHK_QueueMessages_Status] CHECK ([Status] IN (1, 2, 3, 4, 5)),
-  CONSTRAINT [CHK_QueueMessages_Type] CHECK (([Type]=1) OR ([Type]=2) OR ([Type]=3) OR ([Type]=4) OR ([Type]=5) OR ([Type]=6)),
+  CONSTRAINT [CHK_QueueMessages_Type] CHECK (
+       ([Type]=1) -- EmailNotification
+    OR ([Type]=2) -- SmsNotification
+    OR ([Type]=3) -- PushNotification
+    OR ([Type]=4) -- ViberNotification
+    OR ([Type]=5) -- SmsDeliveryCheck
+    OR ([Type]=6) -- ViberDeliveryCheck
+    OR ([Type]=7) -- Translation
+    OR ([Type]=8) -- TranslationClosure
+    OR ([Type]=9) -- DeliveredTicket
+    OR ([Type]=10) -- DataPortal
+  ),
 )
 GO
 

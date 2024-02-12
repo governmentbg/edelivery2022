@@ -16,5 +16,13 @@ namespace ED.DomainJobs
         public SmsDeliveryCheckJobOptions SmsDeliveryCheckJob { get; set; } = null!;
         [Required]
         public ViberDeliveryCheckJobOptions ViberDeliveryCheckJob { get; set; } = null!;
+        [Required]
+        public TranslationJobOptions TranslationJob { get; set; } = null!;
+        [Required]
+        public TranslationClosureJobOptions TranslationClosureJob { get; set; } = null!;
+        [Required]
+        public DeliveredTicketsJobOptions DeliveredTicketsJob { get; set; } = null!;
+        [Required]
+        public DataPortalJobOptions DataPortalJob { get; set; } = null!;
     }
 }

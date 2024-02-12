@@ -255,7 +255,7 @@ namespace EDelivery.WebPortal.Controllers
                 {
                     List<BuilderModelStateError> errors = new List<BuilderModelStateError>();
 
-                    foreach (var error in templateValidationErrors)
+                    foreach (KeyValuePair<string, string> error in templateValidationErrors)
                     {
                         errors.Add(new BuilderModelStateError
                         {

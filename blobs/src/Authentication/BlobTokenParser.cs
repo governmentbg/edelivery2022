@@ -93,6 +93,32 @@ namespace ED.Blobs
                 blobId);
         }
 
+        private static readonly Type[] TranslationBlobTokenValueTypes =
+            new[] { typeof(int) };
+        public record ParsedTranslationBlobToken(
+            int MessageTranslationId);
+        public ParsedTranslationBlobToken? ParseTranslationBlobToken(string token)
+        {
+            object[] tokenValues;
+            try
+            {
+                tokenValues = ParseBlobToken(
+                    this.profileBlobTokenDataProtector,
+                    token,
+                    TranslationBlobTokenValueTypes);
+            }
+            catch (CryptographicException ex)
+            {
+                this.logger.LogInformation(ex.Message);
+                return null;
+            }
+
+            int messageTranslationId = (int)tokenValues[0];
+
+            return new ParsedTranslationBlobToken(
+                messageTranslationId);
+        }
+
         private static readonly Type[] SystemBlobTokenValueTypes =
             new[] { typeof(int) };
         public int? ParseSystemBlobToken(string token)

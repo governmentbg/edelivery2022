@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using static ED.Domain.IEsbMessagesListQueryRepository;
@@ -11,10 +12,16 @@ namespace ED.Domain
     {
         public async Task<TableResultVO<GetInboxVO>> GetInboxAsync(
             int profileId,
+            DateTime? from,
+            DateTime? to,
+            int? templateId,
             int? offset,
             int? limit,
             CancellationToken ct)
         {
+            Expression<Func<Message, bool>> predicate =
+                BuildMessagePredicate(from, to, templateId);
+
             // Use the DateTime value of the SqlDateTime.MaxValue.
             // EF serializes the SqlDateTime to string which ends up as
             // '31-Dec-99 23:59:59', which is not the intended 9999 year.
@@ -31,7 +38,7 @@ namespace ED.Domain
                     into lj1
                 from rl in lj1.DefaultIfEmpty()
 
-                join m in this.DbContext.Set<Message>()
+                join m in this.DbContext.Set<Message>().Where(predicate)
                     on mr.MessageId equals m.MessageId
 
                 join sp in this.DbContext.Set<Profile>()
@@ -41,6 +48,7 @@ namespace ED.Domain
                     on m.SenderLoginId equals sl.Id
 
                 where mr.ProfileId == profileId
+                    && !this.DbContext.Set<Ticket>().Any(t => t.MessageId == mr.MessageId)
 
                 orderby mr.DateReceived ?? sqlMaxDate descending, m.DateSent descending
 
@@ -54,10 +62,40 @@ namespace ED.Domain
                     rl != null ? rl.ElectronicSubjectName : string.Empty,
                     m.Subject,
                     $"{this.domainOptions.WebPortalUrl}/Messages/Open/{m.MessageId}",
-                    m.Rnu))
+                    m.Rnu,
+                    m.TemplateId!.Value))
                 .ToTableResultAsync(offset, limit, ct);
 
             return vos;
+
+            Expression<Func<Message, bool>> BuildMessagePredicate(
+                DateTime? from,
+                DateTime? to,
+                int? templateId)
+            {
+                Expression<Func<Message, bool>> predicate =
+                    PredicateBuilder.True<Message>();
+
+                if (from.HasValue)
+                {
+                    predicate = predicate
+                        .And(e => e.DateSent >= from.Value);
+                }
+
+                if (to.HasValue)
+                {
+                    predicate = predicate
+                        .And(e => e.DateSent <= to.Value);
+                }
+
+                if (templateId.HasValue)
+                {
+                    predicate = predicate
+                        .And(e => e.TemplateId == templateId.Value);
+                }
+
+                return predicate;
+            }
         }
     }
 }

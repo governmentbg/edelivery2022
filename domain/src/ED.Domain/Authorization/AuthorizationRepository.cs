@@ -150,14 +150,20 @@ namespace ED.Domain
             int templateId,
             CancellationToken ct)
         {
-            return await this.DbContext.Set<LoginProfilePermission>()
-                .AnyAsync(
-                    CreateMessageAccessPredicate(
-                        loginId,
-                        profileId,
-                        templateId,
-                        LoginProfilePermissionType.WriteProfileMessageAccess),
-                    ct);
+            bool hasWriteProfileMessageAccess =
+                await this.DbContext.Set<LoginProfilePermission>()
+                    .AnyAsync(
+                        CreateMessageAccessPredicate(
+                            loginId,
+                            profileId,
+                            templateId,
+                            LoginProfilePermissionType.WriteProfileMessageAccess),
+                        ct);
+
+            bool hasWriteProfileTemplateAccess =
+                await this.HasWriteTemplateAccessAsync(profileId, templateId, ct);
+
+            return hasWriteProfileMessageAccess && hasWriteProfileTemplateAccess;
         }
 
         public async Task<bool> HasAdministerProfileAccessAsync(
@@ -270,6 +276,43 @@ namespace ED.Domain
 
                 select fm.MessageId)
                .AnyAsync(ct);
+        }
+
+        private async Task<bool> HasWriteTemplateAccessAsync(
+            int profileId,
+            int templateId,
+            CancellationToken ct)
+        {
+            bool hasWriteTemplateAcces = await (
+                from p in this.DbContext.Set<Profile>()
+                join tgp in this.DbContext.Set<TargetGroupProfile>()
+                    on p.Id equals tgp.ProfileId
+                join ttg in this.DbContext.Set<TemplateTargetGroup>()
+                    on tgp.TargetGroupId equals ttg.TargetGroupId
+                join t in this.DbContext.Set<Template>()
+                on ttg.TemplateId equals t.TemplateId
+                where p.Id == profileId
+                && t.TemplateId == templateId
+                && t.ArchiveDate == null
+                && t.PublishDate != null
+                && t.Category == null
+                && ttg.CanSend
+                select ttg.TemplateId
+                ).Union(
+                    from tp in this.DbContext.Set<TemplateProfile>()
+                    join t in this.DbContext.Set<Template>()
+                        on tp.TemplateId equals t.TemplateId
+                    where tp.ProfileId == profileId
+                        && t.TemplateId == templateId
+                        && t.ArchiveDate == null
+                        && t.PublishDate != null
+                        && t.Category == null
+                        && tp.CanSend
+                    select tp.TemplateId
+                )
+                .AnyAsync(ct);
+
+            return hasWriteTemplateAcces;
         }
 
         private static Expression<Func<LoginProfilePermission, bool>> CreateMessageAccessPredicate(

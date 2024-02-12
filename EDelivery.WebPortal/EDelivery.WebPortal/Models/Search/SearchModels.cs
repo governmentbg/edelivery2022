@@ -16,8 +16,6 @@ namespace EDelivery.WebPortal.Models
 
         public bool CanSendToLegalEntities { get; set; }
 
-        // public List<SelectListItem> RecipientGroups { get; set; }
-
         public List<SelectListItem> TargetGroups { get; set; }
     }
 }

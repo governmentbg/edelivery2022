@@ -12,6 +12,10 @@ public class EsbApiOptions
     [Required]
     public string BlobServiceWebUrl { get; set; } = null!;
 
+    public string BlobsServiceUrl { get; set; } = null!;
+
+    public bool BlobsServiceUseGrpcWeb { get; set; }
+
     public TimeSpan BlobTokenLifetime { get; set; }
 
     public string? SharedSecretDPKey { get; set; }

@@ -96,19 +96,16 @@ namespace ED.Domain
                 throw new Exception("The command should either have an IndividualData or a LegalEntityData.");
             }
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
                 profile.Id,
                 ProfileHistoryAction.ProfileUpdated,
-                command.AdminUserId)
-            {
-                ActionDetails =
-                    ProfilesHistory.GenerateAccessDetails(
-                        ProfileHistoryAction.ProfileUpdated,
-                        profile.ElectronicSubjectId,
-                        profile.ElectronicSubjectName,
-                        updatesLog.ToString()),
-                IPAddress = command.Ip,
-            };
+                command.AdminUserId,
+                ProfilesHistory.GenerateAccessDetails(
+                    ProfileHistoryAction.ProfileUpdated,
+                    profile.ElectronicSubjectId,
+                    profile.ElectronicSubjectName,
+                    updatesLog.ToString()),
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

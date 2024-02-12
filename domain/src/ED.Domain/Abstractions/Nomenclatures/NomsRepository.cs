@@ -37,7 +37,7 @@ namespace ED.Domain
                 throw new ArgumentException("Filtering by the default value for nomValueId is not allowed.");
             }
 
-            var predicate =
+            Expression<Func<TQuery, bool>> predicate =
                 PredicateBuilder.True<TQuery>()
                 .AndPropertyEquals(this.keySelector, nomValueId);
 
@@ -72,7 +72,7 @@ namespace ED.Domain
 
         protected virtual IQueryable<TQuery> GetNameFilteredQuery(string term)
         {
-            var predicate =
+            Expression<Func<TQuery, bool>> predicate =
                 PredicateBuilder.True<TQuery>()
                 .AndStringContains(this.nameSelector, term);
 

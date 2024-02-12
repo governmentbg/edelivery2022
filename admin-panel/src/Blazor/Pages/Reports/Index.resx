@@ -135,6 +135,9 @@
   <data name="Statistics" xml:space="preserve">
     <value>Обща статистика</value>
   </data>
+  <data name="Tickets" xml:space="preserve">
+    <value>Справка административни актове</value>
+  </data>
   <data name="Timestamps" xml:space="preserve">
     <value>Справка Timestamp заявки</value>
   </data>

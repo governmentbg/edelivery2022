@@ -26,8 +26,6 @@ public class TemplatesController : ControllerBase
     public async Task<IActionResult> ListAsync(
         [FromServices] EsbClient esbClient,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
-        [FromQuery] int? offset,
-        [FromQuery] int? limit,
         CancellationToken ct)
     {
         int profileId = this.HttpContext.User.GetAuthenticatedUserProfileId();
@@ -50,7 +48,6 @@ public class TemplatesController : ControllerBase
     [Authorize(Policy = Policies.TemplateAccess)]
     [HttpGet("{templateId:int}")]
     [ProducesResponseType(typeof(TemplateDetailsDO), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

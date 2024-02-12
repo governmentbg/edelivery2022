@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ED.DomainServices.Esb;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static ED.DomainServices.Esb.Esb;
 
@@ -20,6 +22,8 @@ public class StatisticsController : ControllerBase
     /// <param name="from">От дата</param>
     /// <param name="to">До дата</param>
     [HttpGet("messages/sent")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MessageStatisticsDO), StatusCodes.Status200OK)]
     public async Task<MessageStatisticsDO> GetSentMessagesStatisticsAsync(
         [FromServices] EsbClient esbClient,
         [FromQuery, Required] DateTime from,
@@ -44,6 +48,7 @@ public class StatisticsController : ControllerBase
     /// <param name="from">От дата</param>
     /// <param name="to">До дата</param>
     [HttpGet("messages/received")]
+    [ProducesResponseType(typeof(MessageStatisticsDO), StatusCodes.Status200OK)]
     public async Task<MessageStatisticsDO> GetReceivedMessagesStatisticsAsync(
         [FromServices] EsbClient esbClient,
         [FromQuery, Required] DateTime from,
@@ -68,6 +73,7 @@ public class StatisticsController : ControllerBase
     /// <param name="month"></param>
     /// <returns></returns>
     [HttpGet("messages/sent-by-month")]
+    [ProducesResponseType(typeof(List<MessageMonthlyStatisticsDO>), StatusCodes.Status200OK)]
     public async Task<MessageMonthlyStatisticsDO[]> GetSentMessagesMonthlyStatisticsAsync(
         [FromServices] EsbClient esbClient,
         [FromQuery] DateTime? month,
@@ -90,6 +96,7 @@ public class StatisticsController : ControllerBase
     /// <param name="month"></param>
     /// <returns></returns>
     [HttpGet("messages/received-by-month")]
+    [ProducesResponseType(typeof(List<MessageMonthlyStatisticsDO>), StatusCodes.Status200OK)]
     public async Task<MessageMonthlyStatisticsDO[]> GetReceivedMessagesMonthlyStatisticsAsync(
         [FromServices] EsbClient esbClient,
         [FromQuery] DateTime? month,

@@ -19,11 +19,17 @@
     <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\esb.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
       <Link>Protos\esb.proto</Link>
     </Protobuf>
+    <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\esb_ticket.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
+      <Link>Protos\esb_ticket.proto</Link>
+    </Protobuf>
     <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\authorization.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
       <Link>Protos\authorization.proto</Link>
     </Protobuf>
     <Protobuf Include="..\..\domain\src\ED.DomainServices\Protos\enums.proto" ProtoRoot="../../domain/src/ED.DomainServices/Protos/" GrpcServices="Client">
       <Link>Protos\enums.proto</Link>
+    </Protobuf>
+    <Protobuf Include="..\..\blobs\src\Protos\blobs.proto" ProtoRoot="../../blobs/src/Protos/" GrpcServices="Client">
+      <Link>Protos\blobs.proto</Link>
     </Protobuf>
   </ItemGroup>
 
@@ -35,7 +41,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Mapster" Version="7.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />

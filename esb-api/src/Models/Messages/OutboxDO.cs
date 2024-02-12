@@ -13,6 +13,7 @@ namespace ED.EsbApi;
 /// <param name="Recipients">Получатели като текст</param>
 /// <param name="Url">Url за преглед на съобщението в ССЕВ</param>
 /// <param name="Rnu">Референтен номер на услуга (РНУ)</param>
+/// <param name="TemplateId">Идентификатор на шаблон на съобщение</param>
 public record OutboxDO(
     int MessageId,
     DateTime DateSent,
@@ -21,4 +22,5 @@ public record OutboxDO(
     string SenderLoginName,
     string Recipients,
     string Url,
-    string? Rnu);
+    string? Rnu,
+    int TemplateId);

@@ -20,9 +20,12 @@ namespace ED.Domain
             string? subject,
             CancellationToken ct)
         {
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetEFormsAsync)}({adminUserId}, \"{fromDate}\", \"{toDate}\") called");
+            this.logger.LogInformation(
+                "{method}({adminUserId}, \"{fromDate}\", \"{toDate}\") called",
+                nameof(GetEFormsAsync),
+                adminUserId,
+                fromDate,
+                toDate);
 
             Expression<Func<Message, bool>> predicate =
                 BuildMessagePredicate(

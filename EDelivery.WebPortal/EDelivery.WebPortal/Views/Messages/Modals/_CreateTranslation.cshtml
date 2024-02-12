@@ -1,0 +1,94 @@
+﻿@model CreateTranslationViewModel
+
+@using (Ajax.BeginForm(
+    "CreateTranslation",
+    "Messages",
+    null,
+    new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        UpdateTargetId = "create-translation-form",
+        InsertionMode = InsertionMode.ReplaceWith
+    },
+    new { id = "create-translation-form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.MessageId)
+
+    <h2>Заявка за превод на съобщение</h2>
+
+    @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+    <div class="modal-content">
+        <section class="form-section">
+            <ul class="col-list">
+                <li class="form-row">
+                    <label for="SourceLanguage">Език на оригиналния текст<span class="txt-red">*</span>:</label>
+                    <div class="form-element">
+                        @Html.DropDownListFor(
+                            x => x.SourceLanguage,
+                            ViewBag.Languages as IEnumerable<SelectListItem>,
+                            "-- Изберете --",
+                            new
+                            {
+                                @class = "form-select select2",
+                            })
+
+                        @Html.ValidationMessageFor(x => x.SourceLanguage)
+                    </div>
+                </li>
+                <li class="form-row">
+                    <label for="TargetLanguage">Целеви език<span class="txt-red">*</span>:</label>
+                    <div class="form-element">
+                        @Html.DropDownListFor(
+                            x => x.TargetLanguage,
+                            ViewBag.Languages as IEnumerable<SelectListItem>,
+                            "-- Изберете --",
+                            new
+                            {
+                                @class = "form-select select2",
+                            })
+                        @Html.ValidationMessageFor(x => x.TargetLanguage)
+                    </div>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+    <section class="form-section form-row button-row-right">
+        <button class="btn-border btn-m" type="button" id="cancel-create-translation">Откажи</button>
+        <button class="btn-primary btn-m" type="submit">Заяви</button>
+    </section>
+
+    var currentCulture = EDelivery.WebPortal.Utils.CultureHelper.ToSiteCulture(UICulture);
+    var select2Language = currentCulture == EDelivery.WebPortal.Enums.eSiteCulture.BG
+        ? "bg"
+        : "en";
+
+    <script type="text/javascript">
+        $(function () {
+            $('#SourceLanguage')
+                .select2({
+                    placeholder: '-- Избор на език --',
+                    language: '@select2Language',
+                    allowClear: true
+                });
+
+            $('#TargetLanguage')
+                .select2({
+                    placeholder: '-- Избор на език --',
+                    language: '@select2Language',
+                    allowClear: true
+                });
+
+            $(document).on('select2:open', function (e) {
+                var selectId = e.target.id;
+                document.querySelector('.select2-search__field[aria-controls="select2-' + selectId + '-results"]').focus();
+            });
+
+            $('#cancel-create-translation').on('click', function () { gf.hideModal(); });
+        });
+    </script>
+}
+
+

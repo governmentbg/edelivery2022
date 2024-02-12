@@ -29,6 +29,9 @@ namespace ED.DomainServices
                     .GetRequiredService<IEsbMessagesListQueryRepository>()
                     .GetInboxAsync(
                         request.ProfileId,
+                        request.From?.ToLocalDateTime(),
+                        request.To?.ToLocalDateTime(),
+                        request.TemplateId,
                         request.Offset,
                         request.Limit,
                         context.CancellationToken);
@@ -52,6 +55,9 @@ namespace ED.DomainServices
                     .GetRequiredService<IEsbMessagesListQueryRepository>()
                     .GetOutboxAsync(
                         request.ProfileId,
+                        request.From?.ToLocalDateTime(),
+                        request.To?.ToLocalDateTime(),
+                        request.TemplateId,
                         request.Offset,
                         request.Limit,
                         context.CancellationToken);
@@ -264,13 +270,13 @@ namespace ED.DomainServices
                 .GetRequiredService<IMediator>()
                 .Send(
                     new EsbCreatePassiveIndividualCommand(
+                        request.Identifier,
                         request.FirstName,
                         request.MiddleName,
                         request.LastName,
-                        request.Identifier,
                         request.Phone,
                         request.Email,
-                        request.Residence,
+                        request.Address.Adapt<EsbCreatePassiveIndividualCommandAddress>(),
                         request.ActionLoginId,
                         request.Ip),
                     context.CancellationToken);
@@ -457,6 +463,24 @@ namespace ED.DomainServices
             };
         }
 
+        public override async Task<GetForwardedMessageOriginalRecipientProfileResponse> GetForwardedMessageOriginalRecipientProfile(
+            GetForwardedMessageOriginalRecipientProfileRequest request,
+            ServerCallContext context)
+        {
+            int recipientProfileId =
+                await this.serviceProvider
+                    .GetRequiredService<IEsbMessagesOpenQueryRepository>()
+                    .GetForwardedMessageOriginalRecipientProfile(
+                        request.MessageId,
+                        request.ForwardedMessageId,
+                        context.CancellationToken);
+
+            return new GetForwardedMessageOriginalRecipientProfileResponse
+            {
+                RecipientProfileId = recipientProfileId
+            };
+        }
+
         public override async Task<GetBlobsInfoResponse> GetBlobsInfo(
             GetBlobsInfoRequest request,
             ServerCallContext context)
@@ -531,6 +555,204 @@ namespace ED.DomainServices
                     context.CancellationToken);
 
             return new Empty();
+        }
+
+        public override async Task<CheckStorageBlobResponse> CheckStorageBlob(
+            CheckStorageBlobRequest request,
+            ServerCallContext context)
+        {
+            IEsbBlobsListQueryRepository.CheckStorageBlobVO checkStorageBlob =
+              await this.serviceProvider
+                  .GetRequiredService<IEsbBlobsListQueryRepository>()
+                  .CheckStorageBlobAsync(
+                      request.ProfileId,
+                      request.BlobId,
+                      context.CancellationToken);
+
+            return checkStorageBlob.Adapt<CheckStorageBlobResponse>();
+        }
+
+        public override async Task<GetRegisteredProfilesResponse> GetRegisteredProfiles(
+            GetRegisteredProfilesRequest request,
+            ServerCallContext context)
+        {
+            TableResultVO<IEsbProfilesRegisterQueryRepository.GetRegisteredProfilesVO> profiles =
+                await this.serviceProvider
+                    .GetRequiredService<IEsbProfilesRegisterQueryRepository>()
+                    .GetRegisteredProfilesAsync(
+                        request.Identifier,
+                        request.Offset,
+                        request.Limit,
+                        context.CancellationToken);
+
+            return new GetRegisteredProfilesResponse
+            {
+                Length = profiles.Length,
+                Result =
+                {
+                    profiles.Result.ProjectToType<GetRegisteredProfilesResponse.Types.Profile>()
+                }
+            };
+        }
+
+        public override async Task<CreateOrUpdateIndividualResponse> CreateOrUpdateIndividual(
+            CreateOrUpdateIndividualRequest request,
+            ServerCallContext context)
+        {
+            int profileId = await this.serviceProvider
+                .GetRequiredService<IMediator>()
+                .Send(
+                    new EsbCreateOrUpdateIndividualCommand(
+                        request.Identifier,
+                        request.FirstName,
+                        request.MiddleName,
+                        request.LastName,
+                        request.Phone,
+                        request.Email,
+                        request.Address.Adapt<EsbCreateOrUpdateIndividualCommandAddress>(),
+                        request.IsEmailNotificationEnabled,
+                        request.IsFullFeatured,
+                        request.ActionLoginId,
+                        request.Ip),
+                    context.CancellationToken);
+
+            return new CreateOrUpdateIndividualResponse
+            {
+                ProfileId = profileId
+            };
+        }
+
+        public override async Task<GetCountriesResponse> GetCountries(
+            GetCountriesRequest request,
+            ServerCallContext context)
+        {
+            TableResultVO<IEsbCountriesListQueryRepository.GetCountriesVO> countries =
+               await this.serviceProvider
+                   .GetRequiredService<IEsbCountriesListQueryRepository>()
+                   .GetCountriesAsync(
+                       request.Offset,
+                       request.Limit,
+                       context.CancellationToken);
+
+            return new GetCountriesResponse
+            {
+                Length = countries.Length,
+                Result =
+                {
+                    countries.Result.ProjectToType<GetCountriesResponse.Types.Country>()
+                }
+            };
+        }
+
+        public override async Task<CheckCountryIsoResponse> CheckCountryIso(
+            CheckCountryIsoRequest request,
+            ServerCallContext context)
+        {
+            bool isValid =
+                await this.serviceProvider
+                    .GetRequiredService<IEsbProfilesRegisterQueryRepository>()
+                    .CheckCountryIsoAsync(
+                        request.Iso,
+                        context.CancellationToken);
+
+            return new CheckCountryIsoResponse
+            {
+                IsValid = isValid
+            };
+        }
+
+        public override async Task<CheckTargetGroupIdResponse> CheckTargetGroupId(
+            CheckTargetGroupIdRequest request,
+            ServerCallContext context)
+        {
+            bool isValid =
+                await this.serviceProvider
+                    .GetRequiredService<IEsbProfilesRegisterQueryRepository>()
+                    .CheckTargetGroupIdAsync(
+                        request.TargetGroupId,
+                        context.CancellationToken);
+
+            return new CheckTargetGroupIdResponse
+            {
+                IsValid = isValid
+            };
+        }
+
+        public override async Task<CheckExistingLegalEntityResponse> CheckExistingLegalEntity(
+            CheckExistingLegalEntityRequest request,
+            ServerCallContext context)
+        {
+            bool isExisting =
+                await this.serviceProvider
+                    .GetRequiredService<IEsbProfilesRegisterQueryRepository>()
+                    .CheckExistingLegalEntityAsync(
+                        request.Identifier,
+                        request.TargetGroupId,
+                        context.CancellationToken);
+
+            return new CheckExistingLegalEntityResponse
+            {
+                IsExisting = isExisting
+            };
+        }
+
+        public override async Task<CreateLegalEntityResponse> CreateLegalEntity(
+            CreateLegalEntityRequest request,
+            ServerCallContext context)
+        {
+            int profileId = await this.serviceProvider
+                .GetRequiredService<IMediator>()
+                .Send(
+                    new EsbCreateLegalEntityCommand(
+                        request.Identifier,
+                        request.Name,
+                        request.Email,
+                        request.Phone,
+                        request.Address.Adapt<EsbCreateLegalEntityCommandAddress>(),
+                        request.TargetGroupId,
+                        request.OwnersData.ProjectToType<EsbCreateLegalEntityCommandOwnerData>().ToArray(),
+                        request.ActionLoginId,
+                        request.Ip),
+                    context.CancellationToken);
+
+            return new CreateLegalEntityResponse
+            {
+                ProfileId = profileId
+            };
+        }
+
+        public override async Task<CheckAllLoginsExistResponse> CheckAllLoginsExist(
+            CheckAllLoginsExistRequest request,
+            ServerCallContext context)
+        {
+            bool isValid =
+                await this.serviceProvider
+                    .GetRequiredService<IEsbProfilesRegisterQueryRepository>()
+                    .CheckAllLoginsExistAsync(
+                        request.Identifiers.ToArray(),
+                        context.CancellationToken);
+
+            return new CheckAllLoginsExistResponse
+            {
+                IsValid = isValid
+            };
+        }
+
+        public override async Task<GetProfileResponse> GetProfile(
+            GetProfileRequest request,
+            ServerCallContext context)
+        {
+            IEsbProfilesListQueryRepository.GetProfileVO? profile =
+                await this.serviceProvider
+                    .GetRequiredService<IEsbProfilesListQueryRepository>()
+                    .GetProfileAsync(
+                        request.ProfileId,
+                        context.CancellationToken);
+
+            return new GetProfileResponse
+            {
+                Result = profile?.Adapt<GetProfileResponse.Types.Profile>()
+            };
         }
     }
 }

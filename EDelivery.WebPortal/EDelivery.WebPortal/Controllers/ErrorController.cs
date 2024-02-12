@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace EDelivery.WebPortal.Controllers
 {
@@ -25,6 +21,7 @@ namespace EDelivery.WebPortal.Controllers
                     model = new Models.HandleErrorInfoWithMessage(EDeliveryResources.ErrorMessages.ErrorSystemGeneral);
                     break;
             }
+
             return View("Error", model);
         }
     }

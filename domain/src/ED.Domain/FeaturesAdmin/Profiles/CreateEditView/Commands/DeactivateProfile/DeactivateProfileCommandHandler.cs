@@ -21,13 +21,12 @@ namespace ED.Domain
 
             profile.Deactivate(command.AdminUserId);
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
                 command.ProfileId,
                 ProfileHistoryAction.ProfileDeactivated,
-                command.AdminUserId)
-            {
-                IPAddress = command.Ip
-            };
+                command.AdminUserId,
+                null,
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

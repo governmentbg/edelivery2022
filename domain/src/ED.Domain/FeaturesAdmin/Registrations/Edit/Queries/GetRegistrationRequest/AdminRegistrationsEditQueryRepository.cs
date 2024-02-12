@@ -15,9 +15,11 @@ namespace ED.Domain
             int registrationRequestId,
             CancellationToken ct)
         {
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetRegistrationRequestAsync)}({adminUserId}, {registrationRequestId}) called");
+            this.logger.LogInformation(
+                "{method}({adminUserId}, {registrationRequestId}) called",
+                nameof(GetRegistrationRequestAsync),
+                adminUserId,
+                registrationRequestId);
 
             var result = await (
                 from rr in this.DbContext.Set<RegistrationRequest>()

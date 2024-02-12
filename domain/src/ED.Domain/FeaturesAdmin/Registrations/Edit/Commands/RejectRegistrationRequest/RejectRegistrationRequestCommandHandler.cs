@@ -32,10 +32,12 @@ namespace ED.Domain
 
             await this.UnitOfWork.SaveAsync(ct);
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
                 registrationRequest.RegisteredProfileId,
                 ProfileHistoryAction.ProfileDeactivated,
-                command.AdminUserId);
+                command.AdminUserId,
+                null,
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,
@@ -89,6 +91,7 @@ namespace ED.Domain
                         $"Missing resource {nameof(Notifications.RegistrationRequestRejectedEmailBody)}");
 
             return new EmailQueueMessage(
+                QueueMessageFeatures.Register,
                 registrationRequestRecipient,
                 string.Format(emailSubect, registrationRequestProfile),
                 string.Format(

@@ -1,0 +1,163 @@
+﻿@page "/reports/tickets"
+@using ED.DomainServices.Admin
+@using ED.DomainServices
+@inherits PagedComponent
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "reports", "reports" },
+        { "tickets", null }
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <h3>@Localizer["Title"]</h3>
+
+            <EditForm EditContext="@editContext" OnValidSubmit="Search">
+                <DataAnnotationsValidator />
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="@nameof(SearchTicketsModel.ReportDate)">
+                                    @Localizer["FormReportDate"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <DateField id="@nameof(SearchTicketsModel.ReportDate)" @bind-Value="model.ReportDate" Placeholder=@Constants.DateTimeFormat />
+                                    <ValidationMessage For="@(() => model.ReportDate)" />
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">@Localizer["BtnSearch"]</button>
+                    </section>
+                </div>
+            </EditForm>
+
+            @if (hasSentRequest)
+            {
+                <div style="padding: 15px 0px; height: 45px;">
+                    <a href="@recordsReportLink"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       download
+                       class="btn btn-border btn-m butright">
+                        @Localizer["BtnExport"]
+                    </a>
+                </div>
+
+                <div class="table-responsive" style="position: relative">
+                    @if (IsLoading)
+                    {
+                        <div class="loader-container">
+                        </div>
+                    }
+
+                    <table class="list">
+                        <tbody>
+                            <tr>
+                                <th colspan="4">
+                                    @recordsTableTitle
+                                </th>
+                            </tr>
+
+                            @if (records == null)
+                            {
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="loader page-loader show">
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+
+                                <tr>
+                                    <td>@Localizer["LabelTotalTickets"]</td>
+                                    <td>@(records.TotalTickets)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyTickets"]</td>
+                                    <td>@(records.DailyIndividualTickets + records.DailyLegalEntityPenalDecrees + records.DailyIndividualPenalDecrees + records.DailyLegalEntityPenalDecrees)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyIndividualTotalTickets"]</td>
+                                    <td>@(records.DailyIndividualTickets + records.DailyIndividualPenalDecrees)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyLegalEntityTotalTickets"]</td>
+                                    <td>@(records.DailyLegalEntityPenalDecrees + records.DailyLegalEntityPenalDecrees)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyIndividualTickets"]</td>
+                                    <td>@(records.DailyIndividualTickets)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyLegalEntityTickets"]</td>
+                                    <td>@(records.DailyLegalEntityTickets)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyIndividualPenalDecrees"]</td>
+                                    <td>@(records.DailyIndividualPenalDecrees)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyLegalEntityPenalDecrees"]</td>
+                                    <td>@(records.DailyLegalEntityPenalDecrees)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyNotifications"]</td>
+                                    <td>@(records.DailyNotificationsByEmail + records.DailyNotificationsByPhone)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyNotificationsByEmail"]</td>
+                                    <td>@(records.DailyNotificationsByEmail)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyNotificationsByPhone"]</td>
+                                    <td>@(records.DailyNotificationsByPhone)</td>
+                                </tr>
+
+                                <tr>
+                                    <td>@Localizer["LabelDailyReceivedTickets"]</td>
+                                    <td>@(records.DailyReceivedIndividualTickets + records.DailyReceivedLegalEntityTickets + records.DailyReceivedIndividualPenalDecrees + records.DailyReceivedLegalEntityPenalDecrees)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyReceivedIndividualTickets"]</td>
+                                    <td>@(records.DailyReceivedIndividualTickets)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyReceivedLegalEntityTickets"]</td>
+                                    <td>@(records.DailyReceivedLegalEntityTickets)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyReceivedIndividualPenalDecrees"]</td>
+                                    <td>@(records.DailyReceivedIndividualPenalDecrees)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyReceivedLegalEntityPenalDecrees"]</td>
+                                    <td>@(records.DailyReceivedLegalEntityPenalDecrees)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyPassiveProfiles"]</td>
+                                    <td>@(records.DailyPassiveProfiles)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Localizer["LabelDailyActiveProfiles"]</td>
+                                    <td>@(records.DailyActiveProfiles)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

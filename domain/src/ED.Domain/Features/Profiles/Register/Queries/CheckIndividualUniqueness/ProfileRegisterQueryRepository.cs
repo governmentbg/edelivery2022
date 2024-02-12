@@ -23,6 +23,7 @@ namespace ED.Domain
                     on p.Id equals tgp.ProfileId
 
                 where EF.Functions.Like(p.Identifier, identifier)
+                    && p.IsActivated
                     && tgp.TargetGroupId == TargetGroup.IndividualTargetGroupId
 
                 select p.Id)

@@ -72,6 +72,23 @@
         </a>
     </div>
     <div class="col-3">
+        <a href="@Url.Action("Inbox", "Tickets")" class="content-wrapper icon-menu-item bgr-gray">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 64 64" class="icon icon-svg">
+                    <path d="M30 46H2V10h54v23" />
+                    <path d="M2 10l27 20.6L56 10" />
+                    <circle cx="46" cy="46" r="16" />
+                    <path d="M46 38v14.9m5.9-5.8L46 52.9l-5.9-5.8" />
+                </svg>
+            </div>
+            <h6>@Common.TitleReceivedTickets</h6>
+            <span id="tickets-count"
+                  class="number"
+                  style="display: none;">
+            </span>
+        </a>
+    </div>
+    <div class="col-3">
         <a href="@Url.Action("Index", "Storage")" class="content-wrapper icon-menu-item bgr-gray">
             <div class="icon-box">
                 <svg class="icon icon-svg" viewBox="-1 0 210 190" version="1.1" xmlns="http://www.w3.org/2000/svg">

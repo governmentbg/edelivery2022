@@ -25,6 +25,8 @@ namespace ED.AdminPanel.Blazor.Pages.Requests
     {
         [Parameter] public int RegistrationRequestId { get; set; }
 
+        [CascadingParameter] private ConnectionInfo ConnectionInfo { get; set; }
+
         [Inject] private Admin.AdminClient AdminClient { get; set; }
 
         [Inject] private IStringLocalizer<EditResources> Localizer { get; set; }
@@ -73,7 +75,8 @@ namespace ED.AdminPanel.Blazor.Pages.Requests
                 {
                     Comment = this.model.Comment,
                     AdminUserId = currentUserId,
-                    RegistrationRequestId = this.RegistrationRequestId
+                    RegistrationRequestId = this.RegistrationRequestId,
+                    Ip = this.ConnectionInfo.RemoteIpAddress,
                 });
 
             this.NavigationManager.NavigateTo("requests");
@@ -88,7 +91,8 @@ namespace ED.AdminPanel.Blazor.Pages.Requests
                 {
                     Comment = this.model.Comment,
                     AdminUserId = currentUserId,
-                    RegistrationRequestId = this.RegistrationRequestId
+                    RegistrationRequestId = this.RegistrationRequestId,
+                    Ip = this.ConnectionInfo.RemoteIpAddress,
                 });
 
             if (resp.IsSuccessful)

@@ -2,13 +2,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ED.Domain;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace ED.DomainJobs
 {
-    public class SmsJob : QueueJob<SmsQueueMessage, DisposableTuple<LinkMobilityServiceClient, IServiceScope>>
+    public class SmsJob : QueueJob<SmsQueueMessage, DisposableTuple<InfosystemsServiceClient, IServiceScope>>
     {
         private IServiceScopeFactory scopeFactory;
 
@@ -21,35 +22,43 @@ namespace ED.DomainJobs
             this.scopeFactory = scopeFactory;
         }
 
-        protected override Task<DisposableTuple<LinkMobilityServiceClient, IServiceScope>> CreateThreadContextAsync(CancellationToken ct)
+        protected override Task<DisposableTuple<InfosystemsServiceClient, IServiceScope>> CreateThreadContextAsync(CancellationToken ct)
         {
+            // using scope to inject a new client for each thread
             var scope = this.scopeFactory.CreateScope();
-            var client = scope.ServiceProvider.GetRequiredService<LinkMobilityServiceClient>();
+            var client = scope.ServiceProvider.GetRequiredService<InfosystemsServiceClient>();
+
+            // making the scope part of the result so that it is disposed when the thread context is disposed
             return Task.FromResult(DisposableTuple.Create(client, scope));
         }
 
-        protected override async Task<(QueueJobProcessingResult result, string? error)>
-            HandleMessageAsync(
-                DisposableTuple<LinkMobilityServiceClient, IServiceScope> context,
-                SmsQueueMessage payload,
-                CancellationToken ct)
+        protected override async Task<(QueueJobProcessingResult result, string? error)> HandleMessageAsync(
+            DisposableTuple<InfosystemsServiceClient, IServiceScope> context,
+            SmsQueueMessage payload,
+            bool isLastAttempt,
+            CancellationToken ct)
         {
-            var client = context.Item1;
+            InfosystemsServiceClient client = context.Item1;
 
             try
             {
+                if (!this.ShouldProcessQueueMessage(payload.Feature))
+                {
+                    return (QueueJobProcessingResult.Cancel, null);
+                }
+
                 string? smsId = await client.SendSmsAsync(payload.Recipient, payload.Body, ct);
 
                 using var scope = this.scopeFactory.CreateScope();
 
-                var queueMessagesService = scope.ServiceProvider
-                    .GetRequiredService<IQueueMessagesService>();
-
-                await queueMessagesService.TryPostMessageAndSaveAsync(
-                    new SmsDeliveryCheckQueueMessage(smsId!),
-                    DateTime.Now.AddMinutes(2),
-                    null!,
-                    ct);
+                await scope.ServiceProvider
+                    .GetRequiredService<IMediator>()
+                    .Send(
+                        new CreateSmsDeliveryQueueMessageCommand(
+                            payload.Feature,
+                            smsId!,
+                            DateTime.UtcNow.AddMinutes(2)),
+                            ct);
 
                 return (QueueJobProcessingResult.Success, null);
             }

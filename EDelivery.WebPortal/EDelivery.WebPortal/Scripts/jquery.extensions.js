@@ -62,6 +62,29 @@
         });
     };
 
+    $.fn.myUrlTabs = function (btnSelector, tabSelector, targetAttribute, activeClass, cb) {
+        var hash = window.location.hash;
+
+        return this.each(function () {
+
+            $(this).on('click', function () {
+                var target = $(this).attr(targetAttribute);
+
+                var fragment = $(this).data('fragment');
+                var url = new URL(window.location.origin + window.location.pathname + '#' + fragment);
+                window.history.pushState(null, null, url);
+
+                resetTabs(btnSelector, tabSelector, activeClass);
+                openTab(this, target, activeClass, cb);
+            });
+
+            var fragment = $(this).data('fragment');
+            if (hash === '#' + fragment) {
+                $(this).trigger('click');
+            }
+        });
+    };
+
     $.fn.myModal = function () {
         return this.each(function () {
             var data = $(this).data('my-modal');
@@ -138,7 +161,7 @@
         return o;
     };
 
-    $.GetUrlParams = function() {
+    $.GetUrlParams = function () {
         var url = window.location.search;
         if (url !== '') {
             var qs = url.substring(url.indexOf('?') + 1).split('&');
@@ -151,7 +174,7 @@
         return '';
     };
 
-    $.SetUrlParameters = function(data, url) {
+    $.SetUrlParameters = function (data, url) {
         var newUrl = url;
         for (var key in data) {
             if (data.hasOwnProperty(key)) {

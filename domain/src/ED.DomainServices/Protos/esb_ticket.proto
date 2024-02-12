@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices.Esb";
+
+package esb_ticket;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "enums.proto";
+
+service EsbTicket {
+  // profiles
+  rpc GetOrCreateRecipient(GetOrCreateRecipientRequest) returns (GetOrCreateRecipientResponse);
+
+  // tickets
+  rpc SendTicket (SendTicketRequest) returns (SendTicketResponse);
+  rpc ServeTicket (ServeTicketRequest) returns (google.protobuf.Empty);
+  rpc AnnulTicket (AnnulTicketRequest) returns (google.protobuf.Empty);
+  rpc CheckTickets (CheckTicketsRequest) returns (CheckTicketsResponse);
+
+  // notifications
+  rpc SendNotification (SendNotificationRequest) returns (google.protobuf.Empty);
+}
+
+message GetOrCreateRecipientRequest {
+  message LegalEntityRecipient {
+    string identifier = 1;
+    string name = 2;
+  }
+
+  message IndividualRecipient {
+    string identifier = 1;
+    string first_name = 2;
+    google.protobuf.StringValue middle_name = 3;
+    string last_name = 4;
+    google.protobuf.StringValue email = 5;
+    google.protobuf.StringValue phone = 6;
+  }
+
+  optional LegalEntityRecipient legal_entity_recipient = 1;
+  IndividualRecipient individual_recipient = 2;
+  int32 action_login_id = 3;
+  string ip = 4;
+}
+
+message GetOrCreateRecipientResponse {
+  int32 profile_id = 1;
+  string identifier = 2;
+  bool is_individual = 3;
+}
+
+message SendTicketRequest {
+  message Blob {
+    string file_name = 1;
+    string hash_algorithm = 2;
+    string hash = 3;
+    uint64 size = 4;
+    int32 blob_id = 5;
+  }
+
+  bool is_recipient_individual = 1;
+  int32 recipient_profile_id = 2;
+  string recipient_identifier = 3;
+  
+  int32 sender_profile_id = 4;
+  int32 sender_login_id = 5;
+
+  google.protobuf.StringValue notification_email = 6;
+  google.protobuf.StringValue notification_phone = 7;
+
+  string subject= 8;
+  string body = 9;
+  enums.TicketType type = 10;
+  google.protobuf.StringValue document_series = 11;
+  string document_number = 12;
+  google.protobuf.Timestamp issue_date = 13;
+  string vehicle_number = 14;
+  google.protobuf.Timestamp violation_date = 15;
+  string violated_provision = 16;
+  string penalty_provision = 17;
+  string due_amount = 18;
+  string discounted_payment_amount = 19;
+  string iban = 20;
+  string bic = 21;
+  string payment_reason = 22;
+  Blob document = 23;
+  google.protobuf.StringValue document_identifier = 24;
+}
+
+message SendTicketResponse {
+  int32 ticket_id = 1;
+}
+
+message ServeTicketRequest {
+  int32 ticket_id  = 1;
+  google.protobuf.Timestamp serve_date = 2;
+  int32 action_login_id = 3;
+}
+
+message AnnulTicketRequest {
+  int32 ticket_id  = 1;
+  google.protobuf.Timestamp annul_date = 2;
+  string annulment_reason = 3;
+  int32 action_login_id = 4;
+}
+
+message CheckTicketsRequest {
+  repeated int32 ticket_ids = 1;
+  enums.TicketDeliveryStatus delivery_status = 2;
+  google.protobuf.Timestamp from = 3;
+  google.protobuf.Timestamp to = 4;
+  int32 profile_id = 5;
+}
+
+message CheckTicketsResponse {
+  message TicketCheck {
+    int32 ticket_id = 1;
+    google.protobuf.Timestamp delivery_date = 2;
+  }
+
+  repeated TicketCheck result = 1;
+}
+
+message SendNotificationRequest {
+  message LegalEntityRecipient {
+    google.protobuf.StringValue email = 1;
+    google.protobuf.StringValue phone = 2;
+  }
+
+  message IndividualRecipient {
+    google.protobuf.StringValue email = 1;
+    google.protobuf.StringValue phone = 2;
+  }
+
+  message Email {
+    string subject = 1;
+    string body = 2;
+  }
+
+  optional LegalEntityRecipient legal_entity_recipient = 1;
+  optional IndividualRecipient individual_recipient = 2;
+  optional Email email = 3;
+  google.protobuf.StringValue sms = 4;
+  google.protobuf.StringValue viber = 5;
+  int32 profile_id = 6;
+}

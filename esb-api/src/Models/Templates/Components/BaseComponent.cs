@@ -7,7 +7,8 @@ using NJsonSchema.Converters;
 namespace ED.EsbApi;
 
 /// <summary>
-/// Базов клас за поле в шаблон
+/// Базов клас за поле в шаблон. 
+/// Спрямо полето "discriminator" се сериализира до следните класове: CheckboxComponent, FileComponent, DateTimeComponent, HiddenComponent, SelectComponent, TextAreaComponent, TextFieldComponent и MarkdownComponent.
 /// </summary>
 /// <param name="Id">Идентификатор на поле</param>
 /// <param name="Label">Наименование на поле</param>
@@ -22,7 +23,7 @@ namespace ED.EsbApi;
 [KnownType(typeof(SelectComponent))]
 [KnownType(typeof(TextAreaComponent))]
 [KnownType(typeof(TextFieldComponent))]
-[KnownType(typeof(MarkdownComponent))]// TODO: https://makolyte.com/csharp-deserialize-json-to-a-derived-type/
+[KnownType(typeof(MarkdownComponent))]
 public abstract record BaseComponent(
     Guid Id,
     string Label,

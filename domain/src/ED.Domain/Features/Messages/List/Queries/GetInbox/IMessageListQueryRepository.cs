@@ -12,8 +12,8 @@ namespace ED.Domain
             int limit,
             string? subject,
             string? profile,
-            DateTime? fromDate,
-            DateTime? toDate,
+            DateTime? from,
+            DateTime? to,
             string? urn,
             CancellationToken ct);
     }

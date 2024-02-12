@@ -1,0 +1,95 @@
+﻿@using EDelivery.WebPortal.Utils
+
+@model TranslationsListViewModel
+
+@{
+    var activeProfileId = Context.GetCachedUserData().ActiveProfileId;
+}
+
+<div class="table-responsive" id="message-translations-table">
+
+    @Html.ValidationSummary(true, "", new { @class = "field-validation-error" })
+
+    <table class="statistics">
+        <tbody>
+            <tr>
+                <th>Заглавие на съобщение</th>
+                <th>Език на оригиналния текст</th>
+                <th>Целеви език</th>
+                <th>Дата на създаване</th>
+                <th>Дата на последна редакция</th>
+                <th></th>
+            </tr>
+
+            @if (Model.Items.Count == 0)
+            {
+                <tr>
+                    <td colspan="6">
+                        @ViewBag.NoTranslations
+                    </td>
+                </tr>
+            }
+
+            @foreach (var translation in Model.Items.OrderBy(e => e.CreateDate))
+            {
+                var formId = $"delete_{translation.MessageId}_{activeProfileId}_{translation.SourceLanguage}_{translation.TargetLanguage}";
+
+                <tr>
+                    <td>
+                        <a href="@Url.Action("Open","Messages", new { id = Model.MessageId })">
+                            @translation.Subject
+                        </a>
+                    </td>
+                    <td>@translation.SourceLanguage</td>
+                    <td>@translation.TargetLanguage</td>
+                    <td>@translation.CreateDate</td>
+                    <td>@translation.ModifyDate</td>
+                    <td class="file-actions">
+                        <div>
+                            <a href="@Url.Action("Details","Translations", new { id = translation.MessageTranslationId })">
+                                <img src="~/Content/img/view_icon.png" alt="">
+                            </a>
+
+                            @using (Ajax.BeginForm(
+                                "Delete",
+                                "Translations",
+                                new { },
+                                new AjaxOptions()
+                                {
+                                    Confirm = ProfilePage.MessageConfirmDeleteTranslation,
+                                    HttpMethod = "POST",
+                                    InsertionMode = InsertionMode.ReplaceWith,
+                                    UpdateTargetId = "message-translations-table",
+                                    OnFailure = "onFailure",
+                                },
+                                new { id = formId }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("messageTranslationId", translation.MessageTranslationId)
+                                @Html.Hidden("messageId", translation.MessageId)
+
+                                <button type="submit" id="submit_@formId" style="display:none"></button>
+
+                                <a href="#"
+                                   class="delete"
+                                   onclick="javascript:document.getElementById('submit_@formId').click();return false;">
+                                    <img src="~/Content/img/trash-icon.png">
+                                </a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function onFailure(e) {
+        var error = (e && e.responseJSON)
+            ? (e.responseJSON.error || '@ErrorMessages.ErrorSystemGeneral')
+            : '@ErrorMessages.ErrorSystemGeneral';
+
+        gf.showError(error, 2);
+    };
+</script>

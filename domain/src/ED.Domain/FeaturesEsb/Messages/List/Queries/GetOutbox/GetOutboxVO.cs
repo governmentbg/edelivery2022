@@ -12,6 +12,7 @@ namespace ED.Domain
             string Recipients,
             string Subject,
             string Url,
-            string? Rnu);
+            string? Rnu,
+            int TemplateId);
     }
 }

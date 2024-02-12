@@ -42,13 +42,12 @@ namespace ED.Domain
 
             profile.Activate(command.AdminUserId);
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByAdmin(
                 command.ProfileId,
                 ProfileHistoryAction.ProfileActivated,
-                command.AdminUserId)
-            {
-                IPAddress = command.Ip
-            };
+                command.AdminUserId,
+                null,
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

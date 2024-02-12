@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
 using static ED.DomainServices.Esb.Esb;
 
 namespace ED.EsbApi;
@@ -42,8 +43,9 @@ public class MessageSendDOValidator : AbstractValidator<MessageSendDO>
         this.esbClient = esbClient;
         this.templateService = templateService;
 
-        this.RuleFor(x => x.RecipientProfileIds).NotEmpty();
         this.RuleFor(x => x.RecipientProfileIds)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
             .MustAsync(async (it, profileIds, context, ct) =>
             {
                 int profileId = this.httpContext.User.GetAuthenticatedUserProfileId();
@@ -67,7 +69,6 @@ public class MessageSendDOValidator : AbstractValidator<MessageSendDO>
         this.RuleFor(x => new { x.TemplateId, x.Fields })
             .MustAsync(async (compose, ct) =>
             {
-                // TODO: unfinished validation
                 IList<BaseComponent> components =
                     await templateService.GetTemplateComponentsAsync(
                         compose.TemplateId,
@@ -75,22 +76,62 @@ public class MessageSendDOValidator : AbstractValidator<MessageSendDO>
 
                 foreach (var field in compose.Fields)
                 {
-                    // TODO: switch for each component type
                     var match = components.FirstOrDefault(e => e.Id == field.Key);
 
-                    if (match == null)
+                    // check require rule
+                    if (match == null
+                        || (match.IsRequired && field.Value == null))
                     {
                         return false;
                     }
 
-                    if (match.IsRequired && field.Value == null)
+                    // check value type
+                    switch (match.Type)
                     {
-                        return false;
+                        case ComponentType.textfield:
+                        case ComponentType.textarea:
+                        case ComponentType.select:
+                        case ComponentType.hidden:
+                        case ComponentType.datetime:
+                            if (field.Value != null && field.Value is not string)
+                            {
+                                return false;
+                            }
+
+                            break;
+                        case ComponentType.checkbox:
+                            if (field.Value != null && field.Value is not bool)
+                            {
+                                return false;
+                            }
+
+                            break;
+                        case ComponentType.file:
+                            if (field.Value != null)
+                            {
+                                try
+                                {
+                                    int[] deserializedValues = ((JArray)field.Value).ToObject<int[]>()!;
+                                }
+#pragma warning disable CA1031 // Do not catch general exception types
+                                catch
+#pragma warning restore CA1031 // Do not catch general exception types
+                                {
+                                    return false;
+                                }
+                            }
+
+                            break;
+                        case ComponentType.markdown:
+                            break;
+                        default:
+                            return false;
                     }
+
                 }
 
                 return true;
             })
-            .WithMessage("Invalid fields or blobs according to template");
+            .WithMessage("Invalid fields according to template");
     }
 }

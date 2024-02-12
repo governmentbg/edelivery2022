@@ -18,6 +18,8 @@ namespace ED.Domain
         IOptions<DomainOptions> DomainOptionsAccessor)
         : IRequestHandler<CreateOrUpdateIndividualCommand, CreateOrUpdateIndividualCommandResult>
     {
+        private const string RegisterIndividualActionDetails = "Register individual";
+
         public async Task<CreateOrUpdateIndividualCommandResult> Handle(
             CreateOrUpdateIndividualCommand command,
             CancellationToken ct)
@@ -80,22 +82,22 @@ namespace ED.Domain
                         false,
                         profile.EmailAddress,
                         profile.Phone,
-                        Login.SystemLoginId,
+                        command.ActionLoginId,
                         new[]
                         {
                             (LoginProfilePermissionType.OwnerAccess, (int?)null)
                         });
 
-                    ProfilesHistory profilesHistory = new(
+                    ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByLogin(
                         profile.Id,
                         ProfileHistoryAction.GrantAccessToProfile,
-                        Login.SystemLoginId,
+                        command.ActionLoginId,
                         ProfilesHistory.GenerateAccessDetails(
                            ProfileHistoryAction.GrantAccessToProfile,
                            login.ElectronicSubjectId,
                            login.ElectronicSubjectName,
                            string.Empty),
-                        command.IP);
+                        command.Ip);
 
                     await this.ProfilesHistoryAggregateRepository.AddAsync(
                         profilesHistory,
@@ -141,6 +143,23 @@ namespace ED.Domain
 
                 await this.UnitOfWork.SaveAsync(ct);
 
+                ProfilesHistory profilesHistoryCreate = ProfilesHistory.CreateInstanceByLogin(
+                    profile.Id,
+                    ProfileHistoryAction.CreateProfile,
+                    command.ActionLoginId,
+                    ProfilesHistory.GenerateAccessDetails(
+                        ProfileHistoryAction.CreateProfile,
+                        profile.ElectronicSubjectId,
+                        profile.ElectronicSubjectName,
+                        RegisterIndividualActionDetails),
+                    command.Ip);
+
+                await this.ProfilesHistoryAggregateRepository.AddAsync(
+                    profilesHistoryCreate,
+                    ct);
+
+                await this.UnitOfWork.SaveAsync(ct);
+
                 await this.TargetGroupProfileAggregateRepository.AddAsync(
                     new TargetGroupProfile(
                         TargetGroup.IndividualTargetGroupId,
@@ -179,7 +198,7 @@ namespace ED.Domain
                             (LoginProfilePermissionType.OwnerAccess, (int?)null)
                         });
 
-                    ProfilesHistory profilesHistory = new(
+                    ProfilesHistory profilesHistoryGrantAccess = ProfilesHistory.CreateInstanceByLogin(
                         profile.Id,
                         ProfileHistoryAction.GrantAccessToProfile,
                         Login.SystemLoginId,
@@ -188,10 +207,10 @@ namespace ED.Domain
                            login.ElectronicSubjectId,
                            login.ElectronicSubjectName,
                            string.Empty),
-                        command.IP);
+                        command.Ip);
 
                     await this.ProfilesHistoryAggregateRepository.AddAsync(
-                        profilesHistory,
+                        profilesHistoryGrantAccess,
                         ct);
 
                     await this.UnitOfWork.SaveAsync(ct);

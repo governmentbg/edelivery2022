@@ -61,6 +61,42 @@ namespace ED.Domain {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NA.
+        /// </summary>
+        public static string AnnulledTicketEmailBody {
+            get {
+                return ResourceManager.GetString("AnnulledTicketEmailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NA.
+        /// </summary>
+        public static string AnnulledTicketEmailSubject {
+            get {
+                return ResourceManager.GetString("AnnulledTicketEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NA.
+        /// </summary>
+        public static string AnnulledTicketSMSBody {
+            get {
+                return ResourceManager.GetString("AnnulledTicketSMSBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NA.
+        /// </summary>
+        public static string AnnulledTicketViberBody {
+            get {
+                return ResourceManager.GetString("AnnulledTicketViberBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Здравейте {0},
         ///
         ///Изпратено през профил {1} съобщение &quot;{2}&quot; е отворено от {3}. Можете да проверите детайли за отварянето, като  влезете в профила си на адрес {4}
@@ -240,6 +276,101 @@ namespace ED.Domain {
         public static string RegistrationRequestRejectedEmailSubject {
             get {
                 return ResourceManager.GetString("RegistrationRequestRejectedEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;html&gt;
+        ///  &lt;header&gt;
+        ///  &lt;/header&gt;
+        ///  &lt;body&gt;
+        ///    &lt;b&gt;Уважаема/и госпожо/господине&lt;/b&gt;,
+        ///    &lt;p&gt;
+        ///      С настоящото Ви уведомяваме, че в системата на МВР е регистрирано
+        ///      нарушение по Закона за движението по пътищата за:
+        ///    &lt;/p&gt;
+        ///    &lt;table style=&quot;border-collapse: collapse; padding: 10px; border: 1px solid black;&quot;&gt;
+        ///      &lt;tr&gt;
+        ///        &lt;th style=&quot;border-collapse: collapse; padding: 10px; border: 1px solid black;&quot;&gt;МПС с регистрационен номер&lt;/th&gt;
+        ///        &lt;th style=&quot;border-collapse: collapse; padding: 10p [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string SentTicketEmailBody {
+            get {
+                return ResourceManager.GetString("SentTicketEmailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to МВР Известие за извършено нарушение с МПС.
+        /// </summary>
+        public static string SentTicketEmailSubject {
+            get {
+                return ResourceManager.GetString("SentTicketEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to МВР:Извършено нарушение МПС {0} по ЗДвП {1}, глоба {2} BGN.
+        /// </summary>
+        public static string SentTicketSMSBody {
+            get {
+                return ResourceManager.GetString("SentTicketSMSBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to *МВР:*
+        ///Уважаема/и госпожо/господине,
+        ///С настоящото Ви уведомяваме, че в системата на МВР е регистрирано нарушение по Закона за движението по пътищата за:
+        ///  ✓ *МПС с регистрационен номер:* {0}
+        ///  ✓ *Дата на нарушението:* {1}
+        ///  ✓ *Вид на документа:* {2}
+        ///  ✓ *Серия:* {3}
+        ///  ✓ *Документ №:* {4}
+        ///  ✓ *Дължима сума:* {5} лева.
+        ///Подробна информация за установеното нарушение може да получите по сигурен начин на {6}
+        ///Глобата може да заплатите на следния адрес: {7} 
+        ///В случай че сте платили задължението си преди  [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string SentTicketViberBody {
+            get {
+                return ResourceManager.GetString("SentTicketViberBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NA.
+        /// </summary>
+        public static string ServedTicketEmailBody {
+            get {
+                return ResourceManager.GetString("ServedTicketEmailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NA.
+        /// </summary>
+        public static string ServedTicketEmailSubject {
+            get {
+                return ResourceManager.GetString("ServedTicketEmailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NA.
+        /// </summary>
+        public static string ServedTicketSMSBody {
+            get {
+                return ResourceManager.GetString("ServedTicketSMSBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NA.
+        /// </summary>
+        public static string ServedTicketViberBody {
+            get {
+                return ResourceManager.GetString("ServedTicketViberBody", resourceCulture);
             }
         }
     }

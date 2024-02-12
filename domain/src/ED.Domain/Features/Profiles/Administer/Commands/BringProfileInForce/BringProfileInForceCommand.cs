@@ -10,6 +10,6 @@ namespace ED.Domain
         bool IsSmsNotificationOnDeliveryEnabled,
         bool IsViberNotificationEnabled,
         bool IsViberNotificationOnDeliveryEnabled,
-        string IP)
+        string Ip)
         : IRequest;
 }

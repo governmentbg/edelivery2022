@@ -1,0 +1,106 @@
+﻿@page "/profiles/{ProfileId:int}/history"
+@inherits PagedComponent
+@attribute [Authorize]
+
+<Breadcrumb Items="@(
+    new Dictionary<string, string>()
+    {
+        { "home", "" },
+        { "profiles", "profiles" },
+        { "view", $"profiles/{ProfileId}" },
+        { "profileHistory", null },
+    })" />
+
+<div class="wrapper content-wrapper">
+    <div class="cols-wrapper">
+        <NavMenu />
+        <div class="content-right">
+            <div style="padding-bottom: 15px;">
+                <h3>@Localizer["Title"]</h3>
+            </div>
+
+            <EditForm EditContext="@editContext" OnValidSubmit="Search">
+                <DataAnnotationsValidator />
+                <div class="single-col">
+                    <section class="form-section">
+                        <ul class="col-list">
+                            <li class="form-row">
+                                <label for="@nameof(SearchProfileHistoryModel.Actions)">
+                                    @Localizer["FormActions"]<span class="txt-red">*</span>
+                                </label>
+                                <div class="form-element">
+                                    <Select2MultiField id="@nameof(SearchProfileHistoryModel.Actions)"
+                                                       @bind-Value="model.Actions"
+                                                       Options="@actions" />
+                                    <ValidationMessage For="@(() => model.Actions)" />
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                    <section class="form-section form-row button-row-right">
+                        <button class="btn-primary btn-l" type="submit">@Localizer["BtnSearch"]</button>
+                    </section>
+                </div>
+            </EditForm>
+
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(history?.Length ?? 0)" />
+            <div class="table-responsive" style="position: relative">
+                @if (IsLoading)
+                {
+                    <div class="loader-container">
+                    </div>
+                }
+                <table class="list">
+                    <tbody>
+                        <tr>
+                            <th>@Localizer["ColumDate"]</th>
+                            <th>@Localizer["ColumnAction"]</th>
+                            <th>@Localizer["ColumnActor"]</th>
+                            <th>@Localizer["ColumnDetails"]</th>
+                            <th>@Localizer["ColumnIp"]</th>
+                        </tr>
+
+                        @if (history == null)
+                        {
+                            <tr>
+                                <td colspan="5">
+                                    <div class="loader page-loader show">
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @if (!history.Result.Any())
+                            {
+                                <tr>
+                                    <td colspan="5">@Localizer["NoItems"]</td>
+                                </tr>
+                            }
+
+                            @foreach (var record in history.Result)
+                            {
+                                <tr>
+                                    <td>@record.ActionDate.ToLocalDateTime().ToString("g")</td>
+                                    <td>@record.Action</td>
+                                    <td>@(record.LoginName ?? $"{record.AdminName}*")</td>
+                                    <td>@record.Details</td>
+                                    <td>@record.Ip</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <Pager Page="@(Page)"
+                   PageSize="@PageSize"
+                   TotalItemsCount="@(history?.Length ?? 0)" />
+
+            <section class="form-section form-row button-row-right">
+                <a class="btn btn-border btn-l" href="profiles/@ProfileId">&lt; @Localizer["BtnBack"]</a>
+            </section>
+        </div>
+    </div>
+</div>

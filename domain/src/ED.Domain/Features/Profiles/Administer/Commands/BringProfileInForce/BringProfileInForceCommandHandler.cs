@@ -43,12 +43,12 @@ namespace ED.Domain
                     (LoginProfilePermissionType.OwnerAccess, (int?)null)
                 });
 
-            ProfilesHistory profilesHistory = new(
+            ProfilesHistory profilesHistory = ProfilesHistory.CreateInstanceByLogin(
                 profile.Id,
                 ProfileHistoryAction.BringProfileInForce,
                 command.LoginId,
                 null,
-                command.IP);
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

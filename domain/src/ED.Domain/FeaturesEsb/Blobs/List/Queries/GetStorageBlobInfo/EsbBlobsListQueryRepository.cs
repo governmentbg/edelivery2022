@@ -53,7 +53,7 @@ namespace ED.Domain
                     SignatureValidFrom = (DateTime?)bs.ValidFrom,
                     SignatureValidTo = (DateTime?)bs.ValidTo,
                 })
-                 .ToArrayAsync(ct);
+                .ToArrayAsync(ct);
 
             GetStorageBlobInfoVO? vo = blob
                 .GroupBy(e => e.BlobId)

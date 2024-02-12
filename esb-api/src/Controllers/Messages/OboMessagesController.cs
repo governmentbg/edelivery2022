@@ -26,21 +26,27 @@ public class OboMessagesController : ControllerBase
     [HttpGet("inbox")]
     [ProducesResponseType(typeof(TableResultDO<InboxDO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetInboxAsync(
         [FromServices] EsbClient esbClient,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        [FromQuery] int? templateId,
         [FromQuery] int? offset,
         [FromQuery] int? limit,
         CancellationToken ct)
     {
-        int profileId = this.HttpContext.User.GetAuthenticatedUserProfileId();
         int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
 
         DomainServices.Esb.InboxResponse resp =
             await esbClient.InboxAsync(
                 new DomainServices.Esb.BoxRequest
                 {
-                    ProfileId = representedProfileId ?? profileId,
+                    ProfileId = representedProfileId!.Value,
+                    From = from?.ToTimestamp(),
+                    To = to?.ToTimestamp(),
+                    TemplateId = templateId,
                     Offset = offset,
                     Limit = limit,
                 },
@@ -57,21 +63,27 @@ public class OboMessagesController : ControllerBase
     [HttpGet("outbox")]
     [ProducesResponseType(typeof(TableResultDO<OutboxDO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetOutboxAsync(
         [FromServices] EsbClient esbClient,
         [FromHeader(Name = EsbAuthSchemeConstants.DpMiscinfoHeader), BindRequired] string dpMiscinfo,
+        [FromQuery] DateTime? from,
+        [FromQuery] DateTime? to,
+        [FromQuery] int? templateId,
         [FromQuery] int? offset,
         [FromQuery] int? limit,
         CancellationToken ct)
     {
-        int profileId = this.HttpContext.User.GetAuthenticatedUserProfileId();
         int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
 
         DomainServices.Esb.OutboxResponse resp =
             await esbClient.OutboxAsync(
                 new DomainServices.Esb.BoxRequest
                 {
-                    ProfileId = representedProfileId ?? profileId,
+                    ProfileId = representedProfileId!.Value,
+                    From = from?.ToTimestamp(),
+                    To = to?.ToTimestamp(),
+                    TemplateId = templateId,
                     Offset = offset,
                     Limit = limit,
                 },
@@ -85,7 +97,7 @@ public class OboMessagesController : ControllerBase
     /// </summary>
     /// <returns>Публичен идентификатор на изпратеното съобщение</returns>
     /// <include file='../../Documentation.xml' path='Documentation/CommonParams/*'/>
-    // TODO: authorization
+    [Authorize(Policy = Policies.OboSendMessage)]
     [HttpPost("")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -99,6 +111,8 @@ public class OboMessagesController : ControllerBase
         CancellationToken ct)
     {
         int loginId = this.HttpContext.User.GetAuthenticatedUserLoginId();
+        int? representedProfileId = this.HttpContext.User.GetAuthenticatedUserRepresentedProfileId();
+        int? operatorLoginId = this.HttpContext.User.GetAuthenticatedUserOperatorLoginIdOrDefault();
 
         IList<BaseComponent> components =
             await templateService.GetTemplateComponentsAsync(
@@ -141,8 +155,8 @@ public class OboMessagesController : ControllerBase
                     {
                         message.RecipientProfileIds
                     },
-                    SenderProfileId = message.SenderProfileId,
-                    SenderLoginId = loginId,
+                    SenderProfileId = representedProfileId!.Value,
+                    SenderLoginId = operatorLoginId ?? loginId,
                     SenderViaLoginId = loginId,
                     TemplateId = message.TemplateId,
                     Subject = message.Subject,

@@ -417,6 +417,52 @@ namespace ED.Blobs
             await transaction.CommitAsync(ct);
         }
 
+        public record MessageTranslationRequestInfoVO(int ProfileId, string? FileName);
+        public async Task<MessageTranslationRequestInfoVO?> MessageTranslationRequestInfoAsync(
+            int messageTranslationId,
+            long requestId,
+            string targetLanguage,
+            CancellationToken ct)
+        {
+            await using SqlConnection connection = new(this.connectionString);
+            await connection.OpenAsync(ct);
+
+            await using SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText =
+                @"SELECT
+                    mt.[ProfileId],
+                    b.[FileName]
+                FROM [MessageTranslationRequests] mtr
+                JOIN [MessageTranslations] mt
+                    ON mtr.[MessageTranslationId] = mt.[MessageTranslationId]
+                LEFT JOIN [dbo].[Blobs] b
+                    ON mtr.[SourceBlobId] = b.[BlobId]
+                WHERE mtr.[RequestId] = @requestId
+                    AND mtr.[TargetBlobId] IS NULL
+                    AND mt.[MessageTranslationId] = @messageTranslationId
+                    AND mt.[TargetLanguage] = @targetLanguage
+                    AND mt.[ArchiveDate] IS NULL";
+            cmd.Parameters.AddWithValue("@requestId", requestId);
+            cmd.Parameters.AddWithValue("@messageTranslationId", messageTranslationId);
+            cmd.Parameters.AddWithValue("@targetLanguage", targetLanguage);
+
+            await using SqlDataReader reader = await cmd.ExecuteReaderAsync(ct);
+
+            if (!reader.HasRows)
+            {
+                return null;
+            }
+
+            await reader.ReadAsync(ct);
+
+            int profileId = reader.GetInt32(reader.GetOrdinal("ProfileId"));
+            string? filename = reader.IsDBNull(reader.GetOrdinal("FileName"))
+                ? null
+                : reader.GetString(reader.GetOrdinal("FileName"));
+
+            return new MessageTranslationRequestInfoVO(profileId, filename);
+        }
+
         private async Task<byte[]> GetDecryptedProfileBlobAccessKeyAsync(
             SqlConnection connection,
             SqlTransaction transaction,

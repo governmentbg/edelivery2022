@@ -32,8 +32,20 @@ public class ReadMessageAsSenderRequirementHandler : AuthorizationHandler<ReadMe
         AuthorizationHandlerContext context,
         ReadMessageAsSenderRequirement requirement)
     {
-        int profileId = context.User.GetAuthenticatedUserProfileId();
-        int loginId = context.User.GetAuthenticatedUserLoginId();
+        int? profileId = context.User.GetAuthenticatedUserProfileIdOrDefault();
+        if (!profileId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
+        int? loginId = context.User.GetAuthenticatedUserLoginIdOrDefault();
+        if (!loginId.HasValue)
+        {
+            context.Fail();
+            return;
+        }
+
         string? messageIdParam = this.httpContext.GetFromRouteOrQuery("messageId");
         bool isRequirementMet = false;
 
@@ -44,8 +56,8 @@ public class ReadMessageAsSenderRequirementHandler : AuthorizationHandler<ReadMe
                     new DomainServices.HasReadMessageAsSenderAccessRequest
                     {
                         MessageId = messageId,
-                        ProfileId = profileId,
-                        LoginId = loginId,
+                        ProfileId = profileId.Value,
+                        LoginId = loginId.Value,
                     });
 
             if (resp.HasAccess)

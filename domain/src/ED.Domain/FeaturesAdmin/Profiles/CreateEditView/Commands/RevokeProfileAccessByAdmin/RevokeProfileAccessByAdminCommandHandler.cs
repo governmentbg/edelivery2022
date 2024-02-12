@@ -36,7 +36,7 @@ namespace ED.Domain
                     loginInfo.ElectronicSubjectId,
                     loginInfo.ElectronicSubjectName,
                     string.Empty),
-                command.IP);
+                command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

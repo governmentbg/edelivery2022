@@ -19,9 +19,15 @@ namespace ED.Domain
             int limit,
             CancellationToken ct)
         {
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetDelayedMessagesVO)}({adminUserId}, \"{delay}\", \"{targetGroupId}\", \"{profileId}\", {offset}, {limit}) called");
+            this.logger.LogInformation(
+                "{method}({adminUserId}, \"{delay}\", \"{targetGroupId}\", \"{profileId}\", {offset}, {limit}) called",
+                nameof(GetDelayedMessagesVO),
+                adminUserId,
+                delay,
+                targetGroupId,
+                profileId,
+                offset,
+                limit);
 
             Expression<Func<MessageRecipient, bool>> messageRecipientPredicate =
                 BuildMessageRecipientPredicate(profileId);
@@ -47,7 +53,7 @@ namespace ED.Domain
                 join rtg in this.DbContext.Set<TargetGroup>()
                     on rtgp.TargetGroupId equals rtg.TargetGroupId
 
-                where rp.IsActivated 
+                where rp.IsActivated
                       && rtgp.TargetGroupId == targetGroupId
                       && m.DateSent < filter
 

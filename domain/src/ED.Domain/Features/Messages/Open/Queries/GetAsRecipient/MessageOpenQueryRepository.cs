@@ -38,11 +38,6 @@ namespace ED.Domain
                 join t in this.DbContext.Set<Template>()
                     on m.TemplateId equals t.TemplateId
 
-                join mb in this.DbContext.Set<MessageBlob>()
-                    on m.MessageId equals mb.MessageId
-                into lj1
-                from mb in lj1.DefaultIfEmpty()
-
                 join fm in this.DbContext.Set<ForwardedMessage>()
                     on m.MessageId equals fm.MessageId
                 into lj4

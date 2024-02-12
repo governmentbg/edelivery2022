@@ -18,10 +18,13 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-using static ED.DomainServices.Esb.Esb;
-using static ED.DomainServices.Authorization;
-using FluentValidation.AspNetCore;
 using FluentValidation;
+using FluentValidation.AspNetCore;
+
+using static ED.DomainServices.Esb.Esb;
+using static ED.DomainServices.Esb.EsbTicket;
+using static ED.DomainServices.Authorization;
+using static ED.Blobs.Blobs;
 
 [assembly: ApiConventionType(typeof(EsbApiConventions))]
 
@@ -49,7 +52,7 @@ builder.Services
     .AddFluentValidation();
 
 builder.Services
-    .AddValidatorsFromAssemblyContaining<ProfileRegisterDOValidator>();
+    .AddValidatorsFromAssemblyContaining<RegisterIndividualDOValidator>();
 
 builder.Services
     .AddApiVersioning(opts =>
@@ -117,12 +120,24 @@ AddGrpcClient<EsbClient>(
     esbApiOptions.DomainServicesUrl,
     esbApiOptions.DomainServicesUseGrpcWeb);
 
+AddGrpcClient<EsbTicketClient>(
+    builder.Services,
+    esbApiOptions.DomainServicesUrl,
+    esbApiOptions.DomainServicesUseGrpcWeb);
+
 AddGrpcClient<AuthorizationClient>(
     builder.Services,
     esbApiOptions.DomainServicesUrl,
     esbApiOptions.DomainServicesUseGrpcWeb);
 
+
+AddGrpcClient<BlobsClient>(
+    builder.Services,
+    esbApiOptions.BlobsServiceUrl,
+    esbApiOptions.BlobsServiceUseGrpcWeb);
+
 builder.Services.AddScoped<ITemplateService, TemplateService>();
+builder.Services.AddTransient<BlobsServiceClient>();
 
 WebApplication app = builder.Build();
 
@@ -168,6 +183,7 @@ TypeAdapterConfig.GlobalSettings.Apply(
     new TimestampMapping(),
     new MessageViewDOMapping(),
     new MessageOpenDOMapping(),
+    new ForwardedMessageOpenDOMapping(),
     new BlobDOMapping());
 TypeAdapterConfig.GlobalSettings.Default
     .EnumMappingStrategy(EnumMappingStrategy.ByName);

@@ -11,12 +11,15 @@ namespace ED.Domain
         IUnitOfWork UnitOfWork,
         IAggregateRepository<Profile> ProfileAggregateRepository,
         IAggregateRepository<TargetGroupProfile> TargetGroupProfileAggregateRepository,
+        IAggregateRepository<ProfilesHistory> ProfilesHistoryAggregateRepository,
         IAggregateRepository<RegistrationRequest> RegistrationRequestAggregateRepository,
         ED.Keystore.Keystore.KeystoreClient KeystoreClient,
         IProfileRegisterQueryRepository ProfileRegisterQueryRepository,
         IOptions<DomainOptions> DomainOptionsAccessor)
         : IRequestHandler<CreateRegisterRequestCommand, CreateRegisterRequestCommandResult>
     {
+        private const string RegisterLegalEntityActionDetails = "Register legal entity";
+
         public async Task<CreateRegisterRequestCommandResult> Handle(
             CreateRegisterRequestCommand command,
             CancellationToken ct)
@@ -75,6 +78,23 @@ namespace ED.Domain
                 });
 
             await this.ProfileAggregateRepository.AddAsync(profile, ct);
+
+            await this.UnitOfWork.SaveAsync(ct);
+
+            ProfilesHistory profilesHistoryCreate = ProfilesHistory.CreateInstanceByLogin(
+                profile.Id,
+                ProfileHistoryAction.CreateProfile,
+                command.LoginId,
+                ProfilesHistory.GenerateAccessDetails(
+                    ProfileHistoryAction.CreateProfile,
+                    profile.ElectronicSubjectId,
+                    profile.ElectronicSubjectName,
+                    RegisterLegalEntityActionDetails),
+                command.Ip);
+
+            await this.ProfilesHistoryAggregateRepository.AddAsync(
+                profilesHistoryCreate,
+                ct);
 
             await this.UnitOfWork.SaveAsync(ct);
 

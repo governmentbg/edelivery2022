@@ -20,9 +20,16 @@ namespace ED.Domain
             int limit,
             CancellationToken ct)
         {
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetReceivedMessagesAsync)}({adminUserId}, \"{fromDate}\", \"{toDate}\", \"{recipientProfileId}\", \"{senderProfileId}\", {offset}, {limit}) called");
+            this.logger.LogInformation(
+                "{method}({adminUserId}, \"{fromDate}\", \"{toDate}\", \"{recipientProfileId}\", \"{senderProfileId}\", {offset}, {limit}) called",
+                nameof(GetReceivedMessagesAsync),
+                adminUserId,
+                fromDate,
+                toDate,
+                recipientProfileId,
+                senderProfileId,
+                offset,
+                limit);
 
             Expression<Func<Message, bool>> messagePredicate =
                 BuildMessagePredicate(

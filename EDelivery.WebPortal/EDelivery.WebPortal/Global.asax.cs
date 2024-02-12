@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Net.Http.Formatting;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
@@ -22,7 +23,7 @@ namespace EDelivery.WebPortal
 
         protected void Application_Start()
         {
-            var jsonFormatter = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            JsonMediaTypeFormatter jsonFormatter = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
             jsonFormatter.UseDataContractJsonSerializer = true;
             GlobalConfiguration.Configuration.Formatters.Clear();
             GlobalConfiguration.Configuration.Formatters.Add(jsonFormatter);
@@ -58,7 +59,7 @@ namespace EDelivery.WebPortal
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            var httpContext = ((HttpApplication)sender).Context;
+            HttpContext httpContext = ((HttpApplication)sender).Context;
 
             //remove the server header
             httpContext.Response.Headers.Remove("Server");
@@ -72,10 +73,10 @@ namespace EDelivery.WebPortal
             ElmahLogger.Instance.Error("EDelivery WebPortal is starting...");
 
             //init log4net logger
-            var path = ConfigurationManager.AppSettings["LogConfigurationPath"] ?? "log4net.config";
+            string path = ConfigurationManager.AppSettings["LogConfigurationPath"] ?? "log4net.config";
             if (!Path.IsPathRooted(path))
             {
-                var assemblyPath = HostingEnvironment.MapPath("/");
+                string assemblyPath = HostingEnvironment.MapPath("/");
                 path = Path.Combine(assemblyPath, path);
             }
 

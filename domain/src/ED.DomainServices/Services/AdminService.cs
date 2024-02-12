@@ -29,7 +29,8 @@ namespace ED.DomainServices
                     .GetRequiredService<IAdminProfileListQueryRepository>()
                     .GetProfilesAsync(
                         request.AdminUserId,
-                        request.Term,
+                        request.Identifier,
+                        request.NameEmailPhone,
                         request.Offset,
                         request.Limit,
                         context.CancellationToken);
@@ -501,6 +502,8 @@ namespace ED.DomainServices
                 await this.serviceProvider
                     .GetRequiredService<IAdminTemplatesListQueryRepository>()
                     .GetAllAsync(
+                        request.Term,
+                        request.TemplateStatus.Adapt<Domain.TemplateStatus>(),
                         request.Offset,
                         request.Limit,
                         context.CancellationToken);
@@ -695,7 +698,8 @@ namespace ED.DomainServices
                             request.Residence,
                             request.TargetGroupId,
                             request.BlobId,
-                            request.AdminUserId),
+                            request.AdminUserId,
+                            request.Ip),
                         context.CancellationToken);
 
             return response.Adapt<RegisterProfileResponse>();
@@ -751,7 +755,8 @@ namespace ED.DomainServices
                         new ConfirmRegistrationRequestCommand(
                             request.AdminUserId,
                             request.RegistrationRequestId,
-                            request.Comment),
+                            request.Comment,
+                            request.Ip),
                         context.CancellationToken);
 
             return result.Adapt<ConfirmRegistrationRequestResponse>();
@@ -767,7 +772,8 @@ namespace ED.DomainServices
                     new RejectRegistrationRequestCommand(
                         request.AdminUserId,
                         request.RegistrationRequestId,
-                        request.Comment),
+                        request.Comment,
+                        request.Ip),
                     context.CancellationToken);
 
             return new Empty();
@@ -1340,6 +1346,22 @@ namespace ED.DomainServices
             };
         }
 
+        public override async Task<GetTicketsReportResponse> GetTicketsReport(
+            GetTicketsReportRequest request,
+            ServerCallContext context)
+        {
+            IAdminReportsListQueryRepository.GetTicketsVO tickets =
+                await this.serviceProvider
+                    .GetRequiredService<IAdminReportsListQueryRepository>()
+                    .GetTicketsAsync(
+                        request.AdminUserId,
+                        request.From.ToLocalDateTime(),
+                        request.To.ToLocalDateTime(),
+                        context.CancellationToken);
+
+            return tickets.Adapt<GetTicketsReportResponse>();
+        }
+
         public async override Task<GetSeosParticipantsListResponse> GetSeosParticipantsList(
             GetSeosParticipantsListRequest request,
             ServerCallContext context)
@@ -1529,6 +1551,30 @@ namespace ED.DomainServices
                    context.CancellationToken);
 
             return new Empty();
+        }
+
+        public override async Task<GetProfileHistoryResponse> GetProfileHistory(
+            GetProfileHistoryRequest request,
+            ServerCallContext context)
+        {
+            TableResultVO<IAdminProfilesCreateEditViewQueryRepository.GetHistoryVO> history =
+                await this.serviceProvider
+                    .GetRequiredService<IAdminProfilesCreateEditViewQueryRepository>()
+                    .GetHistoryAsync(
+                        request.ProfileId,
+                        request.Actions.ProjectToType<Domain.ProfileHistoryAction>().ToArray(),
+                        request.Offset,
+                        request.Limit,
+                        context.CancellationToken);
+
+            return new GetProfileHistoryResponse
+            {
+                Length = history.Length,
+                Result =
+                {
+                    history.Result.ProjectToType<GetProfileHistoryResponse.Types.History>()
+                }
+            };
         }
     }
 }

@@ -73,8 +73,8 @@ namespace ED.DomainServices
                         request.Limit,
                         request.Subject,
                         request.Profile,
-                        request.FromDate?.ToLocalDateTime(),
-                        request.ToDate?.ToLocalDateTime(),
+                        request.From?.ToLocalDateTime(),
+                        request.To?.ToLocalDateTime(),
                         request.Rnu,
                         context.CancellationToken);
 
@@ -92,7 +92,7 @@ namespace ED.DomainServices
             BoxRequest request,
             ServerCallContext context)
         {
-            TableResultVO<IMessageListQueryRepository.GetOutboxVO> outbox =
+            TableResultVO<IMessageListQueryRepository.GetOutboxQO> outbox =
                 await this.serviceProvider
                     .GetRequiredService<IMessageListQueryRepository>()
                     .GetOutboxAsync(
@@ -101,8 +101,8 @@ namespace ED.DomainServices
                         request.Limit,
                         request.Subject,
                         request.Profile,
-                        request.FromDate?.ToLocalDateTime(),
-                        request.ToDate?.ToLocalDateTime(),
+                        request.From?.ToLocalDateTime(),
+                        request.To?.ToLocalDateTime(),
                         request.Rnu,
                         context.CancellationToken);
 
@@ -492,7 +492,7 @@ namespace ED.DomainServices
             GetRecipientGroupsRequest request,
             ServerCallContext context)
         {
-            TableResultVO<IMessageSendQueryRepository.GetRecipientGroupsVO> recipientGroups =
+            TableResultVO<IMessageSendQueryRepository.GetRecipientGroupsQO> recipientGroups =
                 await this.serviceProvider
                     .GetRequiredService<IMessageSendQueryRepository>()
                     .GetRecipientGroupsAsync(

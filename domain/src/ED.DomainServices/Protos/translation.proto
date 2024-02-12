@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+option csharp_namespace = "ED.DomainServices.Translations";
+
+package translation;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "enums.proto";
+
+service Translation {
+  // list
+  rpc GetTranslations (GetTranslationsRequest) returns (GetTranslationsResponse);
+  rpc GetTranslation (GetTranslationRequest) returns (GetTranslationResponse);
+
+  // create
+  rpc AddMessageTranslation (AddMessageTranslationRequest) returns (google.protobuf.Empty);
+  rpc ArchiveMessageTranslation (ArchiveMessageTranslationRequest) returns (google.protobuf.Empty);
+
+  rpc CheckExistingMessageTranslation (CheckExistingMessageTranslationRequest) returns (CheckExistingMessageTranslationResponse);
+  rpc GetMessageTranslationsCount (GetMessageTranslationsCountRequest) returns (GetMessageTranslationsCountResponse);
+  rpc GetArchivedMessageTranslationsCount (GetArchivedMessageTranslationsCountRequest) returns (GetArchivedMessageTranslationsCountResponse);
+  
+}
+
+message GetTranslationsRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+}
+
+message GetTranslationsResponse {
+  message Translation {
+    int32 message_translation_id = 1;
+    int32 message_id = 2;
+    string subject = 3;
+    string source_language = 4;
+    string target_language = 5;
+    google.protobuf.Timestamp create_date = 6;
+    google.protobuf.Timestamp modify_date = 7;
+  }
+
+  repeated Translation result = 1;
+  int32 length = 2;
+}
+
+message GetTranslationRequest {
+  int32 message_translation_id = 1;
+}
+
+message GetTranslationResponse {
+  message Request {
+    google.protobuf.Int64Value request_id = 1;
+    google.protobuf.Int32Value source_blob_id = 2;
+    google.protobuf.StringValue source_blob_file_name = 3;
+    google.protobuf.Int32Value target_blob_id = 4;
+    google.protobuf.StringValue target_blob_file_name = 5;
+    enums.MessageTranslationRequestStatus status = 6;
+    google.protobuf.StringValue error_message  = 7;
+  }
+
+  message Translation {
+    int32 message_translation_id = 1;
+    int32 message_id = 2;
+    string subject = 3;
+    string source_language = 4;
+    string target_language = 5;
+    google.protobuf.Timestamp create_date = 6;
+    google.protobuf.Timestamp modify_date = 7;
+    repeated Request requests = 8;
+  }
+
+  Translation translation = 1;
+}
+
+message AddMessageTranslationRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+  string source_language = 3;
+  string target_language = 4;
+  int32 login_id = 5;
+}
+
+message ArchiveMessageTranslationRequest {
+  int32 message_translation_id = 1;
+  int32 login_id = 5;
+}
+
+message CheckExistingMessageTranslationRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+  string source_language = 3;
+  string target_language = 4;
+}
+
+message CheckExistingMessageTranslationResponse {
+  bool is_existing = 1;
+}
+
+message GetMessageTranslationsCountRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+}
+
+message GetMessageTranslationsCountResponse {
+  int32 count = 1;
+}
+
+message GetArchivedMessageTranslationsCountRequest {
+  int32 message_id = 1;
+  int32 profile_id = 2;
+}
+
+message GetArchivedMessageTranslationsCountResponse {
+  int32 count = 1;
+}

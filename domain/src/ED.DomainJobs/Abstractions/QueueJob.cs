@@ -22,6 +22,7 @@ namespace ED.DomainJobs
         private int maxFailedAttempts;
         private TimeSpan failedAttemptTimeout;
         private int parallelTasks;
+        private string[] features;
 
         protected QueueJob(
             QueueMessageType type,
@@ -38,6 +39,7 @@ namespace ED.DomainJobs
             this.failedAttemptTimeout =
                 TimeSpan.FromMinutes(options.FailedAttemptTimeoutInMinutes);
             this.parallelTasks = options.ParallelTasks;
+            this.features = options.Features;
         }
 
         protected ILogger Logger => this.logger;
@@ -59,7 +61,7 @@ namespace ED.DomainJobs
             catch (Exception ex)
 #pragma warning restore CA1031 // Do not catch general exception types
             {
-                this.logger.Log(LogLevel.Error, ex, ex.Message);
+                this.logger.Log(LogLevel.Error, "Exception {ex}; Message: {message}", ex, ex.Message);
             }
         }
 
@@ -98,7 +100,12 @@ namespace ED.DomainJobs
                 {
                     this.logger.Log(
                         LogLevel.Information,
-                        $"Batch finished in {sw.ElapsedMilliseconds}ms - {counter.Successes} succeeded, {counter.Failures} failed of total {total}.");
+                        "Batch finished in {ElapsedMilliseconds}ms - {Successes} succeeded, {Failures} failed and {Cancels} cancels of total {total}.",
+                        sw.ElapsedMilliseconds,
+                        counter.Successes,
+                        counter.Failures,
+                        counter.Cancels,
+                        total);
                 }
             }
 #pragma warning disable CA1031 // Do not catch general exception types
@@ -107,7 +114,7 @@ namespace ED.DomainJobs
             {
                 if (!ct.IsCancellationRequested)
                 {
-                    this.logger.Log(LogLevel.Error, ex, ex.Message);
+                    this.logger.Log(LogLevel.Error, "Exception {ex}; Message: {message}", ex, ex.Message);
                 }
             }
 
@@ -115,7 +122,11 @@ namespace ED.DomainJobs
             {
                 this.logger.Log(
                     LogLevel.Information,
-                    $"Job was canceled due to a token cancellation request; Batch finished with {counter.Successes} succeeded, {counter.Failures} failed of total {total}.");
+                    "Job was canceled due to a token cancellation request; Batch finished with {Successes} succeeded, {Failures} failed and {Cancels} cancels of total {total}.",
+                    counter.Successes,
+                    counter.Failures,
+                    counter.Cancels,
+                    total);
             }
 
             if (!pendingTasksQueue.IsEmpty)
@@ -135,7 +146,7 @@ namespace ED.DomainJobs
                     tasks.Min(m => m.DueDate),
                     tasks.Max(m => m.DueDate),
                     tasks.Select(e => e.QueueMessageId).ToArray(),
-                    default(CancellationToken));
+                    default);
             }
         }
 
@@ -173,13 +184,15 @@ namespace ED.DomainJobs
                         JsonSerializer.Deserialize<TMessage>(message.Payload)
                         ?? throw new Exception("Payload should not be null");
 
+                    bool isLastAttempt = message.FailedAttempts == this.maxFailedAttempts - 1;
+
                     (QueueJobProcessingResult result, string? error) =
-                        await this.HandleMessageAsync(context, payload, ct);
+                        await this.HandleMessageAsync(context, payload, isLastAttempt, ct);
 
                     switch (result)
                     {
                         case QueueJobProcessingResult.Success:
-                            { 
+                            {
                                 await queueMessagesRepository.SetStatusProcessedAsync(
                                     message.Type,
                                     message.DueDate,
@@ -189,7 +202,7 @@ namespace ED.DomainJobs
                                     DateTime.UtcNow,
                                     // not passing cancellationToken as this
                                     // operation must succeed even when cancelled
-                                    default(CancellationToken)
+                                    default
                                 );
                                 counter.CountSuccess();
                             }
@@ -213,9 +226,26 @@ namespace ED.DomainJobs
                                     failedAttemptsErrors,
                                     // not passing cancellationToken as this
                                     // operation must succeed even when cancelled
-                                    default(CancellationToken)
+                                    default
                                 );
                                 counter.CountFailure();
+                            }
+                            break;
+
+                        case QueueJobProcessingResult.Cancel:
+                            {
+                                await queueMessagesRepository.SetStatusCancelledAsync(
+                                    message.Type,
+                                    message.DueDate,
+                                    message.QueueMessageId,
+                                    // queue messages always use UTC to prevent
+                                    // problems with daylight saving time
+                                    DateTime.UtcNow,
+                                    // not passing cancellationToken as this
+                                    // operation must succeed even when cancelled
+                                    default
+                                );
+                                counter.CountCancel();
                             }
                             break;
 
@@ -243,11 +273,11 @@ namespace ED.DomainJobs
                         failedAttemptsErrors,
                         // not passing cancellationToken as this
                         // operation must succeed even when cancelled
-                        default(CancellationToken)
+                        default
                     );
                     counter.CountFailure();
 
-                    this.Logger.Log(LogLevel.Error, ex, ex.Message);
+                    this.logger.Log(LogLevel.Error, "Exception {ex}; Message: {message}", ex, ex.Message);
                 }
             }
         }
@@ -281,7 +311,22 @@ namespace ED.DomainJobs
         protected abstract Task<(QueueJobProcessingResult result, string? error)> HandleMessageAsync(
             TThreadContext context,
             TMessage payload,
+            bool isLastAttempt,
             CancellationToken ct);
+
+        protected virtual bool ShouldProcessQueueMessage(string? messageFeature)
+        {
+            if (!this.features.Any() || string.IsNullOrEmpty(messageFeature))
+            {
+                return true;
+            }
+
+            bool match = this.features
+                .Where(e => e.Equals(messageFeature, StringComparison.OrdinalIgnoreCase))
+                .Any();
+
+            return match;
+        }
     }
 
 #pragma warning disable CA1063 // Implement IDisposable Correctly
@@ -316,6 +361,7 @@ namespace ED.DomainJobs
         protected override async Task<(QueueJobProcessingResult result, string? error)> HandleMessageAsync(
             DefaultThreadContext context,
             TMessage payload,
+            bool isLastAttempt,
             CancellationToken ct)
         {
             return await this.HandleMessageAsync(payload, ct);

@@ -42,7 +42,7 @@ namespace ED.Domain
                    profile.ElectronicSubjectId,
                    profile.ElectronicSubjectName,
                    ActionDetails),
-               command.IP);
+               command.Ip);
 
             await this.ProfilesHistoryAggregateRepository.AddAsync(
                 profilesHistory,

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Security;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
 using ED.DomainServices.Messages;
+using ED.DomainServices.Translations;
 
 using EDelivery.WebPortal.Authorization;
 using EDelivery.WebPortal.Enums;
@@ -35,7 +37,10 @@ namespace EDelivery.WebPortal.Controllers
         private const int SystemTemplateId = 1;
         private const int SystemForwardTemplateId = 2;
 
+        private const int MaxTranslationsPerMessage = 5;
+
         private readonly Lazy<Message.MessageClient> messageClient;
+        private readonly Lazy<Translation.TranslationClient> translationClient;
         private readonly Lazy<CachedUserData> userData;
 
         public MessagesController()
@@ -43,6 +48,10 @@ namespace EDelivery.WebPortal.Controllers
             this.messageClient =
                 new Lazy<Message.MessageClient>(
                     () => GrpcClientFactory.CreateMessageClient(), isThreadSafe: false);
+
+            this.translationClient =
+                new Lazy<Translation.TranslationClient>(
+                    () => GrpcClientFactory.CreateTranslationClient(), isThreadSafe: false);
 
             this.userData =
                 new Lazy<CachedUserData>(
@@ -58,14 +67,14 @@ namespace EDelivery.WebPortal.Controllers
         }
 
         //TODO: How to handle cancellation exception here?
-        [StripAuthCookie]
+        [StripAuthCookie] // this method should not renew identity cookie expiration
         [OutputCache(NoStore = true, Duration = 0)]
-        [HttpGet]
+        [HttpPost]
         public async Task<JsonResult> GetProfilesMessagesCounts()
         {
             try
             {
-                var response =
+                GetNewMessagesCountResponse response =
                     await this.messageClient.Value.GetNewMessagesCountAsync(
                         new GetNewMessagesCountRequest
                         {
@@ -94,8 +103,7 @@ namespace EDelivery.WebPortal.Controllers
                                         : 0
                                 })
                             .ToList()
-                    },
-                    JsonRequestBehavior.AllowGet);
+                    });
             }
             catch (Exception ex)
             {
@@ -104,9 +112,7 @@ namespace EDelivery.WebPortal.Controllers
                     "Error getting profiles messages counts.");
             }
 
-            return Json(
-                new { Success = false },
-                JsonRequestBehavior.AllowGet);
+            return Json(new { Success = false });
         }
 
         [OverrideAuthorization]
@@ -116,12 +122,12 @@ namespace EDelivery.WebPortal.Controllers
         public async Task<ActionResult> Inbox(
             string subject,
             string profile,
-            string fromDate,
-            string toDate,
+            string from,
+            string to,
             int page = 1)
         {
-            DateTime? fromDateDT = DateTime.TryParseExact(
-                fromDate,
+            DateTime? fromDT = DateTime.TryParseExact(
+                from,
                 SystemConstants.DatePickerDateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -129,8 +135,8 @@ namespace EDelivery.WebPortal.Controllers
                 ? dt1
                 : (DateTime?)null;
 
-            DateTime? toDateDT = DateTime.TryParseExact(
-                toDate,
+            DateTime? toDT = DateTime.TryParseExact(
+                to,
                 SystemConstants.DatePickerDateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -148,8 +154,8 @@ namespace EDelivery.WebPortal.Controllers
                         Limit = SystemConstants.PageSize,
                         Subject = subject,
                         Profile = profile,
-                        FromDate = fromDateDT?.ToTimestamp(),
-                        ToDate = toDateDT?.ToTimestamp(),
+                        From = fromDT?.ToTimestamp(),
+                        To = toDT?.ToTimestamp(),
                         Rnu = null,
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
@@ -165,8 +171,8 @@ namespace EDelivery.WebPortal.Controllers
                     SearchFilter = new SearchMessagesViewModel(
                         subject,
                         profile,
-                        fromDate,
-                        toDate,
+                        from,
+                        to,
                         BoxType.Inbox)
                 };
 
@@ -189,8 +195,8 @@ namespace EDelivery.WebPortal.Controllers
             {
                 subject = model.Subject,
                 profile = model.Profile,
-                fromDate = model.FromDate,
-                toDate = model.ToDate,
+                from = model.From,
+                to = model.To,
                 page = 1,
             });
         }
@@ -200,8 +206,8 @@ namespace EDelivery.WebPortal.Controllers
         [HttpPost]
         public async Task<ActionResult> ExportInbox(SearchMessagesViewModel model)
         {
-            DateTime? fromDateDT = DateTime.TryParseExact(
-                model.FromDate,
+            DateTime? fromDT = DateTime.TryParseExact(
+                model.From,
                 SystemConstants.DatePickerDateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -209,8 +215,8 @@ namespace EDelivery.WebPortal.Controllers
                 ? dt1
                 : (DateTime?)null;
 
-            DateTime? toDateDT = DateTime.TryParseExact(
-                model.ToDate,
+            DateTime? toDT = DateTime.TryParseExact(
+                model.To,
                 SystemConstants.DatePickerDateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -228,8 +234,8 @@ namespace EDelivery.WebPortal.Controllers
                         Limit = SystemConstants.ExportSize,
                         Subject = model.Subject,
                         Profile = model.Profile,
-                        FromDate = fromDateDT?.ToTimestamp(),
-                        ToDate = toDateDT?.ToTimestamp(),
+                        From = fromDT?.ToTimestamp(),
+                        To = toDT?.ToTimestamp(),
                         Rnu = null,
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
@@ -244,12 +250,12 @@ namespace EDelivery.WebPortal.Controllers
         public async Task<ActionResult> Outbox(
             string subject,
             string profile,
-            string fromDate,
-            string toDate,
+            string from,
+            string to,
             int page = 1)
         {
-            DateTime? fromDateDT = DateTime.TryParseExact(
-                fromDate,
+            DateTime? fromDT = DateTime.TryParseExact(
+                from,
                 SystemConstants.DatePickerDateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -257,8 +263,8 @@ namespace EDelivery.WebPortal.Controllers
                 ? dt1
                 : (DateTime?)null;
 
-            DateTime? toDateDT = DateTime.TryParseExact(
-                toDate,
+            DateTime? toDT = DateTime.TryParseExact(
+                to,
                 SystemConstants.DatePickerDateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -276,8 +282,8 @@ namespace EDelivery.WebPortal.Controllers
                         Limit = SystemConstants.PageSize,
                         Subject = subject,
                         Profile = profile,
-                        FromDate = fromDateDT?.ToTimestamp(),
-                        ToDate = toDateDT?.ToTimestamp(),
+                        From = fromDT?.ToTimestamp(),
+                        To = toDT?.ToTimestamp(),
                         Rnu = null,
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
@@ -293,8 +299,8 @@ namespace EDelivery.WebPortal.Controllers
                     SearchFilter = new SearchMessagesViewModel(
                         subject,
                         profile,
-                        fromDate,
-                        toDate,
+                        from,
+                        to,
                         BoxType.Outbox)
                 };
 
@@ -317,8 +323,8 @@ namespace EDelivery.WebPortal.Controllers
             {
                 subject = model.Subject,
                 profile = model.Profile,
-                fromDate = model.FromDate,
-                toDate = model.ToDate,
+                from = model.From,
+                to = model.To,
                 page = 1,
             });
         }
@@ -328,8 +334,8 @@ namespace EDelivery.WebPortal.Controllers
         [HttpPost]
         public async Task<ActionResult> ExportOutbox(SearchMessagesViewModel model)
         {
-            DateTime? fromDateDT = DateTime.TryParseExact(
-               model.FromDate,
+            DateTime? fromDT = DateTime.TryParseExact(
+               model.From,
                SystemConstants.DatePickerDateFormat,
                CultureInfo.InvariantCulture,
                DateTimeStyles.None,
@@ -337,8 +343,8 @@ namespace EDelivery.WebPortal.Controllers
                ? dt1
                : (DateTime?)null;
 
-            DateTime? toDateDT = DateTime.TryParseExact(
-                model.ToDate,
+            DateTime? toDT = DateTime.TryParseExact(
+                model.To,
                 SystemConstants.DatePickerDateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
@@ -356,8 +362,8 @@ namespace EDelivery.WebPortal.Controllers
                         Limit = SystemConstants.ExportSize,
                         Subject = model.Subject,
                         Profile = model.Profile,
-                        FromDate = fromDateDT?.ToTimestamp(),
-                        ToDate = toDateDT?.ToTimestamp(),
+                        From = fromDT?.ToTimestamp(),
+                        To = toDT?.ToTimestamp(),
                         Rnu = null,
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
@@ -552,7 +558,7 @@ namespace EDelivery.WebPortal.Controllers
         public async Task<ActionResult> Open(
             [Bind(Prefix = "id")] int messageId)
         {
-            await messageClient.Value.OpenAsync(
+            await this.messageClient.Value.OpenAsync(
                 new OpenRequest
                 {
                     LoginId = UserData.LoginId,
@@ -562,7 +568,7 @@ namespace EDelivery.WebPortal.Controllers
                 cancellationToken: Response.ClientDisconnectedToken);
 
             ReadResponse response =
-                await messageClient.Value.ReadAsync(
+                await this.messageClient.Value.ReadAsync(
                     new ReadRequest
                     {
                         MessageId = messageId,
@@ -617,7 +623,7 @@ namespace EDelivery.WebPortal.Controllers
             [Bind(Prefix = "id")] int messageId)
         {
             ViewResponse response =
-                await messageClient.Value.ViewAsync(
+                await this.messageClient.Value.ViewAsync(
                     new ViewRequest
                     {
                         ProfileId = this.UserData.ActiveProfileId,
@@ -894,7 +900,7 @@ namespace EDelivery.WebPortal.Controllers
                 {
                     List<BuilderModelStateError> errors = new List<BuilderModelStateError>();
 
-                    foreach (var error in templateValidationErrors)
+                    foreach (KeyValuePair<string, string> error in templateValidationErrors)
                     {
                         errors.Add(new BuilderModelStateError
                         {
@@ -957,7 +963,7 @@ namespace EDelivery.WebPortal.Controllers
                             : null,
                     };
 
-                _ = await messageClient.Value.SendAsync(
+                _ = await this.messageClient.Value.SendAsync(
                     request,
                     cancellationToken: Response.ClientDisconnectedToken);
 
@@ -1009,7 +1015,7 @@ namespace EDelivery.WebPortal.Controllers
                     Rnu = info.Rnu,
                 };
 
-            return PartialView("Partials/_Forward", model);
+            return PartialView("Modals/_Forward", model);
         }
 
         [OverrideAuthorization]
@@ -1041,7 +1047,7 @@ namespace EDelivery.WebPortal.Controllers
                 {
                     List<BuilderModelStateError> errors = new List<BuilderModelStateError>();
 
-                    foreach (var error in templateValidationErrors)
+                    foreach (KeyValuePair<string, string> error in templateValidationErrors)
                     {
                         errors.Add(new BuilderModelStateError
                         {
@@ -1060,7 +1066,7 @@ namespace EDelivery.WebPortal.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    return PartialView("Partials/_Forward", model);
+                    return PartialView("Modals/_Forward", model);
                 }
 
                 (string jsonMetaFields, string jsonPayload, _) =
@@ -1087,11 +1093,11 @@ namespace EDelivery.WebPortal.Controllers
                         Rnu = model.Rnu,
                     };
 
-                _ = await messageClient.Value.SendAsync(
+                _ = await this.messageClient.Value.SendAsync(
                     request,
                     cancellationToken: Response.ClientDisconnectedToken);
 
-                return PartialView("Partials/_ForwardMessageSuccess");
+                return PartialView("Modals/_ForwardMessageSuccess");
             }
             catch (RpcException er)
             {
@@ -1101,7 +1107,7 @@ namespace EDelivery.WebPortal.Controllers
                     "ForwardRecipientProfileId",
                     er.Message);
 
-                return PartialView("Partials/_Forward", model);
+                return PartialView("Modals/_Forward", model);
             }
             catch (Exception ex)
             {
@@ -1113,7 +1119,7 @@ namespace EDelivery.WebPortal.Controllers
                     "ForwardRecipientProfileId",
                     ErrorMessages.ErrorCantSendDocument);
 
-                return PartialView("Partials/_Forward", model);
+                return PartialView("Modals/_Forward", model);
             }
         }
 
@@ -1186,13 +1192,155 @@ namespace EDelivery.WebPortal.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        // TODO: consider changing the action name
+        [OverrideAuthorization]
+        [EDeliveryResourceAuthorize(
+            Policy = Policies.MessageAccess,
+            MessageIdRouteOrQueryParam = "messageId")]
+        [HttpGet]
+        public ActionResult CreateTranslation(int messageId)
+        {
+            List<SelectListItem> Languages = new List<SelectListItem>
+            {
+                new SelectListItem() { Value = "", Text = "", Selected = true },
+                new SelectListItem() { Value = "BG", Text = "Български (BG)" },
+                new SelectListItem() { Value = "EN", Text = "English (EN)" },
+                new SelectListItem() { Value = "DE", Text = "German (DE)" },
+                new SelectListItem() { Value = "FR", Text = "French (FR)" },
+                new SelectListItem() { Value = "ES", Text = "Spanish (ES)" },
+                new SelectListItem() { Value = "IT", Text = "Italian (IT)" },
+                new SelectListItem() { Value = "RO", Text = "Romanian (RO)" },
+                new SelectListItem() { Value = "HR", Text = "Croatian (HR)" },
+                new SelectListItem() { Value = "FI", Text = "Finnish (FI)" },
+                new SelectListItem() { Value = "LV", Text = "Latvian (LV)" },
+                new SelectListItem() { Value = "RU", Text = "Russian (RU)" },
+                new SelectListItem() { Value = "CS", Text = "Czech (CS)" },
+                new SelectListItem() { Value = "LT", Text = "Lithuanian (LT)" },
+                new SelectListItem() { Value = "DA", Text = "Danish (DA)" },
+                new SelectListItem() { Value = "EL", Text = "Greek (EL)" },
+                new SelectListItem() { Value = "MT", Text = "Maltese (MT)" },
+                new SelectListItem() { Value = "SK", Text = "Slovak (SK)" },
+                new SelectListItem() { Value = "NL", Text = "Dutch (NL)" },
+                new SelectListItem() { Value = "HU", Text = "Hungarian (HU)" },
+                new SelectListItem() { Value = "NB", Text = "Norwegian Bokmål (NB)" },
+                new SelectListItem() { Value = "SL", Text = "Slovenian (SL)" },
+                new SelectListItem() { Value = "IS", Text = "Icelandic (IS)" },
+                new SelectListItem() { Value = "PL", Text = "Polish (PL)" },
+                new SelectListItem() { Value = "SV", Text = "Swedish (SV)" },
+                new SelectListItem() { Value = "ET", Text = "Estonian (ET)" },
+                new SelectListItem() { Value = "GA", Text = "Irish (GA)" },
+                new SelectListItem() { Value = "PT", Text = "Portuguese (PT)" },
+            };
+
+            ViewBag.Languages = Languages;
+
+            CreateTranslationViewModel vm =
+                this.GetTempModel<CreateTranslationViewModel>(true)
+                    ?? new CreateTranslationViewModel(messageId);
+
+            return PartialView("Modals/_CreateTranslation", vm);
+        }
+
+        [OverrideAuthorization]
+        [EDeliveryResourceAuthorize(
+            Policy = Policies.MessageAccess,
+            MessageIdFormValueParam = "MessageId")]
+        [HttpPost]
+        public async Task<ActionResult> CreateTranslation(
+            CreateTranslationViewModel model)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(model.SourceLanguage)
+                    && model.SourceLanguage == model.TargetLanguage)
+                {
+                    ModelState.AddModelError(
+                        nameof(CreateTranslationViewModel.TargetLanguage),
+                        "Целевият език трябва да е различен от оригиналния.");
+                }
+
+                if (!string.IsNullOrEmpty(model.SourceLanguage)
+                    && !string.IsNullOrEmpty(model.TargetLanguage))
+                {
+                    CheckExistingMessageTranslationResponse resp =
+                        await this.translationClient.Value.CheckExistingMessageTranslationAsync(
+                            new CheckExistingMessageTranslationRequest
+                            {
+                                MessageId = model.MessageId,
+                                ProfileId = this.UserData.ActiveProfileId,
+                                SourceLanguage = model.SourceLanguage,
+                                TargetLanguage = model.TargetLanguage,
+                            },
+                            cancellationToken: Response.ClientDisconnectedToken);
+
+                    if (resp.IsExisting)
+                    {
+                        ModelState.AddModelError(
+                            string.Empty,
+                            "Вече е създадена заявка със същите параметри.");
+                    }
+
+                    GetMessageTranslationsCountResponse resp2 =
+                        await this.translationClient.Value.GetMessageTranslationsCountAsync(
+                            new GetMessageTranslationsCountRequest
+                            {
+                                MessageId = model.MessageId,
+                                ProfileId = this.UserData.ActiveProfileId,
+                            },
+                            cancellationToken: Response.ClientDisconnectedToken);
+
+                    if (resp2.Count >= MaxTranslationsPerMessage)
+                    {
+                        ModelState.AddModelError(
+                            string.Empty,
+                            "Стигнали сте максималния брой на преводи за съобщение.");
+                    }
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    this.SetTempModel(model, true);
+
+                    return RedirectToAction(
+                        nameof(MessagesController.CreateTranslation),
+                        new { messageId = model.MessageId });
+                }
+
+                _ = await this.translationClient.Value.AddMessageTranslationAsync(
+                    new AddMessageTranslationRequest
+                    {
+                        MessageId = model.MessageId,
+                        ProfileId = this.UserData.ActiveProfileId,
+                        LoginId = this.UserData.LoginId,
+                        SourceLanguage = model.SourceLanguage,
+                        TargetLanguage = model.TargetLanguage,
+                    },
+                    cancellationToken: Response.ClientDisconnectedToken);
+
+                return PartialView("Modals/_CreateTranslationSuccess");
+            }
+            catch (Exception ex)
+            {
+                ElmahLogger.Instance.Error(
+                    ex,
+                    $"Can not create message [{model.MessageId}] translation!");
+
+                ModelState.AddModelError(string.Empty, ErrorMessages.ErrorCantCreateTranslation);
+
+                this.SetTempModel(model, true);
+
+                return RedirectToAction(
+                        nameof(MessagesController.CreateTranslation),
+                        new { messageId = model.MessageId });
+            }
+        }
+
         [HttpGet]
         [BreadCrumb(2, typeof(EDeliveryResources.Common), "TitleCreateNewMessage", eLeftMenu.CreateMessageByTemplateCategory)]
         public async Task<ActionResult> TemplatesByCategory(string category)
         {
             throw new NotImplementedException();
 
+#pragma warning disable CS0162 // Unreachable code detected
             GetTemplatesByCategoryResponse templates =
                 await this.messageClient.Value.GetTemplatesByCategoryAsync(
                     new GetTemplatesByCategoryRequest
@@ -1222,6 +1370,7 @@ namespace EDelivery.WebPortal.Controllers
             }
 
             return View(vm);
+#pragma warning restore CS0162 // Unreachable code detected
         }
 
         #region Old urls
@@ -1276,7 +1425,7 @@ namespace EDelivery.WebPortal.Controllers
             {
                 try
                 {
-                    using (var seosClient = new SEOSPostServiceClient())
+                    using (SEOSPostServiceClient seosClient = new SEOSPostServiceClient())
                     {
                         Dictionary<Guid, int> profilesMsgCount =
                             seosClient.GetNewMessagesCount(

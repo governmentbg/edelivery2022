@@ -402,8 +402,8 @@ namespace EDelivery.WebPortal.Controllers
             if (!BlobUrlCreator.TryParseProfileBlobWebPortalToken(
                 this.HttpContext,
                 token,
-                out var profileId,
-                out var blobId))
+                out int profileId,
+                out int blobId))
             {
                 return new RedirectToRouteResult(
                     new RouteValueDictionary(
@@ -428,9 +428,9 @@ namespace EDelivery.WebPortal.Controllers
             if (!BlobUrlCreator.TryParseMessageBlobWebPortalToken(
                 this.HttpContext,
                 token,
-                out var profileId,
-                out var messageId,
-                out var blobId))
+                out int profileId,
+                out int messageId,
+                out int blobId))
             {
                 return new RedirectToRouteResult(
                     new RouteValueDictionary(

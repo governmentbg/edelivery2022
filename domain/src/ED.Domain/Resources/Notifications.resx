@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AnnulledTicketEmailBody" xml:space="preserve">
+    <value>NA</value>
+  </data>
+  <data name="AnnulledTicketEmailSubject" xml:space="preserve">
+    <value>NA</value>
+  </data>
+  <data name="AnnulledTicketSMSBody" xml:space="preserve">
+    <value>NA</value>
+  </data>
+  <data name="AnnulledTicketViberBody" xml:space="preserve">
+    <value>NA</value>
+  </data>
   <data name="DeliveredEmailBody" xml:space="preserve">
     <value>Здравейте {0},
 
@@ -197,5 +209,88 @@ Imate saobshtenie ot {2}.</value>
   </data>
   <data name="RegistrationRequestRejectedEmailSubject" xml:space="preserve">
     <value>Министерство на електронното управление, Система за сигурно електронно връчване - Профил {0} е закрит!</value>
+  </data>
+  <data name="SentTicketEmailBody" xml:space="preserve">
+    <value>&lt;html&gt;
+  &lt;header&gt;
+  &lt;/header&gt;
+  &lt;body&gt;
+    &lt;b&gt;Уважаема/и госпожо/господине&lt;/b&gt;,
+    &lt;p&gt;
+      С настоящото Ви уведомяваме, че в системата на МВР е регистрирано
+      нарушение по Закона за движението по пътищата за:
+    &lt;/p&gt;
+    &lt;table style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;
+      &lt;tr&gt;
+        &lt;th style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;МПС с регистрационен номер&lt;/th&gt;
+        &lt;th style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;Дата на нарушението&lt;/th&gt;
+        &lt;th style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;Вид документ&lt;/th&gt;
+        &lt;th style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;Серия&lt;/th&gt;
+        &lt;th style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;Документ №&lt;/th&gt;
+        &lt;th style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;Дължима сума (BGN)&lt;/th&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;{0}&lt;/td&gt;
+        &lt;td style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;{1}&lt;/td&gt;
+        &lt;td style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;{2}&lt;/td&gt;
+        &lt;td style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;{3}&lt;/td&gt;
+        &lt;td style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;{4}&lt;/td&gt;
+        &lt;td style="border-collapse: collapse; padding: 10px; border: 1px solid black;"&gt;{5}&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/table&gt;
+    &lt;p&gt;
+      Подробна информация за установеното нарушение може да получите по сигурен
+      начин в 
+      &lt;a href="{6}" target="_blank" rel="noopener"&gt;Системата за сигурно електронно връчване&lt;/a&gt;.
+    &lt;/p&gt;
+    &lt;p&gt;
+      &lt;b&gt;
+        &lt;u&gt;
+          &lt;a href="{7}" target="_blank" rel="noopener"&gt;
+            Плащане на глоба за административни нарушения
+          &lt;/a&gt;
+        &lt;/u&gt;
+      &lt;/b&gt;
+    &lt;/p&gt;
+    &lt;p&gt;
+      В случай че сте платили задължението си преди датата на получаване на
+      настоящото уведомление, Ви благодарим за проявената ангажираност при
+      изпълнение на задълженията по закон.
+    &lt;/p&gt;
+    &lt;p&gt;Това е автоматично съобщение, моля не отговаряйте на този e-mail.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="SentTicketEmailSubject" xml:space="preserve">
+    <value>МВР Известие за извършено нарушение с МПС</value>
+  </data>
+  <data name="SentTicketSMSBody" xml:space="preserve">
+    <value>МВР:Извършено нарушение МПС {0} по ЗДвП {1}, глоба {2} BGN</value>
+  </data>
+  <data name="SentTicketViberBody" xml:space="preserve">
+    <value>*МВР:*
+Уважаема/и госпожо/господине,
+С настоящото Ви уведомяваме, че в системата на МВР е регистрирано нарушение по Закона за движението по пътищата за:
+  ✓ *МПС с регистрационен номер:* {0}
+  ✓ *Дата на нарушението:* {1}
+  ✓ *Вид на документа:* {2}
+  ✓ *Серия:* {3}
+  ✓ *Документ №:* {4}
+  ✓ *Дължима сума:* {5} лева.
+Подробна информация за установеното нарушение може да получите по сигурен начин на {6}
+Глобата може да заплатите на следния адрес: {7} 
+В случай че сте платили задължението си преди датата на получаване на настоящото уведомление, Ви благодарим за проявената ангажираност при изпълнение на задълженията по закон.</value>
+  </data>
+  <data name="ServedTicketEmailBody" xml:space="preserve">
+    <value>NA</value>
+  </data>
+  <data name="ServedTicketEmailSubject" xml:space="preserve">
+    <value>NA</value>
+  </data>
+  <data name="ServedTicketSMSBody" xml:space="preserve">
+    <value>NA</value>
+  </data>
+  <data name="ServedTicketViberBody" xml:space="preserve">
+    <value>NA</value>
   </data>
 </root>

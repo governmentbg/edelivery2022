@@ -1,6 +1,9 @@
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using static ED.Domain.IAdminProfileListQueryRepository;
 
@@ -10,28 +13,23 @@ namespace ED.Domain
     {
         public async Task<TableResultVO<GetProfilesVO>> GetProfilesAsync(
             int adminUserId,
-            string term,
+            string? identifier,
+            string? nameEmailPhone,
             int offset,
             int limit,
             CancellationToken ct)
         {
-            // carried over from old project
-            // TODO: should we have a better way to log audit actions?
-            this.logger.LogInformation($"{nameof(GetProfilesAsync)}({adminUserId}, \"{term}\", {offset}, {limit}) called");
+            this.logger.LogInformation(
+                "{method}({adminUserId}, \"{identifier}\", \"{nameEmailPhone}\", {offset}, {limit}) called",
+                nameof(GetProfilesAsync),
+                adminUserId,
+                identifier,
+                nameEmailPhone,
+                offset,
+                limit);
 
-            var predicate = PredicateBuilder.True<Profile>();
-            if (!string.IsNullOrWhiteSpace(term))
-            {
-                string[] words = term.Split(null); // split by whitespace
-                foreach (var word in words)
-                {
-                    predicate = predicate.AndAnyStringContains(
-                        t => t.Identifier,
-                        t => t.ElectronicSubjectName,
-                        t => t.EmailAddress,
-                        word);
-                }
-            }
+            Expression<Func<Profile, bool>> predicate =
+                BuildProfilePredicate(identifier, nameEmailPhone);
 
             IQueryable<GetProfilesVO> query =
                 from p in this.DbContext.Set<Profile>().Where(predicate)
@@ -49,6 +47,7 @@ namespace ED.Domain
                     p.ProfileType,
                     p.Identifier,
                     p.ElectronicSubjectName,
+                    p.EmailAddress,
                     p.IsActivated,
                     tg.Name);
 
@@ -56,6 +55,30 @@ namespace ED.Domain
                 await query.ToTableResultAsync(offset, limit, ct);
 
             return table;
+
+            Expression<Func<Profile, bool>> BuildProfilePredicate(
+                string? identifier,
+                string? nameEmailPhone)
+            {
+                Expression<Func<Profile, bool>> predicate =
+                    PredicateBuilder.True<Profile>();
+
+                if (!string.IsNullOrEmpty(identifier))
+                {
+                    predicate = predicate
+                        .And(e => EF.Functions.Like(e.Identifier, $"%{identifier}%"));
+                }
+
+                if (!string.IsNullOrEmpty(nameEmailPhone))
+                {
+                    predicate = predicate
+                        .And(e => EF.Functions.Like(e.ElectronicSubjectName, $"%{nameEmailPhone}%")
+                            || EF.Functions.Like(e.EmailAddress, $"%{nameEmailPhone}%")
+                            || EF.Functions.Like(e.Phone, $"%{nameEmailPhone}%"));
+                }
+
+                return predicate;
+            }
         }
     }
 }
