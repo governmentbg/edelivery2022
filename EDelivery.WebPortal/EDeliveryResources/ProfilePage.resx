@@ -447,7 +447,7 @@
   <data name="LabelMessageTextMaxLength" xml:space="preserve">
     <value>(до 100 000 символа)</value>
   </data>
-  <data name="InfoSmsNotificationsTurnedOff" xml:space="preserve">
+  <data name="InfoPhoneNotificationsTurnedOff" xml:space="preserve">
     <value>Поради необходимост от оптимизиране работата на системата, след &lt;strong&gt;25.05.2020 г.&lt;/strong&gt; нотификациите към  административни органи ще се изпращат само по имейл адреса, вписан в профила.</value>
   </data>
   <data name="ButtonGRAONamesSync" xml:space="preserve">
@@ -495,7 +495,7 @@
   <data name="TitleSectionNotificationSettingsViaEmail" xml:space="preserve">
     <value>Нотификации по e-mail</value>
   </data>
-  <data name="TitleSectionNotificationSettingsViaSMS" xml:space="preserve">
+  <data name="TitleSectionNotificationSettingsViaPhone" xml:space="preserve">
     <value>Нотификации по Viber/SMS</value>
   </data>
   <data name="LabelMessageReceiverPersonalIdentifier" xml:space="preserve">
@@ -519,7 +519,7 @@
   <data name="LabelPersonalIdentifier" xml:space="preserve">
     <value>ЕГН/ЛНЧ</value>
   </data>
-  <data name="InfoSmsViberNotificationChoice" xml:space="preserve">
+  <data name="InfoPhoneNotificationChoice" xml:space="preserve">
     <value>Уважаеми потребители,&lt;br/&gt;ако желаете да получавате съобщения по е-майл, моля маркирайте горните радиобутони.&lt;br/&gt;
 В случай, че имате предпочитания към един от каналите за нотификация: Viber или SMS, избирате само един: или Viber или SMS.&lt;br/&gt;
 Ако не желаете да получавате съобщения, не избирате нито един канал.&lt;br/&gt;
@@ -545,5 +545,8 @@
   </data>
   <data name="MessageConfirmDeleteTranslation" xml:space="preserve">
     <value>Сигурни ли сте, че желаете да изтриете превода?</value>
+  </data>
+  <data name="PlaceholderStatus" xml:space="preserve">
+    <value>Текущо състояние</value>
   </data>
 </root>

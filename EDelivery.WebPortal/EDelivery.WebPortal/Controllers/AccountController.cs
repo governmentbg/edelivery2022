@@ -485,11 +485,6 @@ namespace EDelivery.WebPortal.Controllers
                         nameof(AccountController.RegisterPersonWithKEP));
                 }
 
-                if (model.PhoneNotifications && model.ViberNotifications)
-                {
-                    model.PhoneNotifications = false;
-                }
-
                 return await RegisterPersonInternal(
                     model.FirstName,
                     model.MiddleName,
@@ -501,7 +496,8 @@ namespace EDelivery.WebPortal.Controllers
                     model.CreateProfile,
                     model.EmailNotifications,
                     model.PhoneNotifications,
-                    model.ViberNotifications);
+                    model.LicenceAgreement,
+                    model.GDPRAgreement);
             }
             catch (Exception ex)
             {
@@ -571,11 +567,6 @@ namespace EDelivery.WebPortal.Controllers
 
                 identifier = parsedReponse.Result.Identifier;
 
-                if (model.PhoneNotifications && model.ViberNotifications)
-                {
-                    model.PhoneNotifications = false;
-                }
-
                 CreateRegisterRequestResponse response =
                     await this.profileClient.Value.CreateRegisterRequestAsync(
                         new CreateRegisterRequestRequest
@@ -583,8 +574,7 @@ namespace EDelivery.WebPortal.Controllers
                             RegistrationEmail = model.EmailAddress,
                             RegistrationPhone = model.PhoneNumber,
                             RegistrationIsEmailNotificationEnabled = model.EmailNotifications,
-                            RegistrationIsSmsNotificationEnabled = model.PhoneNotifications,
-                            RegistrationIsViberNotificationEnabled = model.ViberNotifications,
+                            RegistrationIsPhoneNotificationEnabled = model.PhoneNotifications,
                             Name = parsedReponse.Result.Name,
                             Identifier = parsedReponse.Result.Identifier,
                             Phone = parsedReponse.Result.Phone,
@@ -671,7 +661,8 @@ namespace EDelivery.WebPortal.Controllers
             bool createProfile,
             bool emailNotifications,
             bool phoneNotifications,
-            bool viberNotifications)
+            bool licenceAgreement,
+            bool gdprAgreement)
         {
             try
             {
@@ -688,8 +679,9 @@ namespace EDelivery.WebPortal.Controllers
                             Residence = residence,
                             IsPassive = !createProfile,
                             IsEmailNotificationEnabled = emailNotifications,
-                            IsSmsNotificationEnabled = phoneNotifications,
-                            IsViberNotificationEnabled = viberNotifications,
+                            IsPhoneNotificationEnabled = phoneNotifications,
+                            LicenceAgreement = licenceAgreement,
+                            GdprAgreement = gdprAgreement,
                             ActionLoginId = SystemLoginId,
                             Ip = this.Request.UserHostAddress,
                         },

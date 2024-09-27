@@ -375,4 +375,7 @@
   <data name="TitleOpenTicket" xml:space="preserve">
     <value>View ticket sent</value>
   </data>
+  <data name="HideAsRecipientWarning" xml:space="preserve">
+    <value>Due to administrative settings, the profile cannot be selected as a recipient</value>
+  </data>
 </root>

@@ -10,7 +10,6 @@ namespace EDelivery.WebPortal.Models
         {
             this.EmailNotifications = true;
             this.PhoneNotifications = false;
-            this.ViberNotifications = false;
         }
 
         [RequiredRes]
@@ -29,8 +28,6 @@ namespace EDelivery.WebPortal.Models
         public bool EmailNotifications { get; set; }
 
         public bool PhoneNotifications { get; set; }
-
-        public bool ViberNotifications { get; set; }
 
         [RequireTrue(ErrorMessageResourceName = "ErrorAcceptLicenceAgreement", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
         public bool LicenceAgreement { get; set; }

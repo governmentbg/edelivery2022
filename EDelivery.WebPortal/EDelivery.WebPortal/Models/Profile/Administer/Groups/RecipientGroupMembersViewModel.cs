@@ -29,6 +29,7 @@ namespace EDelivery.WebPortal.Models
             this.ProfileId = member.ProfileId;
             this.ProfileName = member.ProfileName;
             this.ProfileTargetGroup = member.ProfileTargetGroup;
+            this.HideAsRecipient = member.HideAsRecipient;
         }
 
         public int ProfileId { get; set; }
@@ -36,5 +37,7 @@ namespace EDelivery.WebPortal.Models
         public string ProfileName { get; set; }
 
         public string ProfileTargetGroup { get; set; }
+
+        public bool HideAsRecipient { get; set; }
     }
 }

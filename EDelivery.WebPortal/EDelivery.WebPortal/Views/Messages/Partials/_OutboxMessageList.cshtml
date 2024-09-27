@@ -66,7 +66,8 @@
                         <div data-toggle="tooltip"
                              data-original-title="@statusName">
                             <a href="@Url.Action("View", "Messages", new { id = message.MessageId })"
-                               style="display:block; height:100%; width: 100%;">
+                               style="display:block; height:100%; width: 100%;"
+                               aria-label="@message.Subject">
                             </a>
                         </div>
                     </td>

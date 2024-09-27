@@ -376,23 +376,23 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Поради необходимост от оптимизиране работата на системата, след &lt;strong&gt;25.05.2020 г.&lt;/strong&gt; нотификациите към  административни органи ще се изпращат само по имейл адреса, вписан в профила..
-        /// </summary>
-        public static string InfoSmsNotificationsTurnedOff {
-            get {
-                return ResourceManager.GetString("InfoSmsNotificationsTurnedOff", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Уважаеми потребители,&lt;br/&gt;ако желаете да получавате съобщения по е-майл, моля маркирайте горните радиобутони.&lt;br/&gt;
         ///В случай, че имате предпочитания към един от каналите за нотификация: Viber или SMS, избирате само един: или Viber или SMS.&lt;br/&gt;
         ///Ако не желаете да получавате съобщения, не избирате нито един канал.&lt;br/&gt;
         ///За да получавате съобщения по Viber e необходимо приложението да бъде инсталирано на мобилното Ви устройство и да имате активен Viber профил..
         /// </summary>
-        public static string InfoSmsViberNotificationChoice {
+        public static string InfoPhoneNotificationChoice {
             get {
-                return ResourceManager.GetString("InfoSmsViberNotificationChoice", resourceCulture);
+                return ResourceManager.GetString("InfoPhoneNotificationChoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Поради необходимост от оптимизиране работата на системата, след &lt;strong&gt;25.05.2020 г.&lt;/strong&gt; нотификациите към  административни органи ще се изпращат само по имейл адреса, вписан в профила..
+        /// </summary>
+        public static string InfoPhoneNotificationsTurnedOff {
+            get {
+                return ResourceManager.GetString("InfoPhoneNotificationsTurnedOff", resourceCulture);
             }
         }
         
@@ -883,6 +883,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Текущо състояние.
+        /// </summary>
+        public static string PlaceholderStatus {
+            get {
+                return ResourceManager.GetString("PlaceholderStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Смяна на профила.
         /// </summary>
         public static string ProfileChange {
@@ -1191,9 +1200,9 @@ namespace EDeliveryResources {
         /// <summary>
         ///   Looks up a localized string similar to Нотификации по Viber/SMS.
         /// </summary>
-        public static string TitleSectionNotificationSettingsViaSMS {
+        public static string TitleSectionNotificationSettingsViaPhone {
             get {
-                return ResourceManager.GetString("TitleSectionNotificationSettingsViaSMS", resourceCulture);
+                return ResourceManager.GetString("TitleSectionNotificationSettingsViaPhone", resourceCulture);
             }
         }
         

@@ -30,14 +30,14 @@
                 </div>
             </div>
             <div class="form-col">
-                <label for="surname">@Common.LabelLastName *:</label>
+                <label for="LastName">@Common.LabelLastName *:</label>
                 <div class="form-element">
                     @Html.TextBoxFor(x => x.LastName, new { @class = "input-validation-valid" })
                     @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "validation-message" })
                 </div>
             </div>
             <div class="form-col">
-                <label for="surname">@Common.LabelPersonalIdentifier *:</label>
+                <label for="Identifier">@Common.LabelPersonalIdentifier *:</label>
                 <div class="form-element">
                     @Html.TextBoxFor(x => x.Identifier, new { @class = "input-validation-valid" })
                     @Html.ValidationMessageFor(x => x.Identifier, null, new { @class = "validation-message" })

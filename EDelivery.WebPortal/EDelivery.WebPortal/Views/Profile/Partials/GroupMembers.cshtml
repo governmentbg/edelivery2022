@@ -5,20 +5,20 @@
 
 @model RecipientGroupMembersViewModel
 @{
-  var isIndividual = Context.GetCachedUserData().ActiveProfile.TargetGroupId == (int)TargetGroupId.Individual;
+    var isIndividual = Context.GetCachedUserData().ActiveProfile.TargetGroupId == (int)TargetGroupId.Individual;
 }
 <h3>Членове</h3>
 
 @if (isIndividual && Model.Members.Count >= Convert.ToInt32(WebConfigurationManager.AppSettings["MaxRecipientGroupMembers"]))
 {
-  <p style="color: #c09853">*Достигнат е максималният брой от 20 члена в групата</p>
+    <p style="color: #c09853">*Достигнат е максималният брой от 20 члена в групата</p>
 }
 else
 {
-  <button class="btn-light btn-l"
-          data-modal-href="@Url.Action("AddGroupMember", new { id = Model.RecipientGroupId })">
-    + Добави
-  </button>
+    <button class="btn-light btn-l"
+            data-modal-href="@Url.Action("AddGroupMember", new { id = Model.RecipientGroupId })">
+        + Добави
+    </button>
 }
 
 <div class="form-row">
@@ -33,14 +33,23 @@ else
                 @foreach (var item in Model.Members)
                 {
                     <tr>
-                        <td>@item.ProfileName</td>
+                        <td>
+                            @if (item.HideAsRecipient)
+                            {
+                                <span class="warning-message" data-toggle="tooltip" data-original-title="@Common.HideAsRecipientWarning">@item.ProfileName</span>
+                            }
+                            else
+                            {
+                                @item.ProfileName
+                            }
+                        </td>
                         <td>@item.ProfileTargetGroup</td>
                         <td>
                             @Ajax.RawActionLink(
-                                "<img src='/Content/img/trash-icon.png'>",
+                                $"<img src='/Content/img/trash-icon.png' alt='{ARIA.AltProfileGroupMembersDelete}' />",
                                 "RemoveGroupMember",
                                 "Profile",
-                                new { profileId = item.ProfileId, recipientGroupId = Model.RecipientGroupId},
+                                new { profileId = item.ProfileId, recipientGroupId = Model.RecipientGroupId },
                                 new AjaxOptions
                                 {
                                     HttpMethod = "POST",

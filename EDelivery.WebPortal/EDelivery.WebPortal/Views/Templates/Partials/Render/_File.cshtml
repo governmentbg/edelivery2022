@@ -194,7 +194,7 @@
 {
     <li class="form-row nowrap file-input-holder-@($"{Model.Id}_{i}")"
         style="@(i <= lastIdx ? string.Empty : "display: none;")">
-        <label for="@($"{Model.Id}_{i}")">
+        <label for="@($"{Model.Id}_{i}")-text">
             @Model.Label
             @if (Model.IsRequired && i == 0)
             {
@@ -209,7 +209,8 @@
                         <input type="file"
                                id="@($"{Model.Id}_{i}")-file"
                                disabled="disabled"
-                               style="position: absolute; top: 0px; left: 0px; opacity: 0" />
+                               style="position: absolute; top: 0px; left: 0px; opacity: 0"
+                               aria-label="@ARIA.LabelTemplateFile" />
                         <input type="hidden"
                                id="@($"{Model.Id}_{i}")"
                                name="@Model.Id"

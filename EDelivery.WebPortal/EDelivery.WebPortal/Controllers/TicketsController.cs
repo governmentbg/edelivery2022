@@ -136,6 +136,7 @@ namespace EDelivery.WebPortal.Controllers
         public async Task<ActionResult> Inbox(
             string from,
             string to,
+            int? status,
             int page = 1)
         {
             DateTime? fromDT = DateTime.TryParseExact(
@@ -165,6 +166,7 @@ namespace EDelivery.WebPortal.Controllers
                         Limit = SystemConstants.PageSize,
                         From = fromDT?.ToTimestamp(),
                         To = toDT?.ToTimestamp(),
+                        Status = status
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
@@ -176,7 +178,7 @@ namespace EDelivery.WebPortal.Controllers
                         SystemConstants.PageSize,
                         page,
                         response.Length),
-                    SearchFilter = new TicketsSearchViewModel(from, to)
+                    SearchFilter = new TicketsSearchViewModel(from, to, status)
                 };
 
             if (model.Tickets.Count == 0)
@@ -200,6 +202,7 @@ namespace EDelivery.WebPortal.Controllers
                 {
                     from = model.From,
                     to = model.To,
+                    status = model.Status,
                     page = 1,
                 });
         }

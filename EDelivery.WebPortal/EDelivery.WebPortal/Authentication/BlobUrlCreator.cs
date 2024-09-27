@@ -24,23 +24,23 @@ namespace EDelivery.WebPortal
         private static readonly Lazy<ITimeLimitedDataProtector> MessageBlobTokenDataProtector =
             new Lazy<ITimeLimitedDataProtector>(
                 () => AuthConfig.DataProtectionProvider.CreateTimeLimitedDataProtector(MessageBlobTokenPurpose),
-                LazyThreadSafetyMode.None);
+                LazyThreadSafetyMode.ExecutionAndPublication);
         private static readonly Lazy<ITimeLimitedDataProtector> ProfileBlobTokenDataProtector =
             new Lazy<ITimeLimitedDataProtector>(
                 () => AuthConfig.DataProtectionProvider.CreateTimeLimitedDataProtector(ProfileBlobTokenPurpose),
-                LazyThreadSafetyMode.None);
+                LazyThreadSafetyMode.ExecutionAndPublication);
         private static readonly Lazy<IDataProtector> MessageBlobWebPortalTokenDataProtector =
             new Lazy<IDataProtector>(
                 () => AuthConfig.DataProtectionProvider.Create(MessageBlobWebPortalTokenPurpose),
-                LazyThreadSafetyMode.None);
+                LazyThreadSafetyMode.ExecutionAndPublication);
         private static readonly Lazy<IDataProtector> ProfileBlobWebPortalTokenDataProtector =
             new Lazy<IDataProtector>(
                 () => AuthConfig.DataProtectionProvider.Create(ProfileBlobWebPortalTokenPurpose),
-                LazyThreadSafetyMode.None);
+                LazyThreadSafetyMode.ExecutionAndPublication);
         private static readonly Lazy<IDataProtector> MessageBlobAccessCodeTokenDataProtector =
             new Lazy<IDataProtector>(
                 () => AuthConfig.DataProtectionProvider.Create(MessageBlobAccessCodeTokenPurpose),
-                LazyThreadSafetyMode.None);
+                LazyThreadSafetyMode.ExecutionAndPublication);
 
         public static string CreateMessageBlobUrl(int profileId, int messageId, int blobId)
         {

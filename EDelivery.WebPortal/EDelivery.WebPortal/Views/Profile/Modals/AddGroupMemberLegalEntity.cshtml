@@ -21,7 +21,7 @@
     {
         <section class="form-section">
             <div class="form-col">
-                <label for="FirstName">@Common.LabelCompanyRegistrationNumber *:</label>
+                <label for="CompanyRegistrationNumber">@Common.LabelCompanyRegistrationNumber *:</label>
                 <div class="form-element">
                     @Html.TextBoxFor(x => x.CompanyRegistrationNumber, new { @class = "input-validation-valid" })
                     @Html.ValidationMessageFor(x => x.CompanyRegistrationNumber, null, new { @class = "validation-message" })

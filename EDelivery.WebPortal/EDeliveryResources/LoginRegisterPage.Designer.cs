@@ -241,6 +241,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Прочетох и приемам условията на &lt;a href=&quot;{0}&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;Политиката за поверителност и защита на данните&lt;/a&gt;. Съгласен/на съм  личните ми данни и приложените от мен документи да бъдат обработени от Министерство на електронното управление съгласно Общ регламент за защита на данните (GDPR) и Закона за защита на личните данни..
+        /// </summary>
+        public static string LabelGDPRAgreement {
+            get {
+                return ResourceManager.GetString("LabelGDPRAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Фамилия.
         /// </summary>
         public static string LabelLastName {
@@ -250,7 +259,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Приемам &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;условията за ползване&lt;/a&gt; на услугата.
+        ///   Looks up a localized string similar to Приемам &lt;a href=&quot;{0}&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;условията за ползване&lt;/a&gt; на услугата.
         /// </summary>
         public static string LabelLicenceAgreement {
             get {
@@ -286,7 +295,7 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Желая да получавам нотификация по SMS.
+        ///   Looks up a localized string similar to Желая да получавам нотификация по телефон.
         /// </summary>
         public static string LabelPhoneNotifications {
             get {
@@ -295,7 +304,16 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Желая да получавам нотификация по SMS при получаване на ново съобщение.
+        ///   Looks up a localized string similar to Желая да получавам нотификация по телефон при отваряне на съобщение.
+        /// </summary>
+        public static string LabelPhoneNotificationsOnDelivery {
+            get {
+                return ResourceManager.GetString("LabelPhoneNotificationsOnDelivery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Желая да получавам нотификация по телефон при получаване на ново съобщение.
         /// </summary>
         public static string LabelPhoneNotificationsOnReceiving {
             get {
@@ -327,33 +345,6 @@ namespace EDeliveryResources {
         public static string LabelUserName {
             get {
                 return ResourceManager.GetString("LabelUserName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Желая да получавам нотификация по Viber.
-        /// </summary>
-        public static string LabelViberNotifications {
-            get {
-                return ResourceManager.GetString("LabelViberNotifications", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Желая да получавам нотификация по Viber при отваряне на съобщение.
-        /// </summary>
-        public static string LabelViberNotificationsOnDelivery {
-            get {
-                return ResourceManager.GetString("LabelViberNotificationsOnDelivery", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Желая да получавам нотификация по Viber при получаване на ново съобщение.
-        /// </summary>
-        public static string LabelViberNotificationsOnReceiving {
-            get {
-                return ResourceManager.GetString("LabelViberNotificationsOnReceiving", resourceCulture);
             }
         }
         

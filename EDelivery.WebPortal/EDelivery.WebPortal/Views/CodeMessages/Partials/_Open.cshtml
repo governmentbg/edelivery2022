@@ -29,8 +29,9 @@
                 @Model.DateSent.ToString(SystemConstants.DateTimeFormat)
                 <a href="@Url.Action("GetMessageTimestamp", "CodeMessages", new { timeStampType = EDelivery.WebPortal.Enums.eTimeStampType.NRO })"
                    data-toggle="tooltip"
-                   data-original-title="@ProfilePage.TooltipDownloadNRO">
-                    <img src="~/Content/img/timestamp.png">
+                   data-original-title="@ProfilePage.TooltipDownloadNRO"
+                   aria-label="@ProfilePage.TooltipDownloadNRO">
+                    <img src="~/Content/img/timestamp.png" alt="@ARIA.AltMessageTimestamp" />
                 </a>
             </td>
         </tr>
@@ -42,8 +43,9 @@
                     @Model.DateReceived.Value.ToString(SystemConstants.DateTimeFormat)
                     <a href="@Url.Action("GetMessageTimestamp", "CodeMessages", new { timeStampType = EDelivery.WebPortal.Enums.eTimeStampType.NRD })"
                        data-toggle="tooltip"
-                       data-original-title="@ProfilePage.TooltipDownloadNRO">
-                        <img src="~/Content/img/timestamp.png">
+                       data-original-title="@ProfilePage.TooltipDownloadNRO"
+                       aria-label="@ProfilePage.TooltipDownloadNRO">
+                        <img src="~/Content/img/timestamp.png" alt="@ARIA.AltMessageTimestamp" />
                     </a>
                 }
             </td>
@@ -70,15 +72,16 @@
                 case ComponentType.hidden:
                     <tr>
                         <td>@item.Value.Label</td>
-                        <td>@item.Value.Value</td>
+                        <td style="white-space: pre-wrap;">@item.Value.Value</td>
                     </tr>
                     break;
                 case ComponentType.checkbox:
+                    bool checkboxValue = item.Value.Value is bool value ? value : false;
                     <tr>
                         <td>@item.Value.Label</td>
                         <td>
                             <div class="form-group disabled" style="margin: 0px;">
-                                @Html.CheckBox("cb1", (bool)item.Value.Value, new { disabled = "disabled" })
+                                @Html.CheckBox("cb1", checkboxValue, new { disabled = "disabled" })
                                 <label>&nbsp;</label>
                             </div>
                         </td>
@@ -132,15 +135,17 @@
                                         </a>
                                     }
 
-                                    <a href="@blobTimestamp" data-toggle="tooltip" data-original-title="@ProfilePage.TooltipDocumentTimestamp">
-                                        <img src="~/Content/img/timestamp.png">
+                                    <a href="@blobTimestamp" 
+                                       data-toggle="tooltip" 
+                                       data-original-title="@ProfilePage.TooltipDocumentTimestamp"
+                                       aria-label="@ProfilePage.TooltipDocumentTimestamp">
+                                        <img src="~/Content/img/timestamp.png" alt="@ARIA.AltMessageTimestamp" />
                                     </a>
 
                                     @if (!string.IsNullOrEmpty(errorMessage))
                                     {
                                         <span class="warning-message">@errorMessage</span>
                                     }
-
 
                                     @if (!string.IsNullOrEmpty(blob.DocumentRegistrationNumber))
                                     {
@@ -194,7 +199,8 @@
                 <a href="@Url.Action("GetPdfAsRecipient", "CodeMessages")"
                    class="file-link pdf"
                    data-toggle="tooltip"
-                   data-original-title="@ProfilePage.TooltipDownloadStampPdfMessage">
+                   data-original-title="@ProfilePage.TooltipDownloadStampPdfMessage"
+                   aria-label="@ProfilePage.TooltipDownloadStampPdfMessage">
                 </a>
             </td>
         </tr>
@@ -204,7 +210,8 @@
                 <a href="@Url.Action("GetSummary", "CodeMessages")"
                    class="file-link xml"
                    data-toggle="tooltip"
-                   data-original-title="@ProfilePage.TooltipDownloadTimestampedMessage">
+                   data-original-title="@ProfilePage.TooltipDownloadTimestampedMessage"
+                   aria-label="@ProfilePage.TooltipDownloadTimestampedMessage">
                 </a>
             </td>
         </tr>

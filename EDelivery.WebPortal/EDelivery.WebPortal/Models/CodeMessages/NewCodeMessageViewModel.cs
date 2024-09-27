@@ -15,6 +15,7 @@ namespace EDelivery.WebPortal.Models
         [RegularExpression(SystemConstants.CyrilicPattern, ErrorMessageResourceName = "ErrorMessageCyrilicRequired", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
         public string FirstName { get; set; }
 
+        [RequiredRes]
         [StringLength(50, ErrorMessageResourceName = "ErrorMessageFieldLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
         [RegularExpression(SystemConstants.CyrilicPattern, ErrorMessageResourceName = "ErrorMessageCyrilicRequired", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
         public string MiddleName { get; set; }
