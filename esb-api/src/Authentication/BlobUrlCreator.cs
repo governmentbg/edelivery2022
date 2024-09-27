@@ -22,11 +22,11 @@ public class BlobUrlCreator
     {
         this.messageBlobTokenDataProtector = new Lazy<ITimeLimitedDataProtector>(
             () => dataProtector.CreateProtector(MessageBlobTokenPurpose).ToTimeLimitedDataProtector(),
-            LazyThreadSafetyMode.None);
+            LazyThreadSafetyMode.ExecutionAndPublication);
 
         this.profileBlobTokenDataProtector = new Lazy<ITimeLimitedDataProtector>(
             () => dataProtector.CreateProtector(ProfileBlobTokenPurpose).ToTimeLimitedDataProtector(),
-            LazyThreadSafetyMode.None);
+            LazyThreadSafetyMode.ExecutionAndPublication);
 
         EsbApiOptions options = optionsAccessor.Value;
         this.blobServiceWebUrl = options.BlobServiceWebUrl;
