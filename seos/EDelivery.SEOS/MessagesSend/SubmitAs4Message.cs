@@ -156,7 +156,7 @@ namespace EDelivery.SEOS.MessagesSend
             DatabaseQueries.SaveAs4SentMessage(innerMessage, messageId);
 
             if (RegisteredEntitiesHelper.IsThroughEDelivery(properties.Sender.Identifier) ||
-                DatabaseAccess.DatabaseQueries.HasAS4Node(properties.Sender.Identifier))
+                DatabaseAccess.DatabaseQueries.IsAS4Entity(properties.Sender.Identifier))
                 return;
 
             DatabaseQueries.SaveAs4TransferLog(innerMessage, messageId, TransferTypeEnum.FromSEOStoAS4);

@@ -27,7 +27,7 @@ namespace EDelivery.SEOS.MessagesStatus
                     settings);
 
                 LogMessagesHelper.LogCommunication(message.MessageGuid,
-                    MessageType.MSG_DocumentStatusResponse, seosMessage, null, false, true, logger);
+                    MessageType.MSG_DocumentStatusRequest, seosMessage, null, true, false, logger);
 
                 logger.Info($"Check message status: messageGuid {message.MessageGuid} docGuid {message.DocGuid}");
 
@@ -48,8 +48,7 @@ namespace EDelivery.SEOS.MessagesStatus
             }
             catch (Exception ex)
             {
-                LogMessagesHelper.LogCommunication(message.MessageGuid,
-                    MessageType.MSG_DocumentStatusResponse, ex.ToString(), null, false, true, logger);
+                LogMessagesHelper.LogCommunication(message.MessageGuid, null, ex.Message, null, false, true, logger);
                 logger.Error($"Error getting message status, docGuid {message.DocGuid}, reseiver {message.Sender.Name} ", ex);
                 throw;
             }

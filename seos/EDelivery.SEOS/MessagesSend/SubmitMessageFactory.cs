@@ -10,15 +10,16 @@ namespace EDelivery.SEOS.MessagesSend
             if (String.IsNullOrEmpty(receiverUic))
                 return null;
 
+            if (DatabaseQueries.IsAS4Entity(receiverUic))
+            {
+                var as4Node = DatabaseQueries.GetAS4Node(receiverUic);
+                return new SubmitAs4Message(as4Node);
+            }
+
             if (isThroughEDelivery)
                 return new SubmitEDeliveryMessage();
 
-            var as4Node = DatabaseQueries.GetAS4Node(receiverUic);
-
-            if (!String.IsNullOrEmpty(as4Node))
-                return new SubmitAs4Message(as4Node);
-            else
-                return new SubmitSeosMessage(isRetry);
+            return new SubmitSeosMessage(isRetry);
         }
     }
 }

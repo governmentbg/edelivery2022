@@ -32,8 +32,7 @@ namespace EDelivery.SEOS.MessagesReceive
                     message.Header.MessageType, request, true, true, logger);
 
                 //Redirect to AS4 node
-                if (!DatabaseQueries.HasProfile(message.Header.Recipient.Identifier) &&
-                    DatabaseQueries.HasAS4Node(message.Header.Recipient.Identifier))
+                if (DatabaseQueries.IsAS4Entity(message.Header.Recipient.Identifier))
                 {
                     var redirect = new RedirectFromSeosToAs4();
                     return redirect.Redirect(message, request, logger);
