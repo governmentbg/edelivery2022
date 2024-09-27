@@ -560,7 +560,7 @@ namespace ED.Domain
                 GetNotificationRecipientsVO tmp = notificationRecipients.First();
 
                 bool skipNotificationContacts = isIndividualActivated
-                    && (tmp.IsEmailNotificationEnabled || tmp.IsViberNotificationEnabled || tmp.IsSmsNotificationEnabled);
+                    && (tmp.IsEmailNotificationEnabled || tmp.IsPhoneNotificationEnabled);
 
                 if (!skipNotificationContacts)
                 {
@@ -573,7 +573,6 @@ namespace ED.Domain
                                     null,
                                     !string.IsNullOrEmpty(notificationEmail),
                                     notificationEmail ?? string.Empty,
-                                    !string.IsNullOrEmpty(notificationPhone),
                                     !string.IsNullOrEmpty(notificationPhone),
                                     notificationPhone ?? string.Empty)
                             })
@@ -599,7 +598,6 @@ namespace ED.Domain
                                 null,
                                 !string.IsNullOrEmpty(legalEntityContacts.Email),
                                 legalEntityContacts.Email,
-                                false,
                                 false,
                                 legalEntityContacts.Phone)
                         })
@@ -668,7 +666,7 @@ namespace ED.Domain
 
             ViberQueueMessage[] viberRecipients = notificationRecipients
                 .Where(e => !string.IsNullOrEmpty(e.Phone))
-                .Where(e => e.IsViberNotificationEnabled || e.IsSmsNotificationEnabled)
+                .Where(e => e.IsPhoneNotificationEnabled)
                 .DistinctBy(e => e.Phone.ToPhone())
                 .Select(e => new ViberQueueMessage(
                     QueueMessageFeatures.Tickets,

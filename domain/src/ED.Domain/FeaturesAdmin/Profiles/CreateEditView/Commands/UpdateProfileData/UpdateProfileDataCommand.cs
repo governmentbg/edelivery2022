@@ -16,7 +16,8 @@ namespace ED.Domain
         string? AddressResidence,
         int TargetGroupId,
         bool? EnableMessagesWithCode,
-        string Ip)
+        string Ip,
+        bool HideAsRecipient)
         : IRequest<UpdateProfileDataCommandResult>;
 
     public record UpdateProfileDataCommandResult(

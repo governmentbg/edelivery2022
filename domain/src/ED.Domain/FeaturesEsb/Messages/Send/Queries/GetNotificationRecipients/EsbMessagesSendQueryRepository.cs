@@ -35,8 +35,7 @@ namespace ED.Domain
                 where m.MessageId == messageId
                     && p.IsActivated
                     && (lp.EmailNotificationActive
-                        || lp.SmsNotificationActive
-                        || lp.ViberNotificationActive
+                        || lp.PhoneNotificationActive
                         || !string.IsNullOrEmpty(l.PushNotificationsUrl))
                     && (
                         (m.TemplateId == lpp.TemplateId && lpp.Permission == LoginProfilePermissionType.ReadProfileMessageAccess)
@@ -52,8 +51,7 @@ namespace ED.Domain
                     l.ElectronicSubjectName,
                     lp.EmailNotificationActive,
                     lp.Email,
-                    lp.SmsNotificationActive,
-                    lp.ViberNotificationActive,
+                    lp.PhoneNotificationActive,
                     lp.Phone,
                     l.PushNotificationsUrl))
                 .Distinct()

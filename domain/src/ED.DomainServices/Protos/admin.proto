@@ -45,6 +45,7 @@ service Admin {
   rpc ListProfiles (ListProfilesRequest) returns (ListProfilesResponse);
   rpc ListTargetGroups (ListTargetGroupsRequest) returns (ListTargetGroupsResponse);
   rpc GetTargetGroupsById (GetTargetGroupsByIdRequest) returns (GetTargetGroupsByIdResponse);
+  rpc ListRecipients (ListRecipientsRequest) returns (ListRecipientsResponse);
 
   // templates
   rpc GetTemplate (GetTemplateRequest) returns (GetTemplateResponse);
@@ -174,14 +175,12 @@ message GetProfileInfoResponse {
     google.protobuf.StringValue certificate_thumbprint = 3;
     google.protobuf.BoolValue can_send_on_behalf_of = 4;
     google.protobuf.StringValue push_notifications_url = 5;
-    bool sms_notification_active = 6;
-    bool sms_notification_on_delivery_active = 7;
+    bool phone_notification_active = 6;
+    bool phone_notification_on_delivery_active = 7;
     bool email_notification_active = 8;
     bool email_notification_on_delivery_active = 9;
-    bool viber_notification_active = 10;
-    bool viber_notification_on_delivery_active = 11;
-    string email = 12;
-    string phone = 13;
+    string email = 10;
+    string phone = 11;
   }
 
   message Login {
@@ -243,6 +242,9 @@ message GetProfileInfoResponse {
   DefaultLogin default_login = 23;
   Quota quota = 24;
   EsbUser esb_user = 25;
+  bool hide_as_recipient = 26;
+  bool licence_agreed = 27;
+  bool gdpr_agreed = 28;
 }
 
 message GetProfileDataRequest {
@@ -275,6 +277,7 @@ message GetProfileDataResponse {
   int32 target_group_id = 10;
   google.protobuf.BoolValue enable_messages_with_code = 11;
   bool is_activated = 12;
+  bool hide_as_recipient = 13;
 }
 
 message GetProfileAccessAllowedTemplatesRequest {
@@ -345,6 +348,7 @@ message UpdateProfileDataRequest {
   int32 target_group_id = 12;
   google.protobuf.BoolValue enable_messages_with_code = 13;
   string ip = 14;
+  bool hide_as_recipient = 15;
 }
 
 message UpdateProfileDataResponse {
@@ -404,14 +408,12 @@ message GetIntegrationLoginInfoResponse {
     google.protobuf.StringValue certificate_thumb_print = 1;
     google.protobuf.StringValue push_notifications_url = 2;
     bool can_send_on_behalf_of = 3;
-    bool sms_notification_active = 4;
-    bool sms_notification_on_delivery_active = 5;
+    bool phone_notification_active = 4;
+    bool phone_notification_on_delivery_active = 5;
     bool email_notification_active = 6;
     bool email_notification_on_delivery_active = 7;
     string email = 8;
     string phone = 9;
-    bool viber_notification_active = 10;
-    bool viber_notification_on_delivery_active = 11;
   }
 
   optional Login login = 1;
@@ -422,14 +424,12 @@ message CreateOrUpdateIntegrationLoginRequest {
   string certificate_thumb_print = 2;
   string push_notifications_url = 3;
   bool can_send_on_behalf_of = 4;
-  bool sms_notification_active = 5;
-  bool sms_notification_on_delivery_active = 6;
+  bool phone_notification_active = 5;
+  bool phone_notification_on_delivery_active = 6;
   bool email_notification_active = 7;
   bool email_notification_on_delivery_active = 8;
   string email = 9;
   string phone = 10;
-  bool viber_notification_active = 11;
-  bool viber_notification_on_delivery_active = 12;
 }
 
 message DeactivateLoginRequest {
@@ -905,6 +905,7 @@ message GetRecipientGroupMembersResponse {
   message RecipientGroupProfileMessage {
     int32 profile_id = 1;
     string name = 2;
+    bool hide_as_recipient = 3;
   }
 
   repeated RecipientGroupProfileMessage recipient_group_members = 1;
@@ -1202,10 +1203,8 @@ message GetLoginProfileNotificationsResponse {
   string phone = 2;
   bool email_notification_active = 3;
   bool email_notification_on_delivery_active = 4;
-  bool sms_notification_active = 5;
-  bool sms_notification_on_delivery_active = 6;
-  bool viber_notification_active = 7;
-  bool viber_notification_on_delivery_active = 8;
+  bool phone_notification_active = 5;
+  bool phone_notification_on_delivery_active = 6;
 }
 
 message UpdateLoginProfileNotificationsRequest {
@@ -1215,12 +1214,10 @@ message UpdateLoginProfileNotificationsRequest {
   string phone = 4;
   bool email_notification_active = 5;
   bool email_notification_on_delivery_active = 6;
-  bool sms_notification_active = 7;
-  bool sms_notification_on_delivery_active = 8;
+  bool phone_notification_active = 7;
+  bool phone_notification_on_delivery_active = 8;
   int32 admin_user_id = 9;
   string ip = 10;
-  bool viber_notification_active = 11;
-  bool viber_notification_on_delivery_active = 12;
 }
 
 message GetTimestampsReportRequest {
@@ -1241,19 +1238,26 @@ message GetTicketsReportRequest {
 }
 
 message GetTicketsReportResponse {
-  int32 total_tickets = 1;
-  int32 daily_individual_tickets = 2;
-  int32 daily_legal_entity_tickets = 3;
-  int32 daily_individual_penal_decrees = 4;
-  int32 daily_legal_entity_penal_decrees = 5;
-  int32 daily_notifications_by_email = 6;
-  int32 daily_notifications_by_phone = 7;
-  int32 daily_received_individual_tickets = 8;
-  int32 daily_received_legal_entity_tickets = 9;
-  int32 daily_received_individual_penal_decrees = 10;
-  int32 daily_received_legal_entity_penal_decrees = 11;
-  int32 daily_passive_profiles = 12;
-  int32 daily_active_profiles = 13;
+  message TicketStat {
+    google.protobuf.Timestamp ticket_stat_date = 1;
+    int32 received_ticket_individuals = 2;
+    int32 received_penal_decree_individuals = 3;
+    int32 received_ticket_legal_entites = 4;
+    int32 received_penal_decree_legal_entites = 5;
+    int32 internal_served = 6;
+    int32 external_served = 7;
+    int32 annulled = 8;
+    int32 email_notifications = 9;
+    int32 phone_notifications = 10;
+    int32 delivered_ticket_individuals = 11;
+    int32 delivered_penal_decree_individuals = 12;
+    int32 delivered_ticket_legal_entites = 13;
+    int32 delivered_penal_decree_legal_entites = 14;
+    int32 sent_to_active_profiles = 15;
+    int32 sent_to_passive_profiles = 16;
+  }
+
+  repeated TicketStat result = 1;
 }
 
 message GetProfileQuotasInfoRequest {
@@ -1308,4 +1312,19 @@ message GetProfileHistoryResponse {
 
   repeated History result = 1;
   int32 length = 2;
+}
+
+message ListRecipientsRequest {
+  string term = 1;
+  int32 offset = 2;
+  int32 limit = 3;
+}
+
+message ListRecipientsResponse {
+  message Item {
+    int32 profile_id = 1;
+    string profile_name = 2;
+  }
+
+  repeated Item items = 1;
 }

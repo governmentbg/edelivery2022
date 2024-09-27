@@ -5,10 +5,8 @@ namespace ED.Domain
         public record GetSettingsVO(
             bool IsEmailNotificationEnabled,
             bool IsEmailNotificationOnDeliveryEnabled,
-            bool IsSmsNotificationEnabled,
-            bool IsSmsNotificationOnDeliveryEnabled,
-            bool IsViberNotificationEnabled,
-            bool IsViberNotificationOnDeliveryEnabled,
+            bool IsPhoneNotificationEnabled,
+            bool IsPhoneNotificationOnDeliveryEnabled,
             string Email,
             string Phone);
     }

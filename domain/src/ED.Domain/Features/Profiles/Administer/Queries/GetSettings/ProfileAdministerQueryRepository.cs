@@ -22,10 +22,8 @@ namespace ED.Domain
                 select new GetSettingsVO(
                     lp.EmailNotificationActive,
                     lp.EmailNotificationOnDeliveryActive,
-                    lp.SmsNotificationActive,
-                    lp.SmsNotificationOnDeliveryActive,
-                    lp.ViberNotificationActive,
-                    lp.ViberNotificationOnDeliveryActive,
+                    lp.PhoneNotificationActive,
+                    lp.PhoneNotificationOnDeliveryActive,
                     lp.Email,
                     lp.Phone))
                 .FirstAsync(ct);

@@ -25,10 +25,8 @@ namespace ED.Domain
                 command.LoginId,
                 command.EmailNotificationActive,
                 command.EmailNotificationOnDeliveryActive,
-                command.SmsNotificationActive,
-                command.SmsNotificationOnDeliveryActive,
-                command.ViberNotificationActive,
-                command.ViberNotificationOnDeliveryActive,
+                command.PhoneNotificationActive,
+                command.PhoneNotificationOnDeliveryActive,
                 command.Email,
                 command.Phone,
                 command.AdminUserId);

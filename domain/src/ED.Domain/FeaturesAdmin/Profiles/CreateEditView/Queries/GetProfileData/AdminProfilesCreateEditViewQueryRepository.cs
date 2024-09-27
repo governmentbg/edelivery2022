@@ -43,6 +43,7 @@ namespace ED.Domain
                     p.EmailAddress,
                     p.EnableMessagesWithCode,
                     p.IsActivated,
+                    p.HideAsRecipient,
 
                     tgp.TargetGroupId,
 
@@ -86,7 +87,8 @@ namespace ED.Domain
                 profileData.AddressResidence,
                 profileData.TargetGroupId,
                 profileData.EnableMessagesWithCode,
-                profileData.IsActivated);
+                profileData.IsActivated,
+                profileData.HideAsRecipient);
         }
     }
 }

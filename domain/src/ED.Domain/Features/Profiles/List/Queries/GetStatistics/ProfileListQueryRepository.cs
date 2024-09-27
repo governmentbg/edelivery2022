@@ -29,6 +29,7 @@ namespace ED.Domain
 
                 where p.IsActivated
                     && !p.IsPassive
+                    && (!p.HideAsRecipient || tgp.TargetGroupId == TargetGroup.LegalEntityTargetGroupId)
                     && targetGroupIds.Contains(tg.TargetGroupId)
 
                 group tg by tg.TargetGroupId into g

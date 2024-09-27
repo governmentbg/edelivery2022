@@ -14,7 +14,8 @@ namespace ED.Domain
             string? AddressResidence,
             int TargetGroupId,
             bool? EnableMessagesWithCode,
-            bool IsActivated);
+            bool IsActivated,
+            bool HideAsRecipient);
 
         public record GetProfileDataVOIndividualData(
             string FirstName,

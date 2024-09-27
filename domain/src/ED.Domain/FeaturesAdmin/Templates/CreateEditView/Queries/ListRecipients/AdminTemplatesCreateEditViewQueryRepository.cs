@@ -10,14 +10,15 @@ namespace ED.Domain
 {
     partial class AdminTemplatesCreateEditViewQueryRepository : IAdminTemplatesCreateEditViewQueryRepository
     {
-        public async Task<ListProfilesVO[]> ListProfilesAsync(
+        public async Task<ListRecipientsVO[]> ListRecipientsAsync(
             string term,
             int offset,
             int limit,
             CancellationToken ct)
         {
-            Expression<Func<Profile, bool>> predicate =
-                PredicateBuilder.True<Profile>();
+            Expression<Func<Profile, bool>> predicate = PredicateBuilder
+                .True<Profile>()
+                .And(p => !p.HideAsRecipient);
 
             if (!string.IsNullOrEmpty(term))
             {
@@ -30,8 +31,6 @@ namespace ED.Domain
 
             var result = await (
                 from p in this.DbContext.Set<Profile>().Where(predicate)
-
-                where p.IsActivated
 
                 orderby p.Identifier, p.ElectronicSubjectName, p.EmailAddress
 
@@ -46,8 +45,8 @@ namespace ED.Domain
                 .Take(limit)
                 .ToArrayAsync(ct);
 
-            ListProfilesVO[] vos = result
-                .Select(x => new ListProfilesVO
+            ListRecipientsVO[] vos = result
+                .Select(x => new ListRecipientsVO
                 (
                     ProfileId: x.Id,
                     ProfileName: $"{x.Identifier} - {x.ElectronicSubjectName}{(!string.IsNullOrEmpty(x.EmailAddress) ? $" - {x.EmailAddress}" : string.Empty)}"

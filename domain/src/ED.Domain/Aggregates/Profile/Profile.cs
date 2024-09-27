@@ -19,6 +19,7 @@ namespace ED.Domain
             this.Identifier = null!;
         }
 
+        // todo: maybe all constructors should be replaced with static methods with description
         public Profile(
             string firstName,
             string middleName,
@@ -28,6 +29,8 @@ namespace ED.Domain
             string email,
             string residence,
             bool isPassive,
+            bool licenceAgreed,
+            bool gdprAgreed,
             int loginId,
             string provider,
             string keyName,
@@ -50,6 +53,9 @@ namespace ED.Domain
             this.ModifiedBy = loginId;
             this.IsReadOnly = false;
             this.IsPassive = isPassive;
+            this.HideAsRecipient = false;
+            this.LicenceAgreed = licenceAgreed;
+            this.GDPRAgreed = gdprAgreed;
 
             this.Individual = new(firstName, middleName, lastName);
 
@@ -93,6 +99,9 @@ namespace ED.Domain
             this.ModifiedBy = loginId;
             this.IsReadOnly = false;
             this.IsPassive = true;
+            this.HideAsRecipient = false;
+            this.LicenceAgreed = false;
+            this.GDPRAgreed = false;
 
             this.Individual = new(firstName, middleName, lastName);
 
@@ -124,10 +133,8 @@ namespace ED.Domain
             DateTime expiresAt,
             bool isEmailNotificationEnabled,
             bool isEmailNotificationOnDeliveryEnabled,
-            bool isSmsNotificationEnabled,
-            bool isSmsNotificationOnDeliveryEnabled,
-            bool isViberNotificationEnabled,
-            bool isViberNotificationOnDeliveryEnabled,
+            bool isPhoneNotificationEnabled,
+            bool isPhoneNotificationOnDeliveryEnabled,
             string registrationEmail,
             string registrationPhone,
             (LoginProfilePermissionType permission, int? templateId)[] permissions)
@@ -147,6 +154,9 @@ namespace ED.Domain
             this.ModifiedBy = loginId;
             this.IsReadOnly = false;
             this.IsPassive = false;
+            this.HideAsRecipient = false;
+            this.LicenceAgreed = false;
+            this.GDPRAgreed = false;
 
             this.LegalEntity = new(name);
 
@@ -170,10 +180,8 @@ namespace ED.Domain
                     false,
                     isEmailNotificationEnabled,
                     isEmailNotificationOnDeliveryEnabled,
-                    isSmsNotificationEnabled,
-                    isSmsNotificationOnDeliveryEnabled,
-                    isViberNotificationEnabled,
-                    isViberNotificationOnDeliveryEnabled,
+                    isPhoneNotificationEnabled,
+                    isPhoneNotificationOnDeliveryEnabled,
                     registrationEmail,
                     registrationPhone,
                     loginId));
@@ -214,6 +222,9 @@ namespace ED.Domain
             this.ModifiedBy = Login.SystemLoginId;
             this.IsReadOnly = false;
             this.IsPassive = false;
+            this.HideAsRecipient = false;
+            this.LicenceAgreed = false;
+            this.GDPRAgreed = false;
 
             this.CreatedByAdminUserId = adminUserId;
             this.ActivatedByAdminUserId = adminUserId;
@@ -265,6 +276,7 @@ namespace ED.Domain
                 ModifiedBy = loginId,
                 IsReadOnly = false,
                 IsPassive = true,
+                HideAsRecipient = false,
                 Individual = new(firstName, middleName, lastName),
                 Address = new(residence, city, state, countryIso),
             };
@@ -311,6 +323,7 @@ namespace ED.Domain
                 ModifiedBy = loginId,
                 IsReadOnly = false,
                 IsPassive = true,
+                HideAsRecipient = false,
                 Individual = new(firstName, middleName, lastName),
                 Address = null,
             };
@@ -363,6 +376,7 @@ namespace ED.Domain
                 ModifiedBy = loginId,
                 IsReadOnly = false,
                 IsPassive = !isFullFeatured,
+                HideAsRecipient = false,
                 Individual = new(firstName, middleName, lastName),
                 Address = new(residence, city, state, countryIso),
             };
@@ -413,6 +427,7 @@ namespace ED.Domain
                 ModifiedBy = actionLoginId,
                 IsReadOnly = false,
                 IsPassive = false,
+                HideAsRecipient = false,
                 LegalEntity = new(name),
                 Address = new(residence, city, state, countryIso),
             };
@@ -439,10 +454,8 @@ namespace ED.Domain
                         false,
                         emailNotificationActive: false,
                         emailNotificationOnDeliveryActive: false,
-                        smsNotificationActive: false,
-                        smsNotificationOnDeliveryActive: false,
-                        viberNotificationActive: false,
-                        viberNotificationOnDeliveryActive: false,
+                        phoneNotificationActive: false,
+                        phoneNotificationOnDeliveryActive: false,
                         ownerData.Email,
                         ownerData.Phone,
                         actionLoginId));
@@ -460,8 +473,10 @@ namespace ED.Domain
 
         public int Id { get; set; }
 
-        // when false indicates that the profile cannot be logged into or be part of any new actions,
-        // but can be modified in the admin panel
+        /// <summary>
+        /// when false indicates that the profile cannot be logged into or be part of any new actions,
+        /// can be changed from the admin panel
+        /// </summary>
         public bool IsActivated { get; set; }
 
         public ProfileType ProfileType { get; set; }
@@ -484,17 +499,19 @@ namespace ED.Domain
 
         public string Identifier { get; set; }
 
-        // the profile can be logged into
-        // but no modifications are allowed (eg. sending messages)
+        /// <summary>
+        /// readonly profiles can receive messages, but can't send,
+        /// can be changed from the admin panel
+        /// </summary>
         public bool IsReadOnly { get; set; }
 
-        // TRUE when
-        // - send a code message to individual with no profile
-        // - send message to individual with no profile from Integration Service
-        // - send message on behalf of individual with no profile from Integration Service
-        // - register individual but choose NOT to create personal profile
-        // - register legal entity pending confirmation
-        // FALSE otherwise
+        /// <summary>
+        /// switch (IsActivated, IsPassive)
+        ///     case (true, false): registered profile
+        ///      case (true, true): registered profile with option NOT to create a personal profile (can't send/receive messages)
+        ///      case (false, false): profile is registered through registration request and waiting for confirmation/rejection
+        ///      case (false, true): passive registration of profile by 3rd party
+        /// </summary>
         public bool IsPassive { get; set; }
 
         public bool? EnableMessagesWithCode { get; set; }
@@ -536,6 +553,12 @@ namespace ED.Domain
 
         public ProfileQuota? Quota { get; set; }
 
+        public bool HideAsRecipient { get; set; }
+
+        public bool LicenceAgreed { get; set; }
+
+        public bool GDPRAgreed {  get; set; }
+
         public void UpdateIndividual(
             string firstName,
             string middleName,
@@ -544,6 +567,8 @@ namespace ED.Domain
             string emailAddress,
             bool isPassive,
             string residence,
+            bool licenceAgreed,
+            bool gdprAgreed,
             int modifiedBy)
         {
             DateTime now = DateTime.Now;
@@ -556,6 +581,8 @@ namespace ED.Domain
             this.IsActivated = true;
             this.ActivatedDate = now; // todo: something fishy here
             this.IsPassive = isPassive;
+            this.LicenceAgreed = licenceAgreed;
+            this.GDPRAgreed = gdprAgreed;
 
             this.Individual!.Update(firstName, middleName, lastName);
 
@@ -610,10 +637,8 @@ namespace ED.Domain
             bool isDefault,
             bool isEmailNotificationEnabled,
             bool isEmailNotificationOnDeliveryEnabled,
-            bool isSmsNotificationEnabled,
-            bool isSmsNotificationOnDeliveryEnabled,
-            bool isViberNotificationEnabled,
-            bool isViberNotificationOnDeliveryEnabled,
+            bool isPhoneNotificationEnabled,
+            bool isPhoneNotificationOnDeliveryEnabled,
             string email,
             string phone,
             int actionLoginId,
@@ -627,10 +652,8 @@ namespace ED.Domain
                     isDefault,
                     isEmailNotificationEnabled,
                     isEmailNotificationOnDeliveryEnabled,
-                    isSmsNotificationEnabled,
-                    isSmsNotificationOnDeliveryEnabled,
-                    isViberNotificationEnabled,
-                    isViberNotificationOnDeliveryEnabled,
+                    isPhoneNotificationEnabled,
+                    isPhoneNotificationOnDeliveryEnabled,
                     email,
                     phone,
                     actionLoginId));
@@ -648,10 +671,8 @@ namespace ED.Domain
             bool isDefault,
             bool isEmailNotificationEnabled,
             bool isEmailNotificationOnDeliveryEnabled,
-            bool isSmsNotificationEnabled,
-            bool isSmsNotificationOnDeliveryEnabled,
-            bool isViberNotificationEnabled,
-            bool isViberNotificationOnDeliveryEnabled,
+            bool isPhoneNotificationEnabled,
+            bool isPhoneNotificationOnDeliveryEnabled,
             string email,
             string phone,
             int adminUserId,
@@ -665,10 +686,8 @@ namespace ED.Domain
                     isDefault,
                     isEmailNotificationEnabled,
                     isEmailNotificationOnDeliveryEnabled,
-                    isSmsNotificationEnabled,
-                    isSmsNotificationOnDeliveryEnabled,
-                    isViberNotificationEnabled,
-                    isViberNotificationOnDeliveryEnabled,
+                    isPhoneNotificationEnabled,
+                    isPhoneNotificationOnDeliveryEnabled,
                     email,
                     phone,
                     Login.SystemLoginId)
@@ -705,10 +724,8 @@ namespace ED.Domain
             int loginId,
             bool emailNotificationActive,
             bool emailNotificationOnDeliveryActive,
-            bool smsNotificationActive,
-            bool smsNotificationOnDeliveryActive,
-            bool viberNotificationActive,
-            bool viberNotificationOnDeliveryActive,
+            bool phoneNotificationActive,
+            bool phoneNotificationOnDeliveryActive,
             string email,
             string phone)
         {
@@ -719,10 +736,8 @@ namespace ED.Domain
             login.Update(
                 emailNotificationActive,
                 emailNotificationOnDeliveryActive,
-                smsNotificationActive,
-                smsNotificationOnDeliveryActive,
-                viberNotificationActive,
-                viberNotificationOnDeliveryActive,
+                phoneNotificationActive,
+                phoneNotificationOnDeliveryActive,
                 email,
                 phone);
         }
@@ -949,12 +964,14 @@ namespace ED.Domain
             string? addressCity,
             string? addressResidence,
             bool? enableMessagesWithCode,
+            bool hideAsRecipient,
             int adminUserId,
             StringBuilder updatesLog)
         {
             this.ModifiedByAdminUserId = adminUserId;
 
             this.EnableMessagesWithCode = enableMessagesWithCode;
+            this.HideAsRecipient = hideAsRecipient;
 
             this.UpdateInternal(
                 identifier,
@@ -1059,10 +1076,8 @@ namespace ED.Domain
             int loginId,
             bool emailNotificationActive,
             bool emailNotificationOnDeliveryActive,
-            bool smsNotificationActive,
-            bool smsNotificationOnDeliveryActive,
-            bool viberNotificationActive,
-            bool viberNotificationOnDeliveryActive,
+            bool phoneNotificationActive,
+            bool phoneNotificationOnDeliveryActive,
             string email,
             string phone,
             int adminUserId)
@@ -1072,10 +1087,8 @@ namespace ED.Domain
             login.UpdateByAdmin(
                 emailNotificationActive,
                 emailNotificationOnDeliveryActive,
-                smsNotificationActive,
-                smsNotificationOnDeliveryActive,
-                viberNotificationActive,
-                viberNotificationOnDeliveryActive,
+                phoneNotificationActive,
+                phoneNotificationOnDeliveryActive,
                 email,
                 phone,
                 adminUserId);

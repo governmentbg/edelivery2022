@@ -12,6 +12,7 @@ namespace ED.Domain
             int limit,
             DateTime? from,
             DateTime? to,
+            TicketStatusStatus? status,
             CancellationToken ct);
     }
 }

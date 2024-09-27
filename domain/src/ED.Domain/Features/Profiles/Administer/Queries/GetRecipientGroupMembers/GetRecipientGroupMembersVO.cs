@@ -5,6 +5,7 @@ namespace ED.Domain
         public record GetRecipientGroupMembersVO(
             int ProfileId,
             string ProfileName,
-            string ProfileTargetGroup);
+            string ProfileTargetGroup,
+            bool HideAsRecipient);
     }
 }

@@ -72,6 +72,7 @@ namespace ED.Domain
                 command.AddressCity,
                 command.AddressResidence,
                 command.EnableMessagesWithCode,
+                command.HideAsRecipient,
                 command.AdminUserId,
                 updatesLog);
 

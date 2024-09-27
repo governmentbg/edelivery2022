@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
@@ -19,30 +17,65 @@ namespace ED.Domain
             int limit,
             DateTime? from,
             DateTime? to,
+            TicketStatusStatus? status,
             CancellationToken ct)
         {
-            Expression<Func<Message, bool>> messagePredicate =
-                BuildMessagePredicate(
-                    from,
-                    to);
+            string countQuery = $@"
+SELECT
+    [m].[MessageId],
+    [m].[DateSent],
+    [p].[ElectronicSubjectName] AS SenderProfileName,
+    [m].[Subject],
+    [t].[Type],
+    [t].[ViolationDate],
+    [e].[Status],
+    [e].[SeenDate]
+FROM [dbo].[Messages] AS [m]
+INNER JOIN [dbo].[Tickets] AS [t] ON [m].[MessageId] = [t].[MessageId]
+CROSS APPLY (
+    SELECT TOP 1
+        [ts].[Status],
+        [ts].[SeenDate]
+    FROM TicketStatuses [ts]
+    WHERE [ts].[MessageId] = [t].[MessageId]
+    ORDER BY [ts].[TicketStatusId] DESC
+) AS [e]
+INNER JOIN [dbo].[Profiles] AS [p] ON [m].[SenderProfileId] = [p].[Id]
+INNER JOIN [dbo].[MessageRecipients] AS [m0] ON [m].[MessageId] = [m0].[MessageId]
+WHERE
+    [m0].[ProfileId] = @profileId AND
+    [m].[TemplateId] = {Template.TicketTemplate} AND
+    {(from.HasValue ? "[m].[DateSent] >= @from AND " : "1=1 AND ")}
+    {(to.HasValue ? "[m].[DateSent] < @to AND " : "1=1 AND ")}
+    {(status.HasValue ? "[e].[Status] = @status AND " : "1=1 AND ")}
+    1=1
+";
 
-            IQueryable<int> countQuery =
-                from mr in this.DbContext.Set<MessageRecipient>()
-                where mr.ProfileId == profileId
-                    && this.DbContext.Set<Ticket>().Any(t => t.MessageId == mr.MessageId)
-                select mr.MessageId;
-
-            if (!messagePredicate.IsTrueLambdaExpr())
+            List<SqlParameter> countParameters = new()
             {
-                countQuery = countQuery.Where(
-                    mId =>
-                        (from m in this.DbContext.Set<Message>().Where(messagePredicate)
-                         where m.MessageId == mId
-                         select m)
-                        .Any());
+                new SqlParameter("profileId", SqlDbType.Int) { Value = profileId },
+            };
+
+            if (from.HasValue)
+            {
+                countParameters.Add(new SqlParameter("from", SqlDbType.DateTime2) { Value = from.Value });
             }
 
-            int count = await countQuery.CountAsync(ct);
+            if (to.HasValue)
+            {
+                countParameters.Add(new SqlParameter("to", SqlDbType.DateTime2) { Value = to.Value.AddDays(1) });
+            }
+
+            if (status.HasValue)
+            {
+                countParameters.Add(new SqlParameter("status", SqlDbType.Int) { Value = (int)status.Value });
+            }
+
+            int count =
+                await this.DbContext.Set<GetInboxQO>()
+                    .FromSqlRaw(countQuery, countParameters.ToArray())
+                    .AsNoTracking()
+                    .CountAsync(ct);
 
             if (count == 0)
             {
@@ -82,6 +115,7 @@ WHERE
     [m].[TemplateId] = {Template.TicketTemplate} AND
     {(from.HasValue ? "[m].[DateSent] >= @from AND " : "1=1 AND ")}
     {(to.HasValue ? "[m].[DateSent] < @to AND " : "1=1 AND ")}
+    {(status.HasValue ? "[e].[Status] = @status AND " : "1=1 AND ")}
     1=1
 ORDER BY CASE
     WHEN [m0].[DateReceived] IS NULL THEN @sqlMaxDate
@@ -110,6 +144,11 @@ OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
                 parameters.Add(new SqlParameter("to", SqlDbType.DateTime2) { Value = to.Value.AddDays(1) });
             }
 
+            if (status.HasValue)
+            {
+                parameters.Add(new SqlParameter("status", SqlDbType.Int) { Value = (int)status.Value });
+            }
+
             GetInboxQO[] qos =
                 await this.DbContext.Set<GetInboxQO>()
                     .FromSqlRaw(query, parameters.ToArray())
@@ -117,28 +156,6 @@ OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
                     .ToArrayAsync(ct);
 
             return new TableResultVO<GetInboxQO>(qos, count);
-
-            Expression<Func<Message, bool>> BuildMessagePredicate(
-                DateTime? fromDate,
-                DateTime? toDate)
-            {
-                Expression<Func<Message, bool>> predicate =
-                    PredicateBuilder.True<Message>();
-
-                if (fromDate.HasValue)
-                {
-                    predicate = predicate
-                        .And(e => e.DateSent.HasValue && e.DateSent.Value > fromDate.Value);
-                }
-
-                if (toDate.HasValue)
-                {
-                    predicate = predicate
-                        .And(e => e.DateSent.HasValue && e.DateSent < toDate.Value.AddDays(1));
-                }
-
-                return predicate;
-            }
         }
     }
 }

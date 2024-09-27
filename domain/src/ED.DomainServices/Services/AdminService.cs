@@ -171,7 +171,8 @@ namespace ED.DomainServices
                         request.AddressResidence,
                         request.TargetGroupId,
                         request.EnableMessagesWithCode,
-                        request.Ip),
+                        request.Ip,
+                        request.HideAsRecipient),
                     context.CancellationToken);
 
             return result.Adapt<UpdateProfileDataResponse>();
@@ -322,12 +323,10 @@ namespace ED.DomainServices
                         request.CertificateThumbPrint,
                         request.PushNotificationsUrl,
                         request.CanSendOnBehalfOf,
-                        request.SmsNotificationActive,
-                        request.SmsNotificationOnDeliveryActive,
+                        request.PhoneNotificationActive,
+                        request.PhoneNotificationOnDeliveryActive,
                         request.EmailNotificationActive,
                         request.EmailNotificationOnDeliveryActive,
-                        request.ViberNotificationActive,
-                        request.ViberNotificationOnDeliveryActive,
                         request.Email,
                         request.Phone),
                     context.CancellationToken);
@@ -397,7 +396,7 @@ namespace ED.DomainServices
             GetProfilesByIdRequest request,
             ServerCallContext context)
         {
-            var profiles =
+            IAdminTemplatesCreateEditViewQueryRepository.GetProfilesByIdVO[] profiles =
                 await this.serviceProvider
                     .GetRequiredService<IAdminTemplatesCreateEditViewQueryRepository>()
                     .GetProfilesByIdAsync(
@@ -417,7 +416,7 @@ namespace ED.DomainServices
             ListProfilesRequest request,
             ServerCallContext context)
         {
-            var profiles =
+            IAdminTemplatesCreateEditViewQueryRepository.ListProfilesVO[] profiles =
                 await this.serviceProvider
                     .GetRequiredService<IAdminTemplatesCreateEditViewQueryRepository>()
                     .ListProfilesAsync(
@@ -439,7 +438,7 @@ namespace ED.DomainServices
             ListTargetGroupsRequest request,
             ServerCallContext context)
         {
-            var targetGroups =
+            IAdminTemplatesCreateEditViewQueryRepository.ListTargetGroupsVO[] targetGroups =
                 await this.serviceProvider
                     .GetRequiredService<IAdminTemplatesCreateEditViewQueryRepository>()
                     .ListTargetGroupsAsync(
@@ -1350,7 +1349,7 @@ namespace ED.DomainServices
             GetTicketsReportRequest request,
             ServerCallContext context)
         {
-            IAdminReportsListQueryRepository.GetTicketsVO tickets =
+            IAdminReportsListQueryRepository.GetTicketsVO[] tickets =
                 await this.serviceProvider
                     .GetRequiredService<IAdminReportsListQueryRepository>()
                     .GetTicketsAsync(
@@ -1359,7 +1358,13 @@ namespace ED.DomainServices
                         request.To.ToLocalDateTime(),
                         context.CancellationToken);
 
-            return tickets.Adapt<GetTicketsReportResponse>();
+            return new GetTicketsReportResponse
+            {
+                Result =
+                {
+                    tickets.ProjectToType<GetTicketsReportResponse.Types.TicketStat>()
+                }
+            };
         }
 
         public async override Task<GetSeosParticipantsListResponse> GetSeosParticipantsList(
@@ -1464,10 +1469,8 @@ namespace ED.DomainServices
                        request.Phone,
                        request.EmailNotificationActive,
                        request.EmailNotificationOnDeliveryActive,
-                       request.SmsNotificationActive,
-                       request.SmsNotificationOnDeliveryActive,
-                       request.ViberNotificationActive,
-                       request.ViberNotificationOnDeliveryActive,
+                       request.PhoneNotificationActive,
+                       request.PhoneNotificationOnDeliveryActive,
                        request.AdminUserId,
                        request.Ip),
                    context.CancellationToken);
@@ -1573,6 +1576,28 @@ namespace ED.DomainServices
                 Result =
                 {
                     history.Result.ProjectToType<GetProfileHistoryResponse.Types.History>()
+                }
+            };
+        }
+
+        public override async Task<ListRecipientsResponse> ListRecipients(
+            ListRecipientsRequest request,
+            ServerCallContext context)
+        {
+            IAdminTemplatesCreateEditViewQueryRepository.ListRecipientsVO[] profiles =
+                await this.serviceProvider
+                    .GetRequiredService<IAdminTemplatesCreateEditViewQueryRepository>()
+                    .ListRecipientsAsync(
+                        request.Term,
+                        request.Offset,
+                        request.Limit,
+                        context.CancellationToken);
+
+            return new ListRecipientsResponse
+            {
+                Items =
+                {
+                    profiles.ProjectToType<ListRecipientsResponse.Types.Item>()
                 }
             };
         }

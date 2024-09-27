@@ -9,8 +9,7 @@
             string LoginName,
             bool IsEmailNotificationOnDeliveryEnabled,
             string Email,
-            bool IsSmsNotificationOnDeliveryEnabled,
-            bool IsViberNotificationOnDeliveryEnabled,
+            bool IsPhoneNotificationOnDeliveryEnabled,
             string Phone,
             string? PushNotificationUrl);
     }

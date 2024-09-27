@@ -52,6 +52,7 @@ namespace ED.DomainServices
                         request.Limit,
                         request.From?.ToLocalDateTime(),
                         request.To?.ToLocalDateTime(),
+                        request.Status?.Adapt<Domain.TicketStatusStatus>(),
                         context.CancellationToken);
 
             return new InboxResponse

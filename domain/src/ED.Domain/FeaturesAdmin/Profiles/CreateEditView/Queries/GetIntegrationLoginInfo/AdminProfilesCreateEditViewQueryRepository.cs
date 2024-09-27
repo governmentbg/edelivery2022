@@ -35,12 +35,10 @@ namespace ED.Domain
                     l.CertificateThumbprint,
                     l.PushNotificationsUrl,
                     l.CanSendOnBehalfOf,
-                    lp.SmsNotificationActive,
-                    lp.SmsNotificationOnDeliveryActive,
+                    lp.PhoneNotificationActive,
+                    lp.PhoneNotificationOnDeliveryActive,
                     lp.EmailNotificationActive,
                     lp.EmailNotificationOnDeliveryActive,
-                    lp.ViberNotificationActive,
-                    lp.ViberNotificationOnDeliveryActive,
                     lp.Email,
                     lp.Phone))
                 .SingleOrDefaultAsync(ct);

@@ -6,7 +6,7 @@ namespace ED.Domain
 {
     public partial interface IAdminReportsListQueryRepository
     {
-        Task<GetTicketsVO> GetTicketsAsync(
+        Task<GetTicketsVO[]> GetTicketsAsync(
             int adminUserId,
             DateTime from,
             DateTime to,

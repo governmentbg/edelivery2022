@@ -31,7 +31,8 @@ namespace ED.Domain
                 select new GetRecipientGroupMembersVO(
                     p.Id,
                     p.ElectronicSubjectName,
-                    tg.Name))
+                    tg.Name,
+                    p.HideAsRecipient))
                 .ToTableResultAsync(null, null, ct);
 
             return vos;
