@@ -7,8 +7,6 @@ CREATE TABLE [dbo].[LoginsProfiles](
   [ProfileId] [int] NOT NULL,
   [IsDefault] [bit] NOT NULL
     CONSTRAINT [DF_LoginsProfiles_IsDefault] DEFAULT (0),
-  [SmsNotificationActive] [bit] NOT NULL
-    CONSTRAINT [DF_LoginsProfiles_SmsNotificationActive] DEFAULT (0),
   [EmailNotificationActive] [bit] NOT NULL
     CONSTRAINT [DF_LoginsProfiles_EmailNotificationActive] DEFAULT (1),
   [AccessGrantedBy] [int] NOT NULL,
@@ -16,10 +14,11 @@ CREATE TABLE [dbo].[LoginsProfiles](
   [EmailNotificationOnDeliveryActive] [bit] NOT NULL DEFAULT (0),
   [Email] [nvarchar](100) NOT NULL,
   [Phone] [nvarchar](50) NOT NULL,
-  [SmsNotificationOnDeliveryActive] [bit] NOT NULL,
   [AccessGrantedByAdminUserId] [int] NULL,
-  [ViberNotificationActive] [bit] NOT NULL,
-  [ViberNotificationOnDeliveryActive] [bit] NOT NULL,
+  [PhoneNotificationActive] [bit] NOT NULL
+    CONSTRAINT [DF_LoginsProfiles_PhoneNotificationActive] DEFAULT (0),
+  [PhoneNotificationOnDeliveryActive] [bit] NOT NULL
+    CONSTRAINT [DF_LoginsProfiles_PhoneNotificationOnDeliveryActive] DEFAULT (0)
   
   CONSTRAINT [PK_LoginsProfiles] PRIMARY KEY ([LoginId], [ProfileId]),
   CONSTRAINT [FK_LoginsProfiles_AdminUsers_AccessGrantedByAdminUserId]
@@ -34,16 +33,5 @@ CREATE TABLE [dbo].[LoginsProfiles](
   CONSTRAINT [FK_LoginsProfiles_Profiles]
     FOREIGN KEY([ProfileId])
     REFERENCES [dbo].[Profiles] ([Id]),
-)
-GO
-
-CREATE NONCLUSTERED INDEX [IX_LoginsProfiles_ProfileId]
-ON [dbo].[LoginsProfiles]([ProfileId])
-INCLUDE(
-  [LoginId],
-  [IsDefault],
-  [SmsNotificationActive],
-  [EmailNotificationActive],
-  [EmailNotificationOnDeliveryActive]
 )
 GO

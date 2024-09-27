@@ -73,6 +73,7 @@ GO
 :r $(rootPath)/Create/Tables/Report/SmsDelivery.sql
 :r $(rootPath)/Create/Tables/Report/TicketDelivery.sql
 :r $(rootPath)/Create/Tables/Report/ViberDelivery.sql
+:r $(rootPath)/Create/Tables/Report/TicketStats.sql
 
 :r $(rootPath)/Create/Tables/__ForRemoval/CertificateFlags.sql
 :r $(rootPath)/Create/Tables/__ForRemoval/ExternalLogins.sql
@@ -82,3 +83,4 @@ GO
 :r $(rootPath)/Create/Views/ProfileStorageSpace_Indexed.sql
 
 :r $(rootPath)/Create/StoredProcedures/spDeleteOrphanedBlobs.sql
+:r $(rootPath)/Create/StoredProcedures/spGetTicketStats.sql
