@@ -7,6 +7,8 @@ namespace ED.AdminPanel
 {
     public class AdminPanelOptions
     {
+        public string Environment { get; set; } = null!;
+
         [Required]
         public string DomainServicesUrl { get; set; } = null!;
 

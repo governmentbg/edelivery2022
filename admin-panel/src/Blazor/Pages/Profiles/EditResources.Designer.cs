@@ -169,6 +169,15 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Скрий като получател.
+        /// </summary>
+        public static string FormHideAsRecipient {
+            get {
+                return ResourceManager.GetString("FormHideAsRecipient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ЕГН/ЛНЧ.
         /// </summary>
         public static string IndividualIdentifier {

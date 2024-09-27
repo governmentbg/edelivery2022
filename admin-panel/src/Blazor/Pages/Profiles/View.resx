@@ -213,6 +213,15 @@
   <data name="FieldEsbUserOId" xml:space="preserve">
     <value>Service OId</value>
   </data>
+  <data name="FieldHideAsRecipient" xml:space="preserve">
+    <value>Скрит като получател</value>
+  </data>
+  <data name="FieldHideAsRecipient_False" xml:space="preserve">
+    <value>Не</value>
+  </data>
+  <data name="FieldHideAsRecipient_True" xml:space="preserve">
+    <value>Да</value>
+  </data>
   <data name="FieldIsPassive" xml:space="preserve">
     <value>Пасивна регистрация</value>
   </data>
@@ -255,11 +264,11 @@
   <data name="FieldLoginPhone" xml:space="preserve">
     <value>Телефон</value>
   </data>
-  <data name="FieldLoginSmsNotificationActive" xml:space="preserve">
-    <value>Нотификации по SMS при получаване на ново съобщение</value>
+  <data name="FieldLoginPhoneNotificationActive" xml:space="preserve">
+    <value>Нотификации по телефон при получаване на ново съобщение</value>
   </data>
-  <data name="FieldLoginSmsNotificationOnDeliveryActive" xml:space="preserve">
-    <value>Нотификации по SMS при отваряне на съобщение</value>
+  <data name="FieldLoginPhoneNotificationOnDeliveryActive" xml:space="preserve">
+    <value>Нотификации по телефон при отваряне на съобщение</value>
   </data>
   <data name="FieldRegistrationRequest" xml:space="preserve">
     <value>Заявки за регистрация</value>
@@ -281,12 +290,6 @@
   </data>
   <data name="FieldTargetGroup" xml:space="preserve">
     <value>Целева група</value>
-  </data>
-  <data name="FieldViberNotificationActive" xml:space="preserve">
-    <value>Нотификации по Viber при получаване на ново съобщение</value>
-  </data>
-  <data name="FieldViberNotificationOnDeliveryActive" xml:space="preserve">
-    <value>Нотификации по Viber при отваряне на съобщение</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>Име</value>
@@ -359,5 +362,23 @@
   </data>
   <data name="TitlePrefix" xml:space="preserve">
     <value>Профил</value>
+  </data>
+  <data name="FieldLicenceAgreed" xml:space="preserve">
+    <value>Приел условията за ползване на услугата</value>
+  </data>
+  <data name="FieldLicenceAgreed_False" xml:space="preserve">
+    <value>Не</value>
+  </data>
+  <data name="FieldLicenceAgreed_True" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="FieldGDPRAgreed" xml:space="preserve">
+    <value>Приел условията на политиката за поверителност и защита на данните</value>
+  </data>
+  <data name="FieldGDPRAgreed_False" xml:space="preserve">
+    <value>Не</value>
+  </data>
+  <data name="FieldGDPRAgreed_True" xml:space="preserve">
+    <value>Да</value>
   </data>
 </root>

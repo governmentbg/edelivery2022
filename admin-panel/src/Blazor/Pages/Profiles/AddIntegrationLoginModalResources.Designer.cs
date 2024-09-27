@@ -178,47 +178,29 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Нотификации по телефон при получаване на ново съобщение.
+        /// </summary>
+        public static string FormPhoneNotificationActive {
+            get {
+                return ResourceManager.GetString("FormPhoneNotificationActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Нотификации по телефон при отваряне на съобщение.
+        /// </summary>
+        public static string FormPhoneNotificationOnDeliveryActive {
+            get {
+                return ResourceManager.GetString("FormPhoneNotificationOnDeliveryActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to URL за нотификации.
         /// </summary>
         public static string FormPushNotificationsUrl {
             get {
                 return ResourceManager.GetString("FormPushNotificationsUrl", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Нотификации по SMS при получаване на ново съобщение.
-        /// </summary>
-        public static string FormSmsNotificationActive {
-            get {
-                return ResourceManager.GetString("FormSmsNotificationActive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Нотификации по SMS при отваряне на съобщение.
-        /// </summary>
-        public static string FormSmsNotificationOnDeliveryActive {
-            get {
-                return ResourceManager.GetString("FormSmsNotificationOnDeliveryActive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Нотификации по Viber при получаване на ново съобщение.
-        /// </summary>
-        public static string FormViberNotificationActive {
-            get {
-                return ResourceManager.GetString("FormViberNotificationActive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Нотификации по Viber при отваряне на съобщение.
-        /// </summary>
-        public static string FormViberNotificationOnDeliveryActive {
-            get {
-                return ResourceManager.GetString("FormViberNotificationOnDeliveryActive", resourceCulture);
             }
         }
         

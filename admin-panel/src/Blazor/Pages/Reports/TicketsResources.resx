@@ -124,64 +124,64 @@
     <value>Търси</value>
   </data>
   <data name="ColumnAll" xml:space="preserve">
-    <value>Справка административни актове за {0}</value>
+    <value>Справка административни актове от {0} до {1}</value>
   </data>
-  <data name="FormReportDate" xml:space="preserve">
-    <value>Ден</value>
+  <data name="FormFrom" xml:space="preserve">
+    <value>От</value>
   </data>
-  <data name="LabelDailyActiveProfiles" xml:space="preserve">
-    <value>Активни профили</value>
+  <data name="FormTo" xml:space="preserve">
+    <value>До</value>
   </data>
-  <data name="LabelDailyIndividualPenalDecrees" xml:space="preserve">
-    <value>НП - ФЛ</value>
+  <data name="LabelAnnulled" xml:space="preserve">
+    <value>Анулирани</value>
   </data>
-  <data name="LabelDailyIndividualTickets" xml:space="preserve">
-    <value>Фиш - ФЛ</value>
-  </data>
-  <data name="LabelDailyIndividualTotalTickets" xml:space="preserve">
-    <value>Общо (НП + фиш) - ФЛ</value>
-  </data>
-  <data name="LabelDailyLegalEntityPenalDecrees" xml:space="preserve">
-    <value>НП - ЮЛ</value>
-  </data>
-  <data name="LabelDailyLegalEntityTickets" xml:space="preserve">
-    <value>Фиш - ЮЛ</value>
-  </data>
-  <data name="LabelDailyLegalEntityTotalTickets" xml:space="preserve">
-    <value>Общо (НП + фиш) - ЮЛ</value>
-  </data>
-  <data name="LabelDailyNotifications" xml:space="preserve">
-    <value>Нотификации Общо</value>
-  </data>
-  <data name="LabelDailyNotificationsByEmail" xml:space="preserve">
-    <value>Имейл</value>
-  </data>
-  <data name="LabelDailyNotificationsByPhone" xml:space="preserve">
-    <value>Телефон</value>
-  </data>
-  <data name="LabelDailyPassiveProfiles" xml:space="preserve">
-    <value>Пасивни профили</value>
-  </data>
-  <data name="LabelDailyReceivedIndividualPenalDecrees" xml:space="preserve">
+  <data name="LabelDeliveredPenalDecreeIndividuals" xml:space="preserve">
     <value>Връчени НП - ФЛ</value>
   </data>
-  <data name="LabelDailyReceivedIndividualTickets" xml:space="preserve">
-    <value>Връчени Фиш - ФЛ</value>
-  </data>
-  <data name="LabelDailyReceivedLegalEntityPenalDecrees" xml:space="preserve">
+  <data name="LabelDeliveredPenalDecreeLegalEntites" xml:space="preserve">
     <value>Връчени НП - ЮЛ</value>
   </data>
-  <data name="LabelDailyReceivedLegalEntityTickets" xml:space="preserve">
+  <data name="LabelDeliveredTicketIndividuals" xml:space="preserve">
+    <value>Връчени Фиш - ФЛ</value>
+  </data>
+  <data name="LabelDeliveredTicketLegalEntites" xml:space="preserve">
     <value>Връчени Фиш - ЮЛ</value>
   </data>
-  <data name="LabelDailyReceivedTickets" xml:space="preserve">
-    <value>Брой връчени през ССЕВ</value>
+  <data name="LabelEmailNotifications" xml:space="preserve">
+    <value>Имейл</value>
   </data>
-  <data name="LabelDailyTickets" xml:space="preserve">
-    <value>Брой получени в ССЕВ</value>
+  <data name="LabelExternalServed" xml:space="preserve">
+    <value>Връчени външно</value>
   </data>
-  <data name="LabelTotalTickets" xml:space="preserve">
-    <value>Брой адм. актове</value>
+  <data name="LabelInternalServed" xml:space="preserve">
+    <value>Връчен в ССЕВ</value>
+  </data>
+  <data name="LabelPhoneNotifications" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="LabelReceivedPenalDecreeIndividuals" xml:space="preserve">
+    <value>НП - ФЛ</value>
+  </data>
+  <data name="LabelReceivedPenalDecreeLegalEntites" xml:space="preserve">
+    <value>НП - ЮЛ</value>
+  </data>
+  <data name="LabelReceivedTicketIndividuals" xml:space="preserve">
+    <value>Фиш - ФЛ</value>
+  </data>
+  <data name="LabelReceivedTicketLegalEntites" xml:space="preserve">
+    <value>Фиш - ЮЛ</value>
+  </data>
+  <data name="LabelSentToActiveProfiles" xml:space="preserve">
+    <value>Активни профили</value>
+  </data>
+  <data name="LabelSentToPassiveProfiles" xml:space="preserve">
+    <value>Пасивни профили</value>
+  </data>
+  <data name="LabelTicketStatDate" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="NoItems" xml:space="preserve">
+    <value>Няма данни услуги за избрания период</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Справка административни актове</value>

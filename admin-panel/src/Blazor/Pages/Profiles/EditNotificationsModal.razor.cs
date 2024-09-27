@@ -40,33 +40,17 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
             ErrorMessageResourceType = typeof(ErrorMessages))]
         [Display(
-            Name = nameof(EditNotificationsModalResources.FormSmsNotificationActive),
+            Name = nameof(EditNotificationsModalResources.FormPhoneNotificationActive),
             ResourceType = typeof(EditNotificationsModalResources))]
-        public bool SmsNotificationActive { get; set; }
+        public bool PhoneNotificationActive { get; set; }
 
         [Required(
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
             ErrorMessageResourceType = typeof(ErrorMessages))]
         [Display(
-            Name = nameof(EditNotificationsModalResources.FormSmsNotificationOnDeliveryActive),
+            Name = nameof(EditNotificationsModalResources.FormPhoneNotificationOnDeliveryActive),
             ResourceType = typeof(EditNotificationsModalResources))]
-        public bool SmsNotificationOnDeliveryActive { get; set; }
-
-        [Required(
-            ErrorMessageResourceName = nameof(ErrorMessages.Required),
-            ErrorMessageResourceType = typeof(ErrorMessages))]
-        [Display(
-            Name = nameof(EditNotificationsModalResources.FormViberNotificationActive),
-            ResourceType = typeof(EditNotificationsModalResources))]
-        public bool ViberNotificationActive { get; set; }
-
-        [Required(
-            ErrorMessageResourceName = nameof(ErrorMessages.Required),
-            ErrorMessageResourceType = typeof(ErrorMessages))]
-        [Display(
-            Name = nameof(EditNotificationsModalResources.FormViberNotificationOnDeliveryActive),
-            ResourceType = typeof(EditNotificationsModalResources))]
-        public bool ViberNotificationOnDeliveryActive { get; set; }
+        public bool PhoneNotificationOnDeliveryActive { get; set; }
     }
 
     public partial class EditNotificationsModal
@@ -103,10 +87,8 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
                 Phone = notifications.Phone,
                 EmailNotificationActive = notifications.EmailNotificationActive,
                 EmailNotificationOnDeliveryActive = notifications.EmailNotificationOnDeliveryActive,
-                SmsNotificationActive = notifications.SmsNotificationActive,
-                SmsNotificationOnDeliveryActive = notifications.SmsNotificationOnDeliveryActive,
-                ViberNotificationActive = notifications.ViberNotificationActive,
-                ViberNotificationOnDeliveryActive = notifications.ViberNotificationOnDeliveryActive,
+                PhoneNotificationActive = notifications.PhoneNotificationActive,
+                PhoneNotificationOnDeliveryActive = notifications.PhoneNotificationOnDeliveryActive,
             };
         }
 
@@ -123,10 +105,8 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
                     Phone = this.model.Phone,
                     EmailNotificationActive = this.model.EmailNotificationActive,
                     EmailNotificationOnDeliveryActive = this.model.EmailNotificationOnDeliveryActive,
-                    SmsNotificationActive = this.model.SmsNotificationActive,
-                    SmsNotificationOnDeliveryActive = this.model.SmsNotificationOnDeliveryActive,
-                    ViberNotificationActive = this.model.ViberNotificationActive,
-                    ViberNotificationOnDeliveryActive = this.model.ViberNotificationOnDeliveryActive,
+                    PhoneNotificationActive = this.model.PhoneNotificationActive,
+                    PhoneNotificationOnDeliveryActive = this.model.PhoneNotificationOnDeliveryActive,
                     AdminUserId = currentUserId,
                     Ip = this.ConnectionInfo.RemoteIpAddress,
                 });

@@ -142,6 +142,30 @@
                                 : Localizer["FieldIsProfilePassive_False"])
                         </label>
                     </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldHideAsRecipient"]</label>
+                        <label class="strong">
+                            @(profile.HideAsRecipient
+                                ? Localizer["FieldHideAsRecipient_True"]
+                                : Localizer["FieldHideAsRecipient_False"])
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldLicenceAgreed"]</label>
+                        <label class="strong">
+                            @(profile.LicenceAgreed
+                                ? Localizer["FieldLicenceAgreed_True"]
+                                : Localizer["FieldLicenceAgreed_False"])
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Localizer["FieldGDPRAgreed"]</label>
+                        <label class="strong">
+                            @(profile.GdprAgreed
+                                ? Localizer["FieldGDPRAgreed_True"]
+                                : Localizer["FieldGDPRAgreed_False"])
+                        </label>
+                    </div>
                     <div class="form-group"></div>
 
                     @if (profile.InfoCase == GetProfileInfoResponse.InfoOneofCase.IndividualInfo)
@@ -321,27 +345,15 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label>@Localizer["FieldViberNotificationActive"]</label>
+                                <label>@Localizer["FieldLoginPhoneNotificationActive"]</label>
                                 <label class="strong">
-                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.ViberNotificationActive}"]
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.PhoneNotificationActive}"]
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label>@Localizer["FieldViberNotificationOnDeliveryActive"]</label>
+                                <label>@Localizer["FieldLoginPhoneNotificationOnDeliveryActive"]</label>
                                 <label class="strong">
-                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.ViberNotificationOnDeliveryActive}"]
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>@Localizer["FieldLoginSmsNotificationActive"]</label>
-                                <label class="strong">
-                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.SmsNotificationActive}"]
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>@Localizer["FieldLoginSmsNotificationOnDeliveryActive"]</label>
-                                <label class="strong">
-                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.SmsNotificationOnDeliveryActive}"]
+                                    @Localizer[$"FieldChecked_{profile.DefaultLogin.PhoneNotificationOnDeliveryActive}"]
                                 </label>
                             </div>
 

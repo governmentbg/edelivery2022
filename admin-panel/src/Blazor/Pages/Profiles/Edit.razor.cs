@@ -17,6 +17,11 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
         public bool IsIndividual { get; set; }
 
         [Display(
+            Name = nameof(EditResources.FormHideAsRecipient),
+            ResourceType = typeof(EditResources))]
+        public bool HideAsRecipient { get; set; }
+
+        [Display(
             Name = nameof(EditResources.FirstName),
             ResourceType = typeof(EditResources))]
         public string FirstName { get; set; }
@@ -173,14 +178,15 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
                 AddressResidence = data.AddressResidence,
                 TargetGroupId = data.TargetGroupId.ToString(),
                 EnableMessagesWithCodeAsString = data.EnableMessagesWithCode?.ToString() ?? string.Empty,
-                EnableMessagesWithCode = data.EnableMessagesWithCode
+                EnableMessagesWithCode = data.EnableMessagesWithCode,
+                HideAsRecipient = data.HideAsRecipient,
             };
 
             this.enableMessagesWithCode = new Select2Option[]
             {
-                new Select2Option { Text = this.Localizer["FormEnableMessagesWithCodeValueNull"], Id = "null" },
-                new Select2Option { Text = this.Localizer["FormEnableMessagesWithCodeValueTrue"], Id = true.ToString() },
-                new Select2Option { Text = this.Localizer["FormEnableMessagesWithCodeValueFalse"], Id = false.ToString() },
+                new() { Text = this.Localizer["FormEnableMessagesWithCodeValueNull"], Id = "null" },
+                new() { Text = this.Localizer["FormEnableMessagesWithCodeValueTrue"], Id = true.ToString() },
+                new() { Text = this.Localizer["FormEnableMessagesWithCodeValueFalse"], Id = false.ToString() },
             };
 
             GetEntityCodeNomResponse countriesResponse =
@@ -258,6 +264,7 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
                 TargetGroupId = int.Parse(this.model.TargetGroupId),
                 EnableMessagesWithCode = enableMessagesWithCode,
                 Ip = this.ConnectionInfo.RemoteIpAddress,
+                HideAsRecipient = this.model.HideAsRecipient,
             };
 
             if (this.model.IsIndividual)

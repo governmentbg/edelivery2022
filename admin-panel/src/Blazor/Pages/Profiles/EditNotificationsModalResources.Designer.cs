@@ -115,38 +115,20 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Нотификации по SMS при получаване на ново съобщение.
+        ///   Looks up a localized string similar to Нотификации по телефон при получаване на ново съобщение.
         /// </summary>
-        public static string FormSmsNotificationActive {
+        public static string FormPhoneNotificationActive {
             get {
-                return ResourceManager.GetString("FormSmsNotificationActive", resourceCulture);
+                return ResourceManager.GetString("FormPhoneNotificationActive", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Нотификации по SMS при отваряне на съобщение.
+        ///   Looks up a localized string similar to Нотификации по телефон при отваряне на съобщение.
         /// </summary>
-        public static string FormSmsNotificationOnDeliveryActive {
+        public static string FormPhoneNotificationOnDeliveryActive {
             get {
-                return ResourceManager.GetString("FormSmsNotificationOnDeliveryActive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Нотификации по Viber при получаване на ново съобщение.
-        /// </summary>
-        public static string FormViberNotificationActive {
-            get {
-                return ResourceManager.GetString("FormViberNotificationActive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Нотификации по Viber при отваряне на съобщение.
-        /// </summary>
-        public static string FormViberNotificationOnDeliveryActive {
-            get {
-                return ResourceManager.GetString("FormViberNotificationOnDeliveryActive", resourceCulture);
+                return ResourceManager.GetString("FormPhoneNotificationOnDeliveryActive", resourceCulture);
             }
         }
         

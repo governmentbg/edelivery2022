@@ -69,11 +69,24 @@
                                         @foreach (var item in members.RecipientGroupMembers)
                                         {
                                             <tr @key="item.ProfileId">
-                                                <td>@item.Name</td>
+                                                <td>
+                                                    @if (item.HideAsRecipient)
+                                                    {
+                                                        <span class="warning-message" data-toggle="tooltip" title="Поради административни настройки профилът не може да бъде избран за получател">
+                                                            @item.Name
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>
+                                                            @item.Name
+                                                        </span>
+                                                    }
+                                                </td>
                                                 <td class="file-actions">
                                                     <div>
                                                         <a href="javascript:void(0);"
-                                                            @onclick="async () => await RemoveRecipientGroupMemberAsync(item.ProfileId)">
+                                                           @onclick="async () => await RemoveRecipientGroupMemberAsync(item.ProfileId)">
                                                             <img src="img/trash-icon.png" class="delete" />
                                                         </a>
                                                     </div>

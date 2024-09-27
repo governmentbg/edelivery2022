@@ -88,46 +88,24 @@
             </div>
             <div class="form-col">
                 <div class="form-group">
-                    <InputCheckbox id="@nameof(AddIntegrationLoginModalModel.ViberNotificationActive)"
-                                   @bind-Value="model.ViberNotificationActive" />
-                    <label for="@nameof(AddIntegrationLoginModalModel.ViberNotificationActive)"
+                    <InputCheckbox id="@nameof(AddIntegrationLoginModalModel.PhoneNotificationActive)"
+                                   @bind-Value="model.PhoneNotificationActive" />
+                    <label for="@nameof(AddIntegrationLoginModalModel.PhoneNotificationActive)"
                            style="width: 100%;">
-                        @Localizer["FormViberNotificationActive"]
+                        @Localizer["FormPhoneNotificationActive"]
                     </label>
-                    <ValidationMessage For="@(() => model.ViberNotificationActive)" />
+                    <ValidationMessage For="@(() => model.PhoneNotificationActive)" />
                 </div>
             </div>
             <div class="form-col">
                 <div class="form-group">
-                    <InputCheckbox id="@nameof(AddIntegrationLoginModalModel.ViberNotificationOnDeliveryActive)"
-                                   @bind-Value="model.ViberNotificationOnDeliveryActive" />
-                    <label for="@nameof(AddIntegrationLoginModalModel.ViberNotificationOnDeliveryActive)"
+                    <InputCheckbox id="@nameof(AddIntegrationLoginModalModel.PhoneNotificationOnDeliveryActive)"
+                                   @bind-Value="model.PhoneNotificationOnDeliveryActive" />
+                    <label for="@nameof(AddIntegrationLoginModalModel.PhoneNotificationOnDeliveryActive)"
                            style="width: 100%;">
-                        @Localizer["FormViberNotificationOnDeliveryActive"]
+                        @Localizer["FormPhoneNotificationOnDeliveryActive"]
                     </label>
-                    <ValidationMessage For="@(() => model.ViberNotificationOnDeliveryActive)" />
-                </div>
-            </div>
-            <div class="form-col">
-                <div class="form-group">
-                    <InputCheckbox id="@nameof(AddIntegrationLoginModalModel.SmsNotificationActive)"
-                                   @bind-Value="model.SmsNotificationActive" />
-                    <label for="@nameof(AddIntegrationLoginModalModel.SmsNotificationActive)"
-                           style="width: 100%;">
-                        @Localizer["FormSmsNotificationActive"]
-                    </label>
-                    <ValidationMessage For="@(() => model.SmsNotificationActive)" />
-                </div>
-            </div>
-            <div class="form-col">
-                <div class="form-group">
-                    <InputCheckbox id="@nameof(AddIntegrationLoginModalModel.SmsNotificationOnDeliveryActive)"
-                                   @bind-Value="model.SmsNotificationOnDeliveryActive" />
-                    <label for="@nameof(AddIntegrationLoginModalModel.SmsNotificationOnDeliveryActive)"
-                           style="width: 100%;">
-                        @Localizer["FormSmsNotificationOnDeliveryActive"]
-                    </label>
-                    <ValidationMessage For="@(() => model.SmsNotificationOnDeliveryActive)" />
+                    <ValidationMessage For="@(() => model.PhoneNotificationOnDeliveryActive)" />
                 </div>
             </div>
         </section>

@@ -156,20 +156,14 @@
   <data name="FormPhone" xml:space="preserve">
     <value>Телефон</value>
   </data>
+  <data name="FormPhoneNotificationActive" xml:space="preserve">
+    <value>Нотификации по телефон при получаване на ново съобщение</value>
+  </data>
+  <data name="FormPhoneNotificationOnDeliveryActive" xml:space="preserve">
+    <value>Нотификации по телефон при отваряне на съобщение</value>
+  </data>
   <data name="FormPushNotificationsUrl" xml:space="preserve">
     <value>URL за нотификации</value>
-  </data>
-  <data name="FormSmsNotificationActive" xml:space="preserve">
-    <value>Нотификации по SMS при получаване на ново съобщение</value>
-  </data>
-  <data name="FormSmsNotificationOnDeliveryActive" xml:space="preserve">
-    <value>Нотификации по SMS при отваряне на съобщение</value>
-  </data>
-  <data name="FormViberNotificationActive" xml:space="preserve">
-    <value>Нотификации по Viber при получаване на ново съобщение</value>
-  </data>
-  <data name="FormViberNotificationOnDeliveryActive" xml:space="preserve">
-    <value>Нотификации по Viber при отваряне на съобщение</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Редакция на интеграцинен логин</value>

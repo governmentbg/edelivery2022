@@ -22,6 +22,20 @@
                     <DataAnnotationsValidator />
                     <ServerSideValidator @ref="serverSideValidator" />
 
+                    <div class="flex-row">
+                        <div class="col-2">
+                            <div class="form-col">
+                                <InputCheckbox id="@nameof(EditModel.HideAsRecipient)"
+                                               @bind-Value="model.HideAsRecipient"
+                                               disabled="@(model.TargetGroupId == Constants.IndividualTargetGroupId.ToString() || model.TargetGroupId == Constants.LegalEntityTargetGroupId.ToString())" />
+                                <label for="@nameof(EditModel.HideAsRecipient)"
+                                       style="width: 100%;">
+                                    @Localizer["FormHideAsRecipient"]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     @if (this.model.IsIndividual)
                     {
                         <div class="flex-row">

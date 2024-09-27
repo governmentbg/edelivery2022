@@ -13,6 +13,7 @@ namespace ED.AdminPanel.Controllers
     {
         private const int PageSize = 30;
 
+#pragma warning disable IDE1006 // Naming Styles
         public record Select2Result(
             Select2ResultItem[] results,
             Select2ResultPagination pagination);
@@ -22,6 +23,7 @@ namespace ED.AdminPanel.Controllers
             string text);
 
         public record Select2ResultPagination(bool more);
+#pragma warning restore IDE1006 // Naming Styles
 
         public async Task<ActionResult<object>> ProfilesAsync(
             [FromQuery] string term,
@@ -61,6 +63,64 @@ namespace ED.AdminPanel.Controllers
             ListProfilesResponse profilesResponse =
                 await adminClient.ListProfilesAsync(
                     new ListProfilesRequest
+                    {
+                        Term = term ?? string.Empty,
+                        Offset = (page - 1) * PageSize,
+                        // take 1 more so that we know there are more
+                        Limit = PageSize + 1,
+                    },
+                    cancellationToken: ct);
+
+            return new Select2Result(
+                profilesResponse.Items
+                    .Select(n =>
+                        new Select2ResultItem(
+                            n.ProfileId.ToString(),
+                            n.ProfileName))
+                    .ToArray(),
+                new Select2ResultPagination(
+                    profilesResponse.Items.Count > PageSize)
+            );
+        }
+
+        public async Task<ActionResult<object>> RecipientsAsync(
+            [FromQuery] string term,
+            [FromQuery(Name = "page")] int? queryPage,
+            [FromQuery] int[] ids,
+            [FromServices] Admin.AdminClient adminClient,
+            CancellationToken ct)
+        {
+            if (ids != null && ids.Length > 0)
+            {
+                GetProfilesByIdResponse profilesByIdResponse =
+                    await adminClient.GetProfilesByIdAsync(
+                        new GetProfilesByIdRequest
+                        {
+                            Ids = { ids }
+                        },
+                        cancellationToken: ct);
+
+                return profilesByIdResponse.Items
+                    .Select(n =>
+                        new Select2ResultItem(
+                            n.ProfileId.ToString(),
+                            n.ProfileName))
+                    .ToArray();
+            }
+
+            int page;
+            if (queryPage != null)
+            {
+                page = queryPage.Value;
+            }
+            else
+            {
+                page = 1;
+            }
+
+            ListRecipientsResponse profilesResponse =
+                await adminClient.ListRecipientsAsync(
+                    new ListRecipientsRequest
                     {
                         Term = term ?? string.Empty,
                         Offset = (page - 1) * PageSize,
