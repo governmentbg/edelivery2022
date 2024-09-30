@@ -51,7 +51,7 @@
         </tr>
         <tr>
             <td>Съдържание:</td>
-            <td>@Model.Fields[new Guid("d7f6dcc0-7dbd-4e8f-b600-8dbfb6a05a49")].ToString()</td>
+            <td style="white-space: pre-wrap;">@Model.Fields[new Guid("d7f6dcc0-7dbd-4e8f-b600-8dbfb6a05a49")].ToString()</td>
         </tr>
         <tr>
             <td>@Model.Fields[new Guid("93803a3b-3040-4d4c-a47c-c2c85dcbacc6")].ToString()</td>
@@ -88,20 +88,25 @@
                     }
                     else
                     {
-                        <a href="@Url.CreateMessageBlobWebPortalToken(activeProfileId, Model.MessageId, blob.BlobId)" class="file-link" rel="noopener" target="_blank">
+                        <a href="@Url.CreateMessageBlobWebPortalToken(activeProfileId, Model.MessageId, blob.BlobId)"
+                           class="file-link"
+                           rel="noopener"
+                           target="_blank">
                             @blob.FileName <span class="note"></span>
                         </a>
                     }
 
-                    <a href="@blobTimestamp" data-toggle="tooltip" data-original-title="@ProfilePage.TooltipDocumentTimestamp">
-                        <img src="~/Content/img/timestamp.png">
+                    <a href="@blobTimestamp" 
+                       data-toggle="tooltip" 
+                       data-original-title="@ProfilePage.TooltipDocumentTimestamp"
+                       aria-label="@ProfilePage.TooltipDocumentTimestamp">
+                        <img src="~/Content/img/timestamp.png" alt="@ARIA.AltMessageTimestamp" />
                     </a>
 
                     @if (!string.IsNullOrEmpty(errorMessage))
                     {
                         <span class="warning-message">@errorMessage</span>
                     }
-
 
                     @if (!string.IsNullOrEmpty(blob.DocumentRegistrationNumber))
                     {
@@ -182,8 +187,9 @@
                 Подадено в ССЕВ:
                 <a href="@Url.Action("GetMessageTimestamp", "Messages", new { id = Model.MessageId, timeStampType = EDelivery.WebPortal.Enums.eTimeStampType.NRO })"
                    data-toggle="tooltip"
-                   data-original-title="@ProfilePage.TooltipDownloadNRO">
-                    <img src="~/Content/img/timestamp.png">
+                   data-original-title="@ProfilePage.TooltipDownloadNRO"
+                   aria-label="@ProfilePage.TooltipDownloadNRO">
+                    <img src="~/Content/img/timestamp.png" alt="@ARIA.AltMessageTimestamp" />
                 </a>
             </div>
         </div>
@@ -197,7 +203,7 @@
                     <a href="@Url.Action("GetMessageTimestamp", "Messages", new { id = Model.MessageId, timeStampType = EDelivery.WebPortal.Enums.eTimeStampType.NRD })"
                        data-toggle="tooltip"
                        data-original-title="@ProfilePage.TooltipDownloadNRD">
-                        <img src="~/Content/img/timestamp.png">
+                        <img src="~/Content/img/timestamp.png" alt="@ARIA.AltMessageTimestamp" />
                     </a>
                 }
             </div>
@@ -209,7 +215,8 @@
                 <a href="@Url.Action("GetPdfAsRecipient", "Messages", new { id = Model.MessageId })"
                    class="file-link pdf"
                    data-toggle="tooltip"
-                   data-original-title="@ProfilePage.TooltipDownloadStampPdfMessage">
+                   data-original-title="@ProfilePage.TooltipDownloadStampPdfMessage"
+                   aria-label="@ProfilePage.TooltipDownloadStampPdfMessage">
                 </a>
             </div>
         </div>
@@ -220,7 +227,8 @@
                 <a href="@Url.Action("GetSummaryAsRecipient", "Messages", new { id = Model.MessageId })"
                    class="file-link xml"
                    data-toggle="tooltip"
-                   data-original-title="@ProfilePage.TooltipDownloadTimestampedMessage">
+                   data-original-title="@ProfilePage.TooltipDownloadTimestampedMessage"
+                   aria-label="@ProfilePage.TooltipDownloadTimestampedMessage">
                 </a>
             </div>
         </div>

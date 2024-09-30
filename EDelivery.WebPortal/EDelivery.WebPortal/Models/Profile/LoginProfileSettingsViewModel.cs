@@ -19,10 +19,8 @@ namespace EDelivery.WebPortal.Models
             this.TargetGroupId = targetGroupId;
             this.IsEmailNotificationEnabled = settings.IsEmailNotificationEnabled;
             this.IsEmailNotificationOnDeliveryEnabled = settings.IsEmailNotificationOnDeliveryEnabled;
-            this.IsSmsNotificationEnabled = settings.IsSmsNotificationEnabled;
-            this.IsSmsNotificationOnDeliveryEnabled = settings.IsSmsNotificationOnDeliveryEnabled;
-            this.IsViberNotificationEnabled = settings.IsViberNotificationEnabled;
-            this.IsViberNotificationOnDeliveryEnabled = settings.IsViberNotificationOnDeliveryEnabled;
+            this.IsPhoneNotificationEnabled = settings.IsPhoneNotificationEnabled;
+            this.IsPhoneNotificationOnDeliveryEnabled = settings.IsPhoneNotificationOnDeliveryEnabled;
             this.Email = settings.Email;
             this.Phone = settings.Phone;
         }
@@ -35,13 +33,9 @@ namespace EDelivery.WebPortal.Models
 
         public bool IsEmailNotificationOnDeliveryEnabled { get; set; }
 
-        public bool IsSmsNotificationEnabled { get; set; }
+        public bool IsPhoneNotificationEnabled { get; set; }
 
-        public bool IsSmsNotificationOnDeliveryEnabled { get; set; }
-
-        public bool IsViberNotificationEnabled { get; set; }
-
-        public bool IsViberNotificationOnDeliveryEnabled { get; set; }
+        public bool IsPhoneNotificationOnDeliveryEnabled { get; set; }
 
         [RequiredRes]
         [EmailAddress(ErrorMessage = null, ErrorMessageResourceName = "ErrorInvalidEmail", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]

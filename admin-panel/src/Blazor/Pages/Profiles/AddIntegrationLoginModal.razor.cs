@@ -29,17 +29,17 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
             ErrorMessageResourceType = typeof(ErrorMessages))]
         [Display(
-            Name = nameof(AddIntegrationLoginModalResources.FormSmsNotificationActive),
+            Name = nameof(AddIntegrationLoginModalResources.FormPhoneNotificationActive),
             ResourceType = typeof(AddIntegrationLoginModalResources))]
-        public bool SmsNotificationActive { get; set; }
+        public bool PhoneNotificationActive { get; set; }
 
         [Required(
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
             ErrorMessageResourceType = typeof(ErrorMessages))]
         [Display(
-            Name = nameof(AddIntegrationLoginModalResources.FormSmsNotificationOnDeliveryActive),
+            Name = nameof(AddIntegrationLoginModalResources.FormPhoneNotificationOnDeliveryActive),
             ResourceType = typeof(AddIntegrationLoginModalResources))]
-        public bool SmsNotificationOnDeliveryActive { get; set; }
+        public bool PhoneNotificationOnDeliveryActive { get; set; }
 
         [Required(
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
@@ -56,22 +56,6 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
             Name = nameof(AddIntegrationLoginModalResources.FormEmailNotificationOnDeliveryActive),
             ResourceType = typeof(AddIntegrationLoginModalResources))]
         public bool EmailNotificationOnDeliveryActive { get; set; }
-
-        [Required(
-            ErrorMessageResourceName = nameof(ErrorMessages.Required),
-            ErrorMessageResourceType = typeof(ErrorMessages))]
-        [Display(
-            Name = nameof(AddIntegrationLoginModalResources.FormViberNotificationActive),
-            ResourceType = typeof(AddIntegrationLoginModalResources))]
-        public bool ViberNotificationActive { get; set; }
-
-        [Required(
-            ErrorMessageResourceName = nameof(ErrorMessages.Required),
-            ErrorMessageResourceType = typeof(ErrorMessages))]
-        [Display(
-            Name = nameof(AddIntegrationLoginModalResources.FormViberNotificationOnDeliveryActive),
-            ResourceType = typeof(AddIntegrationLoginModalResources))]
-        public bool ViberNotificationOnDeliveryActive { get; set; }
 
         [Required(
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
@@ -116,14 +100,12 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
                 CertificateThumbPrint = integrationLogin.Login?.CertificateThumbPrint,
                 PushNotificationsUrl = integrationLogin.Login?.PushNotificationsUrl,
                 CanSendOnBehalfOf = integrationLogin.Login?.CanSendOnBehalfOf ?? false,
-                SmsNotificationActive = integrationLogin.Login?.SmsNotificationActive ?? false,
-                SmsNotificationOnDeliveryActive = integrationLogin.Login?.SmsNotificationOnDeliveryActive ?? false,
+                PhoneNotificationActive = integrationLogin.Login?.PhoneNotificationActive ?? false,
+                PhoneNotificationOnDeliveryActive = integrationLogin.Login?.PhoneNotificationOnDeliveryActive ?? false,
                 EmailNotificationActive = integrationLogin.Login?.EmailNotificationActive ?? false,
                 EmailNotificationOnDeliveryActive = integrationLogin.Login?.EmailNotificationOnDeliveryActive ?? false,
-                ViberNotificationActive = integrationLogin.Login?.ViberNotificationActive ?? false,
-                ViberNotificationOnDeliveryActive = integrationLogin.Login?.ViberNotificationOnDeliveryActive ?? false,
                 Email = integrationLogin.Login?.Email,
-                Phone = integrationLogin.Login?.Phone
+                Phone = integrationLogin.Login?.Phone,
             };
         }
 
@@ -140,10 +122,8 @@ namespace ED.AdminPanel.Blazor.Pages.Profiles
                     EmailNotificationActive = this.model.EmailNotificationActive,
                     EmailNotificationOnDeliveryActive = this.model.EmailNotificationOnDeliveryActive,
                     Phone = this.model.Phone,
-                    SmsNotificationActive = this.model.SmsNotificationActive,
-                    SmsNotificationOnDeliveryActive = this.model.SmsNotificationOnDeliveryActive,
-                    ViberNotificationActive = this.model.ViberNotificationActive,
-                    ViberNotificationOnDeliveryActive = this.model.ViberNotificationOnDeliveryActive,
+                    PhoneNotificationActive = this.model.PhoneNotificationActive,
+                    PhoneNotificationOnDeliveryActive = this.model.PhoneNotificationOnDeliveryActive,
                 });
 
             await this.ModalInstance.CloseAsync();

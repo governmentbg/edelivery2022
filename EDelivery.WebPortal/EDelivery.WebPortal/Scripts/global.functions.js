@@ -177,6 +177,8 @@
             divButton.className = 'recipient-remove-btn';
             divButton.setAttribute('data-id', id);
             divButton.setAttribute('onclick', 'gf.removeMessageRecipientSelect2(event, "' + selectorId + '");');
+            // ! to access Resources this js code should be in a view (that is always rendered in a layout)
+            divButton.setAttribute('aria-label', 'Премахни получател');
             var divButtonText = document.createTextNode('\u00A0');
             divButton.appendChild(divButtonText);
 

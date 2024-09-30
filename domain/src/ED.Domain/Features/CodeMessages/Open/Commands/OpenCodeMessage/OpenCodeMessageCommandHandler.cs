@@ -158,11 +158,6 @@ namespace ED.Domain
                 ct);
 
             await this.QueueMessagesService.PostMessagesAsync(
-                notificationMessages.SmsQueueMessages,
-                QueueMessageFeatures.Messages,
-                ct);
-
-            await this.QueueMessagesService.PostMessagesAsync(
                 notificationMessages.PushNotificationQueueMessages,
                 QueueMessageFeatures.Messages,
                 ct);
@@ -184,7 +179,6 @@ namespace ED.Domain
 
         private record NotificationMessages(
             EmailQueueMessage[] EmailQueueMessages,
-            SmsQueueMessage[] SmsQueueMessages,
             PushNotificationQueueMessage[] PushNotificationQueueMessages,
             ViberQueueMessage[] ViberQueueMessages);
 
@@ -253,26 +247,6 @@ namespace ED.Domain
                     }))
                 .ToArray();
 
-            SmsQueueMessage[] smsRecipients = notificationRecipients
-                .Where(e => e.IsSmsNotificationOnDeliveryEnabled)
-                .Select(e => new SmsQueueMessage(
-                    QueueMessageFeatures.Messages,
-                    e.Phone,
-                    string.Format(
-                        smsBody,
-                        webPortalUrl,
-                        ResourceHelper
-                            .CyrillicToLatin(recipientProfileName)
-                            .ToUpperInvariant()),
-                    new
-                    {
-                        Event = NotificationEvent,
-                        MessageId = messageId,
-                        RecipientProfileId = e.ProfileId,
-                        RecipientLoginId = e.LoginId
-                    }))
-                .ToArray();
-
             PushNotificationQueueMessage[] pushNotificationRecipients = notificationRecipients
                 .Where(e => !string.IsNullOrEmpty(e.PushNotificationUrl))
                 .Select(e => new PushNotificationQueueMessage(
@@ -293,7 +267,7 @@ namespace ED.Domain
                 .ToArray();
 
             ViberQueueMessage[] viberRecipients = notificationRecipients
-                .Where(e => e.IsViberNotificationOnDeliveryEnabled)
+                .Where(e => e.IsPhoneNotificationOnDeliveryEnabled)
                 .Select(e => new ViberQueueMessage(
                     QueueMessageFeatures.Messages,
                     e.Phone,
@@ -306,13 +280,18 @@ namespace ED.Domain
                         Event = NotificationEvent,
                         MessageId = messageId,
                         RecipientProfileId = e.ProfileId,
-                        RecipientLoginId = e.LoginId
+                        RecipientLoginId = e.LoginId,
+                        FallbackSmsBody = string.Format(
+                            smsBody,
+                            webPortalUrl,
+                            ResourceHelper
+                                .CyrillicToLatin(recipientProfileName)
+                                .ToUpperInvariant()),
                     }))
                 .ToArray();
 
             return new NotificationMessages(
                 emailRecipients,
-                smsRecipients,
                 pushNotificationRecipients,
                 viberRecipients);
         }

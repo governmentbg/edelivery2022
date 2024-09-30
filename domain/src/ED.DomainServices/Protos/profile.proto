@@ -98,14 +98,12 @@ message GrantAccessRequest {
   bool is_default = 3;
   bool is_email_notification_enabled = 4;
   bool is_email_notification_on_delivery_enabled = 5;
-  bool is_sms_notification_enabled = 6;
-  bool is_sms_notification_on_delivery_enabled = 7;
+  bool is_phone_notification_enabled = 6;
+  bool is_phone_notification_on_delivery_enabled = 7;
   string details = 8;
   int32 action_login_id = 9;
   string ip = 10;
   repeated PermissionMessage permissions = 11;
-  bool is_viber_notification_enabled = 12;
-  bool is_viber_notification_on_delivery_enabled = 13;
 }
 
 message RevokeAccessRequest {
@@ -143,11 +141,9 @@ message BringProfileInForceRequest {
   int32 login_id = 1;
   bool is_email_notification_enabled = 2;
   bool is_email_notification_on_delivery_enabled = 3;
-  bool is_sms_notification_enabled = 4;
-  bool is_sms_notification_on_delivery_enabled = 5;
-  bool is_viber_notification_enabled = 6;
-  bool is_viber_notification_on_delivery_enabled = 7;
-  string ip = 8;
+  bool is_phone_notification_enabled = 4;
+  bool is_phone_notification_on_delivery_enabled = 5;
+  string ip = 6;
 }
 
 message UpdateAccessRequest {
@@ -182,12 +178,10 @@ message UpdateSettingsRequest {
   int32 login_id = 2;
   bool is_email_notification_enabled = 3;
   bool is_email_notification_on_delivery_enabled = 4;
-  bool is_sms_notification_enabled = 5;
-  bool is_sms_notification_on_delivery_enabled = 6;
+  bool is_phone_notification_enabled = 5;
+  bool is_phone_notification_on_delivery_enabled = 6;
   string email = 7;
   string phone = 8;
-  bool is_viber_notification_enabled = 9;
-  bool is_viber_notification_on_delivery_enabled = 10;
 }
 
 message FindIndividualRequest {
@@ -356,6 +350,7 @@ message GetRecipientGroupMembersResponse {
     int32 profile_id = 1;
     string profile_name = 2;
     string profile_target_group = 3;
+    bool hide_as_recipient = 4;
   }
 
   repeated Member members = 1;
@@ -425,12 +420,10 @@ message GetSettingsRequest {
 message GetSettingsResponse {
   bool is_email_notification_enabled = 1;
   bool is_email_notification_on_delivery_enabled = 2;
-  bool is_sms_notification_enabled = 3;
-  bool is_sms_notification_on_delivery_enabled = 4;
+  bool is_phone_notification_enabled = 3;
+  bool is_phone_notification_on_delivery_enabled = 4;
   string email = 5;
   string phone = 6;
-  bool is_viber_notification_enabled = 7;
-  bool is_viber_notification_on_delivery_enabled = 8;
 }
 
 message GetPassiveProfileDataRequest {
@@ -525,10 +518,11 @@ message CreateOrUpdateIndividualRequest {
   string residence = 7;
   bool is_passive = 8;
   bool is_email_notification_enabled = 9;
-  bool is_sms_notification_enabled = 10;
-  int32 action_login_id = 11;
-  string ip = 12;
-  bool is_viber_notification_enabled = 13;
+  bool is_phone_notification_enabled = 10;
+  bool licence_agreement = 11;
+  bool gdpr_agreement = 12;
+  int32 action_login_id = 13;
+  string ip = 14;
 }
 
 message CreateOrUpdateIndividualResponse {
@@ -541,7 +535,7 @@ message CreateRegisterRequestRequest {
   string registration_email = 1;
   string registration_phone = 2;
   bool registration_is_email_notification_enabled = 3;
-  bool registration_is_sms_notification_enabled = 4;
+  bool registration_is_phone_notification_enabled = 4;
   string name = 5;
   string identifier = 6;
   string phone = 7;
@@ -553,8 +547,7 @@ message CreateRegisterRequestRequest {
   int32 target_group_id = 13;
   int32 blob_id = 14;
   int32 login_id = 15;
-  bool registration_is_viber_notification_enabled = 16;
-  string ip = 17;
+  string ip = 16;
 }
 
 message CreateRegisterRequestResponse {

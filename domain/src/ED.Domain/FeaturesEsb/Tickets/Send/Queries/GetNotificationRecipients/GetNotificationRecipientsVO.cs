@@ -7,8 +7,7 @@
             int? LoginId,
             bool IsEmailNotificationEnabled,
             string Email,
-            bool IsSmsNotificationEnabled,
-            bool IsViberNotificationEnabled,
+            bool IsPhoneNotificationEnabled,
             string Phone);
     }
 }

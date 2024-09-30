@@ -63,6 +63,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ARIA.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ARIA.resx</DependentUpon>
+    </Compile>
     <Compile Include="Common.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -136,6 +141,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ARIA.en-US.resx" />
+    <EmbeddedResource Include="ARIA.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ARIA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Common.en-US.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -150,10 +160,13 @@
       <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Help.en-US.resx" />
+    <EmbeddedResource Include="Help.en-US.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Help.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Help.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Landing.en-US.resx">
       <SubType>Designer</SubType>
@@ -175,7 +188,9 @@
       <LastGenOutput>LoginRegisterPage.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProfilePage.en-US.resx" />
+    <EmbeddedResource Include="ProfilePage.en-US.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProfilePage.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ProfilePage.Designer.cs</LastGenOutput>

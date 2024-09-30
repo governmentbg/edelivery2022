@@ -33,92 +33,94 @@
 
     <table class="statistics">
         <tbody>
-        <tr>
-            <th colspan="4" style="text-align: right;">
-                @($"{StoragePage.LabelQuota}: {Model.QuotaMesage}")
-            </th>
-        </tr>
-        <tr>
-            <th>Име на файла</th>
-            <th>Дата</th>
-            <th>Размер</th>
-            <th></th>
-        </tr>
-
-        @if (Model.Blobs.Count == 0)
-        {
             <tr>
-                <td colspan="4">
-                    @Model.NoBlobsMessage
-                </td>
+                <th colspan="4" style="text-align: right;">
+                    @($"{StoragePage.LabelQuota}: {Model.QuotaMesage}")
+                </th>
             </tr>
-        }
+            <tr>
+                <th>Име на файла</th>
+                <th>Дата</th>
+                <th>Размер</th>
+                <th></th>
+            </tr>
 
-        @{
-            var activeProfileId = Context.GetCachedUserData().ActiveProfileId;
-        }
-        @foreach (var item in Model.Blobs)
-        {
-            <tr @*class="newly-added"*@>
-                <td class="file-name elipsis">
-                    @if (item.IsNotMalicious)
-                    {
-                        <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
-                           data-toggle="tooltip"
-                           data-original-title="@(EDeliveryResources.SEOS.InfoFileIsNotMalicious)"
-                           rel="noopener"
-                           target="_blank">
-                            <img src="~/Content/img/signature-icon.png"/>
-                            <span>@item.FileName</span>
-                        </a>
-                    }
-                    else if (item.IsNotSure)
-                    {
-                        <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
-                           data-toggle="tooltip"
-                           data-original-title="@(EDeliveryResources.SEOS.ErrorUnsuccessfulScan)"
-                           rel="noopener"
-                           target="_blank">
-                            <img src="~/Content/img/neutral-icon.png"/>
-                            <span>@item.FileName</span>
-                        </a>
-                    }
-                    else if (item.IsMalicious)
-                    {
-                        <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
-                           data-toggle="tooltip"
-                           data-original-title="@(EDeliveryResources.SEOS.ErrorReceivedDocumentIsMalicious)"
-                           rel="noopener"
-                           target="_blank">
-                            <img src="~/Content/img/warning-icon.png"/>
-                            <span>@item.FileName</span>
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)" rel="noopener" target="_blank">
-                            <span>@item.FileName</span>
-                        </a>
-                    }
-                </td>
-                <td>
-                    @item.CreateDate.ToLocalDateTime().ToString(SystemConstants.DateTimeFormat)
-                </td>
-                <td>@EDelivery.WebPortal.Utils.Utils.FormatSize(Convert.ToUInt64(item.Size))</td>
-                <td class="file-actions">
-                    <div>
-                        <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
-                           target="_blank"
-                           rel="noopener">
-                            <img src="~/Content/img/download-file.png">
-                        </a>
-                        <a href="#" onclick="event.preventDefault();deleteFile(@item.BlobId)">
-                            <img src="~/Content/img/trash-icon.png">
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        }
+            @if (Model.Blobs.Count == 0)
+            {
+                <tr>
+                    <td colspan="4">
+                        @Model.NoBlobsMessage
+                    </td>
+                </tr>
+            }
+
+            @{
+                var activeProfileId = Context.GetCachedUserData().ActiveProfileId;
+            }
+            @foreach (var item in Model.Blobs)
+            {
+                <tr @*class="newly-added"*@>
+                    <td class="file-name elipsis">
+                        @if (item.IsNotMalicious)
+                        {
+                            <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
+                               data-toggle="tooltip"
+                               data-original-title="@(EDeliveryResources.SEOS.InfoFileIsNotMalicious)"
+                               rel="noopener"
+                               target="_blank">
+                                <img src="~/Content/img/signature-icon.png" alt="@ARIA.AltStorageOk" />
+                                <span>@item.FileName</span>
+                            </a>
+                        }
+                        else if (item.IsNotSure)
+                        {
+                            <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
+                               data-toggle="tooltip"
+                               data-original-title="@(EDeliveryResources.SEOS.ErrorUnsuccessfulScan)"
+                               rel="noopener"
+                               target="_blank">
+                                <img src="~/Content/img/neutral-icon.png" alt="@ARIA.AltStorageNeutral" />
+                                <span>@item.FileName</span>
+                            </a>
+                        }
+                        else if (item.IsMalicious)
+                        {
+                            <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
+                               data-toggle="tooltip"
+                               data-original-title="@(EDeliveryResources.SEOS.ErrorReceivedDocumentIsMalicious)"
+                               rel="noopener"
+                               target="_blank">
+                                <img src="~/Content/img/warning-icon.png" alt="@ARIA.AltStorageMalicious" />
+                                <span>@item.FileName</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
+                               rel="noopener"
+                               target="_blank">
+                                <span>@item.FileName</span>
+                            </a>
+                        }
+                    </td>
+                    <td>
+                        @item.CreateDate.ToLocalDateTime().ToString(SystemConstants.DateTimeFormat)
+                    </td>
+                    <td>@EDelivery.WebPortal.Utils.Utils.FormatSize(Convert.ToUInt64(item.Size))</td>
+                    <td class="file-actions">
+                        <div>
+                            <a href="@Url.CreateProfileBlobWebPortalPath(activeProfileId, item.BlobId)"
+                               target="_blank"
+                               rel="noopener">
+                                <img src="~/Content/img/download-file.png" alt="@ARIA.AltStorageDownload" />
+                            </a>
+                            <a href="#" onclick="event.preventDefault();deleteFile(@item.BlobId)">
+                                <img src="~/Content/img/trash-icon.png" alt="@ARIA.AltStorageDelete" />
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 

@@ -43,8 +43,7 @@ namespace ED.Domain
                     lp != null ? lp.LoginId : null,
                     p.IsPassive || lp.EmailNotificationActive,
                     p.IsPassive ? p.EmailAddress : lp.Email,
-                    p.IsPassive || lp.SmsNotificationActive,
-                    p.IsPassive || lp.ViberNotificationActive,
+                    p.IsPassive || lp.PhoneNotificationActive,
                     p.IsPassive ? p.Phone : lp.Phone))
                 .Distinct()
                 .ToArrayAsync(ct);
@@ -89,8 +88,7 @@ namespace ED.Domain
                     lp != null ? lp.LoginId : null,
                     lp != null && lp.EmailNotificationActive,
                     lp != null ? lp.Email : string.Empty,
-                    lp != null && lp.SmsNotificationActive,
-                    lp != null && lp.ViberNotificationActive,
+                    lp != null && lp.PhoneNotificationActive,
                     lp != null ? lp.Phone : string.Empty))
                 .Distinct()
                 .ToArrayAsync(ct);

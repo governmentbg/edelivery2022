@@ -86,7 +86,8 @@ namespace ED.Domain
             {
                 Expression<Func<Profile, bool>> predicate = PredicateBuilder
                     .True<Profile>()
-                    .And(p => p.IsActivated);
+                    .And(p => p.IsActivated)
+                    .And(p => !p.HideAsRecipient);
 
                 if (!string.IsNullOrEmpty(term))
                 {

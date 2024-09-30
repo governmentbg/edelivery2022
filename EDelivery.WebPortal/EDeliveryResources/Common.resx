@@ -414,4 +414,7 @@
   <data name="TitleOpenTicket" xml:space="preserve">
     <value>Преглед получен административен акт</value>
   </data>
+  <data name="HideAsRecipientWarning" xml:space="preserve">
+    <value>Поради административни настройки профилът не може да бъде избран за получател</value>
+  </data>
 </root>

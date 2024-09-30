@@ -80,11 +80,11 @@
                             @Html.HiddenFor(m => Model.Templates[i].TemplateName)
                         </td>
                         <td>
-                            @Html.CheckBoxFor(m => Model.Templates[i].HasReadPermission)
+                            @Html.CheckBoxFor(m => Model.Templates[i].HasReadPermission, new { aria_label = $"Четене за {Model.Templates[i].TemplateName}" })
                             @Html.LabelFor(m => Model.Templates[i].HasReadPermission, " ")
                         </td>
                         <td>
-                            @Html.CheckBoxFor(m => Model.Templates[i].HasWritePermission)
+                            @Html.CheckBoxFor(m => Model.Templates[i].HasWritePermission, new { aria_label = $"Писане за {Model.Templates[i].TemplateName}" })
                             @Html.LabelFor(m => Model.Templates[i].HasWritePermission, " ")
                         </td>
                     </tr>

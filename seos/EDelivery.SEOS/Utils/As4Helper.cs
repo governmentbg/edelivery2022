@@ -1,7 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.XPath;
+using log4net;
+using EDelivery.SEOS.As4RestService;
 using EDelivery.SEOS.DatabaseAccess;
 using EDelivery.SEOS.DataContracts;
 using EDelivery.SEOS.EDeliveryAS4Node;
@@ -69,57 +76,177 @@ namespace EDelivery.SEOS.Utils
             }
         }
 
-        public static MsgData DownloadMessage(string id)
+        public static async Task DownloadMessages(
+            string[] ids,
+            ILog log,
+            Action<MsgData> processMessage)
+        {
+            foreach (var id in ids)
+            {
+                try
+                {
+                    await DownloadMessage(
+                        id,
+                        log,
+                        processMessage);
+                }
+                catch (Exception ex)
+                {
+                    log.Error($"Error processing downloaded message {id}: {ex.Message} {ex.InnerException?.Message}");
+                }
+            }
+        }
+
+        public static async Task DownloadMessage(
+            string id,
+            ILog log,
+            Action<MsgData> processMessage)
+        {
+            try
+            {
+                var messageStatus = GetMessageStatus(id);
+                if (messageStatus.HasValue && messageStatus.Value == EDeliveryAS4Node.messageStatus.DELETED)
+                    return;
+
+                var message =  await DownloadMessageSOAP(id);
+                processMessage(message);
+            }
+            catch (Exception exSoap)
+            {
+                log.Error($"Error downloading SOAP message {id}: {exSoap.Message} {exSoap.InnerException?.Message}");
+
+                try
+                {
+                    var message = await DownloadMessageREST(id);
+                    processMessage(message);
+
+                    await DeleteMessage(id);
+                }
+                catch (Exception exRest)
+                {
+                    log.Error($"Error downloading REST message {id}: {exRest.ToString()} {exRest.InnerException?.Message}");
+                }
+            }
+        }
+
+        public static async Task<MsgData> DownloadMessageSOAP(string id)
         {
             var msgData = new MsgData();
 
             using (var service = new WebServicePluginInterfaceClient())
             {
-                var response = new EDeliveryAS4Node.retrieveMessageResponse();
                 var request =  new retrieveMessageRequest { messageID = id };
 
-                var retrieveResult = service.retrieveMessage(request, out response);
+                var retrieveResult = await service.retrieveMessageAsync(request);
 
-                msgData.l1Timestamp = retrieveResult
+                msgData.l1Timestamp = retrieveResult.Messaging
                     .UserMessage
                     .MessageInfo
                     .Timestamp
                     .ToString("G");
 
-                msgData.l1MessageId = retrieveResult
+                msgData.l1MessageId = retrieveResult.Messaging
                     .UserMessage
                     .MessageInfo
                     .MessageId;
 
-                msgData.l1From = retrieveResult
+                msgData.l1From = retrieveResult.Messaging
                     .UserMessage
                     .PartyInfo
                     .From
                     .PartyId.Value;
 
-                msgData.l1To = retrieveResult
+                msgData.l1To = retrieveResult.Messaging
                     .UserMessage
                     .PartyInfo
                     .To
                     .PartyId.Value;
 
-                msgData.originalSender = retrieveResult
+                msgData.originalSender = retrieveResult.Messaging
                     .UserMessage
                     .MessageProperties
                     .FirstOrDefault(p => p.name.Equals("originalSender"))
                     .Value;
 
-                msgData.finalRecepient = retrieveResult
+                msgData.finalRecepient = retrieveResult.Messaging
                     .UserMessage
                     .MessageProperties
                     .FirstOrDefault(p => p.name.Equals("finalRecipient"))
                     .Value;
 
                 var content = Encoding.UTF8.GetString(
-                    response.payload.FirstOrDefault().value);
+                    retrieveResult.retrieveMessageResponse.payload.FirstOrDefault().value);
 
                 msgData.payload = content;
+
+                return msgData;
             }
+        }
+
+        public static async Task<MsgData> DownloadMessageREST(string id)
+        {
+            var ns = "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/";
+
+            var msgData = new MsgData();
+
+            var as4RestClient = As4RestClientFactory.CreateClient();
+
+            var content = await as4RestClient.GetPayloadAsync(
+                id,
+                default(CancellationToken));
+
+            var info = await as4RestClient.GetEnvelopeAsync(
+                id,
+                default(CancellationToken));
+
+            var infoXml = new XmlDocument();
+            infoXml.LoadXml(info);
+            var manager = new XmlNamespaceManager(infoXml.NameTable);
+            manager.AddNamespace("eb", ns);
+
+            var timestampXml = infoXml.SelectSingleNode(
+                "//eb:MessageInfo/eb:Timestamp",
+                manager);
+            msgData.l1Timestamp = timestampXml != null
+                ? timestampXml.InnerText
+                : String.Empty;
+
+            var idXml = infoXml.SelectSingleNode(
+                "//eb:MessageInfo/eb:MessageId", 
+                manager);
+            msgData.l1MessageId = idXml != null
+                ? idXml.InnerText
+                : String.Empty;
+
+            var fromXml = infoXml.SelectSingleNode(
+                "//eb:PartyInfo/eb:From/eb:PartyId", 
+                manager);
+            msgData.l1From = fromXml != null
+                ? fromXml.InnerText
+                : String.Empty;
+
+            var toXml = infoXml.SelectSingleNode(
+                "//eb:PartyInfo/eb:To/eb:PartyId", 
+                manager);
+            msgData.l1To = toXml != null
+                ? toXml.InnerText
+                : String.Empty;
+
+            var originalSenderXml = infoXml.SelectSingleNode(
+                "//eb:MessageProperties/eb:Property[@name='originalSender']", 
+                manager);
+            msgData.originalSender = originalSenderXml != null
+                ? originalSenderXml.InnerText
+                : String.Empty;
+
+            var finalRecipientXml = infoXml.SelectSingleNode(
+                "//eb:MessageProperties/eb:Property[@name='finalRecipient']", 
+                manager);
+            msgData.finalRecepient = finalRecipientXml != null
+                ? finalRecipientXml.InnerText
+                : String.Empty;
+
+            msgData.payload = content;
 
             return msgData;
         }
@@ -152,6 +279,21 @@ namespace EDelivery.SEOS.Utils
             {
                 var request = new getErrorsRequest { messageID = id };
                 return service.getMessageErrors(request);
+            }
+        }
+        
+        public static string GetRecepientUic(MsgData message)
+        {
+            using (var sr = new StringReader(message.payload))
+            {
+                var xdoc = new XPathDocument(sr);
+
+                var identifier = xdoc.CreateNavigator().SelectSingleNode("//*[local-name()='Message']/*[local-name()='Header']/*[local-name()='Recipient']/*[local-name()='Identifier']");
+
+                if (identifier == null)
+                    throw new ApplicationException($"The recipient ID of the message {message.l1MessageId} could not be found");
+
+                return identifier.Value;
             }
         }
 
@@ -228,6 +370,17 @@ namespace EDelivery.SEOS.Utils
             submitRequest.payload = new EDeliveryAS4Node.LargePayloadType[] { payload };
 
             return submitRequest;
+        }
+
+        public static async Task<bool> DeleteMessage(string id)
+        {
+            var as4RestClient = As4RestClientFactory.CreateClient();
+
+            var result = await as4RestClient.DeletePayloadAsync(
+                id,
+                default(CancellationToken));
+
+            return result;
         }
     }
 }

@@ -24,10 +24,8 @@ namespace ED.Domain
                     lp.Phone,
                     lp.EmailNotificationActive,
                     lp.EmailNotificationOnDeliveryActive,
-                    lp.SmsNotificationActive,
-                    lp.SmsNotificationOnDeliveryActive,
-                    lp.ViberNotificationActive,
-                    lp.ViberNotificationOnDeliveryActive))
+                    lp.PhoneNotificationActive,
+                    lp.PhoneNotificationOnDeliveryActive))
                 .SingleAsync(ct);
 
             return vo;

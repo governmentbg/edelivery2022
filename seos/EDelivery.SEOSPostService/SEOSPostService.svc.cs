@@ -205,7 +205,7 @@ namespace EDelivery.SEOSPostService
                     if (statusResult != null && string.IsNullOrEmpty(statusResult.Error))
                     {
                         logger.Info($"UpdateMessageStatus, messageId {message.Id}, " +
-                            $"messageBody status {statusResult.StatusResponse.DocRegStatus}");
+                            $"messageBody status {statusResult.Status}");
                         message = DatabaseQueries.ApplySentDocumentStatus(message.Id, statusResult);
                     }
                 }
@@ -262,6 +262,7 @@ namespace EDelivery.SEOSPostService
                     throw new ApplicationException("The status change message cannot be found");
 
                 //if the sender is not from EDelivery
+                message = DatabaseQueries.GetMessage(message.MessageGuid, true, false);
                 Status.SubmitStatusUpdateNotification(message, logger);
 
                 return true;
@@ -303,14 +304,9 @@ namespace EDelivery.SEOSPostService
                 var attachments = AttachDocument.GetAttachments(request.DocumenAttachmentFirstContent,
                     request.DocumenAttachmentFirstComment, request.DocumenAttachments);
 
-                var corespondents = new List<SEOSMessageCorespondent>()
-                {
-                    MapperHelper.Mapping
-                    .Map<CorespondentRequest, SEOSMessageCorespondent>(corespondent)
-                };
 
                 var message = DatabaseQueries.CreateSendMessage(
-                    request, corespondents, attachments);
+                    request, attachments);
 
                 var submitHandler = SubmitMessageFactory.CreateInstance(
                     message.Receiver.EIK,

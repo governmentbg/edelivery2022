@@ -460,7 +460,7 @@ namespace ED.Domain
                         return string.Empty;
                 }
 
-                return valuesDict != null
+                return valuesDict != null && valuesDict.ContainsKey(key)
                     ? (Convert.ToString(valuesDict[key]) ?? string.Empty)
                     : string.Empty;
             }

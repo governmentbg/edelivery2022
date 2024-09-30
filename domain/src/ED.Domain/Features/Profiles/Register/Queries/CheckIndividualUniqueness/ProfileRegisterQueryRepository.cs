@@ -43,6 +43,7 @@ namespace ED.Domain
 #pragma warning disable CS8604 // Possible null reference argument.
                 where (EF.Functions.Like(p.EmailAddress, email) || EF.Functions.Like(l.Email, email))
 #pragma warning restore CS8604 // Possible null reference argument.
+                    && p.IsActivated
                     && tgp.TargetGroupId == TargetGroup.IndividualTargetGroupId
 
                 select p.Id)

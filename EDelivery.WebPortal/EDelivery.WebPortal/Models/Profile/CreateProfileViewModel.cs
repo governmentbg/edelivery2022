@@ -17,7 +17,6 @@ namespace EDelivery.WebPortal.Models
         [RequiredRes]
         public string Address { get; set; }
         public bool IsEmailNotificationEnabled { get; set; }
-        public bool IsSmsNotificationEnabled { get; set; }
-        public bool IsViberNotificationEnabled { get; set; }
+        public bool IsPhoneNotificationEnabled { get; set; }
     }
 }

@@ -36,7 +36,7 @@
                                     <a href="#"
                                        class="delete"
                                        data-modal-href="@Url.Action("UpdateLoginProfilePermissions", new { loginId = item.LoginId })">
-                                        <img src="~/Content/img/edit-icon.png">
+                                        <img src="~/Content/img/edit-icon.png" alt="@ARIA.AltProfileAdministrationEdit" />
                                     </a>
 
                                     @if (!item.IsDefault)
@@ -58,7 +58,7 @@
                                             <a href="#"
                                                class="delete"
                                                onclick="javascript:document.getElementById('submit_@formId').click();return false;">
-                                                <img src="~/Content/img/trash-icon.png">
+                                                <img src="~/Content/img/trash-icon.png" alt="@ARIA.AltProfileAdministrationDelete" />
                                             </a>
                                         }
                                     }

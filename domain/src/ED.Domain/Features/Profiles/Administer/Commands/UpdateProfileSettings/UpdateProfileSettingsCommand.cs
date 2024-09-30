@@ -7,10 +7,8 @@ namespace ED.Domain
         int LoginId,
         bool IsEmailNotificationEnabled,
         bool IsEmailNotificationOnDeliveryEnabled,
-        bool IsSmsNotificationEnabled,
-        bool IsSmsNotificationOnDeliveryEnabled,
-        bool IsViberNotificationEnabled,
-        bool IsViberNotificationOnDeliveryEnabled,
+        bool IsPhoneNotificationEnabled,
+        bool IsPhoneNotificationOnDeliveryEnabled,
         string Email,
         string Phone)
         : IRequest;

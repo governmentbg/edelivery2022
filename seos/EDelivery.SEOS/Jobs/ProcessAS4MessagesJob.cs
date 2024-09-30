@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml.XPath;
 using EDelivery.SEOS.Utils;
 using EDelivery.SEOS.DataContracts;
 using EDelivery.SEOS.MessagesRedirect;
 using EDelivery.SEOS.MessagesSend;
 using EDelivery.SEOS.Models;
-using log4net;
 
 namespace EDelivery.SEOS.Jobs
 {
@@ -22,11 +22,10 @@ namespace EDelivery.SEOS.Jobs
             {
                 var messages = As4Helper.ListPendingMessages();
 
-                foreach(var messageId in messages)
-                {
-                    var message = As4Helper.DownloadMessage(messageId);
-                    ProcessPendingMessage(message);
-                }
+                Task.Run(async() => await As4Helper.DownloadMessages(
+                    messages,
+                    logger,
+                    this.ProcessPendingMessage));
             }
             catch (Exception ex)
             {

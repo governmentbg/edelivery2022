@@ -52,7 +52,12 @@ namespace ED.Domain
                 representedProfileId = await (
                     from p in this.DbContext.Set<Profile>()
 
-                    where p.IsActivated
+                    join tgp in this.DbContext.Set<TargetGroupProfile>()
+                        on p.Id equals tgp.ProfileId
+
+                    where
+                        (tgp.TargetGroupId == TargetGroup.IndividualTargetGroupId
+                            || p.IsActivated)
                         && EF.Functions.Like(p.Identifier, representedProfileIdentifier)
 
                     select p.Id)

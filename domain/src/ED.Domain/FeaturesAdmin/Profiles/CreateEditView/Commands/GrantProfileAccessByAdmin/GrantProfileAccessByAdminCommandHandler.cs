@@ -49,8 +49,6 @@ namespace ED.Domain
                 false,
                 !isCurrentProfilePublicAdministration,
                 false,
-                !isCurrentProfilePublicAdministration,
-                false,
                 email,
                 phone,
                 command.AdminUserId,

@@ -39,10 +39,8 @@ namespace ED.Domain
                     login.Id,
                     command.EmailNotificationActive,
                     command.EmailNotificationOnDeliveryActive,
-                    command.SmsNotificationActive,
-                    command.SmsNotificationOnDeliveryActive,
-                    command.ViberNotificationActive,
-                    command.ViberNotificationOnDeliveryActive,
+                    command.PhoneNotificationActive,
+                    command.PhoneNotificationOnDeliveryActive,
                     command.Email,
                     command.Phone);
 
@@ -72,12 +70,10 @@ namespace ED.Domain
                     true,
                     command.EmailNotificationActive,
                     command.EmailNotificationOnDeliveryActive,
-                    command.SmsNotificationActive,
-                    command.SmsNotificationOnDeliveryActive,
-                    command.ViberNotificationActive,
-                    command.ViberNotificationOnDeliveryActive,
-                    profile.EmailAddress,
-                    profile.Phone,
+                    command.PhoneNotificationActive,
+                    command.PhoneNotificationOnDeliveryActive,
+                    command.Email,
+                    command.Phone,
                     Login.SystemLoginId,
                     new[]
                     {

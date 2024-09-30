@@ -163,7 +163,7 @@
     <value>Please, enter a valid phone number!</value>
   </data>
   <data name="ErrorKepAuthenticationFailed" xml:space="preserve">
-    <value>Error in the unified authentication module with QES. Please, try logging in one of the other two ways - with username / password or by electronic identity card (eID).</value>
+    <value>Error in the unified authentication module with QES. Please, try logging in one of the other two ways - with username / password or by electronic identity card (eID). STS message: {0}</value>
   </data>
   <data name="ErrorKepFailedInvalidResponse" xml:space="preserve">
     <value>Error in unified authentication module with QES. Please contact an administrator to fix the problem! STS message: {0}.
@@ -269,11 +269,15 @@
   <data name="ErrorProfileOfReceiverIsReadOnly" xml:space="preserve">
     <value>Receiving messages is not active for the receiver profile!</value>
   </data>
-  <data name="ErrorPageForbidden" xml:space="preserve">
-    <value>You do not have access to that resource!</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ErrorLegalPedingRegistration" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="ErrorPageNotFound" xml:space="preserve">
     <value>The resource could not be found!</value>
+  </data>
+  <data name="ErrorPageForbidden" xml:space="preserve">
+    <value>You do not have access to that resource!</value>
   </data>
   <data name="ErrorCantCreateTranslation" xml:space="preserve">
     <value>Due to system error a request for message translation could not be created at the moment.</value>
@@ -283,5 +287,8 @@
   </data>
   <data name="ErrorObligationNotFound" xml:space="preserve">
     <value>The obligation could not be found or it is already paid!</value>
+  </data>
+  <data name="ErrorAcceptGDPRAgreement" xml:space="preserve">
+    <value>In order to complete your registration, you need to accept the  'Privacy and Data Protection Policy Terms'!</value>
   </data>
 </root>

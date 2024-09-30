@@ -79,8 +79,10 @@ else
                     processResults: function (data) {
                         var mappedData = $.map(data, function (item) {
                             return {
+                                _resultId: item.id,
                                 id: item.Id,
                                 text: item.Text,
+                                title: item.Text,
                                 selected: item.Selected,
                                 disabled: item.Disabled
                             }

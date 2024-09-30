@@ -29,7 +29,10 @@ namespace ED.Domain
             bool IsPassive,
             GetProfileInfoVODefaultLogin? DefaultLogin,
             GetProfileInfoVOQuota Quota,
-            GetProfileInfoVOEsbUser EsbUser);
+            GetProfileInfoVOEsbUser EsbUser,
+            bool HideAsRecipient,
+            bool LicenceAgreed,
+            bool GdprAgreed);
 
         public record GetProfileInfoVOIndividualInfo(
             string FirstName,
@@ -52,12 +55,10 @@ namespace ED.Domain
             string? CertificateThumbprint,
             bool? CanSendOnBehalfOf,
             string? PushNotificationsUrl,
-            bool SmsNotificationActive,
-            bool SmsNotificationOnDeliveryActive,
+            bool PhoneNotificationActive,
+            bool PhoneNotificationOnDeliveryActive,
             bool EmailNotificationActive,
             bool EmailNotificationOnDeliveryActive,
-            bool ViberNotificationActive,
-            bool ViberNotificationOnDeliveryActive,
             string Email,
             string Phone);
 

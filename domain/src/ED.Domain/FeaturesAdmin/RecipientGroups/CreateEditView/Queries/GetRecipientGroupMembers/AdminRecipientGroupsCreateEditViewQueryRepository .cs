@@ -25,7 +25,8 @@ namespace ED.Domain
 
                 select new GetRecipientGroupMembersVO(
                     p.Id,
-                    p.ElectronicSubjectName))
+                    p.ElectronicSubjectName,
+                    p.HideAsRecipient))
                 .ToArrayAsync(ct);
 
             return vos;

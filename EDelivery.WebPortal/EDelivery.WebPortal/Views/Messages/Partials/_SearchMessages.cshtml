@@ -52,6 +52,7 @@
                 <div class="form-col">
                     <div style="display: flex; justify-content: space-between; flex-wrap: wrap; ">
                         <button style="width: inherit !important; margin-bottom: 5px !important;"
+                                type="submit"
                                 class="btn btn-m btn-clear lnk-clear"
                                 formaction="@Url.Action($"Export{Model.BoxType.ToString()}", "Messages")"
                                 formtarget="_blank"
@@ -126,6 +127,13 @@
 
             $('form#seach-message-form input').val('');
             $('form#seach-message-form').submit();
+        });
+
+        $('form#seach-message-form').on('keypress', function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                $('form#seach-message-form').submit();
+            }
         });
     });
 </script>

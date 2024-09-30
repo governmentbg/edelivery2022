@@ -447,7 +447,7 @@
   <data name="HistoryActionMarkAsReadonly" xml:space="preserve">
     <value>Account has been marked as read-only</value>
   </data>
-  <data name="InfoSmsViberNotificationChoice" xml:space="preserve">
+  <data name="InfoPhoneNotificationChoice" xml:space="preserve">
     <value>Dear users,&lt;br/&gt;If you wish to receive e-mail messages, please tick the boxes above.&lt;br/&gt;
 In case you prefer one of the notification methods - Viber or SMS - you choose only one: either Viber or SMS.&lt;br/&gt;
 If you do not wish to receive messages, do not select any option.&lt;br/&gt;
@@ -464,5 +464,8 @@ In order to receive Viber messages, the application must be installed on your mo
   </data>
   <data name="MessageConfirmDeleteTranslation" xml:space="preserve">
     <value>Are you sure you want to delete the translation?</value>
+  </data>
+  <data name="TitleSectionNotificationSettingsViaPhone" xml:space="preserve">
+    <value>Notifications via Viber/SMS</value>
   </data>
 </root>

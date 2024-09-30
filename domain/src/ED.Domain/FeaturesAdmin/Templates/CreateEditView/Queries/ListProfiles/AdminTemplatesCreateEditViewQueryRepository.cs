@@ -29,21 +29,24 @@ namespace ED.Domain
             }
 
             var result = await (
-                    from p in this.DbContext.Set<Profile>().Where(predicate)
+                from p in this.DbContext.Set<Profile>().Where(predicate)
 
-                    orderby p.Identifier, p.ElectronicSubjectName, p.EmailAddress
-                    select new
-                    {
-                        p.Id,
-                        p.Identifier,
-                        p.ElectronicSubjectName,
-                        p.EmailAddress
-                    })
+                where p.IsActivated
+
+                orderby p.Identifier, p.ElectronicSubjectName, p.EmailAddress
+
+                select new
+                {
+                    p.Id,
+                    p.Identifier,
+                    p.ElectronicSubjectName,
+                    p.EmailAddress
+                })
                 .Skip(offset)
                 .Take(limit)
                 .ToArrayAsync(ct);
 
-            var profile = result
+            ListProfilesVO[] vos = result
                 .Select(x => new ListProfilesVO
                 (
                     ProfileId: x.Id,
@@ -51,7 +54,7 @@ namespace ED.Domain
                 ))
                 .ToArray();
 
-            return profile;
+            return vos;
         }
     }
 }

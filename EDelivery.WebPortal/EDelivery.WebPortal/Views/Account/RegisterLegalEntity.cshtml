@@ -56,7 +56,7 @@
                 <h3>@LoginRegisterPage.TitleSectionProfileData</h3>
                 <ul class="col-list">
                     <li class="form-row nowrap">
-                        <label for="@nameof(Model.FileId)-file">@LoginRegisterPage.LabelChoosePDF *:</label>
+                        <label for="@nameof(Model.FileId)-text">@LoginRegisterPage.LabelChoosePDF *:</label>
                         <div class="f-grow-100 file-holder">
                             <div class="row-group">
                                 <div class="">
@@ -64,7 +64,8 @@
                                         <input id="@nameof(Model.FileId)-file"
                                                type="file"
                                                disabled="disabled"
-                                               style="position: absolute; top: 0px; left: 0px; opacity: 0" />
+                                               style="position: absolute; top: 0px; left: 0px; opacity: 0"
+                                               aria-label="@ARIA.LabelRegisterLegalEntityFile" />
                                         @Html.HiddenFor(x => x.FileId)
                                         @Html.HiddenFor(x => x.FileName)
                                         <input type="text" name="@nameof(Model.FileId)-FileName" value="@Model.FileName" readonly="readonly" id="@nameof(Model.FileId)-text" />
@@ -107,10 +108,6 @@
                     <label for="EmailNotifications">@LoginRegisterPage.LabelEmailNotifications</label>
                 </div>
                 <div class="form-group">
-                    @Html.CheckBoxFor(x => x.ViberNotifications)
-                    <label for="ViberNotifications">@LoginRegisterPage.LabelViberNotifications</label>
-                </div>
-                <div class="form-group">
                     @Html.CheckBoxFor(x => x.PhoneNotifications)
                     <label for="PhoneNotifications">@LoginRegisterPage.LabelPhoneNotifications</label>
                 </div>
@@ -120,7 +117,7 @@
                         @Html.Raw(
                             String.Format(
                                 LoginRegisterPage.LabelLicenceAgreement,
-                                "https://iaieu.egov.bg/wps/wcm/connect/iaieu.egov.bg-27159/6d9d1e1b-e4c4-4594-a266-f2d0a801ba7a/%D0%9E%D0%A3-%D0%B5%D0%92%D1%80%D1%8A%D1%87%D0%B2%D0%B0%D0%BD%D0%B5-v1-dd.pdf?MOD=AJPERES&CONVERT_TO=url&CACHEID=ROOTWORKSPACE.Z18_PPGAHG800HER206O2CR2RV8VK6-6d9d1e1b-e4c4-4594-a266-f2d0a801ba7a-oi4Gr.i"))
+                                "/Content/Documents/ОУ-еВръчване-v1-dd.pdf"))
                     </label>
                 </div>
                 <div class="form-element">
@@ -134,7 +131,7 @@
                 <div class="form-row">
                     <div class="da-tooltip attached iconed">
                         <div class="icon-info"></div>
-                        @Html.Raw(ProfilePage.InfoSmsViberNotificationChoice)
+                        @Html.Raw(ProfilePage.InfoPhoneNotificationChoice)
                     </div>
                 </div>
             </section>
@@ -155,8 +152,6 @@
 
     <script type="text/javascript">
         $(function () {
-            $('#ViberNotifications').mutualExclusive('#PhoneNotifications');
-
             var id = '@nameof(Model.FileId)';
             var fileName = '@nameof(Model.FileName)';
 

@@ -153,6 +153,9 @@
   <data name="FormEnableMessagesWithCodeValueTrue" xml:space="preserve">
     <value>Да</value>
   </data>
+  <data name="FormHideAsRecipient" xml:space="preserve">
+    <value>Скрий като получател</value>
+  </data>
   <data name="IndividualIdentifier" xml:space="preserve">
     <value>ЕГН/ЛНЧ</value>
   </data>

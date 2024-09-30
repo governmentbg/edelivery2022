@@ -47,7 +47,7 @@
                     <td class="file-actions">
                         <div>
                             <a href="@Url.Action("Details","Translations", new { id = translation.MessageTranslationId })">
-                                <img src="~/Content/img/view_icon.png" alt="">
+                                <img src="~/Content/img/view_icon.png" alt="@ARIA.AltTranslationsListView">
                             </a>
 
                             @using (Ajax.BeginForm(
@@ -73,7 +73,7 @@
                                 <a href="#"
                                    class="delete"
                                    onclick="javascript:document.getElementById('submit_@formId').click();return false;">
-                                    <img src="~/Content/img/trash-icon.png">
+                                    <img src="~/Content/img/trash-icon.png" alt="@ARIA.AltTranslationsListDelete" />
                                 </a>
                             }
                         </div>

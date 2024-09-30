@@ -16,10 +16,8 @@ namespace EDelivery.WebPortal.Models.Profile.Administration
             string profileIdentifier,
             bool isEmailNotificationEnabled,
             bool isEmailNotificationOnDeliveryEnabled,
-            bool isSmsNotificationEnabled,
-            bool isSmsNotificationOnDeliveryEnabled,
-            bool isViberNotificationEnabled,
-            bool isViberNotificationOnDeliveryEnabled,
+            bool isPhoneNotificationEnabled,
+            bool isPhoneNotificationOnDeliveryEnabled,
             ED.DomainServices.Profiles.GetTemplatesResponse.Types.TemplateMessage[] templates)
         {
             this.LoginId = loginId;
@@ -27,10 +25,8 @@ namespace EDelivery.WebPortal.Models.Profile.Administration
             this.ProfileIdentifier = profileIdentifier;
             this.IsEmailNotificationEnabled = isEmailNotificationEnabled;
             this.IsEmailNotificationOnDeliveryEnabled = isEmailNotificationOnDeliveryEnabled;
-            this.IsSmsNotificationEnabled = isSmsNotificationEnabled;
-            this.IsSmsNotificationOnDeliveryEnabled = isSmsNotificationOnDeliveryEnabled;
-            this.IsViberNotificationEnabled = isViberNotificationEnabled;
-            this.IsViberNotificationOnDeliveryEnabled = isViberNotificationOnDeliveryEnabled;
+            this.IsPhoneNotificationEnabled = isPhoneNotificationEnabled;
+            this.IsPhoneNotificationOnDeliveryEnabled = isPhoneNotificationOnDeliveryEnabled;
 
             this.Templates.AddRange(templates
                .Select(e => new AddLoginProfilePermissionsViewModelTemplates(
@@ -52,13 +48,9 @@ namespace EDelivery.WebPortal.Models.Profile.Administration
 
         public bool IsEmailNotificationOnDeliveryEnabled { get; set; }
 
-        public bool IsSmsNotificationEnabled { get; set; }
+        public bool IsPhoneNotificationEnabled { get; set; }
 
-        public bool IsSmsNotificationOnDeliveryEnabled { get; set; }
-
-        public bool IsViberNotificationEnabled { get; set; }
-
-        public bool IsViberNotificationOnDeliveryEnabled { get; set; }
+        public bool IsPhoneNotificationOnDeliveryEnabled { get; set; }
 
         public bool IsRepresentative { get; set; }
 

@@ -18,6 +18,7 @@ namespace ED.Domain
             int limit,
             CancellationToken ct)
         {
+            // todo: rewrite query for easier maintenance
             string query =
 $@"
 SELECT

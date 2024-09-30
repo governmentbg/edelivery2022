@@ -90,8 +90,10 @@
                             data.results = $.map(data.results,
                                 function(item) {
                                     return {
+                                        _resultId: item.id,
                                         id: item.id,
                                         text: item.text,
+                                        title: item.text,
                                         selected: false,
                                         disabled: false
                                     }

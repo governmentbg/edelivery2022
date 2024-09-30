@@ -325,4 +325,7 @@
   <data name="ErrorObligationNotFound" xml:space="preserve">
     <value>Задължението, което се опитвате да достъпите, не беше открито или е вече платено!</value>
   </data>
+  <data name="ErrorAcceptGDPRAgreement" xml:space="preserve">
+    <value>Необходимо е да приемете 'Условия на политиката за поверителност и защита на данните', за да направите Вашата регистрация!</value>
+  </data>
 </root>

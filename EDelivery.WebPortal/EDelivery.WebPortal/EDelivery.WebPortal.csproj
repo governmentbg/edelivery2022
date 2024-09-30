@@ -698,7 +698,6 @@
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Content\Documents\EDeliverySeosHelp.pdf" />
-    <Content Include="Content\Documents\LicenceAgreement-v4.pdf" />
     <Content Include="Content\fonts\FiraSans-Bold.ttf" />
     <Content Include="Content\fonts\FiraSans-Bold.woff" />
     <Content Include="Content\fonts\FiraSans-Bold.woff2" />
@@ -727,6 +726,7 @@
     <Content Include="Content\Documents\eDelivery-registration_administration.pdf" />
     <Content Include="Content\Documents\eDelivery-reject_registration.pdf" />
     <Content Include="Content\Documents\eDelivery-registration_sub-administration.pdf" />
+    <Content Include="Content\Documents\ОУ-еВръчване-v1-dd.pdf" />
     <None Include="log4net.Debug.config">
       <DependentUpon>log4net.config</DependentUpon>
       <IsTransformFile>true</IsTransformFile>

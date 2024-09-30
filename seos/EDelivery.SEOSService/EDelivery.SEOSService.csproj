@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Parameters.xml" />
     <Content Include="SEOSService.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

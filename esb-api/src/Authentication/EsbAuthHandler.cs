@@ -56,15 +56,15 @@ public class EsbAuthHandler : AuthenticationHandler<EsbAuthenticationOptions>
 
             Claim[] claims = new Claim[]
             {
-                new Claim(ClaimTypes.NameIdentifier, resp.Result.ProfileId.ToString()),
-                new Claim(EsbAuthClaimTypes.LoginId, resp.Result.LoginId.ToString()),
-                new Claim(EsbAuthClaimTypes.OperatorLoginId, resp.Result.OperatorLoginId?.ToString() ?? string.Empty),
-                new Claim(EsbAuthClaimTypes.RepresentedProfileId, resp.Result.RepresentedProfileId?.ToString() ?? string.Empty),
+                new(ClaimTypes.NameIdentifier, resp.Result.ProfileId.ToString()),
+                new(EsbAuthClaimTypes.LoginId, resp.Result.LoginId.ToString()),
+                new(EsbAuthClaimTypes.OperatorLoginId, resp.Result.OperatorLoginId?.ToString() ?? string.Empty),
+                new(EsbAuthClaimTypes.RepresentedProfileId, resp.Result.RepresentedProfileId?.ToString() ?? string.Empty),
 
-                new Claim(EsbAuthClaimTypes.OId, headerInfo.OId),
-                new Claim(EsbAuthClaimTypes.ClientId, headerInfo.ClientId),
-                new Claim(EsbAuthClaimTypes.OperatorId, headerInfo.OperatorId),
-                new Claim(EsbAuthClaimTypes.RepresentedProfileIdentifier, headerInfo.RepresentedProfileIdentifier),
+                new(EsbAuthClaimTypes.OId, headerInfo.OId),
+                new(EsbAuthClaimTypes.ClientId, headerInfo.ClientId),
+                new(EsbAuthClaimTypes.OperatorId, headerInfo.OperatorId),
+                new(EsbAuthClaimTypes.RepresentedProfileIdentifier, headerInfo.RepresentedProfileIdentifier),
             };
 
             ClaimsIdentity claimsIdentity = new(claims, nameof(EsbAuthHandler));

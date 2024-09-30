@@ -26,7 +26,10 @@ CREATE TABLE [dbo].[Profiles](
   [ActivatedByAdminUserId] [int] NULL,
   [CreatedByAdminUserId] [int] NULL,
   [ModifiedByAdminUserId] [int] NULL,
-  
+  [HideAsRecipient] [bit] NOT NULL CONSTRAINT [DF_Profiles_HideAsRecipient] DEFAULT (0),
+  [LicenceAgreed] [bit] NOT NULL CONSTRAINT [DF_Profiles_LicenceAgreed] DEFAULT (0),
+  [GDPRAgreed] [bit] NOT NULL CONSTRAINT [DF_Profiles_GDPRAgreed] DEFAULT (0),
+
   CONSTRAINT [PK_Profiles] PRIMARY KEY ([Id]),
   CONSTRAINT [UC_Profiles_ElectronicSubjectId] UNIQUE ([ElectronicSubjectId]),
   CONSTRAINT [FK_Profiles_Addresses]

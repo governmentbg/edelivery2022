@@ -169,6 +169,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="As4RestService\As4RestClient.cs" />
+    <Compile Include="As4RestService\As4RestClientException.cs" />
+    <Compile Include="As4RestService\As4RestClientFactory.cs" />
     <Compile Include="DatabaseAccess\DatabaseQueries.cs" />
     <Compile Include="DatabaseAccess\SortResult.cs" />
     <Compile Include="DatabaseAccess\TargetGroupId.cs" />

@@ -210,10 +210,14 @@ namespace EDelivery.SEOS.DatabaseAccess
 
             using (var dbContext = new SEOSDbContext(connectionString))
             {
-                return dbContext.RegisteredEntities
+                var nativeEntities = dbContext.RegisteredEntities
                     .Where(x => uicList.Contains(x.EIK) &&
                       x.Status == 1 &&
                       x.CertificateSN == eDeliveryEntity.CertificateSN)
+                    .ToArray();
+
+                return nativeEntities
+                    .Where(x => !IsAS4Entity(x.EIK))
                     .ToDictionary(p => p.EIK, p => true);
             }
         }
@@ -278,6 +282,21 @@ namespace EDelivery.SEOS.DatabaseAccess
                 message.RejectedReason = messageBody.RejectionReason;
 
                 dbContext.SaveChanges();
+
+                var record = new SEOSStatusHistory()
+                {
+                    DateCreated = DateTime.Now,
+                    MessageId = messageId,
+                    UpdatedByLoginId = null,
+                    Status = (int)messageBody.DocRegStatus,
+                    ExpectedDateClose = messageBody.DocExpectCloseDateSpecified
+                    ? messageBody.DocExpectCloseDate
+                    : message.DocExpectCloseDate,
+                    RejectReason = messageBody.RejectionReason
+                };
+                dbContext.SEOSStatusHistories.Add(record);
+                dbContext.SaveChanges();
+
                 return message;
             }
         }
@@ -516,7 +535,6 @@ namespace EDelivery.SEOS.DatabaseAccess
 
         public static SEOSMessage CreateSendMessage(
             MessageRequest request,
-            List<SEOSMessageCorespondent> corespondents,
             List<SEOSMessageAttachment> attachments)
         {
             var connectionString = WebConfigurationManager.ConnectionStrings["EDeliverySEOSDB"].ConnectionString;
@@ -533,9 +551,22 @@ namespace EDelivery.SEOS.DatabaseAccess
                     throw new ApplicationException($"Receiver with Guid{request.ReceiverGuid} not found");
 
                 var receiverESubjectId =
+                    !DatabaseQueries.IsAS4Entity(receiver.EIK) && 
                     RegisteredEntitiesHelper.IsThroughEDelivery(receiver)
                     ? DatabaseQueries.GetElectronicSubjectIdByIdentifier(receiver.EIK)
                     : (Guid?)null;
+
+                var corespondents = new List<SEOSMessageCorespondent>()
+                {
+                    new SEOSMessageCorespondent
+                    {
+                        Name = receiver.Name,
+                        Phone = receiver.Phone,
+                        Email = receiver.Email,
+                        City = "Непосочен",
+                        Kind = (int)CorrespondentKindType.Corr_Other
+                    }
+                };
 
                 var message = new SEOSMessage()
                 {
@@ -1000,6 +1031,23 @@ namespace EDelivery.SEOS.DatabaseAccess
                 return node != null
                     ? node.AS4Node
                     : String.Empty;
+            }
+        }
+
+        public static bool IsAS4Entity(string uic)
+        {
+            var connectionString = WebConfigurationManager.ConnectionStrings["EDeliverySEOSDB"].ConnectionString;
+            var eDeliveryGuid = WebConfigurationManager.AppSettings["SEOS.EDeliveryGUID"];
+
+            using (var dbContext = new SEOSDbContext(connectionString))
+            {
+                var as4Entity = dbContext.AS4RegisteredEntities
+                    .FirstOrDefault(p => p.EIK == uic);
+
+                if (as4Entity == null)
+                    return false;
+
+                return String.Compare(eDeliveryGuid.Trim(), as4Entity.AS4Node.Trim(), true) != 0;
             }
         }
 

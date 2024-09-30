@@ -77,18 +77,13 @@
                         <label for="IsEmailNotificationEnabled">@LoginRegisterPage.LabelEmailNotifications</label>
                     </div>
                     <div class="form-group">
-                        @Html.CheckBoxFor(x => x.IsViberNotificationEnabled)
-                        <label for="IsViberNotificationEnabled">@LoginRegisterPage.LabelViberNotifications</label>
+                        @Html.CheckBoxFor(x => x.IsPhoneNotificationEnabled)
+                        <label for="IsPhoneNotificationEnabled">@LoginRegisterPage.LabelPhoneNotifications</label>
                     </div>
-                    <div class="form-group">
-                        @Html.CheckBoxFor(x => x.IsSmsNotificationEnabled)
-                        <label for="IsSmsNotificationEnabled">@LoginRegisterPage.LabelPhoneNotifications</label>
-                    </div>
-
                     <div class="form-row">
                         <div class="da-tooltip attached iconed">
                             <div class="icon-info"></div>
-                            @Html.Raw(ProfilePage.InfoSmsViberNotificationChoice)
+                            @Html.Raw(ProfilePage.InfoPhoneNotificationChoice)
                         </div>
                     </div>
                 </section>
@@ -102,9 +97,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(function () {
-        $('#IsSmsNotificationEnabled').mutualExclusive('#IsViberNotificationEnabled');
-    });
-</script>

@@ -1,0 +1,16 @@
+/*
+    This is a configuration file for the SwitchStartupProject Visual Studio Extension
+    See https://heptapod.host/thirteen/switchstartupproject/blob/branch/current/Configuration.md
+*/
+{
+  "Version": 3,
+  "ListAllProjects": true,
+  "MultiProjectConfigurations": {
+    "Services and Jobs": {
+      "Projects": {
+        "ED.DomainJobs": {},
+        "ED.DomainServices": {}
+      }
+    }
+  }
+}

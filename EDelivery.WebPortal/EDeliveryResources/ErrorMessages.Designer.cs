@@ -79,6 +79,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Необходимо е да приемете &apos;Условия на политиката за поверителност и защита на данните&apos;, за да направите Вашата регистрация!.
+        /// </summary>
+        public static string ErrorAcceptGDPRAgreement {
+            get {
+                return ResourceManager.GetString("ErrorAcceptGDPRAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Необходимо е да приемете &apos;Условия за ползвате на системата за сигурно електронно връчване&apos;, за да направите Вашата регистрация!.
         /// </summary>
         public static string ErrorAcceptLicenceAgreement {

@@ -119,6 +119,17 @@
                     $('#confirm-message').prop('disabled', false);
                 }
             );
+
+            $('#new-message-form').submit(function () {
+                if ($(this).valid()) {
+                    $('#confirm-message')
+                        .removeClass('btn-primary')
+                        .addClass('btn-disabled');
+
+                    $(this).find('button')
+                        .prop('disabled', true);
+                }
+            });
         });
     </script>
 }

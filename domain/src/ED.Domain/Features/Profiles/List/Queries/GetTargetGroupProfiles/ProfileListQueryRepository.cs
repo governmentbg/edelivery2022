@@ -28,7 +28,7 @@ namespace ED.Domain
                         || EF.Functions.Like(p.Identifier, $"%{term}%"));
             }
 
-            var vos = await (
+            TableResultVO<GetTargetGroupProfilesVO> vos = await (
                 from p in this.DbContext.Set<Profile>().Where(predicate)
 
                 join tgp in this.DbContext.Set<TargetGroupProfile>()
@@ -39,6 +39,9 @@ namespace ED.Domain
 
                 where p.IsActivated
                     && !p.IsPassive
+                    && (!p.HideAsRecipient
+                        || tgp.TargetGroupId == TargetGroup.IndividualTargetGroupId
+                        || tgp.TargetGroupId == TargetGroup.LegalEntityTargetGroupId)
                     && tg.TargetGroupId == targetGroupId
 
                 orderby p.ElectronicSubjectName

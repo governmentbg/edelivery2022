@@ -17,9 +17,9 @@ namespace ED.Domain
                 join p in this.DbContext.Set<Profile>()
                     on rgp.ProfileId equals p.Id
 
-                where p.IsActivated &&
-                    this.DbContext.MakeIdsQuery(recipientGroupIds)
-                        .Any(id => id.Id == rgp.RecipientGroupId)
+                where p.IsActivated
+                    && !p.HideAsRecipient
+                    && this.DbContext.MakeIdsQuery(recipientGroupIds).Any(id => id.Id == rgp.RecipientGroupId)
 
                 select p.Id)
                 .ToArrayAsync(ct);

@@ -1,5 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.Extensions.Options
+@inherits LayoutComponentBase
 @inject IStringLocalizer<MainLayout> Localizer
+@inject IOptions<AdminPanelOptions> adminPanelOptionsAccessor
 
 <header id="scale-wrapper">
     <div class="wrapper header-wrapper">
@@ -10,6 +12,25 @@
             <div class="titles-box">
                 <h2 class="main-title-long">@Localizer["MainTitle"]</h2>
                 <h4 class="sub-title">@Localizer["SubTitle"]</h4>
+
+                @if (adminPanelOptionsAccessor.Value.Environment == "EGovTestV2")
+                {
+                    <style>
+                        .test-alert {
+                            position: fixed;
+                            top: 10px;
+                            right: 10px;
+                            z-index: 10;
+                            padding: 0.75rem 1.25rem;
+                            color: #721c24;
+                            background-color: #f8d7da;
+                            border: 1px solid transparent;
+                            border-radius: 0.25rem;
+                        }
+                    </style>
+
+                    <div class="test-alert">@Localizer["Title_TestEnv"]</div>
+                }
             </div>
         </div>
         <div class="right-content">
@@ -43,13 +64,24 @@
         <div class="flex-between content-wrapper">
             <div>
                 <p class="explain">
-                    @Localizer["FooterProject"]
-                </p>
-                <p class="small">
-                    @Localizer["FooterCopyright"]
+                    @((MarkupString)@Localizer["ProjectDescription"].ToString())
                 </p>
             </div>
-            <img src="images/footer-flags.png">
+            <img src="img/footer-flags2.png">
+        </div>
+        <div class="flex-between content-wrapper">
+            <div>
+                <p class="explain">
+                    @((MarkupString)@Localizer["OldProjectDescription"].ToString())
+                </p>
+            </div>
+            <img src="img/footer-flags.png">
+        </div>
+        <div class="flex-between content-wrapper">
+            <p class="small">
+                &copy;
+                @((MarkupString)@Localizer["FooterCopyright"].ToString())
+            </p>
         </div>
     </div>
 </footer>

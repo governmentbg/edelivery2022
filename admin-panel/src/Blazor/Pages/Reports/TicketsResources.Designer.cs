@@ -79,7 +79,7 @@ namespace ED.AdminPanel.Blazor.Pages.Reports {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Справка административни актове за {0}.
+        ///   Looks up a localized string similar to Справка административни актове от {0} до {1}.
         /// </summary>
         public static string ColumnAll {
             get {
@@ -88,173 +88,173 @@ namespace ED.AdminPanel.Blazor.Pages.Reports {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ден.
+        ///   Looks up a localized string similar to От.
         /// </summary>
-        public static string FormReportDate {
+        public static string FormFrom {
             get {
-                return ResourceManager.GetString("FormReportDate", resourceCulture);
+                return ResourceManager.GetString("FormFrom", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Активни профили.
+        ///   Looks up a localized string similar to До.
         /// </summary>
-        public static string LabelDailyActiveProfiles {
+        public static string FormTo {
             get {
-                return ResourceManager.GetString("LabelDailyActiveProfiles", resourceCulture);
+                return ResourceManager.GetString("FormTo", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to НП - ФЛ.
+        ///   Looks up a localized string similar to Анулирани.
         /// </summary>
-        public static string LabelDailyIndividualPenalDecrees {
+        public static string LabelAnnulled {
             get {
-                return ResourceManager.GetString("LabelDailyIndividualPenalDecrees", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Фиш - ФЛ.
-        /// </summary>
-        public static string LabelDailyIndividualTickets {
-            get {
-                return ResourceManager.GetString("LabelDailyIndividualTickets", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Общо (НП + фиш) - ФЛ.
-        /// </summary>
-        public static string LabelDailyIndividualTotalTickets {
-            get {
-                return ResourceManager.GetString("LabelDailyIndividualTotalTickets", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to НП - ЮЛ.
-        /// </summary>
-        public static string LabelDailyLegalEntityPenalDecrees {
-            get {
-                return ResourceManager.GetString("LabelDailyLegalEntityPenalDecrees", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Фиш - ЮЛ.
-        /// </summary>
-        public static string LabelDailyLegalEntityTickets {
-            get {
-                return ResourceManager.GetString("LabelDailyLegalEntityTickets", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Общо (НП + фиш) - ЮЛ.
-        /// </summary>
-        public static string LabelDailyLegalEntityTotalTickets {
-            get {
-                return ResourceManager.GetString("LabelDailyLegalEntityTotalTickets", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Нотификации Общо.
-        /// </summary>
-        public static string LabelDailyNotifications {
-            get {
-                return ResourceManager.GetString("LabelDailyNotifications", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Имейл.
-        /// </summary>
-        public static string LabelDailyNotificationsByEmail {
-            get {
-                return ResourceManager.GetString("LabelDailyNotificationsByEmail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Телефон.
-        /// </summary>
-        public static string LabelDailyNotificationsByPhone {
-            get {
-                return ResourceManager.GetString("LabelDailyNotificationsByPhone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Пасивни профили.
-        /// </summary>
-        public static string LabelDailyPassiveProfiles {
-            get {
-                return ResourceManager.GetString("LabelDailyPassiveProfiles", resourceCulture);
+                return ResourceManager.GetString("LabelAnnulled", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Връчени НП - ФЛ.
         /// </summary>
-        public static string LabelDailyReceivedIndividualPenalDecrees {
+        public static string LabelDeliveredPenalDecreeIndividuals {
             get {
-                return ResourceManager.GetString("LabelDailyReceivedIndividualPenalDecrees", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Връчени Фиш - ФЛ.
-        /// </summary>
-        public static string LabelDailyReceivedIndividualTickets {
-            get {
-                return ResourceManager.GetString("LabelDailyReceivedIndividualTickets", resourceCulture);
+                return ResourceManager.GetString("LabelDeliveredPenalDecreeIndividuals", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Връчени НП - ЮЛ.
         /// </summary>
-        public static string LabelDailyReceivedLegalEntityPenalDecrees {
+        public static string LabelDeliveredPenalDecreeLegalEntites {
             get {
-                return ResourceManager.GetString("LabelDailyReceivedLegalEntityPenalDecrees", resourceCulture);
+                return ResourceManager.GetString("LabelDeliveredPenalDecreeLegalEntites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Връчени Фиш - ФЛ.
+        /// </summary>
+        public static string LabelDeliveredTicketIndividuals {
+            get {
+                return ResourceManager.GetString("LabelDeliveredTicketIndividuals", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Връчени Фиш - ЮЛ.
         /// </summary>
-        public static string LabelDailyReceivedLegalEntityTickets {
+        public static string LabelDeliveredTicketLegalEntites {
             get {
-                return ResourceManager.GetString("LabelDailyReceivedLegalEntityTickets", resourceCulture);
+                return ResourceManager.GetString("LabelDeliveredTicketLegalEntites", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Брой връчени през ССЕВ.
+        ///   Looks up a localized string similar to Имейл.
         /// </summary>
-        public static string LabelDailyReceivedTickets {
+        public static string LabelEmailNotifications {
             get {
-                return ResourceManager.GetString("LabelDailyReceivedTickets", resourceCulture);
+                return ResourceManager.GetString("LabelEmailNotifications", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Брой получени в ССЕВ.
+        ///   Looks up a localized string similar to Връчени външно.
         /// </summary>
-        public static string LabelDailyTickets {
+        public static string LabelExternalServed {
             get {
-                return ResourceManager.GetString("LabelDailyTickets", resourceCulture);
+                return ResourceManager.GetString("LabelExternalServed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Брой адм. актове.
+        ///   Looks up a localized string similar to Връчен в ССЕВ.
         /// </summary>
-        public static string LabelTotalTickets {
+        public static string LabelInternalServed {
             get {
-                return ResourceManager.GetString("LabelTotalTickets", resourceCulture);
+                return ResourceManager.GetString("LabelInternalServed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Телефон.
+        /// </summary>
+        public static string LabelPhoneNotifications {
+            get {
+                return ResourceManager.GetString("LabelPhoneNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to НП - ФЛ.
+        /// </summary>
+        public static string LabelReceivedPenalDecreeIndividuals {
+            get {
+                return ResourceManager.GetString("LabelReceivedPenalDecreeIndividuals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to НП - ЮЛ.
+        /// </summary>
+        public static string LabelReceivedPenalDecreeLegalEntites {
+            get {
+                return ResourceManager.GetString("LabelReceivedPenalDecreeLegalEntites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фиш - ФЛ.
+        /// </summary>
+        public static string LabelReceivedTicketIndividuals {
+            get {
+                return ResourceManager.GetString("LabelReceivedTicketIndividuals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фиш - ЮЛ.
+        /// </summary>
+        public static string LabelReceivedTicketLegalEntites {
+            get {
+                return ResourceManager.GetString("LabelReceivedTicketLegalEntites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Активни профили.
+        /// </summary>
+        public static string LabelSentToActiveProfiles {
+            get {
+                return ResourceManager.GetString("LabelSentToActiveProfiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пасивни профили.
+        /// </summary>
+        public static string LabelSentToPassiveProfiles {
+            get {
+                return ResourceManager.GetString("LabelSentToPassiveProfiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Дата.
+        /// </summary>
+        public static string LabelTicketStatDate {
+            get {
+                return ResourceManager.GetString("LabelTicketStatDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Няма данни услуги за избрания период.
+        /// </summary>
+        public static string NoItems {
+            get {
+                return ResourceManager.GetString("NoItems", resourceCulture);
             }
         }
         

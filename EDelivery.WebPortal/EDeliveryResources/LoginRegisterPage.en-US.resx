@@ -163,7 +163,7 @@
     <value>Last name</value>
   </data>
   <data name="LabelLicenceAgreement" xml:space="preserve">
-    <value>I accept &lt;a href="{0}" target="_blank"&gt;terms of use&lt;/a&gt; of the eDelivery System</value>
+    <value>I accept &lt;a href="{0}" rel="noopener" target="_blank"&gt;terms of use&lt;/a&gt; of the eDelivery System</value>
   </data>
   <data name="LabelMiddleName" xml:space="preserve">
     <value>Middle name</value>
@@ -188,9 +188,6 @@
   </data>
   <data name="LinkLostPassword" xml:space="preserve">
     <value>Forgotten password</value>
-  </data>
-  <data name="LoginAuthCertificateNote" xml:space="preserve">
-    <value>Please make sure that your digital signature device is placed on your computer. If it is not inserted, insert it and then proceed.</value>
   </data>
   <data name="LoginWithKep" xml:space="preserve">
     <value>Log in with qualified electronic signature</value>
@@ -220,9 +217,6 @@ Complete your registration by uploading the completed and signed form in the for
   </data>
   <data name="TextRegistrationSuccess" xml:space="preserve">
     <value>Registration successful! A system administrator will verify and activate your registration. You will be notified via e-mail and / or phone when you can start using the system.</value>
-  </data>
-  <data name="TextValidDataResponsibility" xml:space="preserve">
-    <value>I declare that the information provided in this form is true and correct. I am aware that for the deliberate filling of false data I bear the responsibility under Art. 313 Penal code.</value>
   </data>
   <data name="TitleKepAuthFailed" xml:space="preserve">
     <value>QES log in failed.</value>
@@ -263,6 +257,22 @@ Complete your registration by uploading the completed and signed form in the for
   <data name="TitleSectionRegistrationInstructions" xml:space="preserve">
     <value>Registration instructions</value>
   </data>
+  <data name="LoginAuthCertificateNote" xml:space="preserve">
+    <value>Please make sure that your digital signature device is placed on your computer. If it is not inserted, insert it and then proceed.</value>
+  </data>
+  <data name="TextValidDataResponsibility" xml:space="preserve">
+    <value>I declare that the information provided in this form is true and correct. I am aware that for the deliberate filling of false data I bear the responsibility under Art. 313 Penal code.</value>
+  </data>
+  <data name="MessageLoginToRegisterLegalPerson" xml:space="preserve">
+    <value>For registration of a legal entity, it is necessary for the natural person-applicant to be registered in the Secure Electronic Delivery System and to log in!</value>
+  </data>
+  <data name="LoginKepNotice" xml:space="preserve">
+    <value>For electronic authentication with a qualified electronic signature, the latter must contain information about the PIN of the author of the signature in the field Serial number = PIN. In accordance with § 1, item 22 of the additional provisions of the Electronic Management Act under the conditions of § 5 of the Ordinance on the general requirements for information systems, registers and electronic admin. services.</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="LabelEmailNotificationsOnReceiving" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="LabelPersonalIdentifier" xml:space="preserve">
     <value>UCN/PNF</value>
   </data>
@@ -275,23 +285,8 @@ Complete your registration by uploading the completed and signed form in the for
   <data name="YouCanUseIt" xml:space="preserve">
     <value>You can start using the system now.</value>
   </data>
-  <data name="LabelViberNotifications" xml:space="preserve">
-    <value>Send me notifications via Viber</value>
-  </data>
-  <data name="LabelViberNotificationsOnDelivery" xml:space="preserve">
-    <value>Send me notifications via Viber on message delivering</value>
-  </data>
-  <data name="LabelViberNotificationsOnReceiving" xml:space="preserve">
-    <value>Send me notifications via Viber on message receiving</value>
-  </data>
-  <data name="LoginKepNotice" xml:space="preserve">
-    <value>For electronic authentication with a qualified electronic signature, the latter must contain information about the PIN of the author of the signature in the field Serial number = PIN. In accordance with § 1, item 22 of the additional provisions of the Electronic Management Act under the conditions of § 5 of the Ordinance on the general requirements for information systems, registers and electronic admin. services.</value>
-  </data>
   <data name="DescriptionRegisterLegalAddOn" xml:space="preserve">
     <value>We would like to inform you that currently, in connection with upgrading the functionalities of the Secure Electronic Delivery System, applications for joining the Secure Electronic Delivery System of legal entities can only be submitted by a person representing the company (manager, procurator, representative, etc.). In order to ensure the security of the profile and the overall process of applying for and receiving electronic administrative services, and the delivery of administrative acts, it is currently not possible to submit an application via proxy for a Legal Entity to join.</value>
-  </data>
-  <data name="MessageLoginToRegisterLegalPerson" xml:space="preserve">
-    <value>For registration of a legal entity, it is necessary for the natural person-applicant to be registered in the Secure Electronic Delivery System and to log in!</value>
   </data>
   <data name="TitleRegisterPublicAdministration" xml:space="preserve">
     <value>Administration registration</value>
@@ -307,5 +302,8 @@ Complete your registration by uploading the completed and signed form in the for
   </data>
   <data name="TitleUnregisterPublicAdministrationApplication" xml:space="preserve">
     <value>Application to no longer join the System for Secure Electronic Delivery</value>
+  </data>
+  <data name="LabelGDPRAgreement" xml:space="preserve">
+    <value>I have read and accept the terms of the &lt;a href="{0}" rel="noopener" target="_blank"&gt;Privacy and Data Protection Policy&lt;/a&gt;. I agree that my personal data and the documents I have attached will be processed by the Ministry of e-Government in accordance with the General Data Protection Regulation (GDPR) and the Personal Data Protection Act.</value>
   </data>
 </root>

@@ -19,11 +19,19 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
             ErrorMessageResourceName = nameof(ErrorMessages.Required),
             ErrorMessageResourceType = typeof(ErrorMessages))]
         [Display(
-            Name = nameof(TicketsResources.FormReportDate),
+            Name = nameof(TicketsResources.FormFrom),
             ResourceType = typeof(TicketsResources))]
-        public DateTime? ReportDate { get; set; }
+        public DateTime? From { get; set; }
 
-        public bool HasValues => this.ReportDate.HasValue;
+        [Required(
+            ErrorMessageResourceName = nameof(ErrorMessages.Required),
+            ErrorMessageResourceType = typeof(ErrorMessages))]
+        [Display(
+            Name = nameof(TicketsResources.FormTo),
+            ResourceType = typeof(TicketsResources))]
+        public DateTime? To { get; set; }
+
+        public bool HasValues => this.From.HasValue || this.To.HasValue;
 
         public bool IsValid => ValidationExtensions.TryValidateObject(this);
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -64,7 +72,8 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
         {
             base.ExtractQueryStringParams();
 
-            this.model.ReportDate = this.NavigationManager.GetQueryItemAsDateTime("reportDate");
+            this.model.From = this.NavigationManager.GetQueryItemAsDateTime("from");
+            this.model.To = this.NavigationManager.GetQueryItemAsDateTime("to");
         }
 
         protected override async Task LoadDataAsync(CancellationToken ct)
@@ -77,22 +86,21 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
             int currentUserId =
                 await this.AuthenticationStateHelper.GetAuthenticatedUserId();
 
-            DateTime to = this.model.ReportDate!.Value.AddDays(1);
-
             this.records =
                 await this.adminClient.GetTicketsReportAsync(
                     new GetTicketsReportRequest()
                     {
                         AdminUserId = currentUserId,
-                        From = this.model.ReportDate!.Value.ToTimestamp(),
-                        To = to.ToTimestamp(),
+                        From = this.model.From!.Value.ToTimestamp(),
+                        To = this.model.To!.Value.ToTimestamp(),
                     },
                     cancellationToken: ct);
 
-            this.recordsReportLink = $"Reports/ExportTickets?reportDate={this.model.ReportDate!.Value.ToString(Constants.DateTimeFormat)}";
+            this.recordsReportLink = $"Reports/ExportTickets?from={this.model.From!.Value.ToString(Constants.DateTimeFormat)}&to={this.model.To!.Value.ToString(Constants.DateTimeFormat)}";
             this.recordsTableTitle = string.Format(
                 this.Localizer["ColumnAll"],
-                this.model.ReportDate!.Value.ToString(Constants.DateTimeFormat));
+                this.model.From!.Value.ToString(Constants.DateTimeFormat),
+                this.model.To!.Value.ToString(Constants.DateTimeFormat));
 
             this.hasSentRequest = true;
         }
@@ -113,7 +121,8 @@ namespace ED.AdminPanel.Blazor.Pages.Reports
                 new Dictionary<string, StringValues>
                 {
                     { "page", 1.ToString() },
-                    { "reportDate", this.model.ReportDate!.Value.ToQueryItem() },
+                    { "from", this.model.From!.Value.ToQueryItem() },
+                    { "to", this.model.To!.Value.ToQueryItem() },
                 });
         }
     }

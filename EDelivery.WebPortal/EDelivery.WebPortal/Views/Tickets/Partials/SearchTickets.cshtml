@@ -13,6 +13,17 @@
             FormMethod.Post,
             new { id = "search-ticket-form" }))
     {
+        <style>
+            .select2-selection--single {
+                border: 2px solid #949494 !important;
+                background-color: #f7f7f7 !important;
+            }
+
+            .select2-selection__placeholder {
+                color: rgb(117, 117, 117) !important;
+            }
+        </style>
+
         <section class="form-section flex-row">
             <div class="col-2 flex-element date-group">
                 <div class="form-col">
@@ -31,6 +42,23 @@
                         @Html.ValidationMessageFor(x => x.To)
                     </div>
                 </div>
+            </div>
+            <div class="col-2">
+                <div class="form-col">
+                    <label for="Status">@ProfilePage.PlaceholderStatus:</label>
+                    <div class="form-element">
+                        @Html.DropDownListFor(
+                            x => x.Status,
+                            Model.Statuses,
+                            "-- Изберете --",
+                            new
+                            {
+                                @class = "form-select select2",
+                            })
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
             </div>
             <div class="col-2 btn-group">
                 <div class="form-col">
@@ -52,6 +80,13 @@
     }
 </div>
 
+@{
+    var currentCulture = EDelivery.WebPortal.Utils.CultureHelper.ToSiteCulture(UICulture);
+    var select2Language = currentCulture == EDelivery.WebPortal.Enums.eSiteCulture.BG
+        ? "bg"
+        : "en";
+}
+
 <script type="text/javascript">
     $(function () {
         $('.btn-search-filter').click(function () {
@@ -65,7 +100,7 @@
 
         $fromDate
             .datepicker({
-                language: 'bg',
+                language: '@select2Language',
                 format: dateFormat,
                 clearBtn: true
             })
@@ -73,7 +108,7 @@
                 $toDate
                     .datepicker('destroy')
                     .datepicker({
-                        language: 'bg',
+                        language: '@select2Language',
                         format: dateFormat,
                         clearBtn: true,
                         startDate: $(this).val()
@@ -86,7 +121,7 @@
 
         $toDate
             .datepicker({
-                language: 'bg',
+                language: '@select2Language',
                 format: dateFormat,
                 clearBtn: true
             })
@@ -94,7 +129,7 @@
                 $fromDate
                     .datepicker('destroy')
                     .datepicker({
-                        language: 'bg',
+                        language: '@select2Language',
                         format: dateFormat,
                         clearBtn: true,
                         endDate: $(this).val()
@@ -104,6 +139,16 @@
         $toDate.siblings('.icon-hint').on('click', function () {
             $toDate.datepicker('clearDates');
         });
+
+        $status = $('#Status');
+
+        $status
+            .select2({
+                placeholder: '-- Избор на език --',
+                language: '@select2Language',
+                allowClear: true,
+                minimumResultsForSearch: Infinity,
+            });
 
         $('a.lnk-clear').on('click', function (e) {
             e.preventDefault();

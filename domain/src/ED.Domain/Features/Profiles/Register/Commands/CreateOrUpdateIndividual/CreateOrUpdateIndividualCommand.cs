@@ -13,8 +13,9 @@ namespace ED.Domain
         string Residence,
         bool IsPassive,
         bool IsEmailNotificationEnabled,
-        bool IsSsmsNotificationEnabled,
-        bool IsViberNotificationEnabled,
+        bool IsPhoneNotificationEnabled,
+        bool LicenceAgreement,
+        bool GDPRAggreement,
         int ActionLoginId,
         string Ip)
         : IRequest<CreateOrUpdateIndividualCommandResult>;

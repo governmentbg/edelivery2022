@@ -52,7 +52,7 @@
             <br />
             <div class="form-row">
                 <div>
-                    <h5>@ProfilePage.TitleSectionNotificationSettingsViaSMS</h5>
+                    <h5>@ProfilePage.TitleSectionNotificationSettingsViaPhone</h5>
                 </div>
             </div>
 
@@ -80,22 +80,12 @@
                 {
                     <div>
                         <div class="form-group disabled">
-                            @Html.CheckBoxFor(x => x.IsViberNotificationEnabled, new { disabled = "disabled" })
-                            @Html.LabelFor(x => x.IsViberNotificationEnabled, LoginRegisterPage.LabelViberNotificationsOnReceiving)
+                            @Html.CheckBoxFor(x => x.IsPhoneNotificationEnabled, new { disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsPhoneNotificationEnabled, LoginRegisterPage.LabelPhoneNotificationsOnReceiving, new { @class = "disabled" })
                         </div>
                         <div class="form-group disabled">
-                            @Html.CheckBoxFor(x => x.IsViberNotificationOnDeliveryEnabled, new { disabled = "disabled" })
-                            @Html.LabelFor(x => x.IsViberNotificationOnDeliveryEnabled, LoginRegisterPage.LabelViberNotificationsOnDelivery)
-                        </div>
-                    </div>
-                    <div>
-                        <div class="form-group disabled">
-                            @Html.CheckBoxFor(x => x.IsSmsNotificationEnabled, new { disabled = "disabled" })
-                            @Html.LabelFor(x => x.IsSmsNotificationEnabled, LoginRegisterPage.LabelPhoneNotificationsOnReceiving, new { @class = "disabled" })
-                        </div>
-                        <div class="form-group disabled">
-                            @Html.CheckBoxFor(x => x.IsSmsNotificationOnDeliveryEnabled, new { disabled = "disabled" })
-                            @Html.LabelFor(x => x.IsSmsNotificationOnDeliveryEnabled, "Желая да получавам нотификация по SMS при отваряне на съобщение", new { @class = "disabled" })
+                            @Html.CheckBoxFor(x => x.IsPhoneNotificationOnDeliveryEnabled, new { disabled = "disabled" })
+                            @Html.LabelFor(x => x.IsPhoneNotificationOnDeliveryEnabled, LoginRegisterPage.LabelPhoneNotificationsOnDelivery, new { @class = "disabled" })
                         </div>
                     </div>
                 }
@@ -103,22 +93,12 @@
                 {
                     <div>
                         <div class="form-group">
-                            @Html.CheckBoxFor(x => x.IsViberNotificationEnabled)
-                            @Html.LabelFor(x => x.IsViberNotificationEnabled, LoginRegisterPage.LabelViberNotificationsOnReceiving)
+                            @Html.CheckBoxFor(x => x.IsPhoneNotificationEnabled)
+                            @Html.LabelFor(x => x.IsPhoneNotificationEnabled, LoginRegisterPage.LabelPhoneNotificationsOnReceiving)
                         </div>
                         <div class="form-group">
-                            @Html.CheckBoxFor(x => x.IsViberNotificationOnDeliveryEnabled)
-                            @Html.LabelFor(x => x.IsViberNotificationOnDeliveryEnabled, LoginRegisterPage.LabelViberNotificationsOnDelivery)
-                        </div>
-                    </div>
-                    <div>
-                        <div class="form-group">
-                            @Html.CheckBoxFor(x => x.IsSmsNotificationEnabled)
-                            @Html.LabelFor(x => x.IsSmsNotificationEnabled, LoginRegisterPage.LabelPhoneNotificationsOnReceiving)
-                        </div>
-                        <div class="form-group">
-                            @Html.CheckBoxFor(x => x.IsSmsNotificationOnDeliveryEnabled)
-                            @Html.LabelFor(x => x.IsSmsNotificationOnDeliveryEnabled, "Желая да получавам нотификация по SMS при отваряне на съобщение")
+                            @Html.CheckBoxFor(x => x.IsPhoneNotificationOnDeliveryEnabled)
+                            @Html.LabelFor(x => x.IsPhoneNotificationOnDeliveryEnabled, LoginRegisterPage.LabelPhoneNotificationsOnDelivery)
                         </div>
                     </div>
                 }
@@ -129,7 +109,7 @@
                 <div class="form-row">
                     <div class="da-tooltip attached iconed red">
                         <div class="icon-info"></div>
-                        @Html.Raw(ProfilePage.InfoSmsNotificationsTurnedOff)
+                        @Html.Raw(ProfilePage.InfoPhoneNotificationsTurnedOff)
                     </div>
                 </div>
             }
@@ -138,7 +118,7 @@
                 <div class="form-row">
                     <div class="da-tooltip attached iconed">
                         <div class="icon-info"></div>
-                        @Html.Raw(ProfilePage.InfoSmsViberNotificationChoice)
+                        @Html.Raw(ProfilePage.InfoPhoneNotificationChoice)
                     </div>
                 </div>
             }
@@ -152,9 +132,6 @@
             <script type="text/javascript">
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();
-
-                    $('#IsSmsNotificationEnabled').mutualExclusive('#IsViberNotificationEnabled');
-                    $('#IsSmsNotificationOnDeliveryEnabled').mutualExclusive('#IsViberNotificationOnDeliveryEnabled');
                 });
             </script>
         }

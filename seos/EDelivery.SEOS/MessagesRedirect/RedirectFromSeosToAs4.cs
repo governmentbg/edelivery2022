@@ -58,6 +58,7 @@ namespace EDelivery.SEOS.MessagesRedirect
                 messageType == MessageType.MSG_DocumentStatusRequest)
             {
                 //Fake response
+                settings.DocIdentity.SetDocNumberEmpty();
                 return MsgDocumentStatusResponse.Create(
                     settings,
                     DocumentStatusType.DS_WAIT_REGISTRATION);

@@ -1465,27 +1465,26 @@ namespace ED.AdminPanel.Controllers
         }
 
         public async Task<ActionResult<object>> ExportTicketsAsync(
-            [FromQuery, Required][DateTimeModelBinder] DateTime reportDate,
+            [FromQuery, Required][DateTimeModelBinder] DateTime @from,
+            [FromQuery, Required][DateTimeModelBinder] DateTime to,
             [FromServices] IHttpContextAccessor httpContextAccessor,
             CancellationToken ct)
         {
             int currentUserId = httpContextAccessor.HttpContext!.User.GetAuthenticatedUserId();
-
-            DateTime to = reportDate.AddDays(1);
 
             GetTicketsReportResponse report =
                 await this.adminClient.GetTicketsReportAsync(
                     new GetTicketsReportRequest()
                     {
                         AdminUserId = currentUserId,
-                        From = reportDate.ToTimestamp(),
+                        From = @from.ToTimestamp(),
                         To = to.ToTimestamp(),
                     },
                     cancellationToken: ct);
 
             // do not dispose the stream, this will be done by the FileStreamResult
-            var excelStream = new MemoryStream();
-            using var document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true);
+            MemoryStream excelStream = new();
+            using SpreadsheetDocument document = SpreadsheetDocument.Create(excelStream, SpreadsheetDocumentType.Workbook, autoSave: true);
 
             WorkbookPart workbookPart = document.AddNewPart<WorkbookPart>(
                 @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
@@ -1515,10 +1514,10 @@ namespace ED.AdminPanel.Controllers
 
             workbookPart.Workbook = new Workbook(new Sheets());
 
-            var worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
+            WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>("Sheet1");
 
-            var sheets = workbookPart.Workbook.GetFirstChild<Sheets>()!;
-            var lastSheet = sheets.GetLastChild<Sheet>();
+            Sheets sheets = workbookPart.Workbook.GetFirstChild<Sheets>()!;
+            Sheet lastSheet = sheets.GetLastChild<Sheet>();
 
             sheets.AppendChild(
                 new Sheet()
@@ -1530,64 +1529,57 @@ namespace ED.AdminPanel.Controllers
 
             worksheetPart.InitNormalWorksheet();
 
-            var titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
-            var headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
+            int titleFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 14.0);
+            int headerFont = workbookStylesPart.Stylesheet.AppendFont(bold: true, size: 12.0);
 
-            var titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
+            int titleTableCellFormat = workbookStylesPart.Stylesheet.AppendCellFormat(
                 verticalAlignment: VerticalAlignmentValues.Bottom,
                 horizontalAlignment: HorizontalAlignmentValues.Left,
                 wrapText: true,
                 fontId: titleFont);
 
-            var headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+            int headerTableCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                 verticalAlignment: VerticalAlignmentValues.Center,
                 horizontalAlignment: HorizontalAlignmentValues.Center,
                 wrapText: true,
                 fontId: headerFont);
 
-            var dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
+            int dateCell = workbookStylesPart.Stylesheet.AppendCellFormat(
                 // special date number format added in the Stylesheet
                 numberFormatId: 165);
 
             string[] headerRowColumnTitles =
                 new string[]
                 {
-                    "Брой адм. актове",
-                    "Брой получени в ССЕВ",
-                    "Общо (НП + фиш) - ФЛ",
-                    "Общо (НП + фиш) - ЮЛ",
+                    "Дата",
                     "Фиш - ФЛ",
-                    "Фиш - ЮЛ",
                     "НП - ФЛ",
+                    "Фиш - ЮЛ",
                     "НП - ЮЛ",
-                    "Нотификации Общо",
+                    "Връчен в ССЕВ",
+                    "Връчени външно",
+                    "Анулирани",
                     "Имейл",
                     "Телефон",
-                    "Брой връчени през ССЕВ",
                     "Връчени Фиш - ФЛ",
-                    "Връчени Фиш - ЮЛ",
                     "Връчени НП - ФЛ",
+                    "Връчени Фиш - ЮЛ",
                     "Връчени НП - ЮЛ",
-                    "Пасивни профили",
                     "Активни профили",
+                    "Пасивни профили",
                 };
 
-            var titleRow = worksheetPart.Worksheet.AppendRelativeRow();
+            Row titleRow = worksheetPart.Worksheet.AppendRelativeRow();
 
             titleRow
                 .AppendRelativeInlineStringCell(
-                    text: $"Справка е-фишове за {reportDate:dd-MM-yyyy}",
+                    text: $"Справка е-фишове от {@from:dd-MM-yyyy} до {to:dd-MM-yyyy}",
                     styleIndex: titleTableCellFormat);
             worksheetPart.Worksheet
                 .AppendMergeCell($"A{titleRow.RowIndex}:" +
                     $"{OpenXmlExtensions.ColumnIdToColumnIndex(headerRowColumnTitles.Length - 1)}{titleRow.RowIndex}");
 
-            double primaryColWidth = 40;
-            worksheetPart.Worksheet.GetColumns()
-                .AppendCustomWidthColumn(1, 1, primaryColWidth)
-                .AppendCustomWidthColumn(2, 2, primaryColWidth / 4);
-
-            var headerRow = worksheetPart.Worksheet.AppendRelativeRow();
+            Row headerRow = worksheetPart.Worksheet.AppendRelativeRow();
 
             foreach (var columnTitle in headerRowColumnTitles)
             {
@@ -1597,62 +1589,62 @@ namespace ED.AdminPanel.Controllers
                         styleIndex: headerTableCell);
             }
 
+            foreach (var ticketStat in report.Result)
             {
-                var row = worksheetPart.Worksheet.AppendRelativeRow();
+                Row row = worksheetPart.Worksheet.AppendRelativeRow();
+
+                row.AppendRelativeDateCell(
+                    date: ticketStat.TicketStatDate.ToLocalDateTime(),
+                    styleIndex: dateCell);
 
                 row.AppendRelativeNumberCell(
-                    number: report.TotalTickets);
+                    number: ticketStat.ReceivedTicketIndividuals);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyIndividualTickets + report.DailyLegalEntityPenalDecrees + report.DailyIndividualPenalDecrees + report.DailyLegalEntityPenalDecrees);
+                    number: ticketStat.ReceivedPenalDecreeIndividuals);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyIndividualTickets + report.DailyIndividualPenalDecrees);
+                    number: ticketStat.ReceivedTicketLegalEntites);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyLegalEntityPenalDecrees + report.DailyLegalEntityPenalDecrees);
+                    number: ticketStat.ReceivedPenalDecreeLegalEntites);
+
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyIndividualTickets);
+                    number: ticketStat.InternalServed);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyLegalEntityTickets);
+                    number: ticketStat.ExternalServed);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyIndividualPenalDecrees);
+                    number: ticketStat.Annulled);
+
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyLegalEntityPenalDecrees);
+                    number: ticketStat.EmailNotifications);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyNotificationsByEmail + report.DailyNotificationsByPhone);
+                    number: ticketStat.PhoneNotifications);
+
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyNotificationsByEmail);
+                    number: ticketStat.DeliveredTicketIndividuals);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyNotificationsByPhone);
+                    number: ticketStat.DeliveredPenalDecreeIndividuals);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyReceivedIndividualTickets + report.DailyReceivedLegalEntityTickets + report.DailyReceivedIndividualPenalDecrees + report.DailyReceivedLegalEntityPenalDecrees);
+                    number: ticketStat.DeliveredTicketLegalEntites);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyReceivedIndividualTickets);
+                    number: ticketStat.DeliveredPenalDecreeLegalEntites);
+
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyReceivedLegalEntityTickets);
+                    number: ticketStat.SentToActiveProfiles);
 
                 row.AppendRelativeNumberCell(
-                    number: report.DailyReceivedIndividualPenalDecrees);
-
-                row.AppendRelativeNumberCell(
-                    number: report.DailyReceivedLegalEntityPenalDecrees);
-
-                row.AppendRelativeNumberCell(
-                    number: report.DailyPassiveProfiles);
-
-                row.AppendRelativeNumberCell(
-                    number: report.DailyActiveProfiles);
+                    number: ticketStat.SentToPassiveProfiles);
             }
 
             worksheetPart.Worksheet.Finalize();
@@ -1668,7 +1660,7 @@ namespace ED.AdminPanel.Controllers
 
         protected IEnumerable<DateTime> EachDay(DateTime from, DateTime to)
         {
-            for (var day = from.Date; day.Date <= to.Date; day = day.AddDays(1))
+            for (DateTime day = from.Date; day.Date <= to.Date; day = day.AddDays(1))
             {
                 yield return day;
             }

@@ -39,10 +39,11 @@ namespace EDelivery.WebPortal.Models
 
         public bool PhoneNotifications { get; set; }
 
-        public bool ViberNotifications { get; set; }
-
         [RequireTrue(ErrorMessageResourceName = "ErrorAcceptLicenceAgreement", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
         public bool LicenceAgreement { get; set; }
+
+        [RequireTrue(ErrorMessageResourceName = "ErrorAcceptGDPRAgreement", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
+        public bool GDPRAgreement { get; set; }
 
         [StringLength(50, ErrorMessageResourceName = "ErrorUserNameLength", ErrorMessageResourceType = typeof(EDeliveryResources.ErrorMessages))]
         public string UserName { get; set; }

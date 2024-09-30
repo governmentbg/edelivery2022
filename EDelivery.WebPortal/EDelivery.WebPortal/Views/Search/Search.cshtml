@@ -73,7 +73,7 @@
                         {
                             @id = "RecipientsSelect2",
                             @class = "form-select select2 autoaddcontact",
-                            style = "width: 100%"
+                            style = "width: 100%",
                         })
                 </li>
             </ul>
@@ -91,7 +91,7 @@
                         {
                             @id = "RecipientGroupsSelect2",
                             @class = "form-select select2 autoaddcontact",
-                            style = "width: 100%"
+                            style = "width: 100%",
                         })
                 </li>
             </ul>
@@ -134,7 +134,9 @@
         var option = undefined;
 
         $parentTargetGroup
-            .select2({ language: '@select2Language' })
+            .select2({
+                language: '@select2Language',
+            })
             .on('change', function (e) {
                 option = $parentTargetGroup.find(':selected');
             });
@@ -166,8 +168,10 @@
                         data.results = $.map(data.results,
                             function(item) {
                                 return {
+                                    _resultId: item.id,
                                     id: item.id,
                                     text: item.text,
+                                    title: item.text,
                                     selected: false,
                                     disabled: false
                                 }
@@ -217,8 +221,10 @@
                         data.results = $.map(data.results,
                             function (item) {
                                 return {
+                                    _resultId: item.id,
                                     id: item.id,
                                     text: item.text,
+                                    title: item.text,
                                     selected: false,
                                     disabled: false
                                 }
@@ -245,8 +251,10 @@
                 }
             });
 
-        $(document).on('select2:open', function () {
-            document.querySelector('.select2-search__field').focus();
+        $(document).on('select2:open', function (e) {
+            var search__field = $(e.target).siblings().find('.select2-search__field');
+            search__field.focus();
+            search__field.attr('aria-label', '@ARIA.LabelMessageRecipientSelect2');
         });
 
         $('#cancel-message-recipients').on('click', function () { gf.hideModal(); });

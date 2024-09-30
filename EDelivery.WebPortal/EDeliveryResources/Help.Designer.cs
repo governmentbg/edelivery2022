@@ -67,7 +67,7 @@ namespace EDeliveryResources {
         ///            &lt;h2&gt;Изпращане и получаване на съобщение &lt;/h2&gt;
         ///            &lt;p&gt;За изпращане на съобщение, потребителят трябва да избере бутон „Вход“ и да влезе в профила си чрез КЕП, чрез ПИК на НАП или чрез ПИК на НОИ, след което се отваря началният екран на Системата за сигурно електронно връчване (Фигура 4.1).&lt;/p&gt;
         ///            &lt;figure&gt;
-        ///                &lt;img src=&quot;~/Content/img/pixel.gif&quot;  [rest of string was truncated]&quot;;.
+        ///                &lt;img src=&quot;/Content/img/pixel.gif&quot; d [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Messages {
             get {
@@ -82,7 +82,7 @@ namespace EDeliveryResources {
         ///            &lt;h2&gt;Администриране на профила&lt;/h2&gt;
         ///            &lt;p&gt;Чрез менюто „Администриране на профила“ потребителите могат да създават свои профилни групи, да конфигурират профила си, да получат статистика за достъп и да променят настройките в своя профил (Фигура 5.1).&lt;/p&gt;
         ///            &lt;figure&gt;
-        ///                &lt;img src=&quot;~/Content/img/pixel.gif&quot; data-src=&quot;5_1.jpeg&quot; class=&quot;lazy&quot; alt=&quot;Фи [rest of string was truncated]&quot;;.
+        ///                &lt;img src=&quot;/Content/img/pixel.gif&quot; data-src=&quot;5_1.jpeg&quot; class=&quot;lazy&quot; alt=&quot;Фиг [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Profile {
             get {
@@ -140,7 +140,7 @@ namespace EDeliveryResources {
         ///            &lt;h2&gt;Хранилище&lt;/h2&gt;
         ///            &lt;p&gt;В меню „Хранилище“, секция „Качени файлове“ всеки потребител може да добавя документи, които предстои да бъдат изпратени като прикачени файлове към съобщение. Документите се добавят чрез бутон „Качи файл“ (Фигура 6.1).&lt;/p&gt;
         ///            &lt;figure&gt;
-        ///                &lt;img src=&quot;~/Content/img/pixel.gif&quot; data-src=&quot;6_1.jpeg&quot; class=&quot;lazy&quot; alt=&quot;Фигура [rest of string was truncated]&quot;;.
+        ///                &lt;img src=&quot;/Content/img/pixel.gif&quot; data-src=&quot;6_1.jpeg&quot; class=&quot;lazy&quot; alt=&quot;Фигура  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Storage {
             get {

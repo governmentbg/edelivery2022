@@ -32,7 +32,8 @@ namespace EDelivery.SEOS.MessagesReceive
 
                 var msgCertificateSN = ValidateXmlSignature(message, xmlRequest, request, sender.Id, logger);
 
-                CompareCertificateSN(message, sender.CertificateSN, msgCertificateSN, logger);
+                //Проверката трябва да е по истинския сертификат, записан в Регистъра на AS4 участниците
+                //CompareCertificateSN(message, sender.CertificateSN, msgCertificateSN, logger);
 
                 CheckMessageExists(message, logger);
 

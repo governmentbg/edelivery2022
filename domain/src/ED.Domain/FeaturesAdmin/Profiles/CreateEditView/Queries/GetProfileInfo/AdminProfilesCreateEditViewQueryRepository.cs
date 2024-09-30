@@ -61,6 +61,9 @@ namespace ED.Domain
                     p.EnableMessagesWithCode,
                     p.IsReadOnly,
                     p.IsPassive,
+                    p.HideAsRecipient,
+                    p.LicenceAgreed,
+                    p.GDPRAgreed,
 
                     tgp.TargetGroupId,
                     TargetGroupName = tg.Name,
@@ -261,12 +264,10 @@ namespace ED.Domain
                         l.CertificateThumbprint,
                         l.CanSendOnBehalfOf,
                         l.PushNotificationsUrl,
-                        lp.SmsNotificationActive,
-                        lp.SmsNotificationOnDeliveryActive,
+                        lp.PhoneNotificationActive,
+                        lp.PhoneNotificationOnDeliveryActive,
                         lp.EmailNotificationActive,
                         lp.EmailNotificationOnDeliveryActive,
-                        lp.ViberNotificationActive,
-                        lp.ViberNotificationOnDeliveryActive,
                         lp.Email,
                         lp.Phone))
                     .FirstOrDefaultAsync(ct);
@@ -322,7 +323,10 @@ namespace ED.Domain
                 profileInfo.IsPassive,
                 defaultLogin,
                 quota,
-                esbUser);
+                esbUser,
+                profileInfo.HideAsRecipient,
+                profileInfo.LicenceAgreed,
+                profileInfo.GDPRAgreed);
         }
     }
 }

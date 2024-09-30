@@ -340,6 +340,15 @@ namespace EDeliveryResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Поради административни настройки профилът не може да бъде избран за получател.
+        /// </summary>
+        public static string HideAsRecipientWarning {
+            get {
+                return ResourceManager.GetString("HideAsRecipientWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Хърватска.
         /// </summary>
         public static string HR {

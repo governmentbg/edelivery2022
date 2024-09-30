@@ -163,7 +163,7 @@
     <value>Фамилия</value>
   </data>
   <data name="LabelLicenceAgreement" xml:space="preserve">
-    <value>Приемам &lt;a href="{0}" target="_blank"&gt;условията за ползване&lt;/a&gt; на услугата</value>
+    <value>Приемам &lt;a href="{0}" rel="noopener" target="_blank"&gt;условията за ползване&lt;/a&gt; на услугата</value>
   </data>
   <data name="LabelMiddleName" xml:space="preserve">
     <value>Презиме</value>
@@ -172,7 +172,7 @@
     <value>Парола</value>
   </data>
   <data name="LabelPhoneNotifications" xml:space="preserve">
-    <value>Желая да получавам нотификация по SMS</value>
+    <value>Желая да получавам нотификация по телефон</value>
   </data>
   <data name="LabelPhoneNumber" xml:space="preserve">
     <value>Телефон</value>
@@ -286,7 +286,7 @@
     <value>Желая да получавам нотификация по е-mail при получаване на ново съобщение</value>
   </data>
   <data name="LabelPhoneNotificationsOnReceiving" xml:space="preserve">
-    <value>Желая да получавам нотификация по SMS при получаване на ново съобщение</value>
+    <value>Желая да получавам нотификация по телефон при получаване на ново съобщение</value>
   </data>
   <data name="LabelPersonalIdentifier" xml:space="preserve">
     <value>ЕГН/ЛНЧ</value>
@@ -299,15 +299,6 @@
   </data>
   <data name="YouCanUseIt" xml:space="preserve">
     <value>Можете да започнете да я използвате.</value>
-  </data>
-  <data name="LabelViberNotifications" xml:space="preserve">
-    <value>Желая да получавам нотификация по Viber</value>
-  </data>
-  <data name="LabelViberNotificationsOnDelivery" xml:space="preserve">
-    <value>Желая да получавам нотификация по Viber при отваряне на съобщение</value>
-  </data>
-  <data name="LabelViberNotificationsOnReceiving" xml:space="preserve">
-    <value>Желая да получавам нотификация по Viber при получаване на ново съобщение</value>
   </data>
   <data name="DescriptionRegisterLegalAddOn" xml:space="preserve">
     <value>Уведомяваме Ви, че във връзка с надграждане функционалностите на системата за сигурно електронно връчване, към настоящия момент заявления за присъединяване към системата за сигурно електронно връчване на юридически лица, могат да се подават само от лице представляващо дружеството (управител, прокурист, представляващ и др.). С цел осигуряване на сигурност на профила и на цялостния процес по заявяване и получаване на електронни административни услуги и връчване на административни актове, към настоящия момент подаване на заявление за присъединяване на ЮЛ чрез пълномощник не е възможно.</value>
@@ -326,5 +317,11 @@
   </data>
   <data name="TitleUnregisterPublicAdministrationApplication" xml:space="preserve">
     <value>Заявление за прекратяване присъединяването към Системата за сигурно електронно връчване</value>
+  </data>
+  <data name="LabelPhoneNotificationsOnDelivery" xml:space="preserve">
+    <value>Желая да получавам нотификация по телефон при отваряне на съобщение</value>
+  </data>
+  <data name="LabelGDPRAgreement" xml:space="preserve">
+    <value>Прочетох и приемам условията на &lt;a href="{0}" rel="noopener" target="_blank"&gt;Политиката за поверителност и защита на данните&lt;/a&gt;. Съгласен/на съм  личните ми данни и приложените от мен документи да бъдат обработени от Министерство на електронното управление съгласно Общ регламент за защита на данните (GDPR) и Закона за защита на личните данни.</value>
   </data>
 </root>

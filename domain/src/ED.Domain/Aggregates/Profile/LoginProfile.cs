@@ -17,10 +17,8 @@ namespace ED.Domain
             bool isDefault,
             bool emailNotificationActive,
             bool emailNotificationOnDeliveryActive,
-            bool smsNotificationActive,
-            bool smsNotificationOnDeliveryActive,
-            bool viberNotificationActive,
-            bool viberNotificationOnDeliveryActive,
+            bool phoneNotificationActive,
+            bool phoneNotificationOnDeliveryActive,
             string email,
             string phone,
             int accessGrantedBy)
@@ -29,10 +27,8 @@ namespace ED.Domain
             this.IsDefault = isDefault;
             this.EmailNotificationActive = emailNotificationActive;
             this.EmailNotificationOnDeliveryActive = emailNotificationOnDeliveryActive;
-            this.SmsNotificationActive = smsNotificationActive;
-            this.SmsNotificationOnDeliveryActive = smsNotificationOnDeliveryActive;
-            this.ViberNotificationActive = viberNotificationActive;
-            this.ViberNotificationOnDeliveryActive = viberNotificationOnDeliveryActive;
+            this.PhoneNotificationActive = phoneNotificationActive;
+            this.PhoneNotificationOnDeliveryActive = phoneNotificationOnDeliveryActive;
             this.Email = email;
             this.Phone = phone;
             this.AccessGrantedBy = accessGrantedBy;
@@ -49,14 +45,6 @@ namespace ED.Domain
 
         public bool EmailNotificationOnDeliveryActive { get; set; }
 
-        public bool SmsNotificationActive { get; set; }
-
-        public bool SmsNotificationOnDeliveryActive { get; set; }
-
-        public bool ViberNotificationActive { get; set; }
-
-        public bool ViberNotificationOnDeliveryActive { get; set; }
-
         public string Email { get; set; }
 
         public string Phone { get; set; }
@@ -67,22 +55,22 @@ namespace ED.Domain
 
         public DateTime DateAccessGranted { get; set; }
 
+        public bool PhoneNotificationActive { get; set; }
+
+        public bool PhoneNotificationOnDeliveryActive { get; set; }
+
         public void Update(
             bool emailNotificationActive,
             bool emailNotificationOnDeliveryActive,
-            bool smsNotificationActive,
-            bool smsNotificationOnDeliveryActive,
-            bool viberNotificationActive,
-            bool viberNotificationOnDeliveryActive,
+            bool phoneNotificationActive,
+            bool phoneNotificationOnDeliveryActive,
             string email,
             string phone)
         {
             this.EmailNotificationActive = emailNotificationActive;
             this.EmailNotificationOnDeliveryActive = emailNotificationOnDeliveryActive;
-            this.SmsNotificationActive = smsNotificationActive;
-            this.SmsNotificationOnDeliveryActive = smsNotificationOnDeliveryActive;
-            this.ViberNotificationActive = viberNotificationActive;
-            this.ViberNotificationOnDeliveryActive = viberNotificationOnDeliveryActive;
+            this.PhoneNotificationActive = phoneNotificationActive;
+            this.PhoneNotificationOnDeliveryActive = phoneNotificationOnDeliveryActive;
             this.Email = email;
             this.Phone = phone;
         }
@@ -90,20 +78,16 @@ namespace ED.Domain
         public void UpdateByAdmin(
             bool emailNotificationActive,
             bool emailNotificationOnDeliveryActive,
-            bool smsNotificationActive,
-            bool smsNotificationOnDeliveryActive,
-            bool viberNotificationActive,
-            bool viberNotificationOnDeliveryActive,
+            bool phoneNotificationActive,
+            bool phoneNotificationOnDeliveryActive,
             string email,
             string phone,
             int adminUserId)
         {
             this.EmailNotificationActive = emailNotificationActive;
             this.EmailNotificationOnDeliveryActive = emailNotificationOnDeliveryActive;
-            this.SmsNotificationActive = smsNotificationActive;
-            this.SmsNotificationOnDeliveryActive = smsNotificationOnDeliveryActive;
-            this.ViberNotificationActive = viberNotificationActive;
-            this.ViberNotificationOnDeliveryActive = viberNotificationOnDeliveryActive;
+            this.PhoneNotificationActive = phoneNotificationActive;
+            this.PhoneNotificationOnDeliveryActive = phoneNotificationOnDeliveryActive;
             this.Email = email;
             this.Phone = phone;
 

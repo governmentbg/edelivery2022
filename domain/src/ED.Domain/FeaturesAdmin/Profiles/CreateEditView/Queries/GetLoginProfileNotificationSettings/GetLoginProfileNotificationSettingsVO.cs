@@ -7,9 +7,7 @@
             string Phone,
             bool EmailNotificationActive,
             bool EmailNotificationOnDeliveryActive,
-            bool SmsNotificationActive,
-            bool SmsNotificationOnDeliveryActive,
-            bool ViberNotificationActive,
-            bool ViberNotificationOnDeliveryActive);
+            bool PhoneNotificationActive,
+            bool PhoneNotificationOnDeliveryActive);
     }
 }

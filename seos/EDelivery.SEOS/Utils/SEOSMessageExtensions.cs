@@ -180,5 +180,23 @@ namespace EDelivery.SEOS.Utils
 
             return Guid.Parse(parIdentity.DocumentGUID);
         }
+
+        public static void SetDocNumberEmpty(this DocumentIdentificationType identity)
+        {
+            if (identity == null)
+                return;
+
+            if (identity.Item is DocumentURI)
+            {
+                var docUri = (identity.Item as DocumentURI);
+                docUri.SequenceNumber = String.Empty;
+            }
+
+            if (identity.Item is DocumentNumberType)
+            {
+                var docNumberT = (identity.Item as DocumentNumberType);
+                docNumberT.DocNumber = String.Empty;
+            }
+        }
     }
 }

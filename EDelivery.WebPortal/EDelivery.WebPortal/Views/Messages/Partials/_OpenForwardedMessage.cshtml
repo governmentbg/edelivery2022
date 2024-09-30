@@ -66,12 +66,13 @@
                         </tr>
                         break;
                     case ComponentType.checkbox:
+                        bool checkboxValue = item.Value.Value is bool value? value : false;
                         <tr>
                             <td>@item.Value.Label</td>
                             <td>
                             <td>
                                 <div class="form-group disabled" style="margin: 0px;">
-                                    @Html.CheckBox("cb1", (bool)item.Value.Value, new { disabled = "disabled" })
+                                    @Html.CheckBox("cb1", checkboxValue, new { disabled = "disabled" })
                                     <label>&nbsp;</label>
                                 </div>
                             </td>

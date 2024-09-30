@@ -4,7 +4,6 @@ using Blazored.Modal;
 using ED.AdminPanel.Blazor;
 using ED.AdminPanel.Resources;
 using Grpc.Net.Client.Web;
-using Grpc.Net.ClientFactory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +30,7 @@ namespace ED.AdminPanel
         public const string GrpcReportsClient = "ReportsClient";
 
         private AdminPanelOptions Options { get; init; }
+
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             this.Configuration = configuration;

@@ -12,14 +12,19 @@ namespace ED.Domain
             int[] ids,
             CancellationToken ct)
         {
-            return await 
-                (from p in this.DbContext.Set<Profile>()
-                 where this.DbContext.MakeIdsQuery(ids).Any(id => id.Id == p.Id)
-                 orderby p.Identifier, p.ElectronicSubjectName
-                 select new GetProfilesByIdVO(
+            GetProfilesByIdVO[] vos = await (
+                from p in this.DbContext.Set<Profile>()
+
+                where this.DbContext.MakeIdsQuery(ids).Any(id => id.Id == p.Id)
+
+                orderby p.Identifier, p.ElectronicSubjectName
+
+                select new GetProfilesByIdVO(
                     p.Id,
                     $"{p.Identifier} - {p.ElectronicSubjectName}"))
                 .ToArrayAsync(ct);
+
+            return vos;
         }
     }
 }

@@ -6,12 +6,10 @@ namespace ED.Domain
             string? CertificateThumbPrint,
             string? PushNotificationsUrl,
             bool? CanSendOnBehalfOf,
-            bool SmsNotificationActive,
-            bool SmsNotificationOnDeliveryActive,
+            bool PhoneNotificationActive,
+            bool PhoneNotificationOnDeliveryActive,
             bool EmailNotificationActive,
             bool EmailNotificationOnDeliveryActive,
-            bool ViberNotificationActive,
-            bool ViberNotificationOnDeliveryActive,
             string Email,
             string Phone);
     }

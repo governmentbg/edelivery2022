@@ -16,7 +16,6 @@ using EDelivery.WebPortal.Authorization;
 using EDelivery.WebPortal.Enums;
 using EDelivery.WebPortal.Extensions;
 using EDelivery.WebPortal.Models;
-using EDelivery.WebPortal.Models.JWT;
 using EDelivery.WebPortal.Models.Profile;
 using EDelivery.WebPortal.Models.Profile.Administration;
 using EDelivery.WebPortal.Utils;
@@ -24,10 +23,6 @@ using EDelivery.WebPortal.Utils.Attributes;
 using EDelivery.WebPortal.Utils.Cache;
 
 using EDeliveryResources;
-
-using JWT;
-using JWT.Algorithms;
-using JWT.Serializers;
 
 namespace EDelivery.WebPortal.Controllers
 {
@@ -101,21 +96,14 @@ namespace EDelivery.WebPortal.Controllers
                         nameof(ProfileController.CreateProfile));
                 }
 
-                if (model.IsSmsNotificationEnabled && model.IsViberNotificationEnabled)
-                {
-                    model.IsSmsNotificationEnabled = false;
-                }
-
                 await this.profileClient.Value.BringProfileInForceAsync(
                     new BringProfileInForceRequest
                     {
                         Ip = this.Request.UserHostAddress,
                         IsEmailNotificationEnabled = model.IsEmailNotificationEnabled,
                         IsEmailNotificationOnDeliveryEnabled = false,
-                        IsSmsNotificationEnabled = model.IsSmsNotificationEnabled,
-                        IsSmsNotificationOnDeliveryEnabled = false,
-                        IsViberNotificationEnabled = model.IsViberNotificationEnabled,
-                        IsViberNotificationOnDeliveryEnabled = false,
+                        IsPhoneNotificationEnabled = model.IsPhoneNotificationEnabled,
+                        IsPhoneNotificationOnDeliveryEnabled = false,
                         LoginId = this.UserData.LoginId
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
@@ -664,16 +652,6 @@ namespace EDelivery.WebPortal.Controllers
                     return PartialView("Partials/_NotificationSettings", model);
                 }
 
-                if (model.IsSmsNotificationEnabled && model.IsViberNotificationEnabled)
-                {
-                    model.IsSmsNotificationEnabled = false;
-                }
-
-                if (model.IsSmsNotificationOnDeliveryEnabled && model.IsViberNotificationOnDeliveryEnabled)
-                {
-                    model.IsSmsNotificationOnDeliveryEnabled = false;
-                }
-
                 _ = await this.profileClient.Value.UpdateSettingsAsync(
                     new UpdateSettingsRequest
                     {
@@ -681,12 +659,10 @@ namespace EDelivery.WebPortal.Controllers
                         LoginId = this.UserData.LoginId,
                         IsEmailNotificationEnabled = model.IsEmailNotificationEnabled,
                         IsEmailNotificationOnDeliveryEnabled = model.IsEmailNotificationOnDeliveryEnabled,
-                        IsSmsNotificationEnabled = model.IsSmsNotificationEnabled,
-                        IsSmsNotificationOnDeliveryEnabled = model.IsSmsNotificationOnDeliveryEnabled,
-                        IsViberNotificationEnabled = model.IsViberNotificationEnabled,
-                        IsViberNotificationOnDeliveryEnabled = model.IsViberNotificationOnDeliveryEnabled,
+                        IsPhoneNotificationEnabled = model.IsPhoneNotificationEnabled,
+                        IsPhoneNotificationOnDeliveryEnabled = model.IsPhoneNotificationOnDeliveryEnabled,
                         Email = model.Email,
-                        Phone = model.Phone
+                        Phone = model.Phone,
                     },
                     cancellationToken: Response.ClientDisconnectedToken);
 
@@ -840,8 +816,6 @@ namespace EDelivery.WebPortal.Controllers
                         false,
                         !isCurrentProfilePublicAdministration,
                         false,
-                        !isCurrentProfilePublicAdministration,
-                        false,
                         templates.Result.ToArray());
 
                 return PartialView("Partials/AddLoginProfilePermissions", vm);
@@ -918,14 +892,12 @@ namespace EDelivery.WebPortal.Controllers
                     IsDefault = false,
                     IsEmailNotificationEnabled = model.IsEmailNotificationEnabled,
                     IsEmailNotificationOnDeliveryEnabled = model.IsEmailNotificationOnDeliveryEnabled,
-                    IsSmsNotificationEnabled = model.IsSmsNotificationEnabled,
-                    IsSmsNotificationOnDeliveryEnabled = model.IsSmsNotificationOnDeliveryEnabled,
-                    IsViberNotificationEnabled = model.IsViberNotificationEnabled,
-                    IsViberNotificationOnDeliveryEnabled = model.IsViberNotificationOnDeliveryEnabled,
+                    IsPhoneNotificationEnabled = model.IsPhoneNotificationEnabled,
+                    IsPhoneNotificationOnDeliveryEnabled = model.IsPhoneNotificationOnDeliveryEnabled,
                     Details = string.Empty,
                     ActionLoginId = this.UserData.LoginId,
                     Ip = this.Request.UserHostAddress,
-                    Permissions = { permissions }
+                    Permissions = { permissions },
                 },
                 cancellationToken: Response.ClientDisconnectedToken);
 
