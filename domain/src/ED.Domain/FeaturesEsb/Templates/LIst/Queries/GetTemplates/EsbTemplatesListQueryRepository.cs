@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.EntityFrameworkCore;
+
 using static ED.Domain.IEsbTemplatesListQueryRepository;
 
 namespace ED.Domain
@@ -17,8 +19,8 @@ namespace ED.Domain
             var templates = await (
                 from t in this.DbContext.Set<Template>()
 
-                where t.PublishDate != null
-                    && t.ArchiveDate == null
+                where (t.PublishDate != null && t.ArchiveDate == null)
+                    || t.TemplateId == Template.TicketTemplate // ticket template is not published and this is a bypass
 
                 orderby t.TemplateId
 

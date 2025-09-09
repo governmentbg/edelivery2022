@@ -48,7 +48,6 @@ namespace ED.Domain
                     on m.SenderLoginId equals sl.Id
 
                 where mr.ProfileId == profileId
-                    && !this.DbContext.Set<Ticket>().Any(t => t.MessageId == mr.MessageId)
 
                 orderby mr.DateReceived ?? sqlMaxDate descending, m.DateSent descending
 

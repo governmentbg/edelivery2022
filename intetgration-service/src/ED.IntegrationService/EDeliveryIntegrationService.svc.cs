@@ -8,7 +8,6 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Services.Protocols;
 using ED.Blobs;
 using ED.DomainServices.IntegrationService;
 using EDelivery.Common.DataContracts;
@@ -2357,12 +2356,8 @@ $@"Error occured in SendMessageOnBehalfToLegalEntity with params -
                     new CacheItemPolicy
                     {
                         AbsoluteExpiration = DateTimeOffset.Now.Add(this.CacheExpiration)
-                    });
-
-            if (authenticationInfo == null)
-            {
-                throw new UnauthorizedAccessException();
-            }
+                    }) 
+                    ?? throw new UnauthorizedAccessException();
 
             return authenticationInfo;
         }

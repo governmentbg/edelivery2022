@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Mapster;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using static ED.DomainServices.Esb.Esb;
 
 namespace ED.EsbApi;
@@ -251,13 +255,13 @@ public class MessagesController : ControllerBase
                                 messageId,
                                 blob.BlobId);
 
-                        MessageOpenDOBlob result = blob.Adapt<MessageOpenDOBlob>() with
+                        MessageOpenDOBlob messageOpenDOBlob = blob.Adapt<MessageOpenDOBlob>() with
                         {
                             DownloadLink = link,
                             DownloadLinkExpirationDate = expirationDate,
                         };
 
-                        return result;
+                        return messageOpenDOBlob;
                     })
                     .ToArray();
 
@@ -322,7 +326,7 @@ public class MessagesController : ControllerBase
         [FromRoute] int forwardedMessageId,
         CancellationToken ct)
     {
-        DomainServices.Esb.GetForwardedMessageOriginalRecipientProfileResponse recipientResp = 
+        DomainServices.Esb.GetForwardedMessageOriginalRecipientProfileResponse recipientResp =
             await esbClient.GetForwardedMessageOriginalRecipientProfileAsync(
                 new DomainServices.Esb.GetForwardedMessageOriginalRecipientProfileRequest
                 {
