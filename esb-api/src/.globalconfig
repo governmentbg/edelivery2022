@@ -1,0 +1,91 @@
+is_global = true
+
+# copied from https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+# IDE0161: Use file-scoped namespace
+csharp_style_namespace_declarations = file_scoped:warning
+dotnet_diagnostic.IDE0161.severity = warning
+
+# IDE0065: Misplaced using directive
+csharp_using_directive_placement = inside_namespace:warning
+dotnet_diagnostic.IDE0065.severity = warning
+
+# IDE0005: Remove unnecessary import
+dotnet_diagnostic.IDE0005.severity = warning
+
+# IDE0009: Add this or Me qualification
+dotnet_style_qualification_for_event = true:warning
+dotnet_style_qualification_for_field = true:warning
+dotnet_style_qualification_for_method = true:warning
+dotnet_style_qualification_for_property = true:warning
+dotnet_diagnostic.IDE0009.severity = warning
+
+# IDE0060: Remove unused parameter
+dotnet_code_quality_unused_parameters = all:warning
+dotnet_diagnostic.IDE0060.severity = warning
+
+# IDE0079: Remove unnecessary suppression
+dotnet_remove_unnecessary_suppression_exclusions = none:warning
+dotnet_diagnostic.IDE0079.severity = warning
+
+# CA2007: Consider calling ConfigureAwait on the awaited task
+dotnet_diagnostic.CA2007.severity = none
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = none
+
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = none
+
+# CA1852: Seal internal types
+dotnet_diagnostic.CA1852.severity = none
+
+# CA1305: Specify IFormatProvider
+dotnet_diagnostic.CA1305.severity = none
+
+# CA1304: Specify CultureInfo
+dotnet_diagnostic.CA1304.severity = none
+
+# CA1310: Specify StringComparison
+dotnet_diagnostic.CA1310.severity = none
+
+# CA1311: Specify a culture or use an invariant version
+dotnet_diagnostic.CA1311.severity = none
+
+# CA2201: Do not raise reserved exception types
+dotnet_diagnostic.CA2201.severity = none
+
+# CA1848: Use the LoggerMessage delegates
+dotnet_diagnostic.CA1848.severity = warning
+
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = none
+
+# CA1727: Use PascalCase for named placeholders
+dotnet_diagnostic.CA1727.severity = none
+
+# CA1720: Identifier contains type name
+dotnet_diagnostic.CA1720.severity = none
+
+# Workaround for https://github.com/dotnet/roslyn/issues/41640
+dotnet_diagnostic.EnableGenerateDocumentationFile.severity = none
+
+# IDE0130: Namespace does not match folder structure
+dotnet_style_namespace_match_folder = false
+
+# RMG012: Source member was not found for target member
+# https://mapperly.riok.app/docs/configuration/analyzer-diagnostics/
+dotnet_diagnostic.RMG012.severity = error
+
+# RMG020: Source member is not mapped to any target member
+# https://mapperly.riok.app/docs/configuration/analyzer-diagnostics/
+dotnet_diagnostic.RMG020.severity = error
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
+
+# IDE0039: Use local function instead of lambda
+dotnet_diagnostic.IDE0039.severity = none
+
+# IDE0305: Collection initialization can be simplified
+dotnet_diagnostic.IDE0305.severity = none
