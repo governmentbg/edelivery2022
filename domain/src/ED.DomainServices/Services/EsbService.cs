@@ -1,12 +1,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+
 using ED.Domain;
 using ED.DomainServices.Esb;
+
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+
 using Mapster;
 using MediatR;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ED.DomainServices
@@ -381,20 +385,47 @@ namespace ED.DomainServices
             OpenMessageRequest request,
             ServerCallContext context)
         {
-            EsbOpenMessageCommandResult? result =
+            int? templateId =
                 await this.serviceProvider
-                    .GetRequiredService<IMediator>()
-                    .Send(
-                        new EsbOpenMessageCommand(
-                            request.MessageId,
-                            request.ProfileId,
-                            request.LoginId),
+                    .GetRequiredService<IEsbMessagesOpenQueryRepository>()
+                    .GetMessageTemplateAsync(
+                        request.MessageId,
                         context.CancellationToken);
 
-            return new OpenMessageResponse
+            if (templateId == Template.TicketTemplate)
             {
-                Result = result?.Adapt<OpenMessageResponse.Types.MessageInfo>()
-            };
+                EsbOpenTicketCommandResult? result =
+                    await this.serviceProvider
+                        .GetRequiredService<IMediator>()
+                        .Send(
+                            new EsbOpenTicketCommand(
+                                request.MessageId,
+                                request.ProfileId,
+                                request.LoginId),
+                            context.CancellationToken);
+
+                return new OpenMessageResponse
+                {
+                    Result = result?.Adapt<OpenMessageResponse.Types.MessageInfo>()
+                };
+            }
+            else
+            {
+                EsbOpenMessageCommandResult? result =
+                    await this.serviceProvider
+                        .GetRequiredService<IMediator>()
+                        .Send(
+                            new EsbOpenMessageCommand(
+                                request.MessageId,
+                                request.ProfileId,
+                                request.LoginId),
+                            context.CancellationToken);
+
+                return new OpenMessageResponse
+                {
+                    Result = result?.Adapt<OpenMessageResponse.Types.MessageInfo>()
+                };
+            }
         }
 
         public override async Task<GetEsbUserResponse> GetEsbUser(

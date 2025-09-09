@@ -666,15 +666,39 @@ namespace ED.DomainServices
                         $"Profile can't open messsage"));
             }
 
-            bool firstTimeOpen = await this.serviceProvider
-                .GetRequiredService<IMediator>()
-                .Send(
-                    new OpenMessage1Command(
-                        request.MessageId,
-                        request.ProfileId,
-                        request.LoginId,
-                        request.OpenEvent),
+            int? templateId = await this.serviceProvider
+                .GetRequiredService<IIntegrationServiceMessagesOpenQueryRepository>()
+                .GetReceivedMessageTemplateAsync(
+                    request.MessageId,
                     context.CancellationToken);
+
+            bool firstTimeOpen = false;
+
+            // tickets are NOT just messages and they have their own business logic for opening them
+            // once opened it could be treated as a message
+            if (templateId == Template.TicketTemplate)
+            {
+                firstTimeOpen = await this.serviceProvider
+                    .GetRequiredService<IMediator>()
+                    .Send(
+                        new OpenTicketCommand1(
+                            request.MessageId,
+                            request.ProfileId,
+                            request.LoginId),
+                        context.CancellationToken);
+            }
+            else
+            {
+                firstTimeOpen = await this.serviceProvider
+                    .GetRequiredService<IMediator>()
+                    .Send(
+                        new OpenMessage1Command(
+                            request.MessageId,
+                            request.ProfileId,
+                            request.LoginId,
+                            request.OpenEvent),
+                        context.CancellationToken);
+            }
 
             IIntegrationServiceMessagesOpenQueryRepository.GetReceivedMessageContentVO message =
                  await this.serviceProvider

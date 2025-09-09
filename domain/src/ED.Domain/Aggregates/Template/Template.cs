@@ -18,6 +18,9 @@ namespace ED.Domain
         public static Guid SystemForwardTemplateBodyFieldId() =>
             new("8d3747fe-dcee-4371-92f2-75549a3f804d");
 
+        public static Guid TicketTemplateBodyFieldId() =>
+            new("d7f6dcc0-7dbd-4e8f-b600-8dbfb6a05a49");
+
         // EF constructor
         private Template()
         {

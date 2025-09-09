@@ -450,6 +450,9 @@ namespace ED.Domain
                     case Template.SystemForwardTemplateId:
                         key = Template.SystemForwardTemplateBodyFieldId();
                         break;
+                    case Template.TicketTemplate:
+                        key = Template.TicketTemplateBodyFieldId();
+                        break;
                     default:
                         // ends methods
                         return string.Empty;
