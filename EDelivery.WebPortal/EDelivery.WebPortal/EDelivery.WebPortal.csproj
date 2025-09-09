@@ -227,10 +227,6 @@
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SAML2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SAML2.3.2.0.51\lib\net35\SAML2.dll</HintPath>
-    </Reference>
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
       <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
     </Reference>
@@ -1049,6 +1045,10 @@
     <ProjectReference Include="..\EDeliveryResources\EDeliveryResources.csproj">
       <Project>{7ff4d8f6-0359-4a88-878f-788db1ddbdca}</Project>
       <Name>EDeliveryResources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SAML2\src\SAML2\SAML2.csproj">
+      <Project>{75e5bad2-a20c-43cc-b5c8-38004cedbdfd}</Project>
+      <Name>SAML2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
